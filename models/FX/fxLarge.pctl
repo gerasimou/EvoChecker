@@ -1,0 +1,14 @@
+label "success" = state=19;
+label "done" = state=5 |state=19;
+
+// maximisation [0..1]
+P=? [ F "success" ]
+
+// minimisation [0..R+]
+R{"cost"}=? [ F "done"]
+
+// minimisation [0..R+]
+R{"time"}=? [ F "done" ]
+
+// maximisation [0..1]
+P=? [ F "success" ]

@@ -1,0 +1,24 @@
+//Constraint: Use of High Priority Queue < 90%
+R{"QHLength"}<((QmaxH)*0.9) [ S ]
+//R{"QHLength"}=? [ S ]
+
+
+//Constraint: Use of Low Priority Queue < 90%
+R{"QLLength"}<((QmaxL)*0.9) [ S ]
+//R{"QLLength"}=? [ S ]
+
+
+//Objective: Minimise Power usage
+R{"power"}=? [ S ]
+
+
+//Objective: Minimise lost messages
+R{"TotalLost"}=? [ S ]
+
+
+//Objective: Minimise queue length
+R{"TotalLength"}=? [ S ]
+
+
+
+
