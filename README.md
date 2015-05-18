@@ -23,6 +23,6 @@ EvoChecker uses under-the-hood JMetal 4.5 for multiobjective optimisation, PRISM
    
    * for Linux the env. variable name is LD_LIBRARY_PATH
 
-4) Follow the instructions in res / config.properties
+4) Follow the instructions in res/config.properties
 
 5) Run
