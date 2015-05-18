@@ -18,8 +18,8 @@ EvoChecker uses under-the-hood JMetal 4.5 for multiobjective optimisation, PRISM
 
 2) Import the project in your IDE of preference
 
-3) Set the following environment variable (In Eclipse go to Run / Run Configurations / Environment tab / New )
-   DYLD_LIBRARY_PATH = full/path/to/PRISM/lib (e.g., /Users/aUser/Documents/Prism/prism-4.2.1/lib)
+3) Set the following environment variable (In Eclipse go to Run / Run Configurations / Environment tab / New)
+   > DYLD_LIBRARY_PATH = full/path/to/PRISM/lib (e.g., /Users/aUser/Documents/Prism/prism-4.2.1/lib)
    * for Linux the env. variable name is LD_LIBRARY_PATH
 
 4) Follow the instructions in res / config.properties
