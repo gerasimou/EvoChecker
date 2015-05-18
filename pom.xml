@@ -91,7 +91,7 @@
 					<!-- MainClass in mainfest make a executable jar -->
 					<archive>
 					  <manifest>
-						<mainClass>evoChecker.EvoChecker</mainClass>
+						<mainClass>evochecker.EvoChecker</mainClass>
 					  </manifest>
 					</archive>
  
