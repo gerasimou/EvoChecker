@@ -169,14 +169,15 @@ public class pgGA extends Algorithm {
 	  //do normalisation{
 	  for (Solution solution : solutionList){
 		  double cost = solution.getObjective(1);
-		  solution.setObjective(3, cost/maxCost);
+		  solution.setObjective(1, cost/maxCost);
 	  }
   }
   
   private void evaluateObj0(List<Solution> solutionList){
 	  for (Solution solution : solutionList){
 			double w = 0.9;
-			double evaluation = w * (solution.getObjective(3)) + (1-w) * solution.getObjective(2);
+			double evaluation = w * (solution.getObjective(0)) + (1-w) * solution.getObjective(1);
+//			double evaluation = solution.getObjective(0);
 			solution.setObjective(0, evaluation);
 	  }
   }
