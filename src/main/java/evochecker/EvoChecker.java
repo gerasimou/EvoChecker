@@ -15,6 +15,7 @@ import evochecker.genetic.jmetal.metaheuristics.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.SPEA2_Settings;
 import evochecker.genetic.jmetal.single.GeneticProblemSingle;
+import evochecker.genetic.jmetal.single.RandomSearchSingle_Settings;
 import evochecker.genetic.jmetal.single.SingleGA_Settings;
 import evochecker.parser.ParserEngine;
 import evochecker.prism.Property;
@@ -151,6 +152,12 @@ public class EvoChecker {
 				problem = new GeneticProblemSingle(genes, propertyList, parserEngine, numOfConstraints);
 				SingleGA_Settings sga_settings = new SingleGA_Settings("GeneticProblem", problem);
 				algorithm = sga_settings.configure();
+			}
+			else if (algorithmStr.equals("RANDOM_SINGLE")){
+				int numOfConstraints = 1;
+				problem = new GeneticProblemSingle(genes, propertyList, parserEngine, numOfConstraints);
+				RandomSearchSingle_Settings rss_settings = new RandomSearchSingle_Settings("GeneticProblem", problem);
+				algorithm = rss_settings.configure();
 			}
 			else 
 				throw new Exception("Algorithm not recognised");

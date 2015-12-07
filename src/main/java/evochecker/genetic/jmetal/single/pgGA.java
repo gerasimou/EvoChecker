@@ -76,6 +76,7 @@ public class pgGA extends Algorithm {
     populationSize = ((Integer) getInputParameter("populationSize")).intValue();
     maxEvaluations = ((Integer) getInputParameter("maxEvaluations")).intValue();
 
+    //Start the parallel evaluator
     parallelEvaluator_.startEvaluator(problem_) ;
 
     //Initialize the variables
