@@ -48,6 +48,7 @@ public class pgGA extends Algorithm {
     parallelEvaluator_ = evaluator ;
   } // pgGA
 
+  
   /**
    * Runs the pgGA algorithm.
    * @return a <code>SolutionSet</code> that is a set of non dominated solutions
@@ -69,7 +70,7 @@ public class pgGA extends Algorithm {
     Operator selectionOperator;
 
     Comparator comparator        ;
-    comparator = new ObjectiveComparator(0) ; // Single objective comparator
+    comparator = new ObjectiveComparator(3) ; // Single objective comparator
 
     //Read the parameters
     populationSize = ((Integer) getInputParameter("populationSize")).intValue();
@@ -98,13 +99,16 @@ public class pgGA extends Algorithm {
     
     List<Solution> solutionList = parallelEvaluator_.parallelEvaluation() ;
     
-    normaliseObjectives(solutionList);
-    evaluateObj0(solutionList);
-
     for (Solution solution : solutionList) {
       population.add(solution) ;
       evaluations ++ ;
     }
+
+    //normalise objectives
+//    normaliseObjectives(population);
+
+    //evaluate
+    evaluateObjectives(population);
 
     population.sort(comparator) ;
 
@@ -130,12 +134,9 @@ public class pgGA extends Algorithm {
         } // if                            
       } // for
 
-      List<Solution> solutions = parallelEvaluator_.parallelEvaluation() ;
-
-      normaliseObjectives(solutionList);
-      evaluateObj0(solutionList);
+      solutionList = parallelEvaluator_.parallelEvaluation() ;
       
-      for(Solution solution : solutions) {
+      for(Solution solution : solutionList) {
         offspringPopulation.add(solution);
         evaluations++;	    
       }
@@ -146,6 +147,13 @@ public class pgGA extends Algorithm {
         population.add(offspringPopulation.get(i)) ;
       }
       offspringPopulation.clear();
+
+      //normalise objectives
+//      normaliseObjectives(population);
+
+      //evaluate
+      evaluateObjectives(population);
+      
       population.sort(comparator) ;
     } // while
 
@@ -156,6 +164,15 @@ public class pgGA extends Algorithm {
     resultPopulation.add(population.get(0)) ;
 
     System.out.println("Evaluations: " + evaluations ) ;
+    
+    for (int i = 0; i < populationSize; i++) {
+    	Solution solution = population.get(i);
+		for (int objective=0; objective<solution.getNumberOfObjectives(); objective++){
+			System.out.printf("%.3f\t", solution.getObjective(objective));
+		}
+		System.out.println();
+    }
+    
     return resultPopulation ;
   } // execute
   
@@ -165,32 +182,64 @@ public class pgGA extends Algorithm {
    * Normalise objectives [0,1] for all objectives
    * @param solutionList
    */
-  private void normaliseObjectives(List<Solution> solutionList){
-	  //find max cost
-	  double maxCost = 0;
-	  for (Solution solution : solutionList){
-		  double cost = solution.getObjective(1);
-		  if (cost > maxCost)
-			  maxCost = cost;
-	  }
-	  //do normalisation{
-	  for (Solution solution : solutionList){
-		  double cost = solution.getObjective(1);
-		  solution.setObjective(1, cost/maxCost);
-	  }
-  }
+//  private void normaliseObjectives(SolutionSet population){
+//	  //get number of objectives
+//	  int numberOfObjectives = problem_.getNumberOfObjectives();
+//	  
+//	  //get populationSize
+//	  int populationSize = population.size();
+//	  
+//	  for (int objective=0; objective<numberOfObjectives-1; objective++){
+//		  //find maximum		  
+//		  double maximum = 0;
+//		  for (int i = 0; i < populationSize; i++) {
+//			  Solution solution = population.get(i);
+//			  double result = solution.getObjective(objective);
+//			  if (result > maximum)
+//				  maximum = result;
+//		  }
+//		  //do normalisation
+//		  for (int i = 0; i < populationSize; i++) {
+//			  Solution solution = population.get(i);
+//			  double result = solution.getObjective(objective);
+//			  solution.setObjective(objective, result/maximum);
+//		  }
+//	  }
+//  }
   
   
   /**
    * Evaluate the objectives
    * @param solutionList
    */
-  private void evaluateObj0(List<Solution> solutionList){
-	  for (Solution solution : solutionList){
-			double w = 0.9;
-			double evaluation = w * (solution.getObjective(0)) + (1-w) * solution.getObjective(1);
-//			double evaluation = solution.getObjective(0);
-			solution.setObjective(0, evaluation);
+  private void evaluateObjectives(SolutionSet population){
+	  //get populationSize
+	  int populationSize = population.size();
+	  
+	//get number of objectives
+	  int numberOfObjectives = problem_.getNumberOfObjectives()-1;//the last holds the weighted result
+	  
+	  //maximum value per objective
+	  double maximumPerObjective[] = new double[numberOfObjectives];
+	  
+	  for (int objective=0; objective<numberOfObjectives; objective++){
+		  //find maximum		  
+		  double maximum = 0;
+		  for (int i = 0; i < populationSize; i++) {
+			  Solution solution = population.get(i);
+			  double result = solution.getObjective(objective);
+			  if (result > maximum)
+				  maximum = result;
+		  }
+		  maximumPerObjective[objective] = maximum;
+	  }
+
+	  for (int i = 0; i < populationSize; i++) {
+		  Solution solution = population.get(i);
+			double w = 0.5;
+			double evaluation = (w * maximumPerObjective[0]/solution.getObjective(0)) + 
+								(1-w) * solution.getObjective(1)/maximumPerObjective[1];
+			solution.setObjective(3, evaluation);
 	  }
   }
   
