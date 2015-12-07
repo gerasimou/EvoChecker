@@ -27,16 +27,30 @@ import evochecker.prism.Property;
 public class GeneticProblem extends Problem {
 
 	private static final long serialVersionUID = -2679872853510614319L;
-	protected static  int eval = 0;
-	public static synchronized int getEval() {
-		return eval;
-	}
 
+	/** List of genes*/
 	protected List<AbstractGene> genes;
-	protected InstantiatorInterface instantiator;
+	
+	/** List of properties*/
 	protected List<Property> properties;
-	private int intVariables, realVariables;
 
+	/** Reference to the instantiator handler*/
+	protected InstantiatorInterface instantiator;
+	
+	/** Number of integer variables*/
+	private int intVariables;
+	
+	/** Number of real variables*/
+	private int realVariables;
+
+	
+	/**
+	 * Class constructor: create a new Genetic Problem instance
+	 * @param genes
+	 * @param properties
+	 * @param instantiator
+	 * @param numOfConstraints
+	 */
 	public GeneticProblem(List<AbstractGene> genes, List<Property> properties, InstantiatorInterface instantiator, int numOfConstraints) {
 		this.genes 					= genes;
 		this.instantiator 			= instantiator;
@@ -45,13 +59,56 @@ public class GeneticProblem extends Problem {
 		this.properties 			= properties;
 		this.initializeLimits();
 	}
+	
+	
+	/**
+	 * Intialise limits of variables
+	 */
+	private void initializeLimits() {
+		//1) Calculate how many variables exist in the probabilistic model template
+		computeNumberOfVariables();
+		// System.out.println("Found variables: " + this.numberOfVariables_);
+		//2) Initialise arrays to hold their bounds
+		upperLimit_ 	= new double[numberOfVariables_];
+		lowerLimit_ 	= new double[numberOfVariables_];
+		//3) Calculate the number of real variables
+		realVariables 	= this.computeRealVariables(0);
+		//4) Calculate the number of integer variables
+		intVariables 	= this.computeIntVariables(realVariables);
+		//5) Initialise the solution type
+		solutionType_ 	= new ArrayRealIntSolutionType(this, realVariables, intVariables, this.lowerLimit_, this.upperLimit_);
+	}
 
+	
+	/** 
+	 * Calculate the number of variables
+	 */
+	private void computeNumberOfVariables() {
+		this.numberOfVariables_ = 0;
+		for (AbstractGene g : genes) {
+			// Discrete distribution generates a number of genes 
+			// equal to the number of their outcomes
+			if (g instanceof DiscreteDistributionGene) {
+				int outcomes = ((DiscreteDistributionGene) g).getNumberOfOutcomes();
+				this.numberOfVariables_ += outcomes;
+			} 
+			else {
+				this.numberOfVariables_++;
+			}
+		}
+	}
+	
+	
+	/**
+	 * Calculate the number of real variables (i.e., Double + Distribution) 
+	 * @param baseIndex
+	 * @return
+	 */
 	private int computeRealVariables(int baseIndex) {
 		int realVariables = baseIndex;
 		for (AbstractGene g : genes) {
 			if (g instanceof DiscreteDistributionGene) {
-				int outcomes = ((DiscreteDistributionGene) g)
-						.getNumberOfOutcomes();
+				int outcomes = ((DiscreteDistributionGene) g).getNumberOfOutcomes();
 				int total = realVariables + outcomes;
 				for (int j = realVariables; j < total; j++) {
 					lowerLimit_[j] = g.getMinValue().doubleValue();
@@ -69,11 +126,16 @@ public class GeneticProblem extends Problem {
 		return realVariables - baseIndex;
 	}
 
+	
+	/**
+	 * Calculate the number of integer variables (i.e., Integer + Module)
+	 * @param baseIndex
+	 * @return
+	 */
 	private int computeIntVariables(int baseIndex) {
 		int intVariables = baseIndex;
 		for (AbstractGene g : genes) {
-			if (g instanceof IntegerConstGene
-					|| g instanceof AlternativeModuleGene) {
+			if (g instanceof IntegerConstGene || g instanceof AlternativeModuleGene) {
 				lowerLimit_[intVariables] = g.getMinValue().doubleValue();
 				upperLimit_[intVariables] = g.getMaxValue().doubleValue();
 				// System.out.println("MIN VALUE: "+
@@ -86,19 +148,8 @@ public class GeneticProblem extends Problem {
 		return intVariables - baseIndex;
 	}
 
-	private void initializeLimits() {
-		computeNumberOfVariables();
-		// System.out.println("Found variables: " + this.numberOfVariables_);
-		upperLimit_ = new double[numberOfVariables_];
-		lowerLimit_ = new double[numberOfVariables_];
-		realVariables = this.computeRealVariables(0);
-		intVariables = this.computeIntVariables(realVariables);
-
-		solutionType_ = new ArrayRealIntSolutionType(this, realVariables,intVariables, this.lowerLimit_, this.upperLimit_);
-	}
-
-	protected void populateGenesWithRealSolution(Solution solution)
-			throws JMException {
+	
+	protected void populateGenesWithRealSolution(Solution solution) throws JMException {
 		ArrayReal realPart = (ArrayReal) solution.getDecisionVariables()[0];
 		int currentIndex = 0;
 
@@ -132,8 +183,7 @@ public class GeneticProblem extends Problem {
 		}
 	}
 
-	protected void populateGenesWithIntSolution(Solution solution)
-			throws JMException {
+	protected void populateGenesWithIntSolution(Solution solution) throws JMException {
 		int currentIndex = 0;
 		for (int i = 0; i < genes.size(); i++) {
 			AbstractGene g = genes.get(i);
@@ -147,40 +197,14 @@ public class GeneticProblem extends Problem {
 
 		}
 	}
-
-	private void computeNumberOfVariables() {
-		this.numberOfVariables_ = 0;
-		for (AbstractGene g : genes) {
-			// Discrete distribution generates a number of genes equal to the
-			// number of their outcomes
-			if (g instanceof DiscreteDistributionGene) {
-				int outcomes = ((DiscreteDistributionGene) g)
-						.getNumberOfOutcomes();
-				this.numberOfVariables_ += outcomes;
-			} else {
-				this.numberOfVariables_++;
-			}
-		}
-	}
+	
+	
+	
 
 	public void parallelEvaluate(Solution solution, PrintWriter out, BufferedReader in) throws JMException {
 //		double[] x = new double[numberOfVariables_];
 		this.populateGenesWithRealSolution(solution);
 		this.populateGenesWithIntSolution(solution);
-		eval++;
-		// System.out.println("-------------------------------------------------");
-		if (eval % 1000 == 0)
-			System.out.print("Evaluating: " + this.getEval() +"\t");
-
-//		for (int i = 0; i < this.realVariables; i++) {
-//			x[i] = ((ArrayReal) solution.getDecisionVariables()[0]).getValue(i);
-//			// System.out.println(x[i]);
-//		}
-//
-//		for (int i = 0; i < this.intVariables; i++) {
-//			x[i] = ((ArrayInt) solution.getDecisionVariables()[1]).getValue(i);
-//			 System.out.print((int) x[i] +" ");
-//		}
 
 		// Invoke prism....
 		String model = instantiator.getPrismModelInstance(this.genes);
@@ -328,11 +352,11 @@ public class GeneticProblem extends Problem {
 	  }
 	  
 	  
-	  
 	  public int getNumOfIntVariables(){
 		  return (this.intVariables);
 	  }
 
+	  
 	  public int getNumOfRealVariables(){
 		  return (this.realVariables);
 	  }

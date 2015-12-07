@@ -143,7 +143,7 @@ public class pSPEA2 extends Algorithm{
 	        population = offSpringSolutionSet;
 	    }//while
 	    
-	    parallelEvaluator_.stopEvaluator();
+	    parallelEvaluator_.stopEvaluators();
 	    
 	    Ranking ranking = new Ranking(archive);
 	    return ranking.getSubfront(0);

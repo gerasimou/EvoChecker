@@ -468,7 +468,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		return this.evolvableList;
 	}
 	
-	public String getModelString (){
+	public String getInternalModelRepresentation (){
 		return this.modelString.toString();
 	}
 	

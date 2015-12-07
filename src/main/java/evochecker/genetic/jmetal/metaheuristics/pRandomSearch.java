@@ -95,7 +95,7 @@ public class pRandomSearch extends Algorithm{
 		    }
 	    }
 	    
-	    parallelEvaluator_.stopEvaluator();
+	    parallelEvaluator_.stopEvaluators();
 	    
 	    // Return as output parameter the required evaluations
 //	    setOutputParameter("evaluations", requiredEvaluations);

@@ -21,6 +21,9 @@ public class GenotypeFactory{
 	
 	private static Map<AbstractGene,Evolvable> elementsMap = new HashMap<AbstractGene, Evolvable>();
 
+	/**
+	 * Create a chromosome
+	 */
 	public static List<AbstractGene> createChromosome(List<Evolvable> evolvableList) throws Exception{
 		List<AbstractGene> genes = new ArrayList<AbstractGene> ();		
 		for (Evolvable evolvable : evolvableList){
@@ -31,7 +34,10 @@ public class GenotypeFactory{
 			return genes;		
 	}
 		
-		
+	
+	/**
+	 * Initialise this gene 
+	 */
 	private static AbstractGene initialiseGene (Evolvable evolvable) throws Exception{
 		String name 	= evolvable.getName();
 		Number minValue	= evolvable.getMinValue();
@@ -60,6 +66,11 @@ public class GenotypeFactory{
 		throw new Exception ("Error in Genotype Factory");
 	}
 
+	
+	/**
+	 * Get the generated pair of genes and evolvable elements
+	 * @return
+	 */
 	public static Map<AbstractGene, Evolvable> getMapping(){
 		return elementsMap;
 	}	

@@ -196,7 +196,7 @@ public class pMoCell extends Algorithm{
 
 	    }//while	    
 		
-	    parallelEvaluator_.stopEvaluator();
+	    parallelEvaluator_.stopEvaluators();
 
 		return archive;
 	}//execute	

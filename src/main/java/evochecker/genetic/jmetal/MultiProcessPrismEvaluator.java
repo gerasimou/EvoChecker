@@ -37,52 +37,42 @@ import jmetal.core.Problem;
 import jmetal.core.Solution;
 
 public class MultiProcessPrismEvaluator implements IParallelEvaluator {
+	
+	/** number of parallel executions (processes)*/
 	private int numberOfProcesses;
+	
+	/** handler to the problem being solved*/
 	private Problem problem;
 
-	private Socket[] socket = null;
-	private PrintWriter[] out;
-	private BufferedReader[] in;
-
-	private List<Solution> taskList;
-	private Thread[] threads;
-	private RunnableExecutor[] runnables;
+	/** List of solutions*/
+	private List<Solution> solutionsList;
+		
+	/** Solution results list*/
 	private CopyOnWriteArrayList<Solution> results;
+
+	/** Socket array keeping the prism instances*/
+	private Socket[] socket = null;
 	
+	/** Array of threads*/
+	private Thread[] threads;
+	
+	/** Array of runnables*/
+	private RunnableExecutor[] runnables;
+
+	/** Starting port*/
 	static int portId = 8880;
+
+	/** Output array*/
+	private PrintWriter[] out;
 	
-
-	private class RunnableExecutor implements Runnable {
-		private List<Solution> tasks = new ArrayList<Solution>();
-		private PrintWriter out;
-		private BufferedReader in;
-
-		public RunnableExecutor(PrintWriter out, BufferedReader in) {
-			this.in = in;
-			this.out = out;
-			this.tasks = new ArrayList<Solution>();
-		}
-
-		public void addTask(Solution task) {
-			this.tasks.add(task);
-		}
-
-		@Override
-		public void run() {
-//			 System.out.println("Running thread....");
-			for (Solution task : this.tasks) {
-				try {
-					GeneticProblem geneticProblem = (GeneticProblem) problem;
-					geneticProblem.parallelEvaluate(task, out, in);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-//				 System.out.println("Adding result");
-				results.add(task);
-			}
-		}
-	}
-
+	/** Input array*/
+	private BufferedReader[] in;
+	
+	
+	/**
+	 * Constructor
+	 * @param processes
+	 */
 	public MultiProcessPrismEvaluator(int processes) {
 		if (processes <= 0) {
 			String processesNum = Utility.getProperty("PROCESSORS");
@@ -93,16 +83,20 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 		} else {
 			numberOfProcesses = processes;
 		}
-		this.startPrismExecutors();
+		this.startExecutors();
 		this.reset();
 	}
 
-	private void startPrismExecutors() {
+	
+	/** 
+	 * Initialise the executors
+	 */
+	private void startExecutors() {
 		try {
-			 System.out.println("Initialization");
-			socket = new Socket[numberOfProcesses];
-			in = new BufferedReader[numberOfProcesses];
-			out = new PrintWriter[numberOfProcesses];
+			System.out.println("Initialization");
+			socket 	= new Socket[numberOfProcesses];
+			in 		= new BufferedReader[numberOfProcesses];
+			out 	= new PrintWriter[numberOfProcesses];
 
 //			Properties properties = new Properties();
 //			properties.load(new FileInputStream("res/config.properties"));
@@ -112,11 +106,6 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 	      	Thread.sleep(1000);
 			
 			String params[] = new String[4];
-//			params[0] = "/System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/java";
-//			params[0] = "/usr/lib/jvm/java-7-oracle/jre/bin/java";
-//			params[0] = "/opt/yarcc/infrastructure/java/1.8.0_05/1/default/bin/java";
-//			params[0] = "/home/margara/jdk1.7.0_60/bin/java";
-//			params[0] = "/tools/jdk1.7.0_05/bin/java";
 			params[0] = Utility.getProperty("JVM");
 			params[1] = "-jar";
 			params[2] = "res/executor.jar";
@@ -127,22 +116,11 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 				System.out.println("Starting PRISM server " + portNum);
 				params[3] = String.valueOf(portNum);
 				do {
-					Thread.sleep(3000);
+					Thread.sleep(1000);
 					Process p = Runtime.getRuntime().exec(params);
 					isAlive = p.isAlive();
 				} 
 				while (!isAlive);
-				
-				
-//				BufferedReader error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-				
-//				Thread t = new Thread(new Show(p, error));
-//				t.start();
-				
-//				BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-				
-//				Thread t2 = new Thread(new Show(p, input));
-//				t2.start();
 
 				System.out.println("Connecting");
 //				socket[i] = new Socket("127.0.0.1", portNum);
@@ -155,7 +133,14 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 			e.printStackTrace();
 		}
 	}
+
 	
+	/** 
+	 * Try to make a connection until finding an open port
+	 * @param portNum
+	 * @param i
+	 * @param params
+	 */
 	private void makeConnection(int portNum, int i, String[] params){
 		try{
 			socket[i] = new Socket("127.0.0.1", portNum);
@@ -170,19 +155,30 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 			}			
 			makeConnection(portNum, i, params);
 		}
-
 	}
 
+	
+	/** 
+	 * Initialise the evaluator 
+	 */
 	public void startEvaluator(Problem problem) {
-		 System.out.println("Cores: " + numberOfProcesses);
+		System.out.println("Cores: " + numberOfProcesses);
 		this.problem = problem;
 	}
 
+	
+	/** 
+	 * Add the solution to the list of solutions to be evaluated
+	 */
 	public void addSolutionForEvaluation(Solution solution) {
 //		 System.out.println("Adding a solution to be evaluated");
-		taskList.add(solution);
+		solutionsList.add(solution);
 	}
 
+	
+	/**
+	 * Start parallel execution
+	 */
 	private void startThreads() {
 		for (Thread t : this.threads) {
 			t.start();
@@ -199,36 +195,52 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 		}
 	}
 
-	private void assignTasks() {
-		for (int i = 0; i < this.taskList.size(); i++) {
+	
+	/**
+	 * Assign solutions to parallel processes
+	 */
+	private void assignSolutions() {
+		for (int i = 0; i < this.solutionsList.size(); i++) {
 //			System.out.println("Assigning tasks");
-			this.runnables[i % this.runnables.length].addTask(this.taskList
+			this.runnables[i % this.runnables.length].addSolutionForEvaluation(this.solutionsList
 					.get(i));
 		}
 	}
+
 	
+	/**
+	 * When done, reset the evaluators
+	 */
 	private void reset() {
-		threads = new Thread[numberOfProcesses];
-		runnables = new RunnableExecutor[numberOfProcesses];
-		taskList = new ArrayList<Solution>();
+		threads 		= new Thread[numberOfProcesses];
+		runnables 		= new RunnableExecutor[numberOfProcesses];
+		solutionsList 	= new ArrayList<Solution>();
 
 		for (int i = 0; i < numberOfProcesses; i++) {
-			runnables[i] = new RunnableExecutor(out[i], in[i]);
-			threads[i] = new Thread(runnables[i]);
+			runnables[i]	= new RunnableExecutor(out[i], in[i]);
+			threads[i] 		= new Thread(runnables[i]);
 		}
 	}
 
+	
+	/**
+	 * Run parallel evaluation
+	 */
 	public List<Solution> parallelEvaluation() {
 //		System.out.println("Parallel evaluation");
 		results = new CopyOnWriteArrayList<Solution>();
-		this.assignTasks();
+		this.assignSolutions();
 		this.startThreads();
 //		System.out.println("End of parallel evaluation....");
 		this.reset();
 		return this.results;
 	}
 
-	public void stopEvaluator() {
+	
+	/**
+	 * Once finished, stop the evaluators
+	 */
+	public void stopEvaluators() {
 		for (int i = 0; i < this.numberOfProcesses; i++) {
 			try {
 				this.in[i].close();
@@ -239,31 +251,58 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 		}
 	}
 
-//	private class Show implements Runnable {
-//		private BufferedReader buff;
-//		private Process p;
-//
-//		public Show(Process p, BufferedReader buff) {
-//			this.buff = buff;
-//			this.p = p;
-//		}
-//
-//		@Override
-//		public void run() {
-//			String line;
-//			try {
-//				while ((line = buff.readLine()) != null) {
-//				    System.out.println(line);
-//				}
-//				p.waitFor();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//
-//		}
-//	}
+		
+	
+	/**
+	 * Inner class
+	 * @author sgerasimou
+	 *
+	 */
+	private class RunnableExecutor implements Runnable {
+		/** List of solutions to be evaluated*/
+ 		private List<Solution> solution = new ArrayList<Solution>();
+ 		
+ 		/** Output*/
+		private PrintWriter out;
+		
+		/** Input*/
+		private BufferedReader in;
+
+		
+		/**
+		 * Class constructor: create a new runnable executor
+		 * @param out
+		 * @param in
+		 */
+		public RunnableExecutor(PrintWriter out, BufferedReader in) {
+			this.in = in;
+			this.out = out;
+			this.solution = new ArrayList<Solution>();
+		}
+
+		
+		/** Add a solution for evaluation*/
+		public void addSolutionForEvaluation(Solution solution) {
+			this.solution.add(solution);
+		}
+
+		
+		/**
+		 * Run
+		 */
+		@Override
+		public void run() {
+//			 System.out.println("Running thread....");
+			for (Solution task : this.solution) {
+				try {
+					GeneticProblem geneticProblem = (GeneticProblem) problem;
+					geneticProblem.parallelEvaluate(task, out, in);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+//				 System.out.println("Adding result");
+				results.add(task);
+			}
+		}
+	}
 }

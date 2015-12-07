@@ -1,9 +1,5 @@
 package evochecker.parser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +9,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import evochecker.auxiliary.Utility;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.AlternativeModuleGene;
@@ -32,25 +29,41 @@ import evochecker.parser.src.gen.PrismParser;
 
 public class ParserEngine implements InstantiatorInterface {
 
+	/** model template filename */
 	private String modelFilename;
+	
+	/** String that keeps the model template */
+	private String internalModelRepresentation;
+
+	/** properties filename */
 	private String propertiesFilename;
 
+	/** list of evolvable elements*/
 	private List<Evolvable> evolvableList;
-	private String modelTemplate;
+	
+	/** map that keeps pairs of genes and evolvable elements*/
 	private Map<AbstractGene, Evolvable> elementsMap;
 
+	
+	/**
+	 * Class constructor: create a new parser engine
+	 * @param fileName
+	 * @param propertiesFilename
+	 */
 	public ParserEngine(String fileName, String propertiesFilename) {
-		String modelString = readFile(fileName);
+		String modelString = Utility.readFile(fileName);
 
-		this.modelFilename = modelFilename;
+		this.modelFilename = fileName;
 		this.propertiesFilename = propertiesFilename;
 		elementsMap = new HashMap<AbstractGene, Evolvable>();
 
-		// generatedAntlrFiles("Prism.g4");
 		runVisitor(modelString);
-		// runListener(model);
 	}
 
+	
+	/**
+	 * Print the evolvable elements
+	 */
 	public void print() {
 		for (Evolvable evolvable : evolvableList) {
 			if (evolvable instanceof EvolvableDouble) {
@@ -74,18 +87,12 @@ public class ParserEngine implements InstantiatorInterface {
 			// System.out.println(evolvable.toString());
 		}
 
-		System.out.println(modelTemplate + evolvableList.size());
+		System.out.println(internalModelRepresentation + evolvableList.size());
 		//
 	}
 
-//	@SuppressWarnings("unused")
-//	private void generatedAntlrFiles(String inputFile) {
-//		String[] arg0 = { "-visitor", inputFile, "-o",
-//				"./src/org/spg/antlr/src/gen" };
-//		// "-package", "org.spg.antlr.src.gen"};
-//		org.antlr.v4.Tool.main(arg0);
-//	}
-
+	
+	/** run the listener*/
 	@SuppressWarnings("unused")
 	private void runListener(String inputString) {
 		// create a CharStream that reads from standard input
@@ -109,7 +116,12 @@ public class ParserEngine implements InstantiatorInterface {
 		listener.printMemory();
 	}
 
-	@SuppressWarnings("unused")
+	
+	/**
+	 * parse model template, generate an abstract syntax tree
+	 * and generate a list with evolvavle elements
+	 * @param inputString
+	 */
 	private void runVisitor(String inputString) {
 		// create a CharStream that reads from standard input
 		ANTLRInputStream input = new ANTLRInputStream(inputString);
@@ -126,48 +138,55 @@ public class ParserEngine implements InstantiatorInterface {
 		// and visit the nodes
 		visitor.visit(tree);
 
+		//generate list with evolvable elements
 		List<Evolvable> evolvableList = visitor.getEvolvableList();
 		setEvolvableList(evolvableList);
 
-		String modelString = visitor.getModelString();
-		setModelString(modelString);
+		//get internal model representation
+		String modelString = visitor.getInternalModelRepresentation();
+		setInternalModelRepresentation(modelString);
 	}
 
-	@SuppressWarnings("resource")
-	private String readFile(String fileName) {
-		StringBuilder model = new StringBuilder(100);
-		BufferedReader bfr = null;
 
-		try {
-			bfr = new BufferedReader(new FileReader(new File(fileName)));
-			String line = null;
-			while ((line = bfr.readLine()) != null) {
-				model.append(line + "\n");
-			}
-			model.delete(model.length() - 1, model.length());
-			return model.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
+	/**
+	 * Set the list of evolvable elements
+	 * @param evolvableList
+	 */
 	private void setEvolvableList(List<Evolvable> evolvableList) {
 		this.evolvableList = evolvableList;
 	}
 
-	private void setModelString(String modelString) {
-		this.modelTemplate = modelString;
-	}
 
+	/** 
+	 * Get the list of evolvable elements
+	 * @return
+	 */
 	public List<Evolvable> getEvolvableList() {
 		return this.evolvableList;
 	}
 
-	public String getModelTemplate() {
-		return modelTemplate;
+	
+	/**
+	 * Set the internal model representation as string
+	 * @param modelString
+	 */
+	private void setInternalModelRepresentation(String modelString) {
+		this.internalModelRepresentation = modelString;
 	}
 
+
+	/**
+	 * Return the internal model representation
+	 * @return
+	 */
+	public String getInternalModelRepresentation() {
+		return internalModelRepresentation;
+	}
+
+	
+	/**
+	 * Initialise the map of genes and evolvable elements pairs
+	 */
 	public void createMapping() {
 		Map<AbstractGene, Evolvable> map = GenotypeFactory.getMapping();
 		for (Map.Entry<AbstractGene, Evolvable> entry : map.entrySet()) {
@@ -175,9 +194,13 @@ public class ParserEngine implements InstantiatorInterface {
 		}
 	}
 
+	
+	/**
+	 * Return a valid prism model instance
+	 */
 	@Override
 	public String getPrismModelInstance(List<AbstractGene> genes) {
-		StringBuilder concreteModel = new StringBuilder(this.modelTemplate);
+		StringBuilder concreteModel = new StringBuilder(this.internalModelRepresentation);
 		for (AbstractGene gene : genes) {
 			if (gene instanceof IntegerConstGene) {
 				concreteModel.append(elementsMap.get(gene).getCommand(gene.getAllele()));
@@ -196,9 +219,22 @@ public class ParserEngine implements InstantiatorInterface {
 		return concreteModel.toString();
 	}
 
+
+	/**
+	 * Return the name of properties file
+	 */
 	@Override
 	public String getPrismPropertyFileName() {
 		return this.propertiesFilename;
 	}
 
+	
+	
+//	@SuppressWarnings("unused")
+//	private void generatedAntlrFiles(String inputFile) {
+//		String[] arg0 = { "-visitor", inputFile, "-o",
+//				"./src/org/spg/antlr/src/gen" };
+//		// "-package", "org.spg.antlr.src.gen"};
+//		org.antlr.v4.Tool.main(arg0);
+//	}
 }

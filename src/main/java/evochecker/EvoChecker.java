@@ -80,12 +80,17 @@ public class EvoChecker {
 	
 	
 	/**
-	 * initialise
+	 * Initialise the problem and the properties associated with the problem
+	 * Note that in the next iteration of this code, 
+	 * the initialisation should be done by reading the properties file
 	 * @throws Exception
 	 */
 	public void initializeProblem() throws Exception {
+		//1) parse model template
 		parserEngine 		= new ParserEngine(modelFilename, propertiesFilename);
+		//2) create chromosome
 		genes				= GenotypeFactory.createChromosome(parserEngine.getEvolvableList());
+		//3) create (gene,evolvable element) pairs
 		parserEngine.createMapping();
 		
 		propertyList = new ArrayList<Property>();
@@ -111,6 +116,7 @@ public class EvoChecker {
 //		propertyList.add(new Property(true));
 //		int numOfConstraints = 0;
 
+		//4) instantiate the problem
 		problem = new GeneticProblem(genes, propertyList, parserEngine, numOfConstraints);
 		
 	}
@@ -143,8 +149,8 @@ public class EvoChecker {
 			else if (algorithmStr.equals("SGA")){
 				int numOfConstraints = 1;
 				problem = new GeneticProblemSingle(genes, propertyList, parserEngine, numOfConstraints);
-				SingleGA_Settings sga_setting = new SingleGA_Settings("GeneticProblem", problem);
-				algorithm = sga_setting.configure();
+				SingleGA_Settings sga_settings = new SingleGA_Settings("GeneticProblem", problem);
+				algorithm = sga_settings.configure();
 			}
 			else 
 				throw new Exception("Algorithm not recognised");

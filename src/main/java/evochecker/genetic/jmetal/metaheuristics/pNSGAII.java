@@ -213,7 +213,7 @@ public class pNSGAII extends Algorithm {
       
     } // while
 
-    parallelEvaluator_.stopEvaluator();
+    parallelEvaluator_.stopEvaluators();
 
     // Return as output parameter the required evaluations
     setOutputParameter("evaluations", requiredEvaluations);

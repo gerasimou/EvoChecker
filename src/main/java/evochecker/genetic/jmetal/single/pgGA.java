@@ -58,7 +58,7 @@ public class pgGA extends Algorithm {
     int populationSize;
     int maxEvaluations;
     int evaluations;
-    int numberOfThreads ;
+//    int numberOfThreads ;
 
     SolutionSet population;
     SolutionSet offspringPopulation;
@@ -98,7 +98,7 @@ public class pgGA extends Algorithm {
     
     List<Solution> solutionList = parallelEvaluator_.parallelEvaluation() ;
     
-    normaliseObjective(solutionList);
+    normaliseObjectives(solutionList);
     evaluateObj0(solutionList);
 
     for (Solution solution : solutionList) {
@@ -110,6 +110,8 @@ public class pgGA extends Algorithm {
 
     // Generations 
     while (evaluations < maxEvaluations) {
+       System.out.println("\n\nEvaluating: " + evaluations +"\t");
+    	
       // Copy the best two individuals to the offspring population
       offspringPopulation.add(new Solution(population.get(0))) ;
       offspringPopulation.add(new Solution(population.get(1))) ;
@@ -130,7 +132,7 @@ public class pgGA extends Algorithm {
 
       List<Solution> solutions = parallelEvaluator_.parallelEvaluation() ;
 
-      normaliseObjective(solutionList);
+      normaliseObjectives(solutionList);
       evaluateObj0(solutionList);
       
       for(Solution solution : solutions) {
@@ -147,7 +149,7 @@ public class pgGA extends Algorithm {
       population.sort(comparator) ;
     } // while
 
-    parallelEvaluator_.stopEvaluator();
+    parallelEvaluator_.stopEvaluators();
 
     // Return a population with the best individual
     SolutionSet resultPopulation = new SolutionSet(1) ;
@@ -158,7 +160,12 @@ public class pgGA extends Algorithm {
   } // execute
   
   
-  private void normaliseObjective(List<Solution> solutionList){
+  
+  /**
+   * Normalise objectives [0,1] for all objectives
+   * @param solutionList
+   */
+  private void normaliseObjectives(List<Solution> solutionList){
 	  //find max cost
 	  double maxCost = 0;
 	  for (Solution solution : solutionList){
@@ -173,6 +180,11 @@ public class pgGA extends Algorithm {
 	  }
   }
   
+  
+  /**
+   * Evaluate the objectives
+   * @param solutionList
+   */
   private void evaluateObj0(List<Solution> solutionList){
 	  for (Solution solution : solutionList){
 			double w = 0.9;

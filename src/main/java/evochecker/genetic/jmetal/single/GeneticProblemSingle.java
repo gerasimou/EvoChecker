@@ -20,7 +20,13 @@ public class GeneticProblemSingle extends GeneticProblem {
 
 	private static final long serialVersionUID = 1L;
 
-
+	/**
+	 * Class constructor
+	 * @param genes
+	 * @param properties
+	 * @param instantiator
+	 * @param numOfConstraints
+	 */
 	public GeneticProblemSingle(List<AbstractGene> genes, List<Property> properties, InstantiatorInterface instantiator, int numOfConstraints) {
 		super(genes, properties, instantiator, numOfConstraints);
 	}
@@ -29,8 +35,6 @@ public class GeneticProblemSingle extends GeneticProblem {
 	public void parallelEvaluate(Solution solution, PrintWriter out, BufferedReader in) throws JMException {
 		this.populateGenesWithRealSolution(solution);
 		this.populateGenesWithIntSolution(solution);
-		eval++;
-		System.out.print("Evaluating: " + this.getEval() +"\t");
 
 		// Invoke prism....
 		String model = instantiator.getPrismModelInstance(this.genes);

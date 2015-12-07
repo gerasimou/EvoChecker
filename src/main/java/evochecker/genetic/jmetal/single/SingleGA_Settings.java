@@ -2,20 +2,18 @@ package evochecker.genetic.jmetal.single;
 
 import java.util.HashMap;
 
+import evochecker.auxiliary.Utility;
+import evochecker.genetic.jmetal.MultiProcessPrismEvaluator;
+import evochecker.genetic.jmetal.operators.CrossoverFactory;
+import evochecker.genetic.jmetal.operators.MutationFactory;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.experiments.Settings;
-//import jmetal.metaheuristics.singleObjective.geneticAlgorithm.pgGA;
 import jmetal.operators.crossover.Crossover;
 import jmetal.operators.mutation.Mutation;
 import jmetal.operators.selection.Selection;
 import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
-import evochecker.auxiliary.Utility;
-import evochecker.genetic.jmetal.GeneticProblem;
-import evochecker.genetic.jmetal.MultiProcessPrismEvaluator;
-import evochecker.genetic.jmetal.operators.CrossoverFactory;
-import evochecker.genetic.jmetal.operators.MutationFactory;
 
 public class SingleGA_Settings extends Settings{
 	public int populationSize_;
@@ -42,9 +40,7 @@ public class SingleGA_Settings extends Settings{
 		intMutationProbability_ 	= 1.0 / ((GeneticProblemSingle)problem_).getNumOfIntVariables();//0.4;
 		distributionIndex_ 			= 20;
 	} // SingleGA_Settings
-	
-	
-	
+		
 
 	/**
 	 * Configure Single_GA with default parameter experiments.settings
