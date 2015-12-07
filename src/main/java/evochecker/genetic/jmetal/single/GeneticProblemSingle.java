@@ -29,9 +29,12 @@ public class GeneticProblemSingle extends GeneticProblem {
 	 */
 	public GeneticProblemSingle(List<AbstractGene> genes, List<Property> properties, InstantiatorInterface instantiator, int numOfConstraints) {
 		super(genes, properties, instantiator, numOfConstraints);
+		//#objectives = #properties - #constraints + 1 (i.e., the aggregated objective results; fitness function)
+		this.numberOfObjectives_ 	= properties.size()-numberOfConstraints_+1;
 	}
 
 
+	@Override
 	public void parallelEvaluate(Solution solution, PrintWriter out, BufferedReader in) throws JMException {
 		this.populateGenesWithRealSolution(solution);
 		this.populateGenesWithIntSolution(solution);
@@ -41,53 +44,48 @@ public class GeneticProblemSingle extends GeneticProblem {
 //		System.out.println(model);
 		String propertyFile = instantiator.getPrismPropertyFileName();
 
-		
-		List<String> fitnessList;
 		try {
-			fitnessList = this.invokePrism(model, propertyFile, out, in);
-
-			for (int i = 0; i < this.numberOfObjectives_; i++) {
-				Property p = this.properties.get(i);
-				double result;
-				if (p.isMaximization()) {
-					result = new BigDecimal(- Double.parseDouble(fitnessList.get(i))).setScale(3, RoundingMode.HALF_DOWN).doubleValue();
-				}
-				else{
-					result = new BigDecimal(Double.parseDouble(fitnessList.get(i))).setScale(3, RoundingMode.HALF_UP).doubleValue();
-				}
-				solution.setObjective(i, result);
-				System.out.print("FITNESS: "+ result +"\t");
-//				} 
-//				else {
-//					solution.setObjective(i, result);
-//					System.out.print("FITNESS: " + result +"\t");
-//				}
-			}
-			
-//			this.evaluateConstraints(solution, fitnessList);
+			List<String> fitnessList = this.invokePrism(model, propertyFile, out, in);
+			this.evaluatedObjectives(solution, fitnessList);
 			this.evaluateConstraints(solution, fitnessList, true );
-			
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println();
 	}
 	
-	  public void evaluateConstraints(Solution solution, List<String> fitnessList, boolean cost) throws JMException {
-		  double costConstraint = Double.parseDouble(Utility.getProperty("TIME_THRESHOLD", "50"));
-			for (int i=0; i < this.numberOfConstraints_; i++){
-				int index		= numberOfObjectives_ + i;
-				double result 	= Double.parseDouble(fitnessList.get(index));
-				double violation = new BigDecimal(costConstraint-result).setScale(3, RoundingMode.HALF_DOWN).doubleValue() ;
-				System.out.print("Constraint:" + (result) );
-				if (violation < 0){
-					solution.setOverallConstraintViolation(violation);
-					solution.setNumberOfViolatedConstraint(1);
-				}
-				else{
-					solution.setOverallConstraintViolation(0);
-					solution.setNumberOfViolatedConstraint(0);
-				}
+	
+	private void evaluatedObjectives(Solution solution, List<String> fitnessList){
+		for (int index = 0; index < this.numberOfObjectives_-1; index++) {
+			Property p = this.properties.get(index);
+			double result;
+//			if (p.isMaximization()) {
+//				result = -Double.parseDouble(fitnessList.get(index));
+//			}
+//			else{
+				result = Double.parseDouble(fitnessList.get(index));
+//			}
+			solution.setObjective(index, result);
+			System.out.printf("FITNESS: %.3f\t", result);
+		}			
+	}
+	
+	
+	public void evaluateConstraints(Solution solution, List<String> fitnessList, boolean cost) throws JMException {
+	  double costConstraint = Double.parseDouble(Utility.getProperty("TIME_THRESHOLD", "50"));
+		for (int i=0; i < this.numberOfConstraints_; i++){
+			int index		= numberOfObjectives_ -1 + i;
+			double result 	= Double.parseDouble(fitnessList.get(index));
+			double violation = costConstraint-result;
+			System.out.printf("Constraint: %.3f\n", result);
+			if (violation < 0){
+				solution.setOverallConstraintViolation(violation);
+				solution.setNumberOfViolatedConstraint(1);
 			}
-	  }
+			else{
+				solution.setOverallConstraintViolation(0);
+				solution.setNumberOfViolatedConstraint(0);
+			}
+		}
+	}
 }

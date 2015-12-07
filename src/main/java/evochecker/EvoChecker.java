@@ -164,6 +164,9 @@ public class EvoChecker {
 		population.printVariablesToFile("data/VAR_"+algorithmStr);
 		for (int i=0; i<population.size(); i++){
 			Solution solution = population.get(i);
+			for (int objective=0; objective<solution.getNumberOfObjectives(); objective++){
+				System.out.printf("%.3f\t", solution.getObjective(objective));
+			}
 			double constraintValue = solution.getOverallConstraintViolation();
 			if (constraintValue<0){
 				System.out.println(constraintValue +"\t"+ Arrays.toString(solution.getDecisionVariables()));

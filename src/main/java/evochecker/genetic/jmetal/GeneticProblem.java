@@ -149,6 +149,11 @@ public class GeneticProblem extends Problem {
 	}
 
 	
+	/**
+	 * Populate the values for the gene as specified by the solution parameter
+	 * @param solution
+	 * @throws JMException
+	 */
 	protected void populateGenesWithRealSolution(Solution solution) throws JMException {
 		ArrayReal realPart = (ArrayReal) solution.getDecisionVariables()[0];
 		int currentIndex = 0;
@@ -183,6 +188,12 @@ public class GeneticProblem extends Problem {
 		}
 	}
 
+
+	/**
+	 * Populate the integer values for the gene as specified by the solution parameter
+	 * @param solution
+	 * @throws JMException
+	 */
 	protected void populateGenesWithIntSolution(Solution solution) throws JMException {
 		int currentIndex = 0;
 		for (int i = 0; i < genes.size(); i++) {
@@ -200,7 +211,6 @@ public class GeneticProblem extends Problem {
 	
 	
 	
-
 	public void parallelEvaluate(Solution solution, PrintWriter out, BufferedReader in) throws JMException {
 //		double[] x = new double[numberOfVariables_];
 		this.populateGenesWithRealSolution(solution);
