@@ -59,7 +59,6 @@ public class pgGA extends Algorithm {
     int populationSize;
     int maxEvaluations;
     int evaluations;
-//    int numberOfThreads ;
 
     SolutionSet population;
     SolutionSet offspringPopulation;
@@ -105,9 +104,6 @@ public class pgGA extends Algorithm {
       evaluations ++ ;
     }
 
-    //normalise objectives
-//    normaliseObjectives(population);
-
     //evaluate
     evaluateObjectives(population);
 
@@ -149,9 +145,6 @@ public class pgGA extends Algorithm {
       }
       offspringPopulation.clear();
 
-      //normalise objectives
-//      normaliseObjectives(population);
-
       //evaluate
       evaluateObjectives(population);
       
@@ -176,37 +169,6 @@ public class pgGA extends Algorithm {
     
     return resultPopulation ;
   } // execute
-  
-  
-  
-  /**
-   * Normalise objectives [0,1] for all objectives
-   * @param solutionList
-   */
-//  private void normaliseObjectives(SolutionSet population){
-//	  //get number of objectives
-//	  int numberOfObjectives = problem_.getNumberOfObjectives();
-//	  
-//	  //get populationSize
-//	  int populationSize = population.size();
-//	  
-//	  for (int objective=0; objective<numberOfObjectives-1; objective++){
-//		  //find maximum		  
-//		  double maximum = 0;
-//		  for (int i = 0; i < populationSize; i++) {
-//			  Solution solution = population.get(i);
-//			  double result = solution.getObjective(objective);
-//			  if (result > maximum)
-//				  maximum = result;
-//		  }
-//		  //do normalisation
-//		  for (int i = 0; i < populationSize; i++) {
-//			  Solution solution = population.get(i);
-//			  double result = solution.getObjective(objective);
-//			  solution.setObjective(objective, result/maximum);
-//		  }
-//	  }
-//  }
   
   
   /**
@@ -237,9 +199,14 @@ public class pgGA extends Algorithm {
 
 	  for (int i = 0; i < populationSize; i++) {
 		  Solution solution = population.get(i);
-			double w = 0.5;
-			double evaluation = (w * maximumPerObjective[0]/solution.getObjective(0)) + 
-								(1-w) * solution.getObjective(1)/maximumPerObjective[1];
+			double w1 = 0.3;
+			double w2 = 0.4;
+			double evaluation = 10;
+			if (solution.getOverallConstraintViolation()>=0){
+				evaluation 	= 	(w1 * maximumPerObjective[0]/solution.getObjective(0)) + 
+								(w2 * solution.getObjective(1)/maximumPerObjective[1]) + 
+								((1-w1-w2) * solution.getObjective(2)/maximumPerObjective[2]);
+			}
 			solution.setObjective(3, evaluation);
 	  }
   }
