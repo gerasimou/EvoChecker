@@ -42,11 +42,13 @@ public class EvoChecker {
 	private ParserEngine parserEngine;
 	
 	/** model filename*/
-	private String 		modelFilename;		//= "models/DPM/dpm.pm";
+	private String 		modelFilename;		
 	
 	/** property filename*/
-	private String 		propertiesFilename;// 	= "models/DPM/dpm.pctl";
+	private String 		propertiesFilename;
 	
+	/** algorithm to be executed*/
+	Algorithm algorithm;
 	
 	/** get property handler*/
 	public static Properties getProp() {
@@ -68,6 +70,8 @@ public class EvoChecker {
 			evoChecker.propertiesFilename	= Utility.getProperty("PROPERTIES_FILE", "models/DPM/dpm.pctl");
 			evoChecker.initializeProblem();
 			
+			evoChecker.initialiseAlgorithm();
+			
 			evoChecker.execute();
 		} 
 		catch (Exception e) {
@@ -86,7 +90,7 @@ public class EvoChecker {
 	 * the initialisation should be done by reading the properties file
 	 * @throws Exception
 	 */
-	public void initializeProblem() throws Exception {
+	private void initializeProblem() throws Exception {
 		//1) parse model template
 		parserEngine 		= new ParserEngine(modelFilename, propertiesFilename);
 		//2) create chromosome
@@ -127,8 +131,7 @@ public class EvoChecker {
 	 * execute
 	 * @throws Exception
 	 */
-	public void execute() throws Exception{
-		Algorithm algorithm = null;
+	private void initialiseAlgorithm() throws Exception{
 		String algorithmStr = Utility.getProperty("ALGORITHM").toUpperCase();
 		if (algorithmStr != null){
 			if (algorithmStr.equals("NSGAII")){
@@ -162,6 +165,11 @@ public class EvoChecker {
 			else 
 				throw new Exception("Algorithm not recognised");
 		}
+	}
+	
+	
+	private void execute() throws Exception{
+		String algorithmStr = Utility.getProperty("ALGORITHM").toUpperCase();
 
 		// Execute the Algorithm
 		SolutionSet population = algorithm.execute();
