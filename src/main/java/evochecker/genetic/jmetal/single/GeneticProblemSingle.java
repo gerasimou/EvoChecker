@@ -72,11 +72,11 @@ public class GeneticProblemSingle extends GeneticProblem {
 	
 	
 	public void evaluateConstraints(Solution solution, List<String> fitnessList, boolean cost) throws JMException {
-	  double costConstraint = Double.parseDouble(Utility.getProperty("TIME_THRESHOLD", "50"));
+		double reliabilityConstraint = Double.parseDouble(Utility.getProperty("RELIABILITY_THRESHOLD", "0.97"));
 		for (int i=0; i < this.numberOfConstraints_; i++){
 			int index		= numberOfObjectives_ -1 + i;
 			double result 	= Double.parseDouble(fitnessList.get(index));
-			double violation = costConstraint-result;
+			double violation = result-reliabilityConstraint;
 			System.out.printf("Constraint: %.3f\n", result);
 			if (violation < 0){
 				solution.setOverallConstraintViolation(violation);
