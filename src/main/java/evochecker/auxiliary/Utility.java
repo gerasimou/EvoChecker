@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.List;
 import java.util.Properties;
 
 public class Utility {
@@ -98,4 +99,17 @@ public class Utility {
 		return null;
 	}
 	
+	public static void exportToFile(List<String> outputList, String fileName){
+		try {
+			FileWriter writer = new FileWriter(fileName);
+			for (String str : outputList){	
+				writer.append(str +"\n");
+			}
+				writer.flush();
+				writer.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
