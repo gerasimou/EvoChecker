@@ -66,8 +66,6 @@ public class EvoChecker {
 			prop.load(new FileInputStream("res/config.properties"));
 			
 			EvoChecker evoChecker = new EvoChecker();
-			evoChecker.modelFilename 		= Utility.getProperty("MODEL_TEMPLATE_FILE","models/DPM/dpm.pm");
-			evoChecker.propertiesFilename	= Utility.getProperty("PROPERTIES_FILE", "models/DPM/dpm.pctl");
 			evoChecker.initializeProblem();
 			
 			evoChecker.initialiseAlgorithm();
@@ -91,13 +89,20 @@ public class EvoChecker {
 	 * @throws Exception
 	 */
 	private void initializeProblem() throws Exception {
-		//1) parse model template
+		//1 Get model and properties filenames
+		modelFilename 		= Utility.getProperty("MODEL_TEMPLATE_FILE");
+		propertiesFilename	= Utility.getProperty("PROPERTIES_FILE");
+		
+		//2) parse model template
 		parserEngine 		= new ParserEngine(modelFilename, propertiesFilename);
-		//2) create chromosome
+		
+		//3) create chromosome
 		genes				= GenotypeFactory.createChromosome(parserEngine.getEvolvableList());
-		//3) create (gene,evolvable element) pairs
+		
+		//4) create (gene,evolvable element) pairs
 		parserEngine.createMapping();
 		
+		//5) create properties list
 		propertyList = new ArrayList<Property>();
 		
 		//DPM properties (true for maximisation)
@@ -121,9 +126,8 @@ public class EvoChecker {
 //		propertyList.add(new Property(true));
 //		int numOfConstraints = 0;
 
-		//4) instantiate the problem
+		//6) instantiate the problem
 		problem = new GeneticProblem(genes, propertyList, parserEngine, numOfConstraints);
-		
 	}
 	
 

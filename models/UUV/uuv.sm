@@ -36,7 +36,6 @@ formula sensor1Enabled =  mod(CSC,SENSOR1_MOD)>SENSOR1_MOD_RESULT;
 formula sensor2Enabled =  mod(CSC,SENSOR2_MOD)>SENSOR2_MOD_RESULT;
 formula sensor3Enabled =  mod(CSC,SENSOR3_MOD)>SENSOR3_MOD_RESULT;
 
-
 module sensor1
 	// system states
 	stateS1 : [0..6] init 0; // 0:start - 1:on - 2:read - 3:succ - 4: fail - 5:done - 6:off

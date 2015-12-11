@@ -97,14 +97,9 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 			socket 	= new Socket[numberOfProcesses];
 			in 		= new BufferedReader[numberOfProcesses];
 			out 	= new PrintWriter[numberOfProcesses];
-
-//			Properties properties = new Properties();
-//			properties.load(new FileInputStream("res/config.properties"));
 			
 			int initPort = Integer.parseInt(Utility.getProperty("INIT_PORT_NUM"));
-			
-	      	Thread.sleep(1000);
-			
+						
 			String params[] = new String[4];
 			params[0] = Utility.getProperty("JVM");
 			params[1] = "-jar";
@@ -113,11 +108,11 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 				
 				boolean isAlive = false;
 				int portNum = initPort+i;// portId++;
-				System.out.println("Starting PRISM server " + portNum);
+				System.out.println("Starting server at port " + portNum);
 				params[3] = String.valueOf(portNum);
 				do {
-					Thread.sleep(1000);
 					Process p = Runtime.getRuntime().exec(params);
+					Thread.sleep(1000);
 					isAlive = p.isAlive();
 				} 
 				while (!isAlive);

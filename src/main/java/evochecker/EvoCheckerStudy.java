@@ -34,8 +34,8 @@ public class EvoCheckerStudy extends Experiment{
 	private List<AbstractGene> genes = new ArrayList<AbstractGene>();
 	
 	private ParserEngine parserEngine;
-	private String 		modelFilename;		//= "models/DPM/dpm.pm";
-	private String 		propertiesFilename;// 	= "models/DPM/dpm.pctl";
+	private String 		modelFilename;		
+	private String 		propertiesFilename;
 
 	
 	  /**
