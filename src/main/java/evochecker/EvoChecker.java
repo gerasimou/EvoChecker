@@ -75,7 +75,12 @@ public class EvoChecker {
 			//initialise algorithm
 			evoChecker.initialiseAlgorithm();
 			
-			evoChecker.execute();
+			//execute adaptation step
+			evoChecker.adaptationStep("models/FX/fxSmall1.pm");			
+			evoChecker.adaptationStep("models/FX/fxSmall2.pm");
+			
+			//close down
+			evoChecker.closeDown();
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -85,6 +90,16 @@ public class EvoChecker {
 		System.err.println("Time:\t" + (end - start)/1000);
 	}
 
+	
+	/**
+	 * Perform an adaptation step
+	 * @param modelFilename
+	 * @throws Exception
+	 */
+	private void adaptationStep(String modelFilename) throws Exception{
+		parserEngine.updateInternalModelRepresentation(Utility.readFile(modelFilename));
+		execute();
+	}
 	
 	
 	/**
@@ -150,6 +165,7 @@ public class EvoChecker {
 				problem = new GeneticProblemSingle(genes, propertyList, parserEngine, numOfConstraints);
 				SingleGA_Settings sga_settings = new SingleGA_Settings("GeneticProblem", problem);
 				algorithm = sga_settings.configure();
+				((AlgorithmSteps)algorithm).initialise(); //only for single-objective algorithms
 			}
 			else if (algorithmStr.equals("RANDOM_SINGLE")){
 				int numOfConstraints = 1;
@@ -163,12 +179,24 @@ public class EvoChecker {
 	}
 	
 	
+	/**
+	 * Make finalisations of algorithm
+	 */
+	private void closeDown(){
+		//only for single-objective algorithms
+		if (algorithm instanceof AlgorithmSteps)
+			((AlgorithmSteps)algorithm).finalise(); 
+	}
+	
+	
+	/**
+	 * Execute
+	 * @throws Exception
+	 */
 	private void execute() throws Exception{
 		
 		// Execute the Algorithm
-		((AlgorithmSteps)algorithm).initialise(); //only for single-objective algorithms
 		SolutionSet population = algorithm.execute();
-		((AlgorithmSteps)algorithm).finalise(); //only for single-objective algorithms
 
 		
 		//Print results to console

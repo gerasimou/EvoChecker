@@ -20,14 +20,18 @@
 
 package evochecker.genetic.jmetal.single;
 
-import jmetal.core.*;
-import jmetal.util.JMException;
-import jmetal.util.comparators.ObjectiveComparator;
-
 import java.util.Comparator;
 import java.util.List;
 
+import evochecker.auxiliary.Utility;
 import evochecker.genetic.jmetal.metaheuristics.IParallelEvaluator;
+import jmetal.core.Algorithm;
+import jmetal.core.Operator;
+import jmetal.core.Problem;
+import jmetal.core.Solution;
+import jmetal.core.SolutionSet;
+import jmetal.util.JMException;
+import jmetal.util.comparators.ObjectiveComparator;
 
 /** 
  * A multithreaded generational genetic algorithm
@@ -100,6 +104,49 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
   }
   
   
+  /**
+   * Initialise population
+ * @throws ClassNotFoundException 
+   */
+  public void createInitialPopulation() throws ClassNotFoundException {
+	  String seeding = Utility.getProperty("SEEDING").toUpperCase();	  
+  
+	  try{
+		  if (seeding.equals("NORMAL")){
+			  //clear population
+			  population.clear();
+			  
+			  // Create the initial solutionSet
+			  Solution newSolution;
+			  for (int i = 0; i < populationSize; i++) {
+				  newSolution = new Solution(problem_);
+				  parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
+			  }
+		  }
+		  else if (seeding.equals("BEST")){
+			  parallelEvaluator_.addSolutionForEvaluation(new Solution(population.get(0)));
+			  parallelEvaluator_.addSolutionForEvaluation(new Solution(population.get(1)));
+			  // Create the initial solutionSet
+			  Solution newSolution;
+			  for (int i = 2; i < populationSize; i++) {
+				  newSolution = new Solution(problem_);
+				  parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
+			  }
+		  }
+		  else if (seeding.equals("POPULATION")){
+			  // Create the SAME solutionSet
+			  for (int i = 0; i < populationSize; i++) {
+				  parallelEvaluator_.addSolutionForEvaluation(new Solution(population.get(i))) ;
+			  }
+		  }
+		  else throw new Exception();
+	  }
+	  catch (Exception e){
+		  e.printStackTrace();
+		  System.exit(0);
+	  }	  	  
+  }
+  
   
   /**
    * Runs the pgGA algorithm.
@@ -108,40 +155,12 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
    * @throws jmetal.util.JMException
    */
   public SolutionSet execute() throws JMException, ClassNotFoundException {
-//    int populationSize;
-//    int maxEvaluations;
-
-//    SolutionSet offspringPopulation;
-//    SolutionSet union;
-
-//    Operator mutationOperator;
-//    Operator crossoverOperator;
-//    Operator selectionOperator;
-
-//    //Read the parameters
-//    populationSize = ((Integer) getInputParameter("populationSize")).intValue();
-//    maxEvaluations = ((Integer) getInputParameter("maxEvaluations")).intValue();
-
-//    //Initialize the variables
-//    population = new SolutionSet(populationSize);
-//    offspringPopulation = new SolutionSet(populationSize) ;
-
-
-//    //Read the operators
-//    mutationOperator = operators_.get("mutation");
-//    crossoverOperator = operators_.get("crossover");
-//    selectionOperator = operators_.get("selection");
-	  
 	  
 	  // reset evaluations counter
 	  int evaluations = 0;
-	 
-	  // Create the initial solutionSet
-	  Solution newSolution;
-	  for (int i = 0; i < populationSize; i++) {
-		  newSolution = new Solution(problem_);
-		  parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
-	  }
+	  
+	  //initialise population
+	  createInitialPopulation();
     
 	  List<Solution> solutionList = parallelEvaluator_.parallelEvaluation() ;
     

@@ -27,5 +27,10 @@ public interface AlgorithmSteps {
 	 */
 	public SolutionSet execute() throws JMException, ClassNotFoundException;
 
+	
+	/**
+	 * Initialise population
+	 */
+	public void createInitialPopulation() throws ClassNotFoundException;
 
 }
