@@ -1,6 +1,5 @@
 package evochecker.genetic.jmetal.single;
 
-import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 
@@ -20,6 +19,7 @@ public class ObjectiveEvaluation {
 		  //maximum value per objective
 		  double maximumPerObjective[] = new double[numberOfObjectives];
 		  
+		  //find the maximum per objective
 		  for (int objective=0; objective<numberOfObjectives; objective++){
 			  //find maximum		  
 			  double maximum = 0;

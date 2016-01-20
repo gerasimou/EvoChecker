@@ -160,13 +160,13 @@ public class pgGA extends Algorithm {
 
     System.out.println("Evaluations: " + evaluations ) ;
     
-    for (int i = 0; i < populationSize; i++) {
-    	Solution solution = population.get(i);
-		for (int objective=0; objective<solution.getNumberOfObjectives(); objective++){
-			System.out.printf("%.3f\t", solution.getObjective(objective));
-		}
-		System.out.println();
-    }
+//    for (int i = 0; i < populationSize; i++) {
+//    	Solution solution = population.get(i);
+//		for (int objective=0; objective<solution.getNumberOfObjectives(); objective++){
+//			System.out.printf("%.3f\t", solution.getObjective(objective));
+//		}
+//		System.out.println();
+//    }
     
     return resultPopulation ;
   } // execute

@@ -46,7 +46,7 @@ public class GeneticProblemSingle extends GeneticProblem {
 
 		try {
 			List<String> fitnessList = this.invokePrism(model, propertyFile, out, in);
-			this.evaluatedObjectives(solution, fitnessList);
+			this.evaluateObjectives(solution, fitnessList);
 			this.evaluateConstraints(solution, fitnessList, true );
 		} 
 		catch (IOException e) {
@@ -55,16 +55,10 @@ public class GeneticProblemSingle extends GeneticProblem {
 	}
 	
 	
-	private void evaluatedObjectives(Solution solution, List<String> fitnessList){
+	private void evaluateObjectives(Solution solution, List<String> fitnessList){
 		for (int index = 0; index < this.numberOfObjectives_-1; index++) {
 			Property p = this.properties.get(index);
-			double result;
-//			if (p.isMaximization()) {
-//				result = -Double.parseDouble(fitnessList.get(index));
-//			}
-//			else{
-				result = Double.parseDouble(fitnessList.get(index));
-//			}
+			double result = Double.parseDouble(fitnessList.get(index));
 			solution.setObjective(index, result);
 			System.out.printf("FITNESS: %.3f\t", result);
 		}			
@@ -78,7 +72,7 @@ public class GeneticProblemSingle extends GeneticProblem {
 			double result 	= Double.parseDouble(fitnessList.get(index));
 			double violation = result-reliabilityConstraint;
 			
-			System.out.printf("Constraint: %.3f\t", result);
+			System.out.printf("Constraint: %.3f\n", result);
 			if (violation < 0){
 				solution.setOverallConstraintViolation(violation);
 				solution.setNumberOfViolatedConstraint(1);
@@ -89,14 +83,14 @@ public class GeneticProblemSingle extends GeneticProblem {
 			}
 		}
 		
-		double time = 20;
-		double result 	= Double.parseDouble(fitnessList.get(2));
-		double violation = result-time;
-		System.out.printf("Constraint: %.3f\n", result);
-		if (violation < 0){
-			solution.setOverallConstraintViolation(violation+solution.getOverallConstraintViolation());
-			solution.setNumberOfViolatedConstraint(1);
-		}
+//		double timeThreshold = 20;
+//		double result 	= Double.parseDouble(fitnessList.get(2));
+//		double violation = timeThreshold-result;
+//		System.out.printf("Constraint: %.3f\n", result);
+//		if (violation < 0){
+//			solution.setOverallConstraintViolation(violation+solution.getOverallConstraintViolation());
+//			solution.setNumberOfViolatedConstraint(1);
+//		}
 
 	}
 }
