@@ -146,15 +146,7 @@ public class EvoCheckerStudySingleObjective extends Experiment{
 		
 		//5) create properties list
 		propertyList = new ArrayList<Property>();
-		
-		//DPM properties (true for maximisation)
-//				propertyList.add(new Property(false));
-//				propertyList.add(new Property(false));
-//				propertyList.add(new Property(false));
-//				propertyList.add(new Property(false));
-//				propertyList.add(new Property(false));
-//				int numOfConstraints = 2;
-	
+			
 		//FX
 		propertyList.add(new Property(true));
 		propertyList.add(new Property(false));
@@ -162,18 +154,15 @@ public class EvoCheckerStudySingleObjective extends Experiment{
 		propertyList.add(new Property(true));
 		int numOfConstraints = 1;
 	
-		//Zeroconf
-//				propertyList.add(new Property(false));
-//				propertyList.add(new Property(false));
-//				propertyList.add(new Property(true));
-//				int numOfConstraints = 0;
 	
 		//6) instantiate the problem
 		problem = new GeneticProblemSingle(genes, propertyList, parserEngine, numOfConstraints);
 	}
 		
   
-	
+	/**
+	 * Setup algorithm settings and initialise an algorithm, when needed
+	 */
 	public synchronized void algorithmSettings(String problemName, int problemIndex, Algorithm[] algorithm)  throws ClassNotFoundException {  	
 		try{
 			int numberOfAlgorithms = algorithmNameList_.length;

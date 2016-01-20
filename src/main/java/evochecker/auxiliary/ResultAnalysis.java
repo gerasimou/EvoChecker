@@ -1,10 +1,8 @@
-package evochecker.results;
+package evochecker.auxiliary;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import evochecker.auxiliary.Utility;
 
 public class ResultAnalysis {
 

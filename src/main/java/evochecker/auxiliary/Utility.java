@@ -28,6 +28,7 @@ public class Utility {
 		}
 	}
 
+	
 	public static String getProperty (String key){
 		loadPropertiesInstance();
 		String result = properties.getProperty(key); 
@@ -79,7 +80,6 @@ public class Utility {
 	}
 	
 	
-	
 	@SuppressWarnings("resource")
 	public static String readFile(String fileName) {
 		StringBuilder model = new StringBuilder(100);
@@ -98,6 +98,7 @@ public class Utility {
 		}
 		return null;
 	}
+
 	
 	public static void exportToFile(List<String> outputList, String fileName){
 		try {
