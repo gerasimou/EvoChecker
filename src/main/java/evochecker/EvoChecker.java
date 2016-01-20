@@ -14,6 +14,7 @@ import evochecker.genetic.jmetal.metaheuristics.MOCell_Settings;
 import evochecker.genetic.jmetal.metaheuristics.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.SPEA2_Settings;
+import evochecker.genetic.jmetal.single.AlgorithmSteps;
 import evochecker.genetic.jmetal.single.GeneticProblemSingle;
 import evochecker.genetic.jmetal.single.RandomSearchSingle_Settings;
 import evochecker.genetic.jmetal.single.SingleGA_Settings;
@@ -65,9 +66,13 @@ public class EvoChecker {
 		try {
 			prop.load(new FileInputStream("res/config.properties"));
 			
+			//instantiate evochecker
 			EvoChecker evoChecker = new EvoChecker();
+
+			//initialise problem
 			evoChecker.initializeProblem();
 			
+			//initialise algorithm
 			evoChecker.initialiseAlgorithm();
 			
 			evoChecker.execute();
@@ -104,14 +109,6 @@ public class EvoChecker {
 		
 		//5) create properties list
 		propertyList = new ArrayList<Property>();
-		
-		//DPM properties (true for maximisation)
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		int numOfConstraints = 2;
 
 		//FX
 		propertyList.add(new Property(true));
@@ -119,12 +116,6 @@ public class EvoChecker {
 		propertyList.add(new Property(false));
 		propertyList.add(new Property(true));
 		int numOfConstraints = 1;
-
-		//Zeroconf
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(true));
-//		int numOfConstraints = 0;
 
 		//6) instantiate the problem
 		problem = new GeneticProblem(genes, propertyList, parserEngine, numOfConstraints);
@@ -173,14 +164,16 @@ public class EvoChecker {
 	
 	
 	private void execute() throws Exception{
-		String algorithmStr = Utility.getProperty("ALGORITHM").toUpperCase();
-
+		
 		// Execute the Algorithm
+		((AlgorithmSteps)algorithm).initialise(); //only for single-objective algorithms
 		SolutionSet population = algorithm.execute();
+		((AlgorithmSteps)algorithm).finalise(); //only for single-objective algorithms
+
+		
+		//Print results to console
 		System.out.println("-------------------------------------------------");
 		System.out.println("SOLUTION: \t" + population.size());
-		population.printObjectivesToFile("data/FUN_"+algorithmStr);
-		population.printVariablesToFile("data/VAR_"+algorithmStr);
 		for (int i=0; i<population.size(); i++){
 			Solution solution = population.get(i);
 			for (int objective=0; objective<solution.getNumberOfObjectives(); objective++){
@@ -191,5 +184,11 @@ public class EvoChecker {
 				System.out.println(constraintValue +"\t"+ Arrays.toString(solution.getDecisionVariables()));
 			}
 		}
+		
+		//Store results
+		String algorithmStr = Utility.getProperty("ALGORITHM").toUpperCase();
+		population.printObjectivesToFile("data/FUN_"+algorithmStr);
+		population.printVariablesToFile("data/VAR_"+algorithmStr);		
+		
 	}	
 }
