@@ -116,6 +116,7 @@ public class pgGA extends Algorithm {
       // Copy the best two individuals to the offspring population
       offspringPopulation.add(new Solution(population.get(0))) ;
       offspringPopulation.add(new Solution(population.get(1))) ;
+      evaluations += 2;
 
       Solution[] parents = new Solution[2];
       for (int i = 0; i < (populationSize / 2) - 1; i++) {

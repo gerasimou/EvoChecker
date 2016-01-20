@@ -77,7 +77,8 @@ public class GeneticProblemSingle extends GeneticProblem {
 			int index		= numberOfObjectives_ -1 + i;
 			double result 	= Double.parseDouble(fitnessList.get(index));
 			double violation = result-reliabilityConstraint;
-			System.out.printf("Constraint: %.3f\n", result);
+			
+			System.out.printf("Constraint: %.3f\t", result);
 			if (violation < 0){
 				solution.setOverallConstraintViolation(violation);
 				solution.setNumberOfViolatedConstraint(1);
@@ -87,5 +88,15 @@ public class GeneticProblemSingle extends GeneticProblem {
 				solution.setNumberOfViolatedConstraint(0);
 			}
 		}
+		
+		double time = 20;
+		double result 	= Double.parseDouble(fitnessList.get(2));
+		double violation = result-time;
+		System.out.printf("Constraint: %.3f\n", result);
+		if (violation < 0){
+			solution.setOverallConstraintViolation(violation+solution.getOverallConstraintViolation());
+			solution.setNumberOfViolatedConstraint(1);
+		}
+
 	}
 }
