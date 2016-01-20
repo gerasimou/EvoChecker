@@ -182,6 +182,17 @@ public class ParserEngine implements InstantiatorInterface {
 	public String getInternalModelRepresentation() {
 		return internalModelRepresentation;
 	}
+	
+	
+	/**
+	 * Update internal model representation. 
+	 * Used between adaptation steps
+	 * @param modelString
+	 */
+	public void updateInternalModelRepresentation(String modelString) {
+		this.internalModelRepresentation = modelString;
+	}
+	
 
 	
 	/**
