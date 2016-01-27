@@ -60,7 +60,7 @@ public class GeneticProblemSingle extends GeneticProblem {
 			Property p = this.properties.get(index);
 			double result = Double.parseDouble(fitnessList.get(index));
 			solution.setObjective(index, result);
-			System.out.printf("FITNESS: %.3f\t", result);
+//			System.out.printf("FITNESS: %.3f\t", result);
 		}			
 	}
 	
@@ -72,7 +72,7 @@ public class GeneticProblemSingle extends GeneticProblem {
 			double result 	= Double.parseDouble(fitnessList.get(index));
 			double violation = result-reliabilityConstraint;
 			
-			System.out.printf("Constraint: %.3f\n", result);
+//			System.out.printf("Constraint: %.3f\n", result);
 			if (violation < 0){
 				solution.setOverallConstraintViolation(violation);
 				solution.setNumberOfViolatedConstraint(1);

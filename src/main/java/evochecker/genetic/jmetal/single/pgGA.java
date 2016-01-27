@@ -124,19 +124,33 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 			  }
 		  }
 		  else if (seeding.equals("BEST")){
-			  parallelEvaluator_.addSolutionForEvaluation(new Solution(population.get(0)));
-			  parallelEvaluator_.addSolutionForEvaluation(new Solution(population.get(1)));
+			  int i = 0;
+			  if (population.size()>2){
+				  parallelEvaluator_.addSolutionForEvaluation(new Solution(population.get(0)));
+				  parallelEvaluator_.addSolutionForEvaluation(new Solution(population.get(1)));
+				  i = 2;
+			  }
 			  // Create the initial solutionSet
 			  Solution newSolution;
-			  for (int i = 2; i < populationSize; i++) {
+			  for (; i < populationSize; i++) {
 				  newSolution = new Solution(problem_);
 				  parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
 			  }
 		  }
 		  else if (seeding.equals("POPULATION")){
 			  // Create the SAME solutionSet
-			  for (int i = 0; i < populationSize; i++) {
-				  parallelEvaluator_.addSolutionForEvaluation(new Solution(population.get(i))) ;
+			  if (population.size() == populationSize){
+				  for (int i = 0; i < populationSize; i++) {
+					  parallelEvaluator_.addSolutionForEvaluation(new Solution(population.get(i))) ;
+				  }
+			  }
+			  else{
+				  // Create the initial solutionSet
+				  Solution newSolution;
+				  for (int i = population.size(); i < populationSize; i++) {
+					  newSolution = new Solution(problem_);
+					  parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
+				  }
 			  }
 		  }
 		  else throw new Exception();
@@ -155,34 +169,48 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
    * @throws jmetal.util.JMException
    */
   public SolutionSet execute() throws JMException, ClassNotFoundException {
+	  Solution bestSolution 	= null;//Double.MAX_VALUE;
+	  int bestSolutionSame  = 1;
 	  
-	  // reset evaluations counter
+	  
+	  //Reset evaluations counter
 	  int evaluations = 0;
 	  
-	  //initialise population
+	  //Initialise population
 	  createInitialPopulation();
     
+	  //Run parallel evaluation
 	  List<Solution> solutionList = parallelEvaluator_.parallelEvaluation() ;
     
+	  //Clear the population 
+	  population.clear();
+	  
+	  //Add solutionList to the population
 	  for (Solution solution : solutionList) {
 		  population.add(solution) ;
 		  evaluations ++ ;
 	  }
 
-	  //evaluate
+	  //Evaluate objective
 	  ObjectiveEvaluation.evaluateObjectives(population, problem_.getNumberOfObjectives());
 
+	  //Sort population
 	  population.sort(comparator) ;
+	  
+	  //Find best individual
+	  bestSolution 		= population.get(0);//.getObjective(3);
+	  bestSolutionSame 	= 1;
 
-	  // Generations 
+	  //Evolve 
 	  while (evaluations < maxEvaluations) {
-		  System.out.println("\n\nEvaluating: " + evaluations +"\t");
+		  System.out.println("\nEvaluating: " + evaluations +"\t");
     	
 		  // Copy the best two individuals to the offspring population
 		  offspringPopulation.add(new Solution(population.get(0))) ;
 		  offspringPopulation.add(new Solution(population.get(1))) ;
 		  evaluations += 2;
 
+		  //Create offspring population using crossover & mutation
 		  Solution[] parents = new Solution[2];
 		  for (int i = 0; i < (populationSize / 2) - 1; i++) {
 			  if (evaluations < maxEvaluations) {
@@ -197,31 +225,52 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 			  } // if                            
 		  }// for
 
+		  //Run parallel evaluation
 		  solutionList = parallelEvaluator_.parallelEvaluation() ;
-      
+
+		  //Add solutionList to the population
 		  for (Solution solution : solutionList) {
 			  offspringPopulation.add(solution);
 			  evaluations++;	    
 		  }
 
-		  // The offspring population becomes the new current population
+		  //The offspring population becomes the new current population
 		  population.clear();
 		  for (int i = 0; i < populationSize; i++) {
 			  population.add(offspringPopulation.get(i)) ;
 		  }
 		  offspringPopulation.clear();
 
-		  //evaluate
+		  //Evaluate objectives
 		  ObjectiveEvaluation.evaluateObjectives(population, problem_.getNumberOfObjectives());
       
+		  //Sort population
 		  population.sort(comparator) ;
-	  }// while
 
+		  System.out.println(bestSolution.toString() +"\n"+ population.get(0).toString());
+		  
+
+		  //Find best solution
+		  if (solutionsAreEqual(bestSolution, population.get(0))){
+			  bestSolutionSame++;
+		  }
+		  else{
+			  bestSolution = population.get(0);
+			  bestSolutionSame = 1;
+		  }
+		  
+		  
+		  //Termination criterion: no improvement over X generations
+		  if (bestSolutionSame ==  4)
+			  break;
+	  }// while
+	  
+	  System.out.println("Evaluations: " + evaluations ) ;
+	  
+	  
 	  // Return a population with the best individual
 	  SolutionSet resultPopulation = new SolutionSet(1) ;
 	  resultPopulation.add(population.get(0)) ;
-
-	  System.out.println("Evaluations: " + evaluations ) ;
     
 	  //    for (int i = 0; i < populationSize; i++) {
 	  //    	Solution solution = population.get(i);
@@ -233,6 +282,17 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
     
     return resultPopulation ;
   } // execute
+  
+  
+  private boolean solutionsAreEqual (Solution solution1, Solution solution2){
+	  int objectivesTotal = solution1.getNumberOfObjectives()-1;
+	  for (int index=0; index<objectivesTotal; index++){
+		  if ( Math.abs(solution1.getObjective(index) - solution2.getObjective(index)) > 0.001)
+			  return false;
+	  }
+	  return true;
+  }
+  
   
   
   /**
