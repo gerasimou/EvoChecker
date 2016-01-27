@@ -76,8 +76,8 @@ public class EvoChecker {
 			evoChecker.initialiseAlgorithm();
 			
 			//execute adaptation step
-			evoChecker.adaptationStep("models/FX/fxSmall1.pm");			
-			evoChecker.adaptationStep("models/FX/fxSmall2.pm");
+			evoChecker.adaptationStep("models/FX/runtime/fxSmall1.pm");			
+			evoChecker.adaptationStep("models/FX/runtime/fxSmall2.pm");
 			
 			//close down
 			evoChecker.closeDown();
