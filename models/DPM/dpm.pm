@@ -3,9 +3,11 @@ ctmc
 
 evolve const int QmaxL [1..10]; 
 evolve const int QmaxH [1..10]; 
+
 evolve distribution evTrans1 [2][0.0 .. 0.8];
 evolve distribution evTrans2 [2][0.2 .. 0.6];
 evolve distribution evTrans3 [2][0.2 .. 0.6];
+
 
 evolve module PM
 	p: [0..2];

@@ -52,12 +52,12 @@ public class EvoChecker {
 		try {
 			prop.load(new FileInputStream("res/config.properties"));
 			
-			EvoChecker evoPrism = new EvoChecker();
-			evoPrism.modelFilename 		= Utility.getProperty("MODEL_TEMPLATE_FILE","models/DPM/dpm.pm");
-			evoPrism.propertiesFilename	= Utility.getProperty("PROPERTIES_FILE", "models/DPM/dpm.pctl");
-			evoPrism.initialize();
+			EvoChecker evoChecker = new EvoChecker();
+			evoChecker.modelFilename 		= Utility.getProperty("MODEL_TEMPLATE_FILE","models/DPM/dpm.pm");
+			evoChecker.propertiesFilename	= Utility.getProperty("PROPERTIES_FILE", "models/DPM/dpm.pctl");
+			evoChecker.initialize();
 			
-			evoPrism.execute();
+			evoChecker.execute();
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -76,19 +76,19 @@ public class EvoChecker {
 		propertyList = new ArrayList<Property>();
 		
 		//DPM properties (true for maximisation)
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		int numOfConstraints = 2;
+		propertyList.add(new Property(false));
+		propertyList.add(new Property(false));
+		propertyList.add(new Property(false));
+		propertyList.add(new Property(false));
+		propertyList.add(new Property(false));
+		int numOfConstraints = 2;
 
 		//FX
-		propertyList.add(new Property(true));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(true));
-		int numOfConstraints = 1;
+//		propertyList.add(new Property(true));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(true));
+//		int numOfConstraints = 1;
 
 		//Zeroconf
 //		propertyList.add(new Property(false));
