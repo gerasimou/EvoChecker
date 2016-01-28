@@ -32,6 +32,12 @@ public class Utility {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public static void setProperty (String key, String value){
+		loadPropertiesInstance();
+		properties.setProperty(key, value);
+	}
 
 	
 	public static String getProperty (String key){
