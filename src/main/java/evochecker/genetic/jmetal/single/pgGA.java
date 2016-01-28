@@ -201,7 +201,7 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 	  population.sort(comparator) ;
 	  
 	  //Find best individual
-	  bestSolution 		= population.get(0);//.getObjective(3);
+	  bestSolution 		= population.get(0);
 	  bestSolutionSame 	= 1;
 
 	  //Evolve 
@@ -253,7 +253,7 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 		  System.out.println(bestSolution.toString() +"\n"+ population.get(0).toString());
 		  
 
-		  //Find best solution
+		  //Find best solution & check if it is the same with the previous best solution
 		  if (solutionsAreEqual(bestSolution, population.get(0))){
 			  bestSolutionSame++;
 		  }
@@ -264,29 +264,30 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 		  
 		  
 		  //Termination criterion: no improvement over X generations
-		  if (bestSolutionSame ==  4)
+		  if (bestSolutionSame ==  (maxEvaluations/populationSize)/10)
 			  break;
 	  }// while
-	  
+	  	  
+	  //export evaluations to file
 	  System.out.println("Evaluations: " + evaluations ) ;
-	  
+	  Utility.exportToFile("data/EVAL_SGA_"+seeding, evaluations+"", true);
 	  
 	  // Return a population with the best individual
 	  SolutionSet resultPopulation = new SolutionSet(1) ;
 	  resultPopulation.add(population.get(0)) ;
-    
-	  //    for (int i = 0; i < populationSize; i++) {
-	  //    	Solution solution = population.get(i);
-	  //		for (int objective=0; objective<solution.getNumberOfObjectives(); objective++){
-	  //			System.out.printf("%.3f\t", solution.getObjective(objective));
-	  //		}
-	  //		System.out.println();
-	  //    }
-    
+
     return resultPopulation ;
   } // execute
   
   
+  
+  /**
+   * Check if two solutions are equal. They are equal when their
+   * respective objectives differ less than epsilon, e.g., e=0.001
+   * @param solution1
+   * @param solution2
+   * @return
+   */
   private boolean solutionsAreEqual (Solution solution1, Solution solution2){
 	  int objectivesTotal = solution1.getNumberOfObjectives()-1;
 	  for (int index=0; index<objectivesTotal; index++){
