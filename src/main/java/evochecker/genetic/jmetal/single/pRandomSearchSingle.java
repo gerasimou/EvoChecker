@@ -6,6 +6,7 @@ import java.util.Random;
 
 import evochecker.genetic.jmetal.metaheuristics.IParallelEvaluator;
 import jmetal.core.Algorithm;
+import jmetal.core.Operator;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
@@ -14,74 +15,121 @@ import jmetal.util.JMException;
 import jmetal.util.NonDominatedSolutionList;
 import jmetal.util.comparators.ObjectiveComparator;
 
-public class pRandomSearchSingle extends Algorithm{
+public class pRandomSearchSingle extends Algorithm implements AlgorithmSteps {
 
-	IParallelEvaluator parallelEvaluator_ ; 
+	/** Population size */
+	private int populationSize;
+
+	/** Max Evaluations */
+	private int maxEvaluations;
+
+	/** Algorithm population (now a global variable) */
+	private SolutionSet population;
+
+	/** Algorithm offspring population (now a global variable) */
+	private SolutionSet offspringPopulation;
+
+	/** Comparator */
+	Comparator comparator;
+
+	/** Parallel Evaluator handle */
+	private IParallelEvaluator parallelEvaluator_;
+
+	/** Random */
 	Random rand;
 
-  /**
-   * Constructor
-   * @param problem Problem to solve
-   * @param evaluator Parallel evaluator
-   */
+	
+	/**
+	 * Constructor
+	 * @param problem
+	 *            Problem to solve
+	 * @param evaluator
+	 *            Parallel evaluator
+	 */
 	public pRandomSearchSingle(Problem problem, IParallelEvaluator evaluator) {
 		super(problem);
 		parallelEvaluator_ = evaluator;
-		rand = new Random (System.currentTimeMillis());
-	}//constructor
+		rand = new Random(System.currentTimeMillis());
+	}// constructor
 
+	
+	/**
+	 * Do any necessary initialisations
+	 */
+	public void initialise() {
+		// Read the parameters
+		populationSize = ((Integer) getInputParameter("populationSize")).intValue();
+		maxEvaluations = ((Integer) getInputParameter("maxEvaluations")).intValue();
+
+		// Initialize the variables
+		population = new SolutionSet(populationSize);
+		offspringPopulation = new SolutionSet(populationSize);
+
+		// Initialise single objective comparator
+		comparator = new ObjectiveComparator(3);
+
+		// Start the parallel evaluator
+		parallelEvaluator_.startEvaluator(problem_);
+	}
+
+	
+	
+	/**
+	 * Initialise population
+	 * 
+	 * @throws ClassNotFoundException
+	 */
+	public void createInitialPopulation() throws ClassNotFoundException {
+		// Create the initial solution set
+		Solution initSolution;
+		for (int i = 0; i < populationSize; i++) {
+			initSolution = new Solution(problem_);
+			parallelEvaluator_.addSolutionForEvaluation(initSolution);
+		}
+	}
+
+	
+	
 	@Override
-	public SolutionSet execute() throws JMException, ClassNotFoundException {
-		int populationSize;
-		int maxEvaluations;
-		int evaluations;
+	public SolutionSet execute() throws JMException, ClassNotFoundException {		
+	    Solution bestSolution 	= null;//Double.MAX_VALUE;  
+	    int bestSolutionSame  = 1;
+
+	    //Reset evaluations counter
+		int evaluations = 0;
 		
-		SolutionSet population;
-	    SolutionSet offspringPopulation;
-
-	    //Read the parameters
-		populationSize 	= ((Integer)getInputParameter("populationSize")).intValue();
-		maxEvaluations 	= ((Integer)getInputParameter("maxEvaluations")).intValue();		
-
-	    Comparator comparator        ;
-	    comparator = new ObjectiveComparator(3) ; // Single objective comparator
-		
-	    //Start the parallel evaluator
-	    parallelEvaluator_.startEvaluator(problem_);
-
-	    //Initialise the variables
-	    population 				= new SolutionSet(populationSize);
-	    offspringPopulation 	= new SolutionSet(populationSize);
-	    evaluations				= 0;
-	    
-	    //Create the initial solution set
-	    Solution initSolution;
-	    for (int i=0; i<populationSize; i++){
-	    	initSolution = new Solution(problem_);
-	    	parallelEvaluator_.addSolutionForEvaluation(initSolution);
-	    }
+		//Initialise population
+		createInitialPopulation();
 	    
 	    //Run parallel evaluation
 	    List<Solution> solutionList = parallelEvaluator_.parallelEvaluation();
 	    
+		//Clear the population 
+		population.clear();
+
 	    //Add the solutions to the population
 	    for (Solution solution : solutionList){
 	    	population.add(solution);
 	    	evaluations++;
 	    }
-
-	    //evaluate
+ 
+	    //Evaluate objective
 	    ObjectiveEvaluation.evaluateObjectives(population, problem_.getNumberOfObjectives());
 	    
+	    //Sort population
 	    population.sort(comparator) ;
+	    
+	    //Find best individual
+	    bestSolution 		= population.get(0);
+	    bestSolutionSame 	= 1;
 
 	    
-	    //Iterate until the max generations
+		  //Evolve 
 	    while (evaluations < maxEvaluations){
-	        System.out.println("\n\nEvaluating: " + evaluations +"\t");
+	    	System.out.println("\n\nEvaluating: " + evaluations +"\t");
 	    	
 	    	 for (int i=0; i<populationSize; i++){
-	  	    	initSolution = new Solution(problem_);
+	  	    	Solution initSolution = new Solution(problem_);
 	  	    	parallelEvaluator_.addSolutionForEvaluation(initSolution);
 	  	    }
 	    	
@@ -94,7 +142,7 @@ public class pRandomSearchSingle extends Algorithm{
 		    	evaluations++;
 		    }
 
-		    //evaluate
+		    //Evaluate objectives
 		    ObjectiveEvaluation.evaluateObjectives(population, problem_.getNumberOfObjectives());
 		    
 		   //Add the solutions to the normal population
@@ -107,71 +155,58 @@ public class pRandomSearchSingle extends Algorithm{
 		    //sort the population
 		    population.sort(comparator);
 		    
-		  //keep population size to a maximum size
+		    //keep population size to a maximum size
 		    while (population.size()>populationSize){
 		    	population.remove(population.size()-1);
 		    }
+		    
+			System.out.println(bestSolution.toString() +"\n"+ population.get(0).toString());
+			  
+
+			  //Find best solution & check if it is the same with the previous best solution
+			  if (solutionsAreEqual(bestSolution, population.get(0))){
+				  bestSolutionSame++;
+			  }
+			  else{
+				  bestSolution = population.get(0);
+				  bestSolutionSame = 1;
+			  }
+			  
+			  
+			  //Termination criterion: no improvement over X generations
+			  if (bestSolutionSame ==  (maxEvaluations/populationSize)/10)
+				  break; 
 	    }//while
-	    
-	    parallelEvaluator_.stopEvaluators();
+	   
+
+	    System.out.println("Evaluations: " + evaluations ) ;
 	    
 	    // Return a population with the best individual
 	    SolutionSet resultPopulation = new SolutionSet(1) ;
 	    resultPopulation.add(population.get(0)) ;
-	    
-	    
-	    System.out.println("Evaluations: " + evaluations ) ;
-	    
-	    for (int i = 0; i < populationSize; i++) {
-	    	Solution solution = population.get(i);
-			for (int objective=0; objective<solution.getNumberOfObjectives(); objective++){
-				System.out.printf("%.3f\t", solution.getObjective(objective));
-			}
-			System.out.println();
-	    }
-	    
 	    return resultPopulation ;	    
 	}//execute
 	
 	
-   /**
-    * Evaluate the objectives
-    * @param solutionList
-    */
-//	private void evaluateObjectives(SolutionSet population){
-//		//get populationSize
-//		int populationSize = population.size();
-//	  
-//		//get number of objectives
-//		int numberOfObjectives = problem_.getNumberOfObjectives()-1;//the last holds the weighted result
-//	  
-//		//maximum value per objective
-//		double maximumPerObjective[] = new double[numberOfObjectives];
-//	  
-//		for (int objective=0; objective<numberOfObjectives; objective++){
-//			//find maximum		  
-//			double maximum = 0;
-//			for (int i = 0; i < populationSize; i++) {
-//				Solution solution = population.get(i);
-//				double result = solution.getObjective(objective);
-//				if (result > maximum)
-//					maximum = result;
-//			}
-//			maximumPerObjective[objective] = maximum;
-//		}//for
-//
-//		for (int i = 0; i < populationSize; i++) {
-//			Solution solution = population.get(i);
-//			double w1 = 0.2;
-//			double w2 = 0.4;
-//			double evaluation = 10;
-//			if (solution.getOverallConstraintViolation()>=0){
-//				evaluation 	= 	(w1 * maximumPerObjective[0]/solution.getObjective(0)) + 
-//								(w2 * solution.getObjective(1)/maximumPerObjective[1]) + 
-//								((1-w1-w2) * solution.getObjective(2)/maximumPerObjective[2]);
-//			}
-//			solution.setObjective(3, evaluation);
-//		}//for
-//	}//evaluateObjectives
+	
+	  
+	private boolean solutionsAreEqual (Solution solution1, Solution solution2){
+		int objectivesTotal = solution1.getNumberOfObjectives()-1;
+		for (int index=0; index<objectivesTotal; index++){
+			if ( Math.abs(solution1.getObjective(index) - solution2.getObjective(index)) > 0.001)
+				return false;
+		}
+		return true;  
+	}
+	
+	
+	  
+	/**
+	   * Do any necessary cleanup
+	   */
+	public void finalise(){
+		//stop the evaluators
+		parallelEvaluator_.stopEvaluators();
+	}
 	
 }//class

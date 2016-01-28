@@ -3,6 +3,12 @@ package evochecker.genetic.jmetal.single;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 
+/**
+ * Class that performs a linear aggregation of the n QoS objectives 
+ * for each individual from the population
+ * @author sgerasimou
+ *
+ */
 public class ObjectiveEvaluation {
 	
 	 /**

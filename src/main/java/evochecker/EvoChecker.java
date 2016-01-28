@@ -172,6 +172,7 @@ public class EvoChecker {
 				problem = new GeneticProblemSingle(genes, propertyList, parserEngine, numOfConstraints);
 				RandomSearchSingle_Settings rss_settings = new RandomSearchSingle_Settings("GeneticProblem", problem);
 				algorithm = rss_settings.configure();
+				((AlgorithmSteps)algorithm).initialise(); //only for single-objective algorithms
 			}
 			else 
 				throw new Exception("Algorithm not recognised");
