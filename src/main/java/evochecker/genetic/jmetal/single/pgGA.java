@@ -62,6 +62,9 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 
   /** Comparator*/
   Comparator comparator;
+  
+  /** Seeding technique */
+  String seeding;
 
   /** Parallel Evaluator handle*/
   private IParallelEvaluator parallelEvaluator_ ;
@@ -109,7 +112,7 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
  * @throws ClassNotFoundException 
    */
   public void createInitialPopulation() throws ClassNotFoundException {
-	  String seeding = Utility.getProperty("SEEDING").toUpperCase();	  
+	  seeding = Utility.getProperty("SEEDING").toUpperCase();	  
   
 	  try{
 		  if (seeding.equals("NORMAL")){
