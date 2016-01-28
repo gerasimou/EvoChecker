@@ -61,7 +61,7 @@ public class ResultAnalysis {
 			algorithmsDirs.add("data/EvoStudyFXsmall/data/" + algorithm + "/GeneticProblemSingle/FUN");
 		}
 		
-		//assemble a list utility lists
+		//assemble a utility list
 		List<String> utilityList = getUtilityResultsAsList(algorithmsDirs);
 		
 		//export

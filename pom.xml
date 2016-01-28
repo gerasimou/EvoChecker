@@ -48,7 +48,14 @@
 			<groupId>org.jmetal</groupId>
 			<artifactId>jmetal</artifactId>
 			<version>4.5</version>
-		</dependency>	
+		</dependency>
+		
+		<!--  Apache Commons Lang: String manipulation -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		<version>3.4</version>
+</dependency>
   </dependencies>
   
   

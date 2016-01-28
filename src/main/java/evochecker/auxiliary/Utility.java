@@ -1,15 +1,20 @@
 package evochecker.auxiliary;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Properties;
+
+import jmetal.core.Solution;
+import jmetal.util.Configuration;
 
 public class Utility {
 	
@@ -44,9 +49,9 @@ public class Utility {
 	}
 	
 	
-	public static void exportToFile(String fileName, String output){
+	public static void exportToFile(String fileName, String output, boolean append){
 		try {
-			FileWriter writer = new FileWriter(fileName, true);
+			FileWriter writer = new FileWriter(fileName, append);
 			writer.append(output +"\n");
 			writer.flush();
 			writer.close();
@@ -72,7 +77,7 @@ public class Utility {
 			inputChannel.close();
 			outputChannel.close();
 			
-			exportToFile(outputFileName, outputStr);
+			exportToFile(outputFileName, outputStr, false);
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
@@ -113,4 +118,30 @@ public class Utility {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	/**
+	 * Writes the decision encodings.variable values of the
+	 * <code>Solution</code> solutions objects into the set in a file.
+	 * 
+	 * @param path
+	 *            The output file name
+	 */
+	static public void printVariablesToFile(String path, Solution solution, boolean append) {
+		try {
+			FileOutputStream fos = new FileOutputStream(path, append);
+			OutputStreamWriter osw = new OutputStreamWriter(fos);
+			BufferedWriter bw = new BufferedWriter(osw);
+
+			int numberOfVariables = solution.getDecisionVariables().length;
+			for (int j = 0; j < numberOfVariables; j++)
+				bw.write(solution.getDecisionVariables()[j].toString() + " ");
+			bw.newLine();
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			Configuration.logger_.severe("Error acceding to the file");
+			e.printStackTrace();
+		}
+	} // printVariablesToFile
 }
