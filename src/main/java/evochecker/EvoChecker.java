@@ -1,10 +1,13 @@
 package evochecker;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
+import org.apache.commons.lang3.StringUtils;
 
 import evochecker.auxiliary.Utility;
 import evochecker.genetic.GenotypeFactory;
@@ -49,7 +52,8 @@ public class EvoChecker {
 	private String 		propertiesFilename;
 	
 	/** algorithm to be executed*/
-	Algorithm algorithm;
+	private Algorithm algorithm;
+		
 	
 	/** get property handler*/
 	public static Properties getProp() {
@@ -76,8 +80,7 @@ public class EvoChecker {
 			evoChecker.initialiseAlgorithm();
 			
 			//execute adaptation step
-			evoChecker.adaptationStep("models/FX/runtime/fxSmall1.pm");			
-			evoChecker.adaptationStep("models/FX/runtime/fxSmall2.pm");
+			evoChecker.adaptSystem("models/FX/runtime/fxSmall1.pm");
 			
 			//close down
 			evoChecker.closeDown();
@@ -96,9 +99,16 @@ public class EvoChecker {
 	 * @param modelFilename
 	 * @throws Exception
 	 */
-	private void adaptationStep(String modelFilename) throws Exception{
-		parserEngine.updateInternalModelRepresentation(Utility.readFile(modelFilename));
-		execute();
+	private void adaptSystem(String modelFilename) throws Exception{
+		int adaptationStep 	= 1;
+		int newStep 		= 0;
+		
+		while (new File(modelFilename).exists()){
+			System.out.println(modelFilename);
+			parserEngine.updateInternalModelRepresentation(Utility.readFile(modelFilename));
+			execute();
+			modelFilename = StringUtils.replace(modelFilename, adaptationStep + ".", ++adaptationStep + ".", 1);
+		}
 	}
 	
 	
@@ -216,8 +226,10 @@ public class EvoChecker {
 		
 		//Store results
 		String algorithmStr = Utility.getProperty("ALGORITHM").toUpperCase();
-		population.printObjectivesToFile("data/FUN_"+algorithmStr);
-		population.printVariablesToFile("data/VAR_"+algorithmStr);		
-		
+		String seeding = Utility.getProperty("SEEDING").toUpperCase();
+		Utility.exportToFile("data/FUN_"+algorithmStr +"_"+ seeding, population.get(0).toString(), true);
+		Utility.printVariablesToFile("data/VAR_"+algorithmStr +"_"+ seeding, population.get(0), true);
+//		population.printObjectivesToFile("data/FUN_"+algorithmStr +"_"+ seeding);
+//		population.printVariablesToFile("data/VAR_"+algorithmStr  +"_"+ seeding);
 	}	
 }
