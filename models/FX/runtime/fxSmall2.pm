@@ -1,4 +1,6 @@
 //FOREX dtmc model (Simplified: 4 operations with 3 services for each operation)
+//Adaptation Step2: Nominal services reliability & response time
+
 dtmc
 
 
@@ -21,17 +23,35 @@ const double op1S1Fail=0.011; //failure probability of service 1 op1
 const double op1S2Fail=0.004; //failure probability of service 2 op1
 const double op1S3Fail=0.007; //failure probability of service 3 op1
 
-const double op2S1Fail=0.003; //failure probability of service 1 op1
-const double op2S2Fail=0.005; //failure probability of service 2 op1
-const double op2S3Fail=0.006; //failure probability of service 3 op1
+const double op2S1Fail=0.003; //failure probability of service 1 op2
+const double op2S2Fail=0.005; //failure probability of service 2 op2
+const double op2S3Fail=0.006; //failure probability of service 3 op2
 
-const double op4S1Fail=0.009; //failure probability of service 1 op1
-const double op4S2Fail=0.011; //failure probability of service 2 op1
-const double op4S3Fail=0.006; //failure probability of service 3 op1
+const double op4S1Fail=0.009; //failure probability of service 1 op3
+const double op4S2Fail=0.011; //failure probability of service 2 op3
+const double op4S3Fail=0.006; //failure probability of service 3 op3
 
-const double op5S1Fail=0.005; //failure probability of service 1 op1
-const double op5S2Fail=0.004; //failure probability of service 2 op1
-const double op5S3Fail=0.002; //failure probability of service 3 op1
+const double op5S1Fail=0.005; //failure probability of service 1 op4
+const double op5S2Fail=0.004; //failure probability of service 2 op4
+const double op5S3Fail=0.002; //failure probability of service 3 op4
+
+
+// user-defined params parameters: Services response time
+const double op1S1Time=2.5; //response time of service 1 op1
+const double op1S2Time=1.8; //response time of service 2 op1
+const double op1S3Time=2.1; //response time of service 3 op1
+
+const double op2S1Time=2.2; //response time of service 1 op2
+const double op2S2Time=3.2; //response time of service 2 op2
+const double op2S3Time=3.8; //response time of service 3 op2
+
+const double op4S1Time=3.8; //response time of service 1 op3
+const double op4S2Time=2.9; //response time of service 2 op3
+const double op4S3Time=3.5; //response time of service 3 op3
+
+const double op5S1Time=4.1; //response time of service 1 op4
+const double op5S2Time=3.7; //response time of service 2 op4
+const double op5S3Time=3.4; //response time of service 3 op4
 
 
 const int STEPMAX  = 4;
@@ -55,7 +75,6 @@ module forex
 	[startOp2]		state = 3	->	1.0  : (state'=4);	//invoke op2
 	[endOp2Fail]	state = 4   ->	1.0  : (state'=5);	//failed op2
 	[endOp2Succ] 	state = 4	->	1.0  : (state'=6);  	//succ   op2
-
 
 	//Technical analysis result
 	[taResult]		state=6 	->	0.61 : (state'=1) + 0.28 : (state'=11) + 0.11 : (state'=7);
@@ -121,43 +140,43 @@ endmodule
 ////////////
 rewards "time"
 	//OP1: SEQ
-	operation1 = 2 & (STRATEGYOP1>0) : 2.5 *op1S1;
-	operation1 = 3 & (STRATEGYOP1>0) : 1.8 *op1S2;
-	operation1 = 4 & (STRATEGYOP1>0) : 2.1 *op1S3;
+	operation1 = 2 & (STRATEGYOP1>0) : op1S1Time *op1S1;
+	operation1 = 3 & (STRATEGYOP1>0) : op1S2Time *op1S2;
+	operation1 = 4 & (STRATEGYOP1>0) : op1S3Time *op1S3;
 	//OP1: PROB
-	operation1 = 2 & (STRATEGYOP1=0) : 2.5;
-	operation1 = 3 & (STRATEGYOP1=0) : 1.8;
-	operation1 = 4 & (STRATEGYOP1=0) : 2.1;
+	operation1 = 2 & (STRATEGYOP1=0) : op1S1Time;
+	operation1 = 3 & (STRATEGYOP1=0) : op1S2Time;
+	operation1 = 4 & (STRATEGYOP1=0) : op1S3Time;
 
 	//OP2: SEQ
-	operation2 = 2 & (STRATEGYOP2>0) : 2.2 *op2S1;
-	operation2 = 3 & (STRATEGYOP2>0) : 3.2 *op2S2;
-	operation2 = 4 & (STRATEGYOP2>0) : 3.8 *op2S3;
+	operation2 = 2 & (STRATEGYOP2>0) : op2S1Time *op2S1;
+	operation2 = 3 & (STRATEGYOP2>0) : op2S2Time *op2S2;
+	operation2 = 4 & (STRATEGYOP2>0) : op2S3Time *op2S3;
 	//OP2: ROB
-	operation2 = 2 & (STRATEGYOP2=0) : 2.2 ;
-	operation2 = 3 & (STRATEGYOP2=0) : 3.2 ;
-	operation2 = 4 & (STRATEGYOP2=0) : 3.8 ;
+	operation2 = 2 & (STRATEGYOP2=0) : op2S1Time ;
+	operation2 = 3 & (STRATEGYOP2=0) : op2S2Time ;
+	operation2 = 4 & (STRATEGYOP2=0) : op2S3Time ;
 
 	//OP3
 	operation3 = 1 | operation3 = 2 : 1.5 ;
 
 	//OP4: SEQ		
-	operation4 = 2 & (STRATEGYOP4>0) : 3.8 *op4S1;
-	operation4 = 3 & (STRATEGYOP4>0) : 3.9 *op4S2;
-	operation4 = 4 & (STRATEGYOP4>0) : 3.7 *op4S3;
+	operation4 = 2 & (STRATEGYOP4>0) : op4S1Time *op4S1;
+	operation4 = 3 & (STRATEGYOP4>0) : op4S2Time *op4S2;
+	operation4 = 4 & (STRATEGYOP4>0) : op4S3Time *op4S3;
 	//OP4: PROB
-	operation4 = 2 & (STRATEGYOP4=0) : 3.8 ;
-	operation4 = 3 & (STRATEGYOP4=0) : 3.9 ;
-	operation4 = 4 & (STRATEGYOP4=0) : 3.7 ;
+	operation4 = 2 & (STRATEGYOP4=0) : op4S1Time ;
+	operation4 = 3 & (STRATEGYOP4=0) : op4S2Time ;
+	operation4 = 4 & (STRATEGYOP4=0) : op4S3Time ;
 
 	//OP5: SEQ
-	operation5 = 2 & (STRATEGYOP5>0) : 4.1 *op5S1;
-	operation5 = 3 & (STRATEGYOP5>0) : 3.7 *op5S2;
-	operation5 = 4 & (STRATEGYOP5>0) : 3.4 *op5S3;
+	operation5 = 2 & (STRATEGYOP5>0) : op5S1Time *op5S1;
+	operation5 = 3 & (STRATEGYOP5>0) : op5S2Time *op5S2;
+	operation5 = 4 & (STRATEGYOP5>0) : op5S3Time *op5S3;
 	//OP5: PROB
-	operation5 = 2 & (STRATEGYOP5=0) : 4.1 ;
-	operation5 = 3 & (STRATEGYOP5=0) : 3.7 ;
-	operation5 = 4 & (STRATEGYOP5=0) : 3.4 ;
+	operation5 = 2 & (STRATEGYOP5=0) : op5S1Time;
+	operation5 = 3 & (STRATEGYOP5=0) : op5S2Time;
+	operation5 = 4 & (STRATEGYOP5=0) : op5S3Time;
 
 	//OP6
 	operation6 = 1 | operation6 = 2 : 2.5 ;

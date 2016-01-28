@@ -1,5 +1,5 @@
 //FOREX dtmc model (Simplified: 4 operations with 3 services for each operation)
-//Adaptation Step1: Nominal services reliability & response time
+//Adaptation Step9: Increase in reponse time of services op4S1 (op4S1Time=4.8) & op4S2T (op4S2Time=3.9)
 
 dtmc
 
@@ -18,7 +18,7 @@ const int op5S1 = mod(op5Code,2)>0?1:0;
 const int op5S2 = mod(op5Code,4)>1?1:0;
 const int op5S3 = mod(op5Code,8)>3?1:0;
 
-// user-defined params parameters: Services Reliability
+// // user-defined params parameters
 const double op1S1Fail=0.011; //failure probability of service 1 op1
 const double op1S2Fail=0.004; //failure probability of service 2 op1
 const double op1S3Fail=0.007; //failure probability of service 3 op1
@@ -45,8 +45,8 @@ const double op2S1Time=2.2; //response time of service 1 op2
 const double op2S2Time=3.2; //response time of service 2 op2
 const double op2S3Time=3.8; //response time of service 3 op2
 
-const double op4S1Time=3.8; //response time of service 1 op3
-const double op4S2Time=2.9; //response time of service 2 op3
+const double op4S1Time=4.8; //response time of service 1 op3
+const double op4S2Time=3.9; //response time of service 2 op3
 const double op4S3Time=3.5; //response time of service 3 op3
 
 const double op5S1Time=4.1; //response time of service 1 op4
