@@ -23,6 +23,7 @@ package evochecker.genetic.jmetal.single;
 import java.util.Comparator;
 import java.util.List;
 
+import evochecker.EvoChecker;
 import evochecker.auxiliary.Utility;
 import evochecker.genetic.jmetal.metaheuristics.IParallelEvaluator;
 import jmetal.core.Algorithm;
@@ -250,7 +251,7 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 		  //Sort population
 		  population.sort(comparator) ;
 
-		  System.out.println(bestSolution.toString() +"\n"+ population.get(0).toString());
+//		  System.out.println(bestSolution.toString() +"\n"+ population.get(0).toString());
 		  
 
 		  //Find best solution & check if it is the same with the previous best solution
@@ -262,15 +263,27 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 			  bestSolutionSame = 1;
 		  }
 		  
+		  //Log intermediate data every 500 iterations
+		  if (evaluations % 500 == 0)
+			  logIntermediateData(evaluations);
 		  
 		  //Termination criterion: no improvement over X generations
-		  if (bestSolutionSame ==  (maxEvaluations/populationSize)/10)
+		  if (bestSolutionSame ==  (maxEvaluations/populationSize)/5)
 			  break;
 	  }// while
 	  	  
 	  //export evaluations to file
 	  System.out.println("Evaluations: " + evaluations ) ;
 	  Utility.exportToFile("data/EVAL_SGA_"+seeding, evaluations+"", true);
+	  
+	  //update the intermediate log
+	    //find the nearest %500 == 0
+	    if (evaluations%500!=0)
+	    	for (; evaluations%500!=0; evaluations+=50);
+	  while (evaluations <= maxEvaluations){
+		  logIntermediateData(evaluations);
+		  evaluations += 500;
+	  }
 	  
 	  // Return a population with the best individual
 	  SolutionSet resultPopulation = new SolutionSet(1) ;
@@ -305,6 +318,17 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
   public void finalise(){
 	  //stop the evaluators
 	  parallelEvaluator_.stopEvaluators();
+  }
+  
+  
+  /**
+   * Log intermediate data
+   */
+  private void logIntermediateData(int iterations){
+	  Utility.exportToFile("data/FUN_SGA_"+ seeding +"_E"+ EvoChecker.adaptationStep +"_"+ iterations, 
+			  			   population.get(0).toString(), true);
+		Utility.printVariablesToFile("data/VAR_SGA_"+ seeding +"_E"+ EvoChecker.adaptationStep +"_"+ iterations,
+						   population.get(0), true);
   }
   
 } // pgGA
