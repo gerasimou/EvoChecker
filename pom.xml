@@ -17,6 +17,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+  	<!-- Repositories -->
+	<repositories>
+		<repository>
+	   		<id>localRepository</id>
+	   		<url>file://${basedir}/repo</url>
+	 	</repository>
+	</repositories>
 
 	<!-- Dependencies -->
 	<dependencies>
@@ -31,9 +38,9 @@
 		<!--  PRISM model checker -->
 		<dependency>
 			<groupId>org.checker.prism</groupId>
-			<artifactId>pepa</artifactId>
+			<artifactId>prism</artifactId>
 			<version>4.2.1</version>
-			<type>zip</type>
+			<type>jar</type>
 		</dependency>
 
 		<!--  Antlr4 -->
