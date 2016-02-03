@@ -47,10 +47,13 @@ public class GeneticProblemSingle extends GeneticProblem {
 		try {
 			List<String> fitnessList = this.invokePrism(model, propertyFile, out, in);
 			this.evaluateObjectives(solution, fitnessList);
-			this.evaluateConstraints(solution, fitnessList, true );
+			this.evaluateConstraints(solution, fitnessList, true);
 		} 
 		catch (IOException e) {
+			System.err.println("Error when invoking PRISM; check the model");
 			e.printStackTrace();
+			Utility.exportToFile("data/exceptionModel.pm", model, false);
+			System.exit(0);
 		}
 	}
 	

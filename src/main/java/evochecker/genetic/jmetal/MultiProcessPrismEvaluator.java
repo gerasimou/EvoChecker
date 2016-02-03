@@ -143,7 +143,7 @@ public class MultiProcessPrismEvaluator implements IParallelEvaluator {
 			out[i] = new PrintWriter(socket[i].getOutputStream());		
 		} catch (IOException e) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 				Process p = Runtime.getRuntime().exec(params);
 			} catch (InterruptedException | IOException e1) {
 				e1.printStackTrace();

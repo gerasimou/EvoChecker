@@ -277,9 +277,11 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 	  Utility.exportToFile("data/EVAL_SGA_"+seeding, evaluations+"", true);
 	  
 	  //update the intermediate log
-	    //find the nearest %500 == 0
-	    if (evaluations%500!=0)
-	    	for (; evaluations%500!=0; evaluations+=50);
+	    //find the nearest %500 == 
+	  if (evaluations%500!=0)
+		  for (; evaluations%500!=0; evaluations+=50);
+	  else
+		  evaluations +=500;
 	  while (evaluations <= maxEvaluations){
 		  logIntermediateData(evaluations);
 		  evaluations += 500;
