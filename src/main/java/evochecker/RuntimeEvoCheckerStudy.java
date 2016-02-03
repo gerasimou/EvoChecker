@@ -10,18 +10,18 @@ public class RuntimeEvoCheckerStudy {
 
 		int MAXRUNS = 30;
 
-		String seedings[] = new String[] {"NORMAL", "BEST", "POPULATION"};
-		
-		//for all the seeding techniques
-		for (String seeding : seedings){
-			Utility.setProperty("SEEDING", seeding);
+//		String seedings[] = new String[] {"BEST", "POPULATION"};
+//		
+////		for all the seeding techniques
+//		for (String seeding : seedings){
+//			Utility.setProperty("SEEDING", seeding);
 			System.out.println(Utility.getProperty("SEEDING"));
 
 			//run for MAXRUNS
 			for (int run=0; run<MAXRUNS; run++){
 				evoChecker.main(null);
 			}
-		}
+//		}
 		
 	}
 

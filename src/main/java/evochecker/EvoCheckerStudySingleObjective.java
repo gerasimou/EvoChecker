@@ -16,6 +16,7 @@ import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.jmetal.GeneticProblem;
 import evochecker.genetic.jmetal.experiments.Experiment;
+import evochecker.genetic.jmetal.single.AlgorithmSteps;
 import evochecker.genetic.jmetal.single.GeneticProblemSingle;
 import evochecker.genetic.jmetal.single.RandomSearchSingle_Settings;
 import evochecker.genetic.jmetal.single.SingleGA_Settings;
@@ -180,9 +181,11 @@ public class EvoCheckerStudySingleObjective extends Experiment{
 			// set the algorithms
 			switch (times % numberOfAlgorithms) {
 				case 0: 	{ algorithm[0] = new SingleGA_Settings(problemName, problem).configure();
+							  ((AlgorithmSteps)algorithm[0]).initialise(); //only for single-objective algorithms
 							  break;
 							}
 				case 1: 	{ 	algorithm[1] = new RandomSearchSingle_Settings(problemName, problem).configure();
+				  				((AlgorithmSteps)algorithm[1]).initialise(); //only for single-objective algorithms
 								break;
 							}
 				default:	{   throw new JMException("Error in algorithmSettings()");

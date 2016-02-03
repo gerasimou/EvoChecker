@@ -179,7 +179,7 @@ public class EvoCheckerStudy extends Experiment{
 			long timeUsed = (end - start)/1000;
 			System.err.println("Run " + runNum +":\t" + timeUsed);
 			String fileName = Utility.getProperty("OUTPUTDIR") + Utility.getProperty("EXPERIMENT") + "/run.csv";
-			Utility.exportToFile(fileName, timeUsed+"");
+			Utility.exportToFile(fileName, timeUsed+"", true);
 		  }
 	  }
 
