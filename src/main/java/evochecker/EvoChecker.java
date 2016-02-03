@@ -54,6 +54,10 @@ public class EvoChecker {
 	/** algorithm to be executed*/
 	private Algorithm algorithm;
 		
+	/** adaptation step*/
+	public static int adaptationStep;
+
+	
 	
 	/** get property handler*/
 	public static Properties getProp() {
@@ -67,6 +71,9 @@ public class EvoChecker {
 	 */
 	public static void main(String[] args) {
 		long start = System.currentTimeMillis();
+		
+		adaptationStep = 1;
+		
 		try {
 			prop.load(new FileInputStream("res/config.properties"));
 			
@@ -99,10 +106,7 @@ public class EvoChecker {
 	 * @param modelFilename
 	 * @throws Exception
 	 */
-	private void adaptSystem(String modelFilename) throws Exception{
-		int adaptationStep 	= 1;
-		int newStep 		= 0;
-		
+	private void adaptSystem(String modelFilename) throws Exception{		
 		while (new File(modelFilename).exists()){
 			System.out.println(modelFilename);
 			parserEngine.updateInternalModelRepresentation(Utility.readFile(modelFilename));
@@ -148,7 +152,7 @@ public class EvoChecker {
 	
 
 	/**
-	 * execute
+	 * initialise algorithm
 	 * @throws Exception
 	 */
 	private void initialiseAlgorithm() throws Exception{
