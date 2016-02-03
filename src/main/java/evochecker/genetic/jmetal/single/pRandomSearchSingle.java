@@ -145,7 +145,10 @@ public class pRandomSearchSingle extends Algorithm implements AlgorithmSteps {
 		    }
 
 		    //Evaluate objectives
-		    ObjectiveEvaluation.evaluateObjectives(population, problem_.getNumberOfObjectives());
+		    ObjectiveEvaluation.evaluateObjectives(offspringPopulation, problem_.getNumberOfObjectives());
+		   
+		    //increase capacity temporarily 
+		    population.setCapacity(populationSize*2);
 		    
 		   //Add the solutions to the normal population
 		    for (Solution solution : solutionList){
@@ -161,7 +164,10 @@ public class pRandomSearchSingle extends Algorithm implements AlgorithmSteps {
 		    while (population.size()>populationSize){
 		    	population.remove(population.size()-1);
 		    }
-		    
+
+		    //set capacity to normal
+		    population.setCapacity(populationSize);
+
 //			System.out.println(bestSolution.toString() +"\n"+ population.get(0).toString());
 			  
 
