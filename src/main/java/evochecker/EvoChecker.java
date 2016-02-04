@@ -87,7 +87,8 @@ public class EvoChecker {
 			evoChecker.initialiseAlgorithm();
 			
 			//execute adaptation step
-			evoChecker.adaptSystem("models/FX/runtime/fxSmall1.pm");
+//			evoChecker.adaptSystem("models/FX/runtime/fxSmall1.pm");
+			evoChecker.adaptSystemStep("models/FX/runtime/fxSmall_.pm", 1, 13);
 			
 			//close down
 			evoChecker.closeDown();
@@ -102,7 +103,7 @@ public class EvoChecker {
 
 	
 	/**
-	 * Perform an adaptation step
+	 * Perform an adaptation scenario
 	 * @param modelFilename
 	 * @throws Exception
 	 */
@@ -115,6 +116,26 @@ public class EvoChecker {
 		}
 	}
 	
+	
+	/**
+	 * Perform a two-step adaptation starting an initial state
+	 * @param modelFilename
+	 * @param eventIndex
+	 * @throws Exception
+	 */
+	private void adaptSystemStep(String modelFilename, int startEventIndex, int endEventIndex) throws Exception{
+		int tempStep = adaptationStep;
+		modelFilename 	= StringUtils.replace(modelFilename, "_.", startEventIndex + ".", 1);		
+		while (new File(modelFilename).exists()){
+			System.out.println(modelFilename);
+			parserEngine.updateInternalModelRepresentation(Utility.readFile(modelFilename));
+			execute();
+			modelFilename 	= StringUtils.replace(modelFilename, startEventIndex + ".", endEventIndex + ".", 1);
+			startEventIndex = endEventIndex;
+			endEventIndex	= -1;
+			adaptationStep	= 13;
+		}
+	}
 	
 	/**
 	 * Initialise the problem and the properties associated with the problem
