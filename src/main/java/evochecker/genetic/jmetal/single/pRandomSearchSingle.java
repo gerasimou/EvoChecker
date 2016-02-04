@@ -172,7 +172,7 @@ public class pRandomSearchSingle extends Algorithm implements AlgorithmSteps {
 			  
 
 			  //Find best solution & check if it is the same with the previous best solution
-			  if (solutionsAreEqual(bestSolution, population.get(0))){
+			  if (population.get(0).getOverallConstraintViolation()>=0 && solutionsAreEqual(bestSolution, population.get(0))){
 				  bestSolutionSame++;
 			  }
 			  else{
