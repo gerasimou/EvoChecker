@@ -23,26 +23,49 @@ import pse.BoxRegionValues.StateValuesPair;
 
 public class PrismAPI {
 
-	private File propertyFile;
-	private File modelFile;
+	/** Prism log: where to log prism results*/
 	private final String PRISMOUTPUTFILENAME = "output_Prism.txt";
+
+	/** file keeping the properties*/
+	private File propertyFile;
+
+	/** file keeping the model*/
+	private File modelFile;
 	
-	// PRISM vars
-	private PrismLog mainLog;
-	private Prism prism;
-	private ModulesFile modulesFile;
-	private PropertiesFile propertiesFile;
-	private String modelString;
-	
+	/** list of properties to check*/
 	private List<Property> propertiesToCheck;
 
+	/** how many properties will be checked*/
+	int numPropertiesToCheck;
+
+	/** Prism main log*/
+	private PrismLog mainLog;
 	
+	/** Main prism handler*/
+	private Prism prism;
 	
-	// parameter space exploration info
+	/** Modules file instance*/
+	private ModulesFile modulesFile;
+	
+	/** Properties file instance*/
+	private PropertiesFile propertiesFile;
+	
+	private String modelString;
+
+	//PSE related parameters:parameter space exploration info
+	/** PSE time*/
 	private String pseTime;
+	
+	/** PSE accuracy*/
 	private double pseAccuracy;
+	
+	/** Parameter names*/
 	private String[] pseNames = null;
+	
+	/** Parameters lower bounds*/
 	private double[] pseLowerBounds = null;
+	
+	/** Parameters upper bounds */
 	private double[] pseUpperBounds = null;
 	
 	
@@ -72,23 +95,12 @@ public class PrismAPI {
 //			mainLog.close();
 //		}
 	}
-	
-	
-	public PrismAPI(){
-		try {
-			// initialise PRISM
-			mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
-			prism = new Prism(mainLog, mainLog);
-			prism.initialise();
-			prism.setLinEqMethod(1);
-			prism.setMaxIters(100000);
-
-		} catch (Exception e) {
-			System.out.println("Error: " + e.getMessage());
-		} 
-	}
 
 	
+	/** 
+	 * Load the model given as string 
+	 * @param modelString
+	 */
 	public void loadModel(String modelString) {
 		// and build the model
 		try {
@@ -136,46 +148,17 @@ public class PrismAPI {
 		}
 		return results;
 	}
-	
-	
+
+
 	/**
-	 * This function receives data for the model and returns a double value for
-	 * the quantified property.
-	 * 
-	 * pse.DecompositionProcedure.Type decompositionType, PropertiesFile propertiesFile, Property prop,
-	 * String[] paramNames, double[] paramLowerBounds, double[] paramUpperBounds, double accuracy)
+	 * Close down PrismAPI & PRISM
 	 */
-	public void runPrismPSE(pse.DecompositionProcedure.Type pseCheckType) {
-		try {
-			String pseNames[] 		= new String[]{"c_fail", "c_hw_repair_rate"};
-			double pseLowerBounds[]	= new double[]{0.01, 0.5};
-			double pseUpperBounds[]	= new double[]{0.1, 0.6};
-			double pseAccuracy		= 1000;
-			
-			for (int i = 0; i < propertiesFile.getNumProperties(); i++) {
-				Result res = prism.modelCheckPSE(pseCheckType, propertiesFile, propertiesToCheck.get(i), 
-												 pseNames, pseLowerBounds, pseUpperBounds, pseAccuracy);				
-//				Result result = prism.modelCheck(propertiesFile,propertiesFile.getProperty(i));
-			}
-		} 	
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Model checking error");
-			System.exit(-1);
-		}
-	}
-	
-	
-	
-	
-	
-	public void closeDown(){
+	 public void closeDown(){
 		if (mainLog!=null)
 			mainLog.close();
 		modulesFile = null;
 		propertiesFile = null;
 		propertyFile = null;
-//		prism.closeDown();
 		prism = null;
 	}
 	
@@ -184,59 +167,75 @@ public class PrismAPI {
 	// **************** PRISM-PSE ****************//
 	// *******************************************//
 	
-	public PrismAPI(boolean x){
-		
+	public PrismAPI(String mFilename, String propFilename){
+		try{
+			//init prism log
+			mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
+			//init prism object
+			prism	 			= new Prism(mainLog, mainLog);
+			//read files
+			String modelFilename 		= mFilename;
+			String propertiesFilename	= propFilename;
+			//parse model file
+			modulesFile = prism.parseModelFile(new File(modelFilename));
+			//parse properties file
+			propertiesFile = prism.parsePropertiesFile(modulesFile, new File(propertiesFilename));
+			//load model
+			prism.loadPRISMModel(modulesFile);
+			//properties to check
+			propertiesToCheck = new ArrayList<Property>();
+			numPropertiesToCheck = propertiesFile.getNumProperties();
+			for (int i = 0; i < numPropertiesToCheck; i++) {
+				propertiesToCheck.add(propertiesFile.getPropertyObject(i));
+			}
+			//parse undefined constants
+			Values definedMFConstants = new Values();
+			prism.setPRISMModelConstants(definedMFConstants);
+//			modulesFile.setUndefinedConstants(null);
+		}
+		catch (PrismException | FileNotFoundException e){
+			e.printStackTrace();
+		}
 	}
 	
-	public void launchPrismPSE(String mFilename, String propFilename) throws PrismException, FileNotFoundException{
-		PrismLog mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
+	/**
+ 	 * This function receives data for the model and returns a double value for
+	 * the quantified property.
+	 * 
+	 * pse.DecompositionProcedure.Type decompositionType, PropertiesFile propertiesFile, Property prop,
+	 * String[] paramNames, double[] paramLowerBounds, double[] paramUpperBounds, double accuracy)
+	 * @return 
+	 */
+	public List<Result> launchPrismPSE(DecompositionProcedure.Type pseCheckType, String pseSwitch, double pseAccuracy) throws PrismException, FileNotFoundException{
+		List<Result> resultsList = new ArrayList<Result>();
 		
-		//prism object
-		Prism	 prism	 			= new Prism(mainLog, mainLog);
-		//read files
-		String modelFilename 		= mFilename;
-		String propertiesFilename	= propFilename;
 		//pse check type
-		DecompositionProcedure.Type pseCheckType = DecompositionProcedure.Type.SIMPLE;
-		//pse switch
-		String pseSwitch			= "c_fail=0.01:0.1,c_hw_repair_rate=0.5:0.6".trim();
+		DecompositionProcedure.Type decompositionProcedure = pseCheckType;
+		//pse parameters and ranges
+		String paramsRanges = pseSwitch.trim();
 		//pse accuracy
-		Double pseAccuracy			= 40.0;
-		//initialise prism
-		prism.initialise();
+		this.pseAccuracy		= pseAccuracy;
 		//find parameter ranges
 		findParameterRanges(pseSwitch);
-		//parse model file
-		modulesFile = prism.parseModelFile(new File(modelFilename));
-		//parse properties file
-		propertiesFile = prism.parsePropertiesFile(modulesFile, new File(propertiesFilename));
-		//load model
-		prism.loadPRISMModel(modulesFile);
-		//properties to check
-		propertiesToCheck = new ArrayList<Property>();
-		int numPropertiesToCheck = propertiesFile.getNumProperties();
-		for (int i = 0; i < numPropertiesToCheck; i++) {
-			propertiesToCheck.add(propertiesFile.getPropertyObject(i));
-		}
-		//parse undefined constants
-		Values definedMFConstants = new Values();
-		prism.setPRISMModelConstants(definedMFConstants);
-//		modulesFile.setUndefinedConstants(null);
 		//init results storage
 //		ResultsCollection results[] = new ResultsCollection[3];
 		//run
 		for (int i = 0; i < numPropertiesToCheck; i++) {
 			Result res = prism.modelCheckPSE(pseCheckType, propertiesFile, propertiesToCheck.get(i), pseNames, pseLowerBounds, pseUpperBounds, pseAccuracy);
-			BoxRegionValues boxresults = (BoxRegionValues)res.getResult();
-			System.out.println(boxresults.size() +"\t"+ boxresults.entrySet().size());
-			for (Map.Entry<BoxRegion, StateValuesPair> entry : boxresults.entrySet()){
-				BoxRegion box = entry.getKey();
-				System.out.println(box.toString() +"\t"+ entry.getValue().getMin().getValue(0) +"\t"+ entry.getValue().getMax().getValue(0));
-			}
+			resultsList.add(res);
 		}
+		//return the list
+		return resultsList;
 	}
 
+
 	
+	/**
+ 	 * Create data structures with lower & upper bounds for all parameters.
+ 	 * <b>copied for PrismCL.java</b>
+	 * @param pseSwitch
+	 * @throws PrismException
+	 */
 	private void findParameterRanges(String pseSwitch) throws PrismException{
 		String[] pseDefs = pseSwitch.split(",");
 		pseNames = new String[pseDefs.length];
