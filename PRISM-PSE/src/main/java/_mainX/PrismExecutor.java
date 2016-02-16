@@ -102,22 +102,26 @@ public class PrismExecutor {
 			prismAPI.loadModelProperties(modelString, propertiesFilename);
 			//analyse
 			List<Result> resultList = prismAPI.launchPrismPSE(pseCheckType, pseSwitch, pseAccuracy);
-			printResult(resultList);
-//			this.writeResult(out, results);
+			String results = printResult(resultList);
+			this.writeResult(out, results);
 		}
 	}
 	
 	
-	private void printResult(List<Result> resultList){
+	private String printResult(List<Result> resultList){
+		StringBuilder resultsString = new StringBuilder();
 		for (Result res : resultList){
 			BoxRegionValues boxresults = (BoxRegionValues)res.getResult();
 			System.out.println(boxresults.size() +"\t"+ boxresults.entrySet().size());
 			for (Map.Entry<BoxRegion, StateValuesPair> entry : boxresults.entrySet()){
 				BoxRegion box = entry.getKey();
-				System.out.println(box.toString() +"\t"+ entry.getValue().getMin().getValue(0) +"\t"+ entry.getValue().getMax().getValue(0));
-
+				resultsString.append(box.toString()+",");
+				resultsString.append(entry.getValue().getMin().getValue(0).toString()+",");
+				resultsString.append(entry.getValue().getMax().getValue(0)+"@");
+				System.out.println(box.toString() +"\t"+ entry.getValue().getMin().getValue(0).toString() +"\t"+ entry.getValue().getMax().getValue(0));
 			}
 		}
+		return resultList.toString();
 	}
 	
 	
@@ -127,7 +131,7 @@ public class PrismExecutor {
 	 * @param message
 	 */
 	private void writeResult(PrintWriter out, String message){
-//		System.out.println("Sending out: "+message);
+		System.out.println("Sending out: "+message);
 		message = message.substring(0, message.length()-1)+"\nEND\n";
 		out.print(message);
         out.flush();
@@ -152,7 +156,7 @@ public class PrismExecutor {
 			modelBuilder.append("\n");
 		} while (true);
 
-		System.out.println("Received from client..." + modelBuilder.toString());
+//		System.out.println("Received from client..." + modelBuilder.toString());
 		String res[] = modelBuilder.toString().split("@");
 		res[1] =res[1].trim(); 
 		return res;
