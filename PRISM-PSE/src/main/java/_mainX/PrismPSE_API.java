@@ -21,7 +21,7 @@ import pse.BoxRegionValues;
 import pse.DecompositionProcedure;
 import pse.BoxRegionValues.StateValuesPair;
 
-public class PrismAPI {
+public class PrismPSE_API {
 
 	/** Prism log: where to log prism results*/
 	private final String PRISMOUTPUTFILENAME = "output_Prism.txt";
@@ -77,7 +77,7 @@ public class PrismAPI {
 	 * @param propertiesFile
 	 *            - the temporal logic file to be provided as input to PRISM
 	 */
-	public PrismAPI(String propertiesFilename) {
+	public PrismPSE_API(String propertiesFilename) {
 		try {
 			this.propertyFile = new File(propertiesFilename);
 
@@ -167,7 +167,7 @@ public class PrismAPI {
 	// **************** PRISM-PSE ****************//
 	// *******************************************//
 	
-	public PrismAPI(String mFilename, String propFilename){
+	public PrismPSE_API(String mFilename, String propFilename){
 		try{
 			//init prism log
 			mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
