@@ -87,8 +87,8 @@ public class EvoChecker {
 			evoChecker.initialiseAlgorithm();
 			
 			//execute adaptation step
-//			evoChecker.adaptSystem("models/FX/runtime/fxSmall1.pm");
-			evoChecker.adaptSystemStep("models/FX/runtime/fxSmall_.pm", 1, 13);
+			evoChecker.adaptSystem("models/FX/runtime/fxMedium1.pm");
+//			evoChecker.adaptSystemStep("models/FX/runtime/fxSmall_.pm", 1, 13);
 			
 			//close down
 			evoChecker.closeDown();
