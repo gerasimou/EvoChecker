@@ -13,6 +13,7 @@ import parser.ast.Property;
 import prism.Prism;
 import prism.PrismException;
 import prism.PrismFileLog;
+import prism.PrismLangException;
 import prism.PrismLog;
 import prism.Result;
 import prism.ResultsCollection;
@@ -66,113 +67,25 @@ public class PrismPSE_API {
 	private double[] pseLowerBounds = null;
 	
 	/** Parameters upper bounds */
-	private double[] pseUpperBounds = null;
-	
-	
-	/**
-	 * Class constructor
-	 * 
-	 * @param modelFile
-	 *            - the Markov model file to be provided as input to PRISM
-	 * @param propertiesFile
-	 *            - the temporal logic file to be provided as input to PRISM
-	 */
-	public PrismPSE_API(String propertiesFilename) {
-		try {
-			this.propertyFile = new File(propertiesFilename);
-
-			// initialise PRISM
-			mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
-			prism = new Prism(mainLog, mainLog);
-			prism.initialise();
-			prism.setLinEqMethod(1);
-			prism.setMaxIters(100000);
-
-		} catch (Exception e) {
-			System.out.println("Error: " + e.getMessage());
-		} 
-//		finally {
-//			mainLog.close();
-//		}
-	}
-
-	
-	/** 
-	 * Load the model given as string 
-	 * @param modelString
-	 */
-	public void loadModel(String modelString) {
-		// and build the model
-		try {
-			this.modelString = modelString;
-			modulesFile = prism.parseModelString(this.modelString);
-			modulesFile.setUndefinedConstants(null);
-			propertiesFile = prism.parsePropertiesFile(modulesFile,propertyFile);
-			propertiesFile.setUndefinedConstants(null);
-			prism.buildModel(modulesFile);
-		} catch (Exception e) {
-			System.out.println("Error: " + e.getMessage());
-		}
-	}
-
-	
-	/**
-	 * This function receives data for the model and returns a double value for
-	 * the quantified property.
-	 */
-	public List<Double> runPrism() {
-
-		List<Double> results = new ArrayList<Double>();
-
-		try {
-			// run QV
-			for (int i = 0; i < propertiesFile.getNumProperties(); i++) {
-				Result result = prism.modelCheck(propertiesFile,propertiesFile.getProperty(i));
-//				System.out.println(propertiesFile.getProperty(i));
-				if (result.getResult() instanceof Boolean) {
-					boolean booleanResult = (Boolean) result.getResult();
-					
-					if (booleanResult) {
-						results.add(1.0);
-					} else {
-						results.add(0.0);
-					}
-				} else
-					results.add(Double.parseDouble(result.getResult().toString()));
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Model checking error");
-			System.exit(-1);
-		}
-		return results;
-	}
-
-
-	/**
-	 * Close down PrismAPI & PRISM
-	 */
-	 public void closeDown(){
-		if (mainLog!=null)
-			mainLog.close();
-		modulesFile = null;
-		propertiesFile = null;
-		propertyFile = null;
-		prism = null;
-	}
-	
+	private double[] pseUpperBounds = null;	
 	
 	
 	// **************** PRISM-PSE ****************//
 	// *******************************************//
-	
+
+	 
+	/**
+	 * Generic class constructor
+	 * @param mFilename
+	 * @param propFilename
+	 */
 	public PrismPSE_API(String mFilename, String propFilename){
 		try{
 			//init prism log
 			mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
 			//init prism object
 			prism	 			= new Prism(mainLog, mainLog);
+			prism.initialise();
 			//read files
 			String modelFilename 		= mFilename;
 			String propertiesFilename	= propFilename;
@@ -197,6 +110,54 @@ public class PrismPSE_API {
 			e.printStackTrace();
 		}
 	}
+
+	
+	/**
+	 * Class constructor
+	 */
+	public PrismPSE_API(){
+		try{
+			//init prism log
+			mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
+			//init prism object
+			prism	 			= new Prism(mainLog, mainLog);
+			prism.initialise();		
+		}
+		catch (PrismException e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Load model given as string and properties
+	 * @param modelString
+	 * @param propertiesFilename
+	 */
+	public void loadModelProperties(String modelString, String propertiesFilename){
+		try {
+			//parse model file
+			modulesFile = prism.parseModelString(modelString);
+			//parse properties file
+			propertiesFile = prism.parsePropertiesFile(modulesFile, new File(propertiesFilename));
+			//load model
+			prism.loadPRISMModel(modulesFile);
+			//properties to check
+			propertiesToCheck = new ArrayList<Property>();
+			numPropertiesToCheck = propertiesFile.getNumProperties();
+			for (int i = 0; i < numPropertiesToCheck; i++) {
+				propertiesToCheck.add(propertiesFile.getPropertyObject(i));
+			}
+			//parse undefined constants
+			Values definedMFConstants = new Values();
+			prism.setPRISMModelConstants(definedMFConstants);
+//			modulesFile.setUndefinedConstants(null);
+		}
+		catch (PrismException | FileNotFoundException e){
+			e.printStackTrace();
+		}	
+	} 
+
 	
 	/**
  	 * This function receives data for the model and returns a double value for
@@ -206,7 +167,8 @@ public class PrismPSE_API {
 	 * String[] paramNames, double[] paramLowerBounds, double[] paramUpperBounds, double accuracy)
 	 * @return 
 	 */
-	public List<Result> launchPrismPSE(DecompositionProcedure.Type pseCheckType, String pseSwitch, double pseAccuracy) throws PrismException, FileNotFoundException{
+	public List<Result> launchPrismPSE(	DecompositionProcedure.Type pseCheckType, 
+										String pseSwitch, double pseAccuracy) throws PrismException, FileNotFoundException{
 		List<Result> resultsList = new ArrayList<Result>();
 		
 		//pse check type
@@ -216,18 +178,16 @@ public class PrismPSE_API {
 		//pse accuracy
 		this.pseAccuracy		= pseAccuracy;
 		//find parameter ranges
-		findParameterRanges(pseSwitch);
-		//init results storage
-//		ResultsCollection results[] = new ResultsCollection[3];
+		findParameterRanges(paramsRanges);
 		//run
 		for (int i = 0; i < numPropertiesToCheck; i++) {
-			Result res = prism.modelCheckPSE(pseCheckType, propertiesFile, propertiesToCheck.get(i), pseNames, pseLowerBounds, pseUpperBounds, pseAccuracy);
+			Result res = prism.modelCheckPSE(decompositionProcedure, propertiesFile, propertiesToCheck.get(i), 
+											 pseNames, pseLowerBounds, pseUpperBounds, pseAccuracy);
 			resultsList.add(res);
 		}
 		//return the list
 		return resultsList;
 	}
-
 
 	
 	/**
@@ -268,5 +228,18 @@ public class PrismPSE_API {
 		}
 	}
 	
+	
+	/**
+	 * Close down PrismAPI & PRISM
+	 */
+	 public void closeDown(){
+		if (mainLog!=null)
+			mainLog.close();
+		modulesFile = null;
+		propertiesFile = null;
+		propertyFile = null;
+		prism = null;
+	}
+
 
 }
