@@ -1,0 +1,9 @@
+// max  
+P=? [ !((M_up=1)&(R_present>=1)) U[20,40] ((M_up=1)&(R_present>=1)) ]
+
+// min
+R{"replicates"}=? [ C<=40 ]
+
+// min
+R{"C_down"}=? [ C<=40 ]
+
