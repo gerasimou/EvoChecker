@@ -1,16 +1,25 @@
 package _mainX;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import parser.Values;
 import parser.ast.ModulesFile;
 import parser.ast.PropertiesFile;
 import parser.ast.Property;
 import prism.Prism;
+import prism.PrismException;
 import prism.PrismFileLog;
 import prism.PrismLog;
 import prism.Result;
+import prism.ResultsCollection;
+import pse.BoxRegion;
+import pse.BoxRegionValues;
+import pse.DecompositionProcedure;
+import pse.BoxRegionValues.StateValuesPair;
 
 public class PrismAPI {
 
@@ -28,6 +37,13 @@ public class PrismAPI {
 	private List<Property> propertiesToCheck;
 
 	
+	
+	// parameter space exploration info
+	private String pseTime;
+	private double pseAccuracy;
+	private String[] pseNames = null;
+	private double[] pseLowerBounds = null;
+	private double[] pseUpperBounds = null;
 	
 	
 	/**
@@ -165,35 +181,93 @@ public class PrismAPI {
 	
 	
 	
+	// **************** PRISM-PSE ****************//
+	// *******************************************//
 	
-	public PrismAPI(String propertiesFilename, String modelFilename){
-		try {
-			this.propertyFile 		= new File(propertiesFilename);
-			this.modelFile 			= new File(modelFilename);			
-			
-			// initialise PRISM
-			mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
-			prism = new Prism(mainLog, mainLog);
-			prism.initialise();
-			
-			// and build the model
-			modulesFile = prism.parseModelFile(modelFile);
-//			modulesFile.setUndefinedConstants(null);
-			propertiesFile = prism.parsePropertiesFile(modulesFile,propertyFile);
-//			propertiesFile.setUndefinedConstants(null);
-			prism.buildModel(modulesFile);
-			
-			// setup properties to check
-			this.propertiesToCheck	= new ArrayList<Property>();
-			for (int i=0; i<propertiesFile.getNumProperties(); i++){
-				propertiesToCheck.add(propertiesFile.getPropertyObject(i));
-			}
-
-		} 
-		catch (Exception e) {
-			System.out.println("Error: " + e.getMessage());
-		} 
-
+	public PrismAPI(boolean x){
+		
 	}
+	
+	public void launchPrismPSE(String mFilename, String propFilename) throws PrismException, FileNotFoundException{
+		PrismLog mainLog = new PrismFileLog(PRISMOUTPUTFILENAME, false);
+		
+		//prism object
+		Prism	 prism	 			= new Prism(mainLog, mainLog);
+		//read files
+		String modelFilename 		= mFilename;
+		String propertiesFilename	= propFilename;
+		//pse check type
+		DecompositionProcedure.Type pseCheckType = DecompositionProcedure.Type.SIMPLE;
+		//pse switch
+		String pseSwitch			= "c_fail=0.01:0.1,c_hw_repair_rate=0.5:0.6".trim();
+		//pse accuracy
+		Double pseAccuracy			= 40.0;
+		//initialise prism
+		prism.initialise();
+		//find parameter ranges
+		findParameterRanges(pseSwitch);
+		//parse model file
+		modulesFile = prism.parseModelFile(new File(modelFilename));
+		//parse properties file
+		propertiesFile = prism.parsePropertiesFile(modulesFile, new File(propertiesFilename));
+		//load model
+		prism.loadPRISMModel(modulesFile);
+		//properties to check
+		propertiesToCheck = new ArrayList<Property>();
+		int numPropertiesToCheck = propertiesFile.getNumProperties();
+		for (int i = 0; i < numPropertiesToCheck; i++) {
+			propertiesToCheck.add(propertiesFile.getPropertyObject(i));
+		}
+		//parse undefined constants
+		Values definedMFConstants = new Values();
+		prism.setPRISMModelConstants(definedMFConstants);
+//		modulesFile.setUndefinedConstants(null);
+		//init results storage
+//		ResultsCollection results[] = new ResultsCollection[3];
+		//run
+		for (int i = 0; i < numPropertiesToCheck; i++) {
+			Result res = prism.modelCheckPSE(pseCheckType, propertiesFile, propertiesToCheck.get(i), pseNames, pseLowerBounds, pseUpperBounds, pseAccuracy);
+			BoxRegionValues boxresults = (BoxRegionValues)res.getResult();
+			System.out.println(boxresults.size() +"\t"+ boxresults.entrySet().size());
+			for (Map.Entry<BoxRegion, StateValuesPair> entry : boxresults.entrySet()){
+				BoxRegion box = entry.getKey();
+				System.out.println(box.toString() +"\t"+ entry.getValue().getMin().getValue(0) +"\t"+ entry.getValue().getMax().getValue(0));
+			}
+		}
+	}
+
+	
+	private void findParameterRanges(String pseSwitch) throws PrismException{
+		String[] pseDefs = pseSwitch.split(",");
+		pseNames = new String[pseDefs.length];
+		pseLowerBounds = new double[pseDefs.length];
+		pseUpperBounds = new double[pseDefs.length];
+		for (int pdNr = 0; pdNr < pseDefs.length; pdNr++) {
+			if (!pseDefs[pdNr].contains("=")) {
+				throw new PrismException("No range given for parameter " + pseNames[pdNr]);
+			} else {
+				String[] pseDefSplit = pseDefs[pdNr].split("=");
+				pseNames[pdNr] = pseDefSplit[0].trim();
+				String[] upperLower = pseDefSplit[1].split(":");
+				if (upperLower.length != 2)
+					throw new PrismException("\"" + pseDefSplit[1] + "\" cannot be used as range for parameter " + pseNames[pdNr]);
+
+				try {
+					pseLowerBounds[pdNr] = Double.parseDouble(upperLower[0].trim());
+					pseUpperBounds[pdNr] = Double.parseDouble(upperLower[1].trim());
+				} catch (NumberFormatException e) {
+					throw new PrismException(
+							"Invalid range \"" + pseDefSplit[1] + "\" for parameter " + pseNames[pdNr] +
+							" (bounds must be doubles)");
+				}
+				if (pseLowerBounds[pdNr] > pseUpperBounds[pdNr]) {
+					throw new PrismException(
+							"Invalid range \"" + pseDefSplit[1] + "\" for parameter " + pseNames[pdNr] +
+							" (lower bound greater than upper)");
+				}
+			}
+		}
+	}
+	
 
 }
