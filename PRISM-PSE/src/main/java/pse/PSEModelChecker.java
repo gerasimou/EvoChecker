@@ -402,7 +402,7 @@ public final class PSEModelChecker extends PrismComponent
 			}
 		}
 
-		return resRgnVals;
+		return subRgnVals;//resRgnVals;
 	}
 
 	/**
