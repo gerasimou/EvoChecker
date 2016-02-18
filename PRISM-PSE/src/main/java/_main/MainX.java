@@ -44,6 +44,7 @@ public class MainX {
 		serverAPI();
 	}
 	
+	
 	/** Run PrismCL */
 	private static void PrismCL(){ 
 		String str = "models/google-source.sm models/google.csl -psecheck c_fail=0.01:0.1,c_hw_repair_rate=0.5:0.6 100";
@@ -70,6 +71,18 @@ public class MainX {
 	/** Run Prism-PSE API  as a server and send a string as reponse*/
 	private static void serverAPI(){
 		try {
+			String params[] = new String[4];
+			params[0] = "/System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/java";//Utility.getProperty("JVM");
+			params[1] = "-jar";
+			params[2] = "/Users/sgerasimou/Documents/Git/EvoChecker/PRISM-PSE/target/PRISM-PSY-fat.jar";
+			params[3] = "8860";
+			System.out.println("Starting PRISM-PSY server @ " + params[3]);
+			Process p = Runtime.getRuntime().exec(params);
+			System.out.println(p.isAlive());
+			Thread.sleep(3000);
+//			System.exit(0);
+		
+		
 			String serverAddress 			= "127.0.0.1";
 			int serverPort       			= 8860;
 			Socket socket;
@@ -77,6 +90,7 @@ public class MainX {
 			BufferedReader inFromServer 	= new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			PrintWriter outToServer			= new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
 			//send to server
+			for (int i=0; i<10; i++){
 			StringBuilder outputString 		= new StringBuilder();
 			outputString.append(Utility.readFile("models/google-source.sm") + "\n@");	//model String
 			outputString.append("models/google.csl" +"\n@");							//properties filename
@@ -89,8 +103,11 @@ public class MainX {
 			String response = inFromServer.readLine();
 //			System.out.println("Result:\t" + response);
 			printJSON(gson.fromJson(response, JsonObject.class));
+			
+			Thread.sleep(2000);
+			}
 		} 
-		catch (IOException e) {
+		catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

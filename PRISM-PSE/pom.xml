@@ -3,10 +3,10 @@
 
 	<!--  Project specific -->
   	<groupId>org</groupId>
-  	<artifactId>EvoChecker</artifactId>
+  	<artifactId>PRISM-PSY</artifactId>
   	<packaging>jar</packaging>
   	<version>1.0-SNAPSHOT</version>
-  	<name>EvoChecker</name>
+  	<name>PRISM-PSY</name>
   	<url>http://maven.apache.org</url>
 
 
@@ -93,7 +93,7 @@
     </dependencies>
 
   <build>
-  		<finalName>EvoChecker</finalName>
+  		<finalName>PRISM-PSY</finalName>
   
   		<plugins>
 			<!-- download source code in Eclipse, best practice -->
@@ -131,7 +131,7 @@
 					<!-- MainClass in mainfest make a executable jar -->
 					<archive>
 					  <manifest>
-						<mainClass>main.PrismExecutor</mainClass>
+						<mainClass>_main.PrismExecutor</mainClass>
 					  </manifest>
 					</archive>
  
