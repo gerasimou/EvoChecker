@@ -27,12 +27,17 @@
 
 package userinterface;
 
-import javax.swing.plaf.metal.*;
-import javax.swing.*;
-import userinterface.util.*;
-import org.w3c.dom.*;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.MetalTheme;
 
-import userinterface.OptionsPanel;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import userinterface.util.GUIException;
+import userinterface.util.PresentationMetalTheme;
 
 public class GUIGeneralOptions extends OptionsPanel
 {

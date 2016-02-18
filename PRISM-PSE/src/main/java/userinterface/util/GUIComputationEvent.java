@@ -27,7 +27,7 @@
 
 package userinterface.util;
 
-import userinterface.*;
+import userinterface.GUIPlugin;
 
 public class GUIComputationEvent extends GUIEvent
 {

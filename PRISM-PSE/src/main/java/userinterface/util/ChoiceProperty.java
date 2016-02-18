@@ -27,10 +27,18 @@
 
 package userinterface.util;
 
-import java.util.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
 
 public class ChoiceProperty extends SingleProperty
 {

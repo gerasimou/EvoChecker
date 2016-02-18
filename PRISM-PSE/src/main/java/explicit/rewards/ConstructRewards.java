@@ -33,6 +33,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
+import explicit.DTMC;
+import explicit.MDP;
+import explicit.Model;
 import parser.State;
 import parser.Values;
 import parser.ast.Expression;
@@ -41,9 +44,6 @@ import prism.PrismException;
 import prism.PrismFileLog;
 import prism.PrismLangException;
 import prism.PrismLog;
-import explicit.DTMC;
-import explicit.MDP;
-import explicit.Model;
 
 public class ConstructRewards
 {

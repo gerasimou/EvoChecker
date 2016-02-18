@@ -27,9 +27,8 @@
 
 package strat;
 
-import prism.PrismLog;
-import explicit.MDP;
 import explicit.Model;
+import prism.PrismLog;
 
 /**
  * Class to store a memoryless deterministic (MD) strategy, as a (Java) array of choice indices.

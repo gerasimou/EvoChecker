@@ -27,10 +27,18 @@
 
 package userinterface.properties.computation;
 
-import userinterface.properties.*;
-import userinterface.util.*;
-import java.io.*;
-import javax.swing.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.swing.SwingUtilities;
+
+import userinterface.properties.GUIMultiProperties;
+import userinterface.properties.GUIPropConstantList;
+import userinterface.properties.GUIPropLabelList;
+import userinterface.properties.GUIPropertiesList;
+import userinterface.util.GUIComputationEvent;
 
 public class SavePropertiesThread extends Thread
 {

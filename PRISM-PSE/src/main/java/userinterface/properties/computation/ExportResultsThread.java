@@ -27,10 +27,16 @@
 
 package userinterface.properties.computation;
 
-import userinterface.properties.*;
-import java.io.*;
-import javax.swing.*;
-import userinterface.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.swing.SwingUtilities;
+
+import userinterface.properties.GUIExperiment;
+import userinterface.properties.GUIMultiProperties;
+import userinterface.util.GUIComputationEvent;
 
 public class ExportResultsThread extends Thread
 {

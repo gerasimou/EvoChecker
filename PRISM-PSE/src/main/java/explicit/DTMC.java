@@ -26,7 +26,8 @@
 
 package explicit;
 
-import java.util.*;
+import java.util.BitSet;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import explicit.rewards.MCRewards;

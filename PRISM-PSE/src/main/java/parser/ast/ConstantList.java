@@ -28,11 +28,11 @@ package parser.ast;
 
 import java.util.Vector;
 
-import parser.*;
-import parser.visitor.*;
+import parser.Values;
+import parser.type.Type;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 import prism.PrismUtils;
-import parser.type.*;
 
 /**
  * Class to store list of (defined and undefined) constants

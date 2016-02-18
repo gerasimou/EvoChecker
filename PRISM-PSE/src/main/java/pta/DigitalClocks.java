@@ -26,13 +26,45 @@
 
 package pta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import parser.*;
-import parser.ast.*;
-import parser.type.*;
-import parser.visitor.*;
-import prism.*;
+import parser.ParserUtils;
+import parser.Values;
+import parser.VarList;
+import parser.ast.ASTElement;
+import parser.ast.Command;
+import parser.ast.Declaration;
+import parser.ast.DeclarationClock;
+import parser.ast.DeclarationInt;
+import parser.ast.DeclarationType;
+import parser.ast.Expression;
+import parser.ast.ExpressionBinaryOp;
+import parser.ast.ExpressionFunc;
+import parser.ast.ExpressionIdent;
+import parser.ast.ExpressionProb;
+import parser.ast.ExpressionTemporal;
+import parser.ast.ExpressionVar;
+import parser.ast.Module;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import parser.ast.RewardStruct;
+import parser.ast.RewardStructItem;
+import parser.ast.Update;
+import parser.ast.Updates;
+import parser.type.TypeClock;
+import parser.type.TypeInt;
+import parser.visitor.ASTTraverse;
+import parser.visitor.ASTTraverseModify;
+import prism.ModelType;
+import prism.Prism;
+import prism.PrismLangException;
+import prism.PrismLog;
 
 /**
  * Class that converts a PRISM modelling language description

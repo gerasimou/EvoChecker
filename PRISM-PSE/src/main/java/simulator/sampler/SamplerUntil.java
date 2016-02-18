@@ -26,12 +26,13 @@
 
 package simulator.sampler;
 
-import simulator.*;
 import parser.State;
 import parser.ast.Expression;
 import parser.ast.ExpressionTemporal;
 import prism.PrismException;
 import prism.PrismLangException;
+import simulator.Path;
+import simulator.TransitionList;
 
 public class SamplerUntil extends SamplerBoolean
 {

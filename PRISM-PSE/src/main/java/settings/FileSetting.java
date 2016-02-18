@@ -26,9 +26,11 @@
 
 package settings;
 
-import java.awt.*;
-import java.io.*;
-import javax.swing.*;
+import java.awt.Frame;
+import java.awt.HeadlessException;
+import java.io.File;
+
+import javax.swing.JFileChooser;
 
 public class FileSetting extends Setting 
 {

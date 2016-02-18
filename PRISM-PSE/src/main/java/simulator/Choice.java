@@ -26,8 +26,11 @@
 
 package simulator;
 
-import parser.*;
-import prism.*;
+import parser.State;
+import parser.VarList;
+import prism.ModelType;
+import prism.PrismException;
+import prism.PrismLangException;
 
 public interface Choice
 {

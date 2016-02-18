@@ -39,10 +39,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import prism.PrismException;
-import prism.PrismUtils;
 import explicit.rewards.MCRewards;
 import explicit.rewards.MDPRewards;
+import prism.PrismException;
+import prism.PrismUtils;
 
 /**
  * Simple explicit-state representation of an MDP.

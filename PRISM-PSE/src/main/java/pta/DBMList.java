@@ -26,7 +26,9 @@
 
 package pta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Random;
 
 /**
  * List of DBMs representing a non-convex zone.

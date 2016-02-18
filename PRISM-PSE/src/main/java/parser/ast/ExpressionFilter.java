@@ -26,9 +26,9 @@
 
 package parser.ast;
 
-import parser.*;
+import parser.EvaluateContext;
 import parser.type.TypeBool;
-import parser.visitor.*;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 
 public class ExpressionFilter extends Expression

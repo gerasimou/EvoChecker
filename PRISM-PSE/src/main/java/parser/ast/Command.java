@@ -26,7 +26,7 @@
 
 package parser.ast;
 
-import parser.visitor.*;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 
 public class Command extends ASTElement

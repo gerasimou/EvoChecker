@@ -26,13 +26,30 @@
 
 package pta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
 
-import parser.*;
-import parser.ast.*;
-import parser.type.*;
+import parser.State;
+import parser.Values;
+import parser.ast.Expression;
+import parser.ast.ExpressionFilter;
+import parser.ast.ExpressionLabel;
+import parser.ast.ExpressionProb;
+import parser.ast.ExpressionReward;
+import parser.ast.ExpressionTemporal;
+import parser.ast.ExpressionVar;
+import parser.ast.LabelList;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import parser.ast.RelOp;
+import parser.type.TypeClock;
 import parser.visitor.ASTTraverseModify;
-import prism.*;
+import prism.PrismComponent;
+import prism.PrismException;
+import prism.PrismLangException;
+import prism.PrismSettings;
+import prism.Result;
 
 /**
  * Model checker for probabilistic timed automata (PTAs).

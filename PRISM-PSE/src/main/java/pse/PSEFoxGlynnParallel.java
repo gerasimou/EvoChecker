@@ -1,13 +1,13 @@
 package pse;
 
-import prism.PrismException;
-import prism.PrismLog;
-
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import prism.PrismException;
+import prism.PrismLog;
 
 public final class PSEFoxGlynnParallel<Mult extends  PSEMult> implements PSEFoxGlynn
 {

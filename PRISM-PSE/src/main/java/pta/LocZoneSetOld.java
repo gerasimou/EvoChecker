@@ -26,7 +26,7 @@
 
 package pta;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class LocZoneSetOld extends ArrayList<LocZone>
 {

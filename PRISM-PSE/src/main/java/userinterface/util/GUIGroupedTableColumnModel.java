@@ -26,9 +26,14 @@
 
 package userinterface.util;
 
-import java.util.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import java.util.ArrayList;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableColumn;
 
 /**
  * The TableColumnModel with the addition of Groups. A group is a set of columns. The set of columns 

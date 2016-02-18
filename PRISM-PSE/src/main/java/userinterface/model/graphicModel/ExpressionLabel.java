@@ -28,15 +28,19 @@
 package userinterface.model.graphicModel;
 
 //Java Packages
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
-import prism.*;
+import prism.Prism;
 
 //Prism Packages
-
-import userinterface.util.*;
+import userinterface.util.ExpressionProperty;
+import userinterface.util.PropertyException;
+import userinterface.util.PropertyOwner;
 
 
 public class ExpressionLabel extends ExpressionProperty

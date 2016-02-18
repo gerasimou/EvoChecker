@@ -54,9 +54,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Comparator;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;

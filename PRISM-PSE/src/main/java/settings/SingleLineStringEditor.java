@@ -26,11 +26,19 @@
 
 package settings;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.event.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.ArrayList;
+
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
 public class SingleLineStringEditor implements SettingEditor, CaretListener, FocusListener
 {

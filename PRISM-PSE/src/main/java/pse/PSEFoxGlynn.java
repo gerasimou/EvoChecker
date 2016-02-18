@@ -1,10 +1,10 @@
 package pse;
 
-import explicit.FoxGlynn;
-import prism.PrismException;
-
 import java.util.BitSet;
 import java.util.Map;
+
+import explicit.FoxGlynn;
+import prism.PrismException;
 
 public interface PSEFoxGlynn
 {

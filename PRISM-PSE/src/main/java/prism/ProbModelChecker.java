@@ -26,14 +26,14 @@
 
 package prism;
 
-import hybrid.PrismHybrid;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Vector;
 
+import dv.DoubleVector;
+import hybrid.PrismHybrid;
 import jdd.JDD;
 import jdd.JDDNode;
 import jdd.JDDVars;
@@ -47,7 +47,6 @@ import parser.ast.ExpressionUnaryOp;
 import parser.ast.PropertiesFile;
 import parser.ast.RelOp;
 import sparse.PrismSparse;
-import dv.DoubleVector;
 
 /*
  * Model checker for DTMCs.

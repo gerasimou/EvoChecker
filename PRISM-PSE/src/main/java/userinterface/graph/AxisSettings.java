@@ -31,21 +31,35 @@
 
 package userinterface.graph;
 
-import settings.*;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.Locale;
+import java.util.Observable;
 
-import org.jfree.chart.*;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.Range;
+import org.jfree.data.xy.XYSeries;
+import org.w3c.dom.Element;
 
-import org.jfree.chart.plot.*;
-import org.jfree.chart.axis.*;
-import org.jfree.data.*;
-import org.jfree.data.xy.*;
-
-import org.w3c.dom.*;
+import settings.BooleanSetting;
+import settings.ChoiceSetting;
+import settings.ColorSetting;
+import settings.DoubleSetting;
+import settings.FontColorPair;
+import settings.FontColorSetting;
+import settings.NumericConstraint;
+import settings.RangeConstraint;
+import settings.Setting;
+import settings.SettingDisplay;
+import settings.SettingException;
+import settings.SettingOwner;
+import settings.SingleLineStringSetting;
 
 /**
  * Representation of an axis of a Graph.

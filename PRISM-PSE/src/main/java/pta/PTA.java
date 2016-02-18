@@ -26,12 +26,21 @@
 
 package pta;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
+import parser.State;
+import parser.Values;
 import prism.PrismException;
 import prism.PrismLangException;
-import parser.*;
 import pta.parser.PTAParser;
 
 public class PTA

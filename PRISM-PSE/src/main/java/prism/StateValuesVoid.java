@@ -28,10 +28,9 @@ package prism;
 
 import java.io.File;
 
-import parser.ast.RelOp;
-
 import jdd.JDDNode;
 import jdd.JDDVars;
+import parser.ast.RelOp;
 
 /**
  * Dummy class implementing StateValues to return miscellaneous (single valued) results, typically of type "void".

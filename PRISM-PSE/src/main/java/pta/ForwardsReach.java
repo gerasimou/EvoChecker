@@ -26,10 +26,17 @@
 
 package pta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.LinkedList;
+import java.util.List;
 
-import prism.*;
-import explicit.*;
+import explicit.IndexedSet;
+import explicit.StateStorage;
+import prism.PrismException;
+import prism.PrismLog;
+import prism.PrismPrintStreamLog;
+import prism.ProgressDisplay;
 
 public class ForwardsReach
 {

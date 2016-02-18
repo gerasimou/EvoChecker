@@ -1,10 +1,10 @@
 package pse;
 
-import prism.PrismException;
-import prism.PrismLog;
-
 import java.util.Iterator;
 import java.util.Map;
+
+import prism.PrismException;
+import prism.PrismLog;
 
 public final class PSEFoxGlynnMany<Mult extends PSEMultMany> implements PSEFoxGlynn
 {

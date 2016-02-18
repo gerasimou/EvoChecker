@@ -26,13 +26,25 @@
 
 package simulator.networking;
 
-import java.util.*;
-import java.io.*;
-import javax.swing.tree.*;
-import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
-import prism.*;
-import settings.*;
+import javax.swing.JProgressBar;
+import javax.swing.tree.TreeNode;
+
+import prism.PrismException;
+import prism.PropertyConstants;
+import settings.Setting;
+import settings.SettingDisplay;
+import settings.SettingOwner;
+import settings.SingleLineStringSetting;
 
 public class SSHHost extends Thread implements SettingOwner, TreeNode
 {

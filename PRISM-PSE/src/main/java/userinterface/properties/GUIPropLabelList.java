@@ -27,13 +27,19 @@
 
 package userinterface.properties;
 
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.util.ArrayList;
 
-import parser.ast.*;
-import prism.*;
+import javax.swing.CellEditor;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import parser.ast.LabelList;
+import parser.ast.PropertiesFile;
+import prism.PrismException;
 
 public class GUIPropLabelList extends JTable
 {

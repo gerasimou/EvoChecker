@@ -26,8 +26,48 @@
 
 package parser.visitor;
 
-import parser.ast.*;
-import parser.type.*;
+import parser.ast.Command;
+import parser.ast.ConstantList;
+import parser.ast.Declaration;
+import parser.ast.DeclarationArray;
+import parser.ast.DeclarationInt;
+import parser.ast.Expression;
+import parser.ast.ExpressionBinaryOp;
+import parser.ast.ExpressionConstant;
+import parser.ast.ExpressionExists;
+import parser.ast.ExpressionFilter;
+import parser.ast.ExpressionForAll;
+import parser.ast.ExpressionFormula;
+import parser.ast.ExpressionFunc;
+import parser.ast.ExpressionITE;
+import parser.ast.ExpressionIdent;
+import parser.ast.ExpressionLabel;
+import parser.ast.ExpressionLiteral;
+import parser.ast.ExpressionProb;
+import parser.ast.ExpressionProp;
+import parser.ast.ExpressionReward;
+import parser.ast.ExpressionSS;
+import parser.ast.ExpressionStrategy;
+import parser.ast.ExpressionTemporal;
+import parser.ast.ExpressionUnaryOp;
+import parser.ast.ExpressionVar;
+import parser.ast.FormulaList;
+import parser.ast.LabelList;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import parser.ast.Property;
+import parser.ast.RewardStructItem;
+import parser.ast.Update;
+import parser.ast.Updates;
+import parser.type.Type;
+import parser.type.TypeBool;
+import parser.type.TypeClock;
+import parser.type.TypeDouble;
+import parser.type.TypeInt;
+import parser.type.TypeInterval;
+import parser.type.TypePathBool;
+import parser.type.TypePathDouble;
+import parser.type.TypeVoid;
 import prism.PrismLangException;
 
 /**

@@ -27,9 +27,10 @@
 
 package simulator.sampler;
 
-import simulator.*;
 import prism.PrismException;
 import prism.PrismLangException;
+import simulator.Path;
+import simulator.TransitionList;
 
 /**
  * Samplers for properties that associate a simulation path with a real (double) value.

@@ -26,10 +26,16 @@
 
 package settings;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.event.MouseInputAdapter;
 
 public class TableResizer extends MouseInputAdapter
 {

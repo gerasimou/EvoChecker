@@ -27,18 +27,40 @@
 
 package userinterface.model.pepaModel;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.PlainView;
+import javax.swing.text.Segment;
+import javax.swing.text.StyleContext;
+import javax.swing.text.Utilities;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
-import java.util.regex.*;
-import java.awt.*;
-
-import javax.swing.event.*;
-import java.io.*;
-import userinterface.model.*;
+import userinterface.model.GUIModelEditor;
+import userinterface.model.GUIMultiModelHandler;
 
 public class GUIPepaModelEditor extends GUIModelEditor implements DocumentListener
 {	

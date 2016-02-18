@@ -26,8 +26,11 @@
 
 package simulator.networking;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Vector;
+
 import prism.PrismException;
 
 public class SSHHandler

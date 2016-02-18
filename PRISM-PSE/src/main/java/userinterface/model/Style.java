@@ -27,7 +27,8 @@
 
 package userinterface.model;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 
 public class Style
 {

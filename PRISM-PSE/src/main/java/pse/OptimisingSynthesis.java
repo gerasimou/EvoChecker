@@ -26,13 +26,18 @@
 
 package pse;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import parser.ast.Expression;
+import parser.ast.ExpressionFilter;
 import parser.ast.ExpressionProb;
 import parser.ast.ExpressionReward;
-import parser.ast.ExpressionFilter;
 import parser.ast.RelOp;
 import prism.PrismException;
 import prism.PrismLog;

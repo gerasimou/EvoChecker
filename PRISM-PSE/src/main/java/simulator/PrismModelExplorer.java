@@ -25,10 +25,10 @@
 
 package simulator;
 
+import explicit.ModelExplorer;
 import parser.State;
 import parser.ast.ModulesFile;
 import prism.PrismException;
-import explicit.ModelExplorer;
 
 public class PrismModelExplorer implements ModelExplorer<Double>
 {

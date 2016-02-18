@@ -27,8 +27,10 @@
 
 package userinterface.log;
 
-import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 
 /** This is the GUI end of the strucuted log.  It contains the JTree which displays

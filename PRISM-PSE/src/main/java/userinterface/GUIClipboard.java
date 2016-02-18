@@ -31,10 +31,22 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-import userinterface.util.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+
+import userinterface.util.GUIEvent;
+import userinterface.util.GUIEventListener;
+import userinterface.util.GUIUndoManager;
+import userinterface.util.GUIUndoManagerEvent;
 
 /**
  * This class gets notified through pluginChanged when the plugin in

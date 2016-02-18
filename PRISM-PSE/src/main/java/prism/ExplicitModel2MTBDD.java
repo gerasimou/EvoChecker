@@ -26,12 +26,25 @@
 
 package prism;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
-import jdd.*;
-import parser.*;
-import parser.ast.*;
-import explicit.*;
+import explicit.DTMC;
+import explicit.MDP;
+import explicit.MDPSimple;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import parser.State;
+import parser.Values;
+import parser.VarList;
+import parser.ast.Declaration;
+import parser.ast.DeclarationInt;
+import parser.ast.Expression;
+import parser.ast.Module;
+import parser.ast.ModulesFile;
 
 /**
  * Class to convert explicit-state representation of a model to a symbolic one.

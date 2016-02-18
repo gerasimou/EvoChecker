@@ -20,9 +20,9 @@
 
 package jltl2dstar;
 
-import java.util.Vector;
-import java.util.Stack;
 import java.util.Iterator;
+import java.util.Stack;
+import java.util.Vector;
 
 import jltl2ba.MyBitSet;
 

@@ -27,9 +27,9 @@
 
 package simulator.method;
 
+import cern.jet.stat.Probability;
 import prism.PrismException;
 import simulator.sampler.Sampler;
-import cern.jet.stat.Probability;
 
 /**
  * SimulationMethod class for the ACI ("asymptotic confidence interval") approach.

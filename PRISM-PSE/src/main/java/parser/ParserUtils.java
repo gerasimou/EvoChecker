@@ -26,9 +26,14 @@
 
 package parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
-import parser.ast.*;
+import parser.ast.Expression;
+import parser.ast.ExpressionBinaryOp;
+import parser.ast.ExpressionUnaryOp;
 import prism.PrismLangException;
 
 public class ParserUtils

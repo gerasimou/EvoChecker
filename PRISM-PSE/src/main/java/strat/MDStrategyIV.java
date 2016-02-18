@@ -29,11 +29,11 @@ package strat;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import dv.IntegerVector;
 import prism.Model;
 import prism.Prism;
 import prism.PrismException;
 import prism.PrismLog;
-import dv.IntegerVector;
 
 /**
  * Class to store a memoryless deterministic (MD) strategy, as an IntegerVector (i.e. stored natively as an array).

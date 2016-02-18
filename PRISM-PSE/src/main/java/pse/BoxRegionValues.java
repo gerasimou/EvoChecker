@@ -38,11 +38,11 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import explicit.StateValues;
 import parser.type.TypeDouble;
 import prism.Pair;
 import prism.PrismException;
 import prism.PrismLog;
-import explicit.StateValues;
 
 /**
  * Map from a parameter region to a pair of minimised & maximised

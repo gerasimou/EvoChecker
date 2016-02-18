@@ -27,13 +27,22 @@
 
 package userinterface.simulator;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Insets;
 
-import parser.ast.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+
+import parser.ast.Expression;
+import parser.ast.ExpressionReward;
+import parser.ast.PropertiesFile;
 import prism.PrismException;
-import userinterface.properties.*;
-import simulator.*;
+import simulator.SimulatorEngine;
+import userinterface.properties.GUIProperty;
 
 public class GUISimPathFormulaeList extends JList
 {

@@ -26,10 +26,11 @@
 
 package parser.ast;
 
-import java.util.*;
+import java.util.List;
+import java.util.Vector;
 
-import parser.*;
-import parser.visitor.*;
+import parser.Values;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 import prism.PrismUtils;
 

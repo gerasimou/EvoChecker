@@ -26,9 +26,11 @@
 
 package userinterface.properties;
 
-import parser.ast.*;
-import parser.type.*;
-import prism.*;
+import parser.ast.Expression;
+import parser.ast.ExpressionIdent;
+import parser.type.Type;
+import prism.PrismException;
+import prism.PrismLangException;
 
 class GUIConstant
 {

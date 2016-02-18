@@ -27,12 +27,15 @@
 
 package param;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import parser.*;
+import parser.State;
+import parser.VarList;
 import parser.ast.Expression;
 import parser.ast.ExpressionLiteral;
-import prism.*;
+import prism.ModelType;
+import prism.PrismException;
+import prism.PrismLangException;
 
 public class TransitionList
 {

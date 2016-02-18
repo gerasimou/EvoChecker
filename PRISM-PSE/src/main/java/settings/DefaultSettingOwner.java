@@ -26,7 +26,8 @@
 
 package settings;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Observable;
 
 /**
  * DefaultSettingOwners do not have a class and therefore can not be multiple

@@ -26,8 +26,9 @@
 //==============================================================================
 
 package userinterface.model;
-import javax.swing.*;
-import userinterface.*;
+import javax.swing.JOptionPane;
+
+import userinterface.GUIPrism;
 
 public class GUITransientTime extends javax.swing.JDialog
 {

@@ -26,8 +26,9 @@
 //==============================================================================
 
 package userinterface.util;
-import java.util.*;
-import userinterface.*;
+import java.util.ArrayList;
+
+import userinterface.GUIPrism;
 
 public class GUIEventHandler
 {

@@ -30,9 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import parser.*;
-import parser.ast.*;
-import parser.type.*;
+import parser.Values;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import parser.ast.Property;
+import parser.type.Type;
 
 /**
  * Class to handle the undefined constants in model and/or properties file.

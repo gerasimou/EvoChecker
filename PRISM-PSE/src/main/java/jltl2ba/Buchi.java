@@ -27,13 +27,12 @@
 
 package jltl2ba;
 
-import java.util.Vector;
-import java.util.HashMap;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Vector;
 
 import jltl2dstar.APMonom;
 import jltl2dstar.NBA;
-
 import prism.PrismException;
 
 public class Buchi {

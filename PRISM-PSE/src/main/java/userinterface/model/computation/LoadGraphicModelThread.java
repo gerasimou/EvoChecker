@@ -27,20 +27,33 @@
 
 package userinterface.model.computation;
 
-import java.io.*;
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
+import java.awt.Rectangle;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-import userinterface.*;
-import userinterface.model.*;
-import userinterface.model.graphicModel.*;
-import userinterface.util.*;
+import userinterface.GUIPlugin;
+import userinterface.model.GUIMultiModelHandler;
+import userinterface.model.GUIMultiModelTree;
+import userinterface.model.graphicModel.GUIGraphicModelEditor;
+import userinterface.model.graphicModel.ModuleModel;
+import userinterface.model.graphicModel.Nail;
+import userinterface.model.graphicModel.ProbTransition;
+import userinterface.util.GUIComputationEvent;
 
 public class LoadGraphicModelThread extends Thread implements EntityResolver
 {

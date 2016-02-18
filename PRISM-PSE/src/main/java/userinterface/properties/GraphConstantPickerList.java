@@ -27,9 +27,13 @@
 
 package userinterface.properties;
 
-import javax.swing.*;
-import java.util.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+
+import javax.swing.JPanel;
+import javax.swing.Scrollable;
 
 public class GraphConstantPickerList extends JPanel implements Scrollable
 {

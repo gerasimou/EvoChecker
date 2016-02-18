@@ -26,7 +26,7 @@
 
 package parser.ast;
 
-import parser.type.*;
+import parser.type.TypeClock;
 import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 

@@ -28,15 +28,32 @@
 
 package userinterface.simulator;
 
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.font.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.RoundRectangle2D;
 
-import simulator.*;
-import userinterface.util.*;
-import userinterface.simulator.SimulationView.*;
+import javax.swing.AbstractListModel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableCellRenderer;
+
+import simulator.SimulatorEngine;
+import userinterface.simulator.SimulationView.ActionValue;
+import userinterface.simulator.SimulationView.RewardStructureValue;
+import userinterface.simulator.SimulationView.TimeValue;
+import userinterface.simulator.SimulationView.VariableValue;
+import userinterface.util.GUIGroupedTable;
 
 public class GUISimulatorPathTable extends GUIGroupedTable
 {

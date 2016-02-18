@@ -29,11 +29,13 @@ package userinterface.model.computation;
 
 import java.io.File;
 
-import javax.swing.*;
-import userinterface.*;
-import userinterface.model.*;
-import prism.*;
-import userinterface.util.*;
+import javax.swing.SwingUtilities;
+
+import prism.Prism;
+import prism.PrismException;
+import userinterface.GUIComputationThread;
+import userinterface.model.GUIMultiModelHandler;
+import userinterface.util.GUIComputationEvent;
 
 /**
  * Thread that performs steady-state probability computation on a model.

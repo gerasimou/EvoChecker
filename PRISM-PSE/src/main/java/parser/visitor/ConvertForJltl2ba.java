@@ -29,10 +29,16 @@ package parser.visitor;
 
 import java.util.Hashtable;
 
-import parser.ast.*;
+import jltl2ba.SimpleLTL;
+import parser.ast.ASTElement;
+import parser.ast.Expression;
+import parser.ast.ExpressionBinaryOp;
+import parser.ast.ExpressionLabel;
+import parser.ast.ExpressionLiteral;
+import parser.ast.ExpressionTemporal;
+import parser.ast.ExpressionUnaryOp;
+import parser.type.TypeBool;
 import prism.PrismLangException;
-import jltl2ba.*;
-import parser.type.*;
 /*
  * Convert a property expression (an LTL formula) into the classes used by
  * the jltl2ba (and jltl2dstar) libraries.

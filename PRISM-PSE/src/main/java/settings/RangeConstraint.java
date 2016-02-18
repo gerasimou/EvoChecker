@@ -26,7 +26,7 @@
 
 package settings;
 
-import java.util.*;
+import java.util.StringTokenizer;
 
 public class RangeConstraint extends NumericConstraint
 {

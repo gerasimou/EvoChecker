@@ -28,22 +28,39 @@
 
 package userinterface.graph;
 
-import javax.swing.*;
-
-import java.awt.*;
-
-import javax.swing.table.*;
-
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-import userinterface.*;
-import org.jfree.data.xy.*;
-import org.jfree.data.general.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
+import javax.swing.InputMap;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.AbstractTableModel;
+
+import org.jfree.data.general.SeriesChangeEvent;
+import org.jfree.data.general.SeriesChangeListener;
+import org.jfree.data.xy.XYDataItem;
+
+import userinterface.GUIPlugin;
+import userinterface.GUIPrism;
 
 public class SeriesEditorDialog extends JDialog
 {         

@@ -28,10 +28,17 @@
 
 package userinterface.properties;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Insets;
 
-import prism.*;
-import parser.type.*;
+import parser.type.Type;
+import parser.type.TypeBool;
+import parser.type.TypeDouble;
+import parser.type.TypeInt;
+import prism.PrismException;
 
 public class ConstantLine extends javax.swing.JPanel
 {

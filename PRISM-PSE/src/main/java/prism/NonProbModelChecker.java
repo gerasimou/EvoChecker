@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import cex.CexPathAsBDDs;
+import cex.CexPathStates;
 import jdd.JDD;
 import jdd.JDDNode;
 import parser.ast.Expression;
@@ -38,8 +40,6 @@ import parser.ast.ExpressionForAll;
 import parser.ast.ExpressionTemporal;
 import parser.ast.ExpressionUnaryOp;
 import parser.ast.PropertiesFile;
-import cex.CexPathAsBDDs;
-import cex.CexPathStates;
 
 /*
  * Non probabilistic model checker, initially for CTL.

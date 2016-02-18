@@ -26,12 +26,23 @@
 
 package settings;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.event.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.text.BadLocationException;
-import java.util.*;
 
 public class MultipleLineStringEditor implements SettingEditor, KeyListener, CaretListener, FocusListener
 {

@@ -28,7 +28,9 @@ package parser.visitor;
 
 import java.util.Vector;
 
-import parser.ast.*;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import parser.ast.Update;
 import prism.PrismLangException;
 
 /**

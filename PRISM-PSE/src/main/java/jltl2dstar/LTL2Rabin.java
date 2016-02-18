@@ -21,11 +21,11 @@
 
 package jltl2dstar;
 
+import java.util.BitSet;
+
 import jltl2ba.APSet;
 import jltl2ba.SimpleLTL;
 import prism.PrismException;
-
-import java.util.BitSet;
 
 public class LTL2Rabin {
 	

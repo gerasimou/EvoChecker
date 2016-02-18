@@ -1,10 +1,28 @@
 package pse;
 
-import org.jocl.*;
+import static org.jocl.CL.CL_CONTEXT_PLATFORM;
+import static org.jocl.CL.CL_DEVICE_TYPE_ALL;
+import static org.jocl.CL.clBuildProgram;
+import static org.jocl.CL.clCreateCommandQueue;
+import static org.jocl.CL.clCreateContext;
+import static org.jocl.CL.clCreateKernel;
+import static org.jocl.CL.clCreateProgramWithSource;
+import static org.jocl.CL.clGetDeviceIDs;
+import static org.jocl.CL.clGetPlatformIDs;
+import static org.jocl.CL.clReleaseCommandQueue;
+import static org.jocl.CL.clReleaseContext;
+import static org.jocl.CL.clReleaseProgram;
 
 import java.util.Scanner;
 
-import static org.jocl.CL.*;
+import org.jocl.CL;
+import org.jocl.cl_command_queue;
+import org.jocl.cl_context;
+import org.jocl.cl_context_properties;
+import org.jocl.cl_device_id;
+import org.jocl.cl_kernel;
+import org.jocl.cl_platform_id;
+import org.jocl.cl_program;
 
 public final class OCLProgram
 {

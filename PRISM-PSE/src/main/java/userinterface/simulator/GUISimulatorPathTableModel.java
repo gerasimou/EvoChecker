@@ -28,13 +28,24 @@
 
 package userinterface.simulator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
+
 import javax.swing.table.AbstractTableModel;
 
+import parser.ast.Module;
+import parser.ast.ModulesFile;
 import simulator.PathFullInfo;
-import userinterface.simulator.SimulationView.*;
+import userinterface.simulator.SimulationView.ActionValue;
+import userinterface.simulator.SimulationView.RewardStructureColumn;
+import userinterface.simulator.SimulationView.RewardStructureValue;
+import userinterface.simulator.SimulationView.TimeValue;
+import userinterface.simulator.SimulationView.Variable;
+import userinterface.simulator.SimulationView.VariableValue;
 import userinterface.util.GUIGroupedTableModel;
-import parser.ast.*;
 
 public class GUISimulatorPathTableModel extends AbstractTableModel implements GUIGroupedTableModel, Observer
 {

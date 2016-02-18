@@ -26,10 +26,13 @@
 //==============================================================================
 
 package userinterface;
-import java.util.*;
-import javax.swing.*;
-import prism.*;
-import settings.*;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+import prism.PrismException;
+import prism.PrismSettings;
+import settings.SettingTable;
 
 public class GUIOptionsDialog extends javax.swing.JDialog
 {

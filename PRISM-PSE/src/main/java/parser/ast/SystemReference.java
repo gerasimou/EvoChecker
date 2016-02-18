@@ -28,7 +28,7 @@ package parser.ast;
 
 import java.util.Vector;
 
-import parser.visitor.*;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 
 public class SystemReference extends SystemDefn

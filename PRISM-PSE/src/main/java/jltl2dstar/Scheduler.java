@@ -20,11 +20,11 @@
 
 package jltl2dstar;
 
+import java.io.PrintStream;
 /** @file
  * Implementation of LTL2DSTAR_Scheduler
  */
 import java.util.Vector;
-import java.io.PrintStream;
 
 import jltl2ba.APSet;
 import jltl2ba.SimpleLTL;

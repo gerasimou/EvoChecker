@@ -26,7 +26,9 @@
 
 package parser.visitor;
 
-import parser.ast.*;
+import parser.ast.ExpressionFormula;
+import parser.ast.ExpressionIdent;
+import parser.ast.FormulaList;
 import prism.PrismLangException;
 
 /**

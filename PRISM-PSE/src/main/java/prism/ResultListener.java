@@ -26,7 +26,7 @@
 
 package prism;
 
-import parser.*;
+import parser.Values;
 
 /**
  * This class is an interface between the chart package and ResultCollection.

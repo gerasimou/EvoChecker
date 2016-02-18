@@ -26,11 +26,14 @@
 
 package pta;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
-import prism.PrismException;
 import explicit.IndexedSet;
 import explicit.StateStorage;
+import prism.PrismException;
 
 /**
  * Class to perform the parallel composition of PTAs.

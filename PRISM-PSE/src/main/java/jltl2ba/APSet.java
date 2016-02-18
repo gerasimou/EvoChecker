@@ -22,9 +22,9 @@
 
 package jltl2ba;
 
-import java.util.Vector;
-import java.util.Iterator;
 import java.io.PrintStream;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * Class representing a set of atomic propositions (AP).

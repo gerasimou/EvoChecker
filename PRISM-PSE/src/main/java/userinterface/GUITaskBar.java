@@ -27,7 +27,7 @@
 
 package userinterface;
 
-import javax.swing.*;
+import javax.swing.JLabel;
 
 
 /** This class is really for convienience.  It extends JLabel.  It sets up desirable properties for a

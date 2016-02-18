@@ -28,7 +28,7 @@
 package userinterface.util;
 
 import java.util.ArrayList;
-import java.util.*;
+import java.util.Observable;
 
 /**
  * Handles the selection of PropertyOwners

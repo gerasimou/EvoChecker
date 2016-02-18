@@ -27,13 +27,20 @@
 
 package userinterface.properties;
 
-import java.util.*; 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.util.ArrayList;
 
-import parser.ast.*;
-import prism.*;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
+import parser.ast.PropertiesFile;
+import prism.UndefinedConstants;
 
 public class GUIExperimentTable extends JTable
 {

@@ -26,11 +26,16 @@
 
 package simulator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import parser.*;
-import parser.ast.*;
-import prism.*;
+import parser.State;
+import parser.VarList;
+import parser.ast.Command;
+import parser.ast.Update;
+import prism.ModelType;
+import prism.PrismException;
+import prism.PrismLangException;
 
 public class ChoiceSingleton implements Choice
 {

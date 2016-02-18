@@ -27,12 +27,20 @@
 
 package userinterface.properties;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-import java.util.*; 
-import userinterface.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.AbstractTableModel;
+
+import userinterface.GUIPrism;
 
 public class GUIResultsTable extends javax.swing.JDialog
 {

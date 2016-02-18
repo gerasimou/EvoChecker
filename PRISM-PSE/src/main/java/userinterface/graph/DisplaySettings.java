@@ -26,6 +26,7 @@
 
 package userinterface.graph;
 
+import java.awt.Color;
 import java.util.Observable;
 
 import org.jfree.chart.JFreeChart;
@@ -37,10 +38,6 @@ import settings.Setting;
 import settings.SettingDisplay;
 import settings.SettingException;
 import settings.SettingOwner;
-
-import java.awt.*;
-
-import javax.swing.UIManager;
 
 /**
  * Representation of the display settings of a Graph.

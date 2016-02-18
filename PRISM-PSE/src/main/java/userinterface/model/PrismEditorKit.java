@@ -48,8 +48,8 @@ import javax.swing.text.Utilities;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
-import prism.PrismLangException;
 import parser.PrismSyntaxHighlighter;
+import prism.PrismLangException;
 
 /** Prism model editor kit for the text model editor. Defines the syntax
  * highlighting that the model editor should use.

@@ -28,6 +28,11 @@ package explicit;
 
 import java.util.BitSet;
 
+import explicit.rewards.ConstructRewards;
+import explicit.rewards.MCRewards;
+import explicit.rewards.MDPRewards;
+import explicit.rewards.Rewards;
+import explicit.rewards.STPGRewards;
 import parser.ast.Expression;
 import parser.ast.ExpressionProb;
 import parser.ast.ExpressionReward;
@@ -40,11 +45,6 @@ import parser.type.TypeDouble;
 import prism.PrismComponent;
 import prism.PrismException;
 import prism.PrismSettings;
-import explicit.rewards.ConstructRewards;
-import explicit.rewards.MCRewards;
-import explicit.rewards.MDPRewards;
-import explicit.rewards.Rewards;
-import explicit.rewards.STPGRewards;
 
 /**
  * Super class for explicit-state probabilistic model checkers.

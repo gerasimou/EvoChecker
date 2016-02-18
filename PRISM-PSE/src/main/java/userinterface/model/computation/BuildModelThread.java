@@ -27,12 +27,12 @@
 
 package userinterface.model.computation;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
-import userinterface.*;
-import userinterface.model.*;
-import prism.*;
-import userinterface.util.*;
+import prism.PrismException;
+import userinterface.GUIComputationThread;
+import userinterface.model.GUIMultiModelHandler;
+import userinterface.util.GUIComputationEvent;
 
 /**
  * Thread that performs model construction, whether needed or not.

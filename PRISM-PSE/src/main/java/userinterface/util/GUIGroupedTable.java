@@ -26,11 +26,13 @@
 
 package userinterface.util;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.Font;
+import java.util.ArrayList;
 
-import java.util.*;
+import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 /**
  * A table object that is capable of grouping headers, effectively by means of two JTableHeader

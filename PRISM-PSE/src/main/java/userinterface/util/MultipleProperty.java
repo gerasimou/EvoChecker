@@ -27,9 +27,10 @@
 
 package userinterface.util;
 
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Component;
+import java.util.ArrayList;
+
+import javax.swing.JTable;
 
 /**
  * Represents more than one single property when it is selected.

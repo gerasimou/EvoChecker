@@ -21,14 +21,15 @@
 
 package jltl2dstar;
 
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import jltl2ba.APElement;
 import jltl2ba.APSet;
-
 import prism.PrismException;
 
 /**

@@ -27,10 +27,14 @@
 
 package param;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import parser.*;
-import parser.ast.*;
+import parser.State;
+import parser.VarList;
+import parser.ast.Command;
+import parser.ast.Expression;
+import parser.ast.Update;
 import prism.ModelType;
 import prism.PrismException;
 import prism.PrismLangException;

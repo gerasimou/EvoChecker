@@ -1,10 +1,5 @@
 package pse;
 
-import prism.Pair;
-import prism.PrismLog;
-
-import java.util.BitSet;
-
 final public class PSEMultUtility
 {
 	public static PSEMultOptions getOptions()

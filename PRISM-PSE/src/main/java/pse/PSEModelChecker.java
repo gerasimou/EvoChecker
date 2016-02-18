@@ -31,17 +31,29 @@ import java.io.File;
 import java.util.BitSet;
 import java.util.Map.Entry;
 
-import parser.State;
-import parser.Values;
-import parser.ast.*;
-import parser.ast.ExpressionFilter.FilterOperator;
-import parser.type.TypeBool;
-import parser.type.TypeDouble;
-import prism.*;
-import explicit.FoxGlynn;
 import explicit.StateModelChecker;
 import explicit.StateValues;
 import explicit.Utils;
+import parser.State;
+import parser.Values;
+import parser.ast.Expression;
+import parser.ast.ExpressionFilter;
+import parser.ast.ExpressionFilter.FilterOperator;
+import parser.ast.ExpressionLabel;
+import parser.ast.ExpressionProb;
+import parser.ast.ExpressionReward;
+import parser.ast.ExpressionTemporal;
+import parser.ast.ExpressionUnaryOp;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import parser.ast.RelOp;
+import parser.ast.RewardStruct;
+import parser.type.TypeBool;
+import parser.type.TypeDouble;
+import prism.PrismComponent;
+import prism.PrismException;
+import prism.PrismSettings;
+import prism.Result;
 
 /**
  * Model checker for {@link PSEModel}.

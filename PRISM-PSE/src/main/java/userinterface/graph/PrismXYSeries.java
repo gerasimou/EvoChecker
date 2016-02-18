@@ -26,10 +26,12 @@
 
 package userinterface.graph;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.jfree.data.xy.*;
-import org.jfree.data.general.*;
+import org.jfree.data.general.SeriesException;
+import org.jfree.data.xy.XYDataItem;
+import org.jfree.data.xy.XYSeries;
 
 public class PrismXYSeries extends XYSeries
 {

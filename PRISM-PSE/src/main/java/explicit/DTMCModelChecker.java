@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import explicit.rewards.MCRewards;
 import parser.ast.Expression;
 import parser.type.TypeDouble;
 import prism.DRA;
@@ -39,7 +40,6 @@ import prism.Pair;
 import prism.PrismComponent;
 import prism.PrismException;
 import prism.PrismUtils;
-import explicit.rewards.MCRewards;
 
 /**
  * Explicit-state model checker for discrete-time Markov chains (DTMCs).

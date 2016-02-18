@@ -1,9 +1,9 @@
 package pse;
 
+import java.util.Map;
+
 import prism.PrismException;
 import prism.PrismLog;
-
-import java.util.Map;
 
 public final class PSEFoxGlynnSimple<Mult extends PSEMult> implements PSEFoxGlynn
 {

@@ -26,14 +26,18 @@
 
 package prism;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Vector;
 
-import jdd.*;
-import odd.*;
-import mtbdd.*;
-import parser.*;
-import sparse.*;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import mtbdd.PrismMTBDD;
+import odd.ODDUtils;
+import parser.Values;
+import parser.VarList;
+import sparse.PrismSparse;
 
 /*
  * Class for MTBDD-based storage of a PRISM model that is an MDP.

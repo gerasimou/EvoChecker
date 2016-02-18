@@ -27,14 +27,17 @@
 
 package userinterface.model.computation;
 
-import java.io.*;
-import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import javax.swing.SwingUtilities;
 
 import parser.ast.PropertiesFile;
-import prism.*;
-import userinterface.*;
-import userinterface.model.*;
-import userinterface.util.*;
+import prism.PrismException;
+import userinterface.GUIComputationThread;
+import userinterface.GUIPlugin;
+import userinterface.model.GUIMultiModelHandler;
+import userinterface.util.GUIComputationEvent;
 
 /**
  * Thread that performs export of a built model.

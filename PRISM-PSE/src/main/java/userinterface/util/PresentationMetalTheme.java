@@ -27,9 +27,10 @@
 
 package userinterface.util;
 
-import javax.swing.plaf.*;
-import javax.swing.plaf.metal.*;
-import java.awt.*;
+import java.awt.Font;
+
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.metal.DefaultMetalTheme;
 
 /**
  * This class overrides DefaultMetalTheme to change the fonts for components and

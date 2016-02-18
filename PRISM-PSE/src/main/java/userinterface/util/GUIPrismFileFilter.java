@@ -27,9 +27,10 @@
 
 package userinterface.util;
 
-import java.util.Vector;
 import java.io.File;
-import javax.swing.filechooser.*;
+import java.util.Vector;
+
+import javax.swing.filechooser.FileFilter;
 
 public class GUIPrismFileFilter extends FileFilter
 {

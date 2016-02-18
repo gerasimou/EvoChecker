@@ -27,10 +27,16 @@
 
 package userinterface.util;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 public class BooleanProperty extends SingleProperty
 {

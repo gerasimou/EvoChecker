@@ -26,8 +26,9 @@
 
 package settings;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 public class ColorSetting extends Setting
 {

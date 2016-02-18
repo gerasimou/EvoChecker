@@ -28,16 +28,43 @@
 
 package prism;
 
-import java.util.*;
-import java.io.*;
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.JFrame;
 
 import explicit.QuantAbstractRefine;
-
-import java.util.regex.*;
-
-import settings.*;
+import settings.BooleanSetting;
+import settings.ChoiceSetting;
+import settings.ColorSetting;
+import settings.DefaultSettingOwner;
+import settings.DoubleSetting;
+import settings.FileSelector;
+import settings.FileSetting;
+import settings.FontColorPair;
+import settings.FontColorSetting;
+import settings.IntegerSetting;
+import settings.LongSetting;
+import settings.MultipleLineStringSetting;
+import settings.RangeConstraint;
+import settings.Setting;
+import settings.SettingException;
+import settings.SettingOwner;
+import settings.SettingTable;
+import settings.SingleLineStringSetting;
 
 public class PrismSettings implements Observer
 {

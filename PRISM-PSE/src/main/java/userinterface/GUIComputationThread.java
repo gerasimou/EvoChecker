@@ -26,7 +26,7 @@
 
 package userinterface;
 
-import prism.*;
+import prism.Prism;
 
 /**
  * Class providing a few convenience methods for the various computation/*Thread classes.

@@ -27,10 +27,13 @@
 
 package simulator.sampler;
 
-import simulator.*;
-import prism.*;
-import parser.*;
-import parser.ast.*;
+import parser.State;
+import parser.ast.Expression;
+import parser.ast.ExpressionTemporal;
+import prism.PrismException;
+import prism.PrismLangException;
+import simulator.Path;
+import simulator.TransitionList;
 
 public class SamplerBoundedUntilDisc extends SamplerBoolean
 {

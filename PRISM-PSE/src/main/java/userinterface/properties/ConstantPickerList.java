@@ -27,12 +27,16 @@
 
 package userinterface.properties;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+
+import javax.swing.JPanel;
+import javax.swing.Scrollable;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
-
-import java.awt.*;
-import java.util.*;
 
 @SuppressWarnings("serial")
 public class ConstantPickerList extends JPanel implements Scrollable

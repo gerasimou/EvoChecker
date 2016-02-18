@@ -26,11 +26,15 @@
 
 package parser;
 
-import java.util.*;
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 
-import parser.type.*;
 import parser.ast.ModulesFile;
+import parser.type.Type;
+import parser.type.TypeBool;
+import parser.type.TypeDouble;
+import parser.type.TypeInt;
 import prism.PrismLangException;
 
 /**

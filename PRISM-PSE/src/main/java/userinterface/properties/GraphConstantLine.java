@@ -39,7 +39,9 @@ import javax.swing.Icon;
 import javax.swing.JList;
 import javax.swing.UIManager;
 
-import parser.type.*;
+import parser.type.Type;
+import parser.type.TypeDouble;
+import parser.type.TypeInt;
 import prism.DefinedConstant;
 
 public class GraphConstantLine extends javax.swing.JPanel

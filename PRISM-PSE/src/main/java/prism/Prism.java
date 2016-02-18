@@ -26,8 +26,6 @@
 
 package prism;
 
-import hybrid.PrismHybrid;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,6 +35,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dv.DoubleVector;
+import explicit.CTMC;
+import explicit.CTMCModelChecker;
+import explicit.ConstructModel;
+import explicit.DTMC;
+import explicit.DTMCModelChecker;
+import explicit.FastAdaptiveUniformisation;
+import explicit.FastAdaptiveUniformisationModelChecker;
+import hybrid.PrismHybrid;
 import jdd.JDD;
 import jdd.JDDNode;
 import jdd.JDDVars;
@@ -61,6 +68,7 @@ import pse.PSEModel;
 import pse.PSEModelBuilder;
 import pse.PSEModelChecker;
 import pse.PSEModelExplorer;
+import pse.SimpleDecompositionProcedure;
 import pta.DigitalClocks;
 import pta.PTAModelChecker;
 import simulator.GenerateSimulationPath;
@@ -69,14 +77,6 @@ import simulator.SimulatorEngine;
 import simulator.method.SimulationMethod;
 import sparse.PrismSparse;
 import strat.Strategy;
-import dv.DoubleVector;
-import explicit.CTMC;
-import explicit.CTMCModelChecker;
-import explicit.ConstructModel;
-import explicit.DTMC;
-import explicit.DTMCModelChecker;
-import explicit.FastAdaptiveUniformisation;
-import explicit.FastAdaptiveUniformisationModelChecker;
 
 /**
  * Main class for all PRISM's core functionality.

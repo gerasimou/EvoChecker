@@ -40,11 +40,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import explicit.rewards.MCRewards;
+import explicit.rewards.MDPRewards;
 import parser.State;
 import prism.PrismException;
 import prism.PrismUtils;
-import explicit.rewards.MCRewards;
-import explicit.rewards.MDPRewards;
 
 /**
  * Sparse matrix (non-mutable) explicit-state representation of an MDP.

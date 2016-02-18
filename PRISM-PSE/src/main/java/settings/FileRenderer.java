@@ -26,11 +26,18 @@
 
 package settings;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import java.util.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.io.File;
+import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 import userinterface.GUIPrism;
 

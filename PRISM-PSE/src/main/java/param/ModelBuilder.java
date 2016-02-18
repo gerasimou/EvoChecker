@@ -29,6 +29,8 @@ package param;
 import java.util.LinkedList;
 import java.util.List;
 
+import explicit.IndexedSet;
+import explicit.StateStorage;
 import parser.State;
 import parser.ast.Expression;
 import parser.ast.ExpressionBinaryOp;
@@ -39,10 +41,7 @@ import parser.ast.ModulesFile;
 import prism.ModelType;
 import prism.PrismComponent;
 import prism.PrismException;
-import prism.PrismLog;
 import prism.PrismSettings;
-import explicit.IndexedSet;
-import explicit.StateStorage;
 
 /**
  * Class to construct a parametric Markov model.

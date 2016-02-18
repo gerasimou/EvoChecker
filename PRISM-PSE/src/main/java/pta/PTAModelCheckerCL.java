@@ -26,12 +26,15 @@
 
 package pta;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.BitSet;
 
 import explicit.MDP;
 import explicit.MDPModelChecker;
-
 import prism.PrismException;
 
 /**

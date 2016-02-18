@@ -25,9 +25,18 @@
 //==============================================================================
 
 package userinterface;
-import java.awt.*;
-import prism.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.net.URL;
+
+import prism.Prism;
 
 public class GUIPrismSplash extends Frame 
 {

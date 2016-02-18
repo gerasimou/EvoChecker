@@ -20,12 +20,12 @@
 
 package jltl2dstar;
 
-import prism.PrismException;
-import java.util.Iterator;
 import java.util.BitSet;
+import java.util.Iterator;
 
 import jltl2ba.APElement;
 import jltl2ba.APSet;
+import prism.PrismException;
 
 /** @file 
  * Provides class DBA2DRA, which can convert a 

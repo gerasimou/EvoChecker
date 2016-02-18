@@ -27,12 +27,17 @@
 
 package userinterface.model.computation;
 
-import java.io.*;
-import javax.swing.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
-import userinterface.*;
-import userinterface.model.*;
-import userinterface.util.*;
+import javax.swing.SwingUtilities;
+
+import userinterface.GUIPlugin;
+import userinterface.model.GUIModelEditor;
+import userinterface.model.GUIMultiModelHandler;
+import userinterface.model.GUITextModelEditor;
+import userinterface.util.GUIComputationEvent;
 
 public class LoadPRISMModelThread extends Thread
 {

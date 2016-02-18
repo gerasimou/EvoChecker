@@ -26,10 +26,13 @@
 
 package dv;
 
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import odd.ODDNode;
 import parser.ast.RelOp;
-import prism.*;
-import jdd.*;
-import odd.*;
+import prism.PrismException;
+import prism.PrismLog;
 
 /**
  * Class to encapsulate a vector of doubles, stored natively.

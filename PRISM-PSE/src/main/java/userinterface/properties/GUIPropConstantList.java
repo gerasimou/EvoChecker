@@ -27,14 +27,28 @@
 
 package userinterface.properties;
 
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.util.ArrayList;
 
-import parser.ast.*;
-import parser.type.*;
-import prism.*;
+import javax.swing.CellEditor;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
+
+import parser.ast.ConstantList;
+import parser.ast.Expression;
+import parser.ast.PropertiesFile;
+import parser.type.Type;
+import parser.type.TypeBool;
+import parser.type.TypeDouble;
+import parser.type.TypeInt;
+import prism.PrismException;
 
 public class GUIPropConstantList extends JTable
 {

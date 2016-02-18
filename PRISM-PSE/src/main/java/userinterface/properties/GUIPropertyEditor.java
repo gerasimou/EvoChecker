@@ -28,12 +28,18 @@
 
 package userinterface.properties;
 
-import userinterface.*;
-import parser.ast.*;
-import prism.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.JOptionPane;
+
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import prism.PrismException;
+import userinterface.GUIPrism;
 
 public class GUIPropertyEditor extends javax.swing.JDialog implements ActionListener, KeyListener
 {

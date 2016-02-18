@@ -28,7 +28,9 @@
 package prism;
 
 import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
 
 /**
  * Class to store a deterministic Rabin automata (DRA).

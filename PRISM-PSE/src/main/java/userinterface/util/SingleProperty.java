@@ -27,9 +27,10 @@
 
 package userinterface.util;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.Component;
+import java.util.Observable;
+
+import javax.swing.JTable;
 
 public class SingleProperty extends Observable 
 {

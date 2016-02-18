@@ -27,12 +27,24 @@
 
 package userinterface.util;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import javax.swing.border.*;
-import userinterface.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+
+import userinterface.GUIPrism;
 
 public class FontColorProperty extends SingleProperty
 {

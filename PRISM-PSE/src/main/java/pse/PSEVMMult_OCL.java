@@ -1,8 +1,26 @@
 package pse;
 
-import org.jocl.*;
+import static org.jocl.CL.CL_MEM_READ_ONLY;
+import static org.jocl.CL.CL_MEM_READ_WRITE;
+import static org.jocl.CL.clCreateBuffer;
+import static org.jocl.CL.clCreateCommandQueue;
+import static org.jocl.CL.clEnqueueNDRangeKernel;
+import static org.jocl.CL.clEnqueueReadBuffer;
+import static org.jocl.CL.clEnqueueWriteBuffer;
+import static org.jocl.CL.clFinish;
+import static org.jocl.CL.clReleaseCommandQueue;
+import static org.jocl.CL.clReleaseKernel;
+import static org.jocl.CL.clReleaseMemObject;
+import static org.jocl.CL.clSetKernelArg;
+import static org.jocl.CL.setExceptionsEnabled;
 
-import static org.jocl.CL.*;
+import org.jocl.Pointer;
+import org.jocl.Sizeof;
+import org.jocl.cl_command_queue;
+import org.jocl.cl_context;
+import org.jocl.cl_kernel;
+import org.jocl.cl_mem;
+import org.jocl.cl_program;
 
 public class PSEVMMult_OCL implements PSEMult, Releaseable
 {

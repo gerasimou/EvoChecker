@@ -26,8 +26,9 @@
 
 package settings;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
+
+import javax.swing.JTable;
 
 public interface SettingEditor
 {

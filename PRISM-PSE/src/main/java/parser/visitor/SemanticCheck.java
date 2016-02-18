@@ -28,8 +28,34 @@ package parser.visitor;
 
 import java.util.Vector;
 
-import parser.ast.*;
-import parser.type.*;
+import parser.ast.Command;
+import parser.ast.ConstantList;
+import parser.ast.Declaration;
+import parser.ast.DeclarationArray;
+import parser.ast.DeclarationClock;
+import parser.ast.DeclarationInt;
+import parser.ast.Expression;
+import parser.ast.ExpressionFilter;
+import parser.ast.ExpressionFormula;
+import parser.ast.ExpressionFunc;
+import parser.ast.ExpressionIdent;
+import parser.ast.ExpressionLabel;
+import parser.ast.ExpressionProb;
+import parser.ast.ExpressionReward;
+import parser.ast.ExpressionSS;
+import parser.ast.ExpressionTemporal;
+import parser.ast.ExpressionVar;
+import parser.ast.FormulaList;
+import parser.ast.LabelList;
+import parser.ast.Module;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import parser.ast.SystemHide;
+import parser.ast.SystemParallel;
+import parser.ast.SystemReference;
+import parser.ast.SystemRename;
+import parser.ast.Update;
+import parser.type.TypeClock;
 import prism.ModelType;
 import prism.PrismLangException;
 

@@ -28,9 +28,12 @@ package parser.ast;
 
 import java.util.ArrayList;
 
-import parser.*;
-import parser.type.*;
-import parser.visitor.*;
+import parser.EvaluateContextSubstate;
+import parser.State;
+import parser.Values;
+import parser.VarList;
+import parser.type.Type;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 
 /**

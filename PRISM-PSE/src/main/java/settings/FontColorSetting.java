@@ -26,8 +26,10 @@
 
 package settings;
 
-import java.util.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 public class FontColorSetting extends Setting 
 {

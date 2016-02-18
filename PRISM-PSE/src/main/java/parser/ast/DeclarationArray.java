@@ -27,7 +27,7 @@
 
 package parser.ast;
 
-import parser.type.*;
+import parser.type.TypeArray;
 import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 

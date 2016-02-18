@@ -28,14 +28,17 @@
 package userinterface.model.graphicModel;
 
 //Java Packages
-
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 //Prism Packages
-
-import userinterface.util.*;
+import userinterface.util.PropertyException;
+import userinterface.util.PropertyOwner;
+import userinterface.util.SingleProperty;
 
 /** Transitions and states have labels.  This class contains all of the rendering /
  * collision methods required for multiline labels which can be moved around the

@@ -28,9 +28,19 @@
 
 package userinterface;
 
-import parser.*;
+import parser.Values;
 import prism.PrismSettings;
-import simulator.method.*;
+import simulator.method.ACIconfidence;
+import simulator.method.ACIiterations;
+import simulator.method.ACIwidth;
+import simulator.method.APMCapproximation;
+import simulator.method.APMCconfidence;
+import simulator.method.APMCiterations;
+import simulator.method.CIconfidence;
+import simulator.method.CIiterations;
+import simulator.method.CIwidth;
+import simulator.method.SPRTMethod;
+import simulator.method.SimulationMethod;
 
 public class SimulationInformation
 {

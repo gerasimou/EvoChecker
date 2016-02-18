@@ -26,8 +26,8 @@
 
 package settings;
 
-import java.io.*;
-import java.awt.*;
+import java.awt.Frame;
+import java.io.File;
 
 public interface FileSelector
 {

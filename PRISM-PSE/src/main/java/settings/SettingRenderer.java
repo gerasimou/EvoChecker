@@ -26,8 +26,9 @@
 
 package settings;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Component;
+
+import javax.swing.JTable;
 
 public interface SettingRenderer
 {

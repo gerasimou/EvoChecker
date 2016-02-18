@@ -28,18 +28,32 @@
 
 package userinterface;
 
-import java.util.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.util.Vector;
 
-import parser.*;
-import parser.ast.*;
-import parser.type.*;
-import prism.*;
-import simulator.method.*;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+
+import parser.State;
+import parser.Values;
+import parser.ast.Expression;
+import parser.ast.ExpressionReward;
+import parser.ast.ModulesFile;
+import parser.type.TypeBool;
+import parser.type.TypeInt;
+import prism.PrismException;
+import prism.PrismSettings;
+import simulator.method.APMCapproximation;
+import simulator.method.APMCconfidence;
+import simulator.method.APMCiterations;
 
 /**
  *  GUISimulationPicker is a dialog to collect the details required for

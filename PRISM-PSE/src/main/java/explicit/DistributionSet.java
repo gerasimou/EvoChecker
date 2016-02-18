@@ -27,7 +27,8 @@
 
 package explicit;
 
-import java.util.*;
+import java.util.BitSet;
+import java.util.LinkedHashSet;
 
 /**
  * Represents a set of distributions.

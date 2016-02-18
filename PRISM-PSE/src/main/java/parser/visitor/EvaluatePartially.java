@@ -26,8 +26,10 @@
 
 package parser.visitor;
 
-import parser.*;
-import parser.ast.*;
+import parser.EvaluateContext;
+import parser.ast.ExpressionConstant;
+import parser.ast.ExpressionLiteral;
+import parser.ast.ExpressionVar;
 import prism.PrismLangException;
 
 /**

@@ -1,7 +1,11 @@
 package pse;
 
-import org.jocl.*;
-import static org.jocl.CL.*;
+import static org.jocl.CL.CL_DEVICE_TYPE_ALL;
+import static org.jocl.CL.clReleaseContext;
+
+import org.jocl.cl_context;
+import org.jocl.cl_device_id;
+import org.jocl.cl_platform_id;
 
 public class PSEVMMultSettings_OCL implements Releaseable
 {

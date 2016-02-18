@@ -40,15 +40,17 @@ import java.util.LinkedHashMap;
 import java.util.ListIterator;
 import java.util.Map;
 
+import parser.State;
+import parser.Values;
 import parser.ast.Expression;
 import parser.ast.ExpressionIdent;
 import parser.ast.LabelList;
 import parser.ast.RewardStruct;
 import parser.type.TypeDouble;
-import parser.Values;
-import parser.State;
-import prism.*;
 import prism.Model;
+import prism.PrismComponent;
+import prism.PrismException;
+import prism.PrismSettings;
 
 /*
  * TODO

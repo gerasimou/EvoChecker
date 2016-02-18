@@ -27,8 +27,8 @@
 
 package jltl2ba;
 
-import java.util.Vector;
 import java.io.PrintStream;
+import java.util.Vector;
 
 
 public class Generalized {

@@ -27,9 +27,9 @@
 
 package userinterface;
 
-import java.awt.*;
+import java.awt.Component;
 
-import userinterface.util.*;
+import userinterface.util.GUIEvent;
 
 public class GUIClipboardEvent extends GUIEvent
 {

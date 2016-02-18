@@ -27,7 +27,9 @@
 
 package explicit;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Interface for storing a set of objects of type T.

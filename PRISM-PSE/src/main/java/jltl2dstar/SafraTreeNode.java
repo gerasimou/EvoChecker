@@ -20,8 +20,8 @@
 
 package jltl2dstar;
 
-import java.util.Iterator;
 import java.io.PrintStream;
+import java.util.Iterator;
 
 import jltl2ba.MyBitSet;
 

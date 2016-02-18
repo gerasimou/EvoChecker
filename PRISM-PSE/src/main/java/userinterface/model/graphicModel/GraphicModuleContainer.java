@@ -27,13 +27,38 @@
 
 package userinterface.model.graphicModel;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import java.awt.*;
-import javax.swing.border.*;
-import userinterface.*;
-import java.awt.event.*;
-import java.beans.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.beans.PropertyVetoException;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BoundedRangeModel;
+import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+
+import userinterface.GUIPrism;
 
 public class GraphicModuleContainer implements FocusListener, AdjustmentListener
 {

@@ -27,13 +27,13 @@
 
 package userinterface.model.computation;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
-import userinterface.model.*;
-import parser.ast.*;
-import prism.*;
-import userinterface.util.*;
+import parser.ast.ModulesFile;
+import prism.PrismException;
 import userinterface.GUIComputationThread;
+import userinterface.model.GUIMultiModelHandler;
+import userinterface.util.GUIComputationEvent;
 
 public class ParseModelThread extends GUIComputationThread
 {

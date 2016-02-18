@@ -23,8 +23,7 @@ package jltl2dstar;
 /** @file
  * Provides class NBAAnalysis for performing analysis on non-deterministic B�chi automata.
  */
-
-import java.util.*;
+import java.util.Vector;
 
 import jltl2ba.APElementIterator;
 import jltl2ba.MyBitSet;

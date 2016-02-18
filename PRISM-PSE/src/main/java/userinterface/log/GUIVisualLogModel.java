@@ -29,8 +29,11 @@ package userinterface.log;
 
 import java.util.Stack;
 import java.util.StringTokenizer;
-import javax.swing.tree.*;
+
 import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
 import prism.PrismLog;
 
 /** This is the model for the structured log it contains the following interface:

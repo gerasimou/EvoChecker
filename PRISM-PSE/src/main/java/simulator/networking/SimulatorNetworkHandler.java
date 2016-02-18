@@ -26,25 +26,49 @@
 
 package simulator.networking;
 
-import java.util.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Observable;
+import java.util.Vector;
+
+import javax.swing.JProgressBar;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.tree.TreeNode;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
-import java.io.*;
-import javax.swing.tree.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
-import javax.swing.*;
+import org.xml.sax.SAXException;
 
+import parser.Values;
+import prism.PrismException;
+import prism.PropertyConstants;
+import prism.ResultsCollection;
 //import userinterface.util.*;
-import settings.*;
-import prism.*;
-import parser.*;
+import settings.Setting;
+import settings.SettingDisplay;
+import settings.SettingException;
+import settings.SettingOwner;
+import settings.SingleLineStringSetting;
 
 public class SimulatorNetworkHandler extends Observable implements EntityResolver, SettingOwner, TreeNode, TableModel
 {

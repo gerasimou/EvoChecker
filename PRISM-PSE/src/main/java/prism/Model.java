@@ -26,12 +26,17 @@
 
 package prism;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Vector;
 
-import jdd.*;
-import odd.*;
-import parser.*;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import odd.ODDNode;
+import parser.State;
+import parser.Values;
+import parser.VarList;
 
 public interface Model
 {

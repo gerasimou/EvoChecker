@@ -28,7 +28,7 @@ package prism;
 
 import java.util.List;
 
-import jdd.*;
+import jdd.JDDNode;
 import parser.Values;
 
 // interface for state list classes

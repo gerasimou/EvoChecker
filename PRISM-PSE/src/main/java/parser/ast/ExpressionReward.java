@@ -26,8 +26,9 @@
 
 package parser.ast;
 
-import parser.*;
-import parser.visitor.*;
+import parser.EvaluateContext;
+import parser.Values;
+import parser.visitor.ASTVisitor;
 import prism.PrismException;
 import prism.PrismLangException;
 

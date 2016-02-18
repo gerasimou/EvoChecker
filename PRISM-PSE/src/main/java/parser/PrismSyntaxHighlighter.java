@@ -26,8 +26,12 @@
 
 package parser;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.io.*;
 
 import prism.Prism;
 import prism.PrismLangException;

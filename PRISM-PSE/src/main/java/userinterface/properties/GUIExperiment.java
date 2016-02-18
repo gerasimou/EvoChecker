@@ -28,15 +28,24 @@
 
 package userinterface.properties;
 
-import parser.*;
-import parser.ast.*;
-import parser.type.*;
-import prism.*;
-import userinterface.*;
+import java.util.Vector;
 
-import javax.swing.*;
-import java.util.*;
-import userinterface.util.*;
+import javax.swing.SwingUtilities;
+
+import parser.Values;
+import parser.ast.PropertiesFile;
+import parser.ast.Property;
+import parser.type.Type;
+import prism.DefinedConstant;
+import prism.PrismException;
+import prism.PrismSettings;
+import prism.Result;
+import prism.ResultsCollection;
+import prism.UndefinedConstants;
+import userinterface.GUIComputationThread;
+import userinterface.GUISimulationPicker;
+import userinterface.SimulationInformation;
+import userinterface.util.GUIComputationEvent;
 
 public class GUIExperiment
 {

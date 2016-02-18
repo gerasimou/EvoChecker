@@ -27,7 +27,7 @@
 
 package userinterface.properties;
 
-import java.awt.*;
+import java.awt.Dimension;
 
 public class GraphConstantHeader extends javax.swing.JPanel
 {

@@ -26,13 +26,18 @@
 
 package prism;
 
-import java.io.*;
-import java.util.Vector;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Stack;
+import java.util.Vector;
 
-import parser.*;
-import parser.ast.*;
-import parser.type.*;
+import parser.Values;
+import parser.ast.Expression;
+import parser.ast.ForLoop;
+import parser.type.Type;
+import parser.type.TypeInt;
 
 public class Preprocessor
 {

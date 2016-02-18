@@ -28,30 +28,27 @@
 
 package pse;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.ListIterator;
 import java.util.Map;
 
 import explicit.BirthProcess;
 import explicit.StateValues;
+import parser.State;
+import parser.Values;
 import parser.ast.Expression;
 import parser.ast.ExpressionIdent;
 import parser.ast.LabelList;
 import parser.ast.RewardStruct;
 import parser.type.TypeDouble;
-import parser.Values;
-import parser.State;
-import prism.*;
+import prism.Pair;
+import prism.PrismComponent;
+import prism.PrismException;
+import prism.PrismSettings;
 
 /**
  * Implementation of fast adaptive uniformisation (FAU).

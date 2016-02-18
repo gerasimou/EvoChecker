@@ -20,12 +20,12 @@
 
 package jltl2dstar;
 
-import prism.PrismException;
 import java.util.Iterator;
 
 import jltl2ba.APElement;
 import jltl2ba.APSet;
 import jltl2ba.MyBitSet;
+import prism.PrismException;
 
 /**
  * Class representing a subset of 2^AP where AP is the set of 

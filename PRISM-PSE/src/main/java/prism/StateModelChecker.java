@@ -27,12 +27,34 @@
 package prism;
 
 import dv.DoubleVector;
-import jdd.*;
-import odd.*;
-import parser.*;
-import parser.ast.*;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import odd.ODDNode;
+import odd.ODDUtils;
+import parser.Values;
+import parser.VarList;
+import parser.ast.Expression;
+import parser.ast.ExpressionBinaryOp;
+import parser.ast.ExpressionConstant;
+import parser.ast.ExpressionFilter;
 import parser.ast.ExpressionFilter.FilterOperator;
-import parser.type.*;
+import parser.ast.ExpressionFormula;
+import parser.ast.ExpressionFunc;
+import parser.ast.ExpressionITE;
+import parser.ast.ExpressionIdent;
+import parser.ast.ExpressionLabel;
+import parser.ast.ExpressionLiteral;
+import parser.ast.ExpressionProp;
+import parser.ast.ExpressionUnaryOp;
+import parser.ast.ExpressionVar;
+import parser.ast.LabelList;
+import parser.ast.PropertiesFile;
+import parser.ast.Property;
+import parser.type.TypeBool;
+import parser.type.TypeDouble;
+import parser.type.TypeInt;
+import parser.type.TypeVoid;
 
 // Base class for model checkers - does state-based evaluations (no temporal/probabilistic)
 

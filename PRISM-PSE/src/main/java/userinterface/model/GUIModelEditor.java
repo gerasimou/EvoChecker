@@ -27,7 +27,8 @@
 
 package userinterface.model;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.JPanel;
 
 import prism.PrismLangException;
 import userinterface.util.GUIUndoManager;

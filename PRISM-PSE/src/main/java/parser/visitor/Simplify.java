@@ -26,7 +26,12 @@
 
 package parser.visitor;
 
-import parser.ast.*;
+import parser.ast.Expression;
+import parser.ast.ExpressionBinaryOp;
+import parser.ast.ExpressionFormula;
+import parser.ast.ExpressionFunc;
+import parser.ast.ExpressionLiteral;
+import parser.ast.ExpressionUnaryOp;
 import parser.type.TypeDouble;
 import prism.PrismLangException;
 

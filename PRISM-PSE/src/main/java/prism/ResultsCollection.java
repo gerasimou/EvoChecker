@@ -28,8 +28,10 @@
 
 package prism;
 
-import java.util.*;
-import parser.*;
+import java.util.ArrayList;
+import java.util.Vector;
+
+import parser.Values;
 
 /**
  * This class stores the results of experiments. It should be unaware what is being done with the results,

@@ -27,13 +27,17 @@
 
 package userinterface.properties.computation;
 
-import java.io.*;
-import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 
-import userinterface.properties.*;
-import userinterface.util.*;
-import prism.*;
-import parser.ast.*;
+import javax.swing.SwingUtilities;
+
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import prism.Prism;
+import prism.PrismException;
+import userinterface.properties.GUIMultiProperties;
+import userinterface.util.GUIComputationEvent;
 
 public class LoadPropertiesThread extends Thread
 {

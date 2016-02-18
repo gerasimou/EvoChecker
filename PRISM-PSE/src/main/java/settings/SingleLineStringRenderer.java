@@ -26,10 +26,16 @@
 
 package settings;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Insets;
+import java.util.ArrayList;
+
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 public class SingleLineStringRenderer implements SettingRenderer 
 {

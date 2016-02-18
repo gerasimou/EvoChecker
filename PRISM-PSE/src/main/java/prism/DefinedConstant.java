@@ -27,7 +27,10 @@
 
 package prism;
 
-import parser.type.*;
+import parser.type.Type;
+import parser.type.TypeBool;
+import parser.type.TypeDouble;
+import parser.type.TypeInt;
 
 /**
  * Class to manage values for a an undefined constant.

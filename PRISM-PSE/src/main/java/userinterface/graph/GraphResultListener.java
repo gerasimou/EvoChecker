@@ -28,10 +28,13 @@
 
 package userinterface.graph;
 
-import parser.*;
-import prism.*;
+import org.jfree.data.xy.XYDataItem;
 
-import org.jfree.data.xy.*;
+import parser.Values;
+import prism.Interval;
+import prism.PrismException;
+import prism.ResultListener;
+import prism.ResultsCollection;
 
 // TODO: When either the graph or the resultset seizes to exist, then so should this listener.
 

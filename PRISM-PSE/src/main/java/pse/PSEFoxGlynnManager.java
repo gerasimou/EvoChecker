@@ -1,9 +1,9 @@
 package pse;
 
-import prism.PrismLog;
-
 import java.util.BitSet;
 import java.util.HashMap;
+
+import prism.PrismLog;
 
 final public class PSEFoxGlynnManager implements Releaseable
 {

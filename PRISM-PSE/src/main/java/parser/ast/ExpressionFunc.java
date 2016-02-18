@@ -28,11 +28,11 @@ package parser.ast;
 
 import java.util.ArrayList;
 
-import parser.*;
-import parser.visitor.*;
+import parser.EvaluateContext;
+import parser.type.TypeInt;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 import prism.PrismUtils;
-import parser.type.*;
 
 public class ExpressionFunc extends Expression
 {

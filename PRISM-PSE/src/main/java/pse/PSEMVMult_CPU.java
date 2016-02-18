@@ -1,7 +1,5 @@
 package pse;
 
-import java.io.File;
-
 import java.util.Arrays;
 
 public final class PSEMVMult_CPU implements PSEMult, Releaseable

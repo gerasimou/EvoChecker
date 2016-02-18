@@ -26,11 +26,15 @@
 
 package parser.visitor;
 
-import parser.ast.*;
-import parser.type.*;
-import prism.PrismException;
-import prism.PrismLangException;
+import parser.ast.ExpressionProb;
+import parser.ast.ExpressionReward;
+import parser.ast.ExpressionSS;
+import parser.ast.ExpressionStrategy;
+import parser.ast.ExpressionTemporal;
+import parser.ast.RelOp;
+import parser.type.TypeInt;
 import prism.ModelType;
+import prism.PrismLangException;
 
 /**
  * Check expression (property) for validity with respect to a particular model type

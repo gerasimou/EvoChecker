@@ -26,8 +26,8 @@
 
 package explicit;
 
-import java.util.Map;
 import java.util.BitSet;
+import java.util.Map;
 
 import prism.ModelType;
 

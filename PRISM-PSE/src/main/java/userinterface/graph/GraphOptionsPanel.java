@@ -27,14 +27,24 @@
 
 package userinterface.graph;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.util.ArrayList;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import settings.*;
-import userinterface.*;
+import settings.SettingTable;
+import userinterface.GUIPlugin;
+import userinterface.GUIPrism;
 
 public class GraphOptionsPanel extends JPanel implements ListSelectionListener
 {

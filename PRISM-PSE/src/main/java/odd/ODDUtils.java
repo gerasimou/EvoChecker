@@ -26,7 +26,9 @@
 
 package odd;
 
-import jdd.*;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
 
 public class ODDUtils
 {

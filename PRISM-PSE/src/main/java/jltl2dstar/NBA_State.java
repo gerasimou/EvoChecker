@@ -20,12 +20,13 @@
 
 package jltl2dstar;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import jltl2ba.APElement;
 import jltl2ba.APSet;
 import jltl2ba.MyBitSet;
-import jltl2ba.MyBitSet.MyBitSetIterator;
 
 
 /** @file

@@ -31,11 +31,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import jdd.*;
-import odd.*;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import odd.ODDNode;
 import parser.VarList;
 import parser.ast.RelOp;
-import parser.type.*;
+import parser.type.TypeInt;
 
 // Class for state-indexed vectors of (integer or double) values, represented by an MTBDD
 

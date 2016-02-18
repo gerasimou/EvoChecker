@@ -28,16 +28,30 @@
 
 package userinterface.properties;
 
-import java.io.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
-import parser.*;
-import parser.ast.*;
-import prism.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.KeyStroke;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
+
+import parser.PrismParser;
+import parser.ast.PropertiesFile;
+import prism.Prism;
 
 public class GUIPropertiesList extends JList implements KeyListener
 {

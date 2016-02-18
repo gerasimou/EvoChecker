@@ -26,9 +26,11 @@
 
 package prism;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 
-import parser.ast.*;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
 
 /**
  * Example class demonstrating how to control PRISM programmatically,

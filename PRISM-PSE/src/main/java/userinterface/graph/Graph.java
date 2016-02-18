@@ -29,33 +29,72 @@
 
 package userinterface.graph;
 
-import java.awt.*;
-import java.awt.print.*;
-import java.io.*;
-import java.util.*;
-import java.awt.image.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Paint;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.awt.print.Printable;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.StringTokenizer;
+import java.util.TimerTask;
 
-import org.w3c.dom.*;
-import org.xml.sax.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.encoders.KeypointPNGEncoderAdapter;
+import org.jfree.chart.plot.DefaultDrawingSupplier;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.LegendTitle;
+import org.jfree.data.xy.XYDataItem;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.RectangleEdge;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-import org.jfree.ui.*;
-import org.jfree.chart.*;
-import org.jfree.chart.plot.*;
-import org.jfree.chart.title.*;
-import org.jfree.chart.axis.*;
-import org.jfree.data.xy.*;
-import org.jfree.chart.renderer.xy.*;
-import org.jfree.chart.encoders.*;
-
-import net.sf.epsgraphics.*;
-
-import prism.*;
-import settings.*;
+import net.sf.epsgraphics.ColorMode;
+import net.sf.epsgraphics.EpsGraphics;
+import prism.PrismException;
+import settings.BooleanSetting;
+import settings.ChoiceSetting;
+import settings.FontColorPair;
+import settings.FontColorSetting;
+import settings.MultipleLineStringSetting;
+import settings.Setting;
+import settings.SettingDisplay;
+import settings.SettingException;
+import settings.SettingOwner;
 
 /**
  * This class represents multiple series on a single unit graph; all series are

@@ -20,13 +20,15 @@
 
 package jltl2dstar;
 
-import java.util.*;
-import prism.PrismException;
 import java.io.PrintStream;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 
 import jltl2ba.APElement;
 import jltl2ba.APSet;
 import jltl2ba.MyBitSet;
+import prism.PrismException;
 
 
 /** @file

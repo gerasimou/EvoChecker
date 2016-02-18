@@ -26,19 +26,44 @@
 
 package userinterface.simulator.networking;
 
-import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.event.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Frame;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-import simulator.networking.*;
-import settings.*;
-import prism.*;
-import userinterface.*;
-import userinterface.util.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+
+import prism.PrismException;
+import settings.FileSelector;
+import settings.SettingTable;
+import simulator.networking.FileSystem;
+import simulator.networking.SSHHost;
+import simulator.networking.SimulatorNetworkHandler;
+import userinterface.GUIPrism;
+import userinterface.util.GUIPrismFileFilter;
 
 public class GUINetworkEditor extends JDialog implements TreeSelectionListener, MouseListener, Observer, FileSelector
 {

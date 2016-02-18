@@ -26,10 +26,16 @@
 
 package settings;
 
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Insets;
+import java.util.ArrayList;
+
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 public class MultipleLineStringRenderer implements SettingRenderer
 {

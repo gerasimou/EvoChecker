@@ -28,16 +28,27 @@
 package userinterface.model.graphicModel;
 
 
-import java.io.*;
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
-import prism.*;
-import parser.type.*;
-import userinterface.util.*;
-import userinterface.model.*;
-import userinterface.model.computation.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+
+import parser.type.Type;
+import prism.ModelType;
+import prism.PrismException;
+import userinterface.model.GUIModelEditor;
+import userinterface.model.GUIMultiModelHandler;
+import userinterface.model.GUIMultiModelTree;
+import userinterface.model.GUITextModelEditor;
+import userinterface.model.computation.LoadGraphicModelThread;
+import userinterface.util.PropertyTableModel;
+import userinterface.util.SelectionEvent;
+import userinterface.util.SelectionListener;
 
 public class GUIGraphicModelEditor extends GUIModelEditor implements SelectionListener
 {

@@ -27,9 +27,13 @@
 
 package userinterface.model.graphicModel;
 
-import java.awt.datatransfer.*;
-import java.io.*;
-import java.util.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 public class GraphicSelection implements ClipboardOwner, Transferable, Serializable
 {

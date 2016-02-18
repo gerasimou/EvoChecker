@@ -26,7 +26,7 @@
 
 package prism;
 
-import java.io.*;
+import java.io.PrintStream;
 
 /**
  * Implementation of the PrismLog interface that passed all output to a PrintStream object.

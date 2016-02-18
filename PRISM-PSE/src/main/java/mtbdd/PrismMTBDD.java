@@ -29,9 +29,12 @@ package mtbdd;
 
 import java.io.FileNotFoundException;
 
-import prism.*;
-import jdd.*;
-import odd.*;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import odd.ODDNode;
+import prism.PrismException;
+import prism.PrismLog;
 
 //------------------------------------------------------------------------------
 

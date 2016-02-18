@@ -26,9 +26,10 @@
 
 package parser.visitor;
 
-import java.util.*;
+import java.util.List;
 
-import parser.ast.*;
+import parser.ast.Command;
+import parser.ast.RewardStructItem;
 import prism.PrismLangException;
 
 /**

@@ -27,14 +27,19 @@
 
 package userinterface.properties;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.ArrayList;
 
-import prism.*;
-import parser.type.*;
-import userinterface.*;
+import javax.swing.Action;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.TitledBorder;
+
+import prism.PrismException;
+import prism.UndefinedConstants;
+import userinterface.GUIPrism;
 
 public class GUIExperimentPicker extends javax.swing.JDialog
 {

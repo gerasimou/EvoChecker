@@ -20,11 +20,15 @@
 
 package jltl2dstar;
 
+import java.io.PrintStream;
 /** @file
  * Provides optimizations on complete DRAs, notably quotienting using bisimulation.
  */
-import java.util.*;
-import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Vector;
 
 import jltl2ba.APElement;
 import jltl2ba.APElementIterator;

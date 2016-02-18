@@ -1,11 +1,14 @@
 package pse;
 
+import static org.jocl.CL.CL_MEM_COPY_HOST_PTR;
+import static org.jocl.CL.CL_MEM_READ_ONLY;
+import static org.jocl.CL.clCreateBuffer;
+import static org.jocl.CL.clReleaseMemObject;
+
 import org.jocl.Pointer;
 import org.jocl.Sizeof;
 import org.jocl.cl_context;
 import org.jocl.cl_mem;
-
-import static org.jocl.CL.*;
 
 final public class PSEMVMultTopology_ELL_OCL implements Releaseable
 {

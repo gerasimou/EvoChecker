@@ -31,13 +31,18 @@ package userinterface.properties;
 
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
+import parser.Values;
+import parser.ast.Expression;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import prism.Interval;
+import prism.Prism;
+import prism.PrismException;
+import prism.Result;
+import prism.TileList;
 import userinterface.GUIPrism;
-import parser.*;
-import parser.ast.*;
-import parser.type.TypeVoid;
-import prism.*;
 
 /**
  * Encapsulates a property in the list in the GUI "Properties" tab.

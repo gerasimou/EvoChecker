@@ -26,9 +26,11 @@
 
 package parser.ast;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
-import parser.visitor.*;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 
 public class Module extends ASTElement

@@ -26,7 +26,22 @@
 
 package parser.visitor;
 
-import parser.ast.*;
+import parser.ast.Command;
+import parser.ast.Declaration;
+import parser.ast.ExpressionExists;
+import parser.ast.ExpressionForAll;
+import parser.ast.ExpressionFunc;
+import parser.ast.ExpressionIdent;
+import parser.ast.ExpressionProb;
+import parser.ast.ExpressionReward;
+import parser.ast.ExpressionSS;
+import parser.ast.ExpressionStrategy;
+import parser.ast.ExpressionTemporal;
+import parser.ast.Module;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import parser.ast.RenamedModule;
+import parser.ast.Update;
 import prism.PrismLangException;
 
 /**

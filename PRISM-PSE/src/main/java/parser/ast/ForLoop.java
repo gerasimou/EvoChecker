@@ -26,9 +26,9 @@
 
 package parser.ast;
 
-import parser.visitor.*;
+import parser.type.TypeInt;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
-import parser.type.*;
 public class ForLoop extends ASTElement
 {
 	// For loop info

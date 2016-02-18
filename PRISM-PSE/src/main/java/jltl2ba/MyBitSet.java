@@ -22,10 +22,10 @@
 
 package jltl2ba;
 
-import java.util.BitSet;
-import java.util.Vector;
-import java.util.Iterator;
 import java.io.PrintStream;
+import java.util.BitSet;
+import java.util.Iterator;
+import java.util.Vector;
 
 
 public class MyBitSet extends BitSet implements Comparable<BitSet>, Iterable<Integer> {

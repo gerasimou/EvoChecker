@@ -28,8 +28,10 @@ package prism;
 
 import java.util.Vector;
 
-import jdd.*;
-import parser.*;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import parser.Values;
+import parser.VarList;
 
 /*
  * Class for MTBDD-based storage of a PRISM model that is a CTMC.

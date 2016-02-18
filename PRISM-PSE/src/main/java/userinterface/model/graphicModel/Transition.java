@@ -27,13 +27,22 @@
 
 package userinterface.model.graphicModel;
 
-//Java Packages
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
 
-import java.awt.geom.*;
-import java.util.*;
-import java.awt.*;
-import userinterface.util.*;
-import prism.*;
+//Java Packages
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Observer;
+
+import prism.Prism;
+import userinterface.util.PropertyOwner;
+import userinterface.util.SingleProperty;
 
 
 /** This class stores information about simple transitions between States.  In its

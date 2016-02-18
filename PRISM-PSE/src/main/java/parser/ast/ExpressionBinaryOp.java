@@ -26,10 +26,10 @@
 
 package parser.ast;
 
-import parser.*;
-import parser.visitor.*;
+import parser.EvaluateContext;
+import parser.type.TypeInt;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
-import parser.type.*;
 
 public class ExpressionBinaryOp extends Expression
 {

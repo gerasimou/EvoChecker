@@ -26,7 +26,8 @@
 
 package parser;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import parser.ast.ModulesFile;
 import prism.PrismLangException;

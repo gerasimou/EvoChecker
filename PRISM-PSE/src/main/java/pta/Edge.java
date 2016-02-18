@@ -28,7 +28,8 @@ package pta;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import prism.PrismException;
 

@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import explicit.rewards.MCRewards;
+import explicit.rewards.MCRewardsFromMDPRewards;
+import explicit.rewards.MDPRewards;
 import parser.ast.Expression;
 import prism.DRA;
 import prism.Pair;
@@ -42,9 +45,6 @@ import prism.PrismFileLog;
 import prism.PrismLog;
 import prism.PrismUtils;
 import strat.MDStrategyArray;
-import explicit.rewards.MCRewards;
-import explicit.rewards.MCRewardsFromMDPRewards;
-import explicit.rewards.MDPRewards;
 
 /**
  * Explicit-state model checker for Markov decision processes (MDPs).

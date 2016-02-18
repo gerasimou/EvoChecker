@@ -26,16 +26,20 @@
 
 package userinterface.simulator;
 
-import prism.*;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
 
-import java.awt.*;
-import java.util.*;
-import java.awt.event.*;
-import userinterface.*;
+import prism.PrismException;
+import prism.PrismSettings;
+import userinterface.GUIPrism;
+import userinterface.simulator.SimulationView.RewardStructure;
+import userinterface.simulator.SimulationView.RewardStructureColumn;
 import userinterface.simulator.SimulationView.Variable;
-import userinterface.simulator.SimulationView.*;
 
 public class GUIViewDialog extends JDialog implements KeyListener
 {

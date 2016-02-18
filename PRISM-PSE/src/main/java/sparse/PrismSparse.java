@@ -29,11 +29,16 @@ package sparse;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import prism.*;
-import strat.MDStrategyIV;
-import jdd.*;
-import dv.*;
-import odd.*;
+import dv.DoubleVector;
+import dv.IntegerVector;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import odd.ODDNode;
+import prism.NativeIntArray;
+import prism.OpsAndBoundsList;
+import prism.PrismException;
+import prism.PrismLog;
 
 //----------------------------------------------------------------------------------------------
 

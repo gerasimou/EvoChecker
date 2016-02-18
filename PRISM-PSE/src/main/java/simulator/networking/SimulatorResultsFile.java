@@ -26,9 +26,14 @@
 
 package simulator.networking;
 
-import java.util.*;
-import java.io.*;
-import prism.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.StringTokenizer;
+
+import prism.PrismException;
 
 public class SimulatorResultsFile extends Observable
 {

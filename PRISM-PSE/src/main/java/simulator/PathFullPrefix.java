@@ -26,7 +26,7 @@
 
 package simulator;
 
-import parser.*;
+import parser.State;
 
 /**
  * Represents a prefix of an existing PathFull object.

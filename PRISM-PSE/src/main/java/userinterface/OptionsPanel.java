@@ -27,8 +27,9 @@
 
 package userinterface;
 
-import javax.swing.*;
-import prism.*;
+import javax.swing.JPanel;
+
+import prism.PrismException;
 
 public abstract class OptionsPanel extends JPanel
 {

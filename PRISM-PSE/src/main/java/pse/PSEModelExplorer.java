@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import explicit.ModelExplorer;
 import param.SymbolicEngine;
 import param.TransitionList;
 import parser.State;
@@ -40,7 +41,6 @@ import parser.ast.ModulesFile;
 import parser.visitor.ASTTraverse;
 import prism.Pair;
 import prism.PrismException;
-import explicit.ModelExplorer;
 
 /**
  * Class providing means for exploration of structures arising from modules

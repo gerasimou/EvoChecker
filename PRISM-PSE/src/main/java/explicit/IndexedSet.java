@@ -26,7 +26,12 @@
 
 package explicit;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Class storing an indexed set of objects of type T.

@@ -26,10 +26,13 @@
 
 package simulator;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import parser.*;
-import prism.*;
+import parser.State;
+import parser.VarList;
+import prism.ModelType;
+import prism.PrismException;
+import prism.PrismLangException;
 
 public class TransitionList
 {

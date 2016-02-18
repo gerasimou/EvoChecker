@@ -26,9 +26,11 @@
 
 package dv;
 
-import prism.*;
-import jdd.*;
-import odd.*;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import odd.ODDNode;
+import prism.PrismException;
+import prism.PrismLog;
 
 /**
  * Class to encapsulate a vector of integer, stored natively.

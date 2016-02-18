@@ -26,13 +26,16 @@
 
 package prism;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import jdd.*;
-import odd.*;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import odd.ODDNode;
 import parser.Values;
 import parser.VarList;
-import parser.type.*;
+import parser.type.TypeInt;
 
 // list of states (mtbdd)
 

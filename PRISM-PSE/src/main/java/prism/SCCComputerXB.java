@@ -28,7 +28,9 @@ package prism;
 
 import java.util.Vector;
 
-import jdd.*;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
 
 /**
  * SCC (strongly connected component) decomposition

@@ -26,7 +26,7 @@
 
 package userinterface.util;
 
-import java.util.*;
+import java.util.Observer;
 
 public interface PropertyOwner extends Comparable<Object>
 {

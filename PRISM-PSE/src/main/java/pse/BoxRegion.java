@@ -30,8 +30,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import parser.Values;
 import explicit.Utils;
+import parser.Values;
 
 /**
  * Box (hyper-rectangle) variant of a parameter region.

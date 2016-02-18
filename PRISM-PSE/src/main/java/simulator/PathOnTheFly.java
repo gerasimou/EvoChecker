@@ -26,8 +26,8 @@
 
 package simulator;
 
-import parser.*;
-import parser.ast.*;
+import parser.State;
+import parser.ast.ModulesFile;
 
 /**
  * Stores and manipulates a path though a model.

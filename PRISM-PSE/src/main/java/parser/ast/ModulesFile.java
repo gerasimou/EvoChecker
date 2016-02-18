@@ -26,14 +26,19 @@
 
 package parser.ast;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Vector;
 
-import parser.*;
-import parser.visitor.*;
-import prism.PrismLangException;
+import parser.State;
+import parser.Values;
+import parser.VarList;
+import parser.type.Type;
+import parser.visitor.ASTVisitor;
 import prism.ModelType;
+import prism.PrismLangException;
 import prism.PrismUtils;
-import parser.type.*;
 
 // Class representing parsed model file
 

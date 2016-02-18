@@ -26,7 +26,7 @@
 
 package parser.visitor;
 
-import parser.ast.*;
+import parser.ast.ASTElement;
 import prism.PrismLangException;
 
 public class ToTreeString extends ASTTraverse

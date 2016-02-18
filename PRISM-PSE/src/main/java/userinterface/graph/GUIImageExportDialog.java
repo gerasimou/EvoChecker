@@ -26,12 +26,14 @@
 
 package userinterface.graph;
 
-import javax.swing.*;
+import java.awt.Rectangle;
 
-import java.awt.*;
+import javax.swing.Action;
+import javax.swing.JDialog;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import userinterface.*;
+
+import userinterface.GUIPrism;
 
 public class GUIImageExportDialog extends JDialog implements DocumentListener
 {         

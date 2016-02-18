@@ -27,8 +27,10 @@
 
 package userinterface.properties;
 
-import parser.ast.*;
-import prism.*;
+import parser.ast.Expression;
+import parser.ast.ExpressionIdent;
+import prism.PrismException;
+import prism.PrismLangException;
 
 public class GUILabel
 {

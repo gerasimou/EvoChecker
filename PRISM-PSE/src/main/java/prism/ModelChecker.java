@@ -27,7 +27,7 @@
 package prism;
 
 import jdd.JDDNode;
-import parser.ast.*;
+import parser.ast.Expression;
 
 // interface for model checker classes
 

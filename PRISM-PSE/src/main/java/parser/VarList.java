@@ -26,11 +26,26 @@
 
 package parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
-import prism.*;
-import parser.ast.*;
-import parser.type.*;
+import parser.ast.Declaration;
+import parser.ast.DeclarationBool;
+import parser.ast.DeclarationClock;
+import parser.ast.DeclarationInt;
+import parser.ast.DeclarationIntUnbounded;
+import parser.ast.DeclarationType;
+import parser.ast.Module;
+import parser.ast.ModulesFile;
+import parser.type.Type;
+import parser.type.TypeBool;
+import parser.type.TypeInt;
+import prism.PrismLangException;
+import prism.PrismUtils;
 
 /**
  * Class to store information about the set of variables in a PRISM model.

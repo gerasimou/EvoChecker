@@ -33,17 +33,12 @@ import explicit.StateValues;
 import parser.Values;
 import parser.ast.Expression;
 import parser.ast.ExpressionProb;
-import parser.ast.ExpressionReward;
-import parser.ast.ExpressionTemporal;
 import parser.ast.LabelList;
 import parser.ast.ModulesFile;
 import parser.ast.PropertiesFile;
-import parser.ast.RewardStruct;
 import prism.PrismComponent;
 import prism.PrismException;
 import prism.Result;
-import simulator.PrismModelExplorer;
-import simulator.SimulatorEngine;
 
 /**
  * CTMC model checker based on fast adaptive uniformisation.

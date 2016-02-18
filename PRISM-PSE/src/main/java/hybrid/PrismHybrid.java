@@ -26,10 +26,13 @@
 
 package hybrid;
 
-import prism.*;
-import jdd.*;
-import dv.*;
-import odd.*;
+import dv.DoubleVector;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import odd.ODDNode;
+import prism.PrismException;
+import prism.PrismLog;
 
 //------------------------------------------------------------------------------
 

@@ -27,8 +27,8 @@
 
 package userinterface.properties;
 
-import userinterface.util.*;
-import parser.*;
+import parser.Values;
+import userinterface.util.GUIEvent;
 
 public class GUIPropertiesEvent extends GUIEvent
 {

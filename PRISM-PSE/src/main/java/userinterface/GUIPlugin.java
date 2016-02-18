@@ -27,11 +27,24 @@
 
 package userinterface;
 
-import javax.swing.*;
-import java.awt.*;
-import prism.*;
-import java.io.*;
-import userinterface.util.*;
+import java.awt.Dimension;
+import java.io.File;
+
+import javax.swing.Action;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
+
+import prism.Prism;
+import prism.PrismSettingsListener;
+import userinterface.util.GUIEvent;
+import userinterface.util.GUIEventHandler;
+import userinterface.util.GUIEventListener;
+import userinterface.util.GUILogEvent;
+import userinterface.util.GUIPrismFileFilter;
+import userinterface.util.GUIUndoManager;
 
 /** This abstract class should be overridden to implement a component to be plugged
  * in to the PRISM GUI.  It extends JPanel so that it can be directly added to the

@@ -28,23 +28,63 @@
 
 package userinterface.simulator;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
+import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import simulator.*;
-import simulator.networking.*;
-import parser.*;
-import parser.ast.*;
-import prism.*;
-import userinterface.*;
-import userinterface.util.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFileChooser;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
+import parser.Values;
+import parser.ast.LabelList;
+import parser.ast.ModulesFile;
+import parser.ast.PropertiesFile;
+import prism.PrismException;
+import prism.PrismLangException;
+import prism.PrismSettings;
+import prism.PrismSettingsListener;
+import prism.PrismUtils;
+import prism.UndefinedConstants;
+import simulator.PathFullInfo;
+import simulator.SimulatorEngine;
+import simulator.networking.SimulatorNetworkHandler;
+import userinterface.GUIConstantsPicker;
+import userinterface.GUIPlugin;
+import userinterface.GUIPrism;
+import userinterface.OptionsPanel;
 import userinterface.graph.Graph;
-import userinterface.model.*;
-import userinterface.properties.*;
-import userinterface.simulator.networking.*;
+import userinterface.model.GUIModelEvent;
+import userinterface.model.GUIMultiModel;
+import userinterface.properties.GUIMultiProperties;
+import userinterface.properties.GUIPropertiesEvent;
+import userinterface.properties.GUIPropertiesList;
+import userinterface.properties.GUIProperty;
+import userinterface.simulator.networking.GUINetworkEditor;
+import userinterface.util.GUIComputationEvent;
+import userinterface.util.GUIExitEvent;
+import userinterface.util.GUIPrismFileFilter;
 
 @SuppressWarnings("serial")
 public class GUISimulator extends GUIPlugin implements MouseListener, ListSelectionListener, PrismSettingsListener

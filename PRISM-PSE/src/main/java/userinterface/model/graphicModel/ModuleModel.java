@@ -27,19 +27,30 @@
 
 package userinterface.model.graphicModel;
 
+import java.awt.Component;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+
 //Java Packages
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-import java.util.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 
-
-
-import java.awt.geom.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.datatransfer.*;
-import java.io.*;
-import userinterface.model.*;
-import userinterface.util.*;
+import userinterface.model.GUIMultiModelHandler;
+import userinterface.model.GUIMultiModelTree;
+import userinterface.util.BooleanProperty;
+import userinterface.util.SelectionModel;
 
 /** This class is the model for a ModuleDrawingPane.  It contains all data /
  * processing methods required for the module diagrams to be drawn.  The processing

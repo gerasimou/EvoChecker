@@ -28,12 +28,15 @@
 package userinterface.model.graphicModel;
 
 //Java Packages
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Observer;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
-import userinterface.util.*;
-import prism.*;
+import prism.Prism;
+import userinterface.util.SingleProperty;
 
 /** A ProbTransition is basically a Transition with an overridden probability
  * attribute.  It also has a different rendering method, allowing it to be drawn

@@ -57,6 +57,8 @@ package param;
 import java.util.BitSet;
 import java.util.List;
 
+import edu.jas.kern.ComputerThreads;
+import explicit.Model;
 import param.Lumper.BisimType;
 import param.StateEliminator.EliminationOrder;
 import parser.State;
@@ -90,8 +92,6 @@ import prism.PrismLog;
 import prism.PrismPrintStreamLog;
 import prism.PrismSettings;
 import prism.Result;
-import edu.jas.kern.ComputerThreads;
-import explicit.Model;
 
 /**
  * Model checker for parametric Markov models.

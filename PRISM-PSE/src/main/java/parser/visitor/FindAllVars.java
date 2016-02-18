@@ -28,8 +28,10 @@ package parser.visitor;
 
 import java.util.Vector;
 
-import parser.ast.*;
-import parser.type.*;
+import parser.ast.ExpressionIdent;
+import parser.ast.ExpressionVar;
+import parser.ast.Update;
+import parser.type.Type;
 import prism.PrismLangException;
 
 /**

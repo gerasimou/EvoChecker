@@ -26,11 +26,20 @@
 
 package parser.ast;
 
-import parser.*;
-import parser.visitor.*;
+import parser.EvaluateContext;
+import parser.EvaluateContextState;
+import parser.EvaluateContextSubstate;
+import parser.EvaluateContextValues;
+import parser.State;
+import parser.Values;
+import parser.type.TypeBool;
+import parser.type.TypeDouble;
+import parser.type.TypeInt;
+import parser.visitor.ASTTraverse;
+import parser.visitor.CheckValid;
+import parser.visitor.ConvertForJltl2ba;
 import prism.ModelType;
 import prism.PrismLangException;
-import parser.type.*;
 
 // Abstract class for PRISM language expressions
 

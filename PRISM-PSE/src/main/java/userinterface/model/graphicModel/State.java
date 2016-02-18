@@ -28,13 +28,18 @@
 package userinterface.model.graphicModel;
 
 //Java Packages
-
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 //Prism Package
-import userinterface.util.*;
+import userinterface.util.BooleanProperty;
+import userinterface.util.DoubleProperty;
+import userinterface.util.PropertyConstants;
+import userinterface.util.PropertyOwner;
+import userinterface.util.SingleProperty;
 
 /** This class stores all of the data required to represent a state on a module
  * diagram.  It contains fields for a name, invariant and a flag to say whether it

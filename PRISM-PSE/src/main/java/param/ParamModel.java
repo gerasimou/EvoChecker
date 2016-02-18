@@ -32,11 +32,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
+import explicit.ModelExplicit;
 import parser.Values;
 import prism.ModelType;
 import prism.PrismException;
 import prism.PrismLog;
-import explicit.ModelExplicit;
 
 /**
  * Represents a parametric Markov model.

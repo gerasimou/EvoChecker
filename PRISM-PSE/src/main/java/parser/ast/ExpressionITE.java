@@ -26,8 +26,8 @@
 
 package parser.ast;
 
-import parser.*;
-import parser.visitor.*;
+import parser.EvaluateContext;
+import parser.visitor.ASTVisitor;
 import prism.PrismLangException;
 
 public class ExpressionITE extends Expression

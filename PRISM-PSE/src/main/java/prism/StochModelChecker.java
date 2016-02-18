@@ -26,15 +26,17 @@
 
 package prism;
 
-import java.io.*;
+import java.io.File;
 
-import jdd.*;
-import dv.*;
-import mtbdd.*;
-import sparse.*;
-import hybrid.*;
-import parser.ast.*;
-import parser.type.*;
+import dv.DoubleVector;
+import hybrid.PrismHybrid;
+import jdd.JDD;
+import jdd.JDDNode;
+import mtbdd.PrismMTBDD;
+import parser.ast.Expression;
+import parser.ast.ExpressionTemporal;
+import parser.ast.PropertiesFile;
+import sparse.PrismSparse;
 
 /*
  * Model checker for CTMCs.

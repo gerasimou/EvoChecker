@@ -31,13 +31,13 @@ import java.util.BitSet;
 import java.util.List;
 import java.util.Map;
 
+import explicit.rewards.STPGRewards;
 import parser.ast.Expression;
 import prism.PrismComponent;
 import prism.PrismException;
 import prism.PrismFileLog;
 import prism.PrismLog;
 import prism.PrismUtils;
-import explicit.rewards.STPGRewards;
 
 /**
  * Explicit-state model checker for two-player stochastic games (STPGs).

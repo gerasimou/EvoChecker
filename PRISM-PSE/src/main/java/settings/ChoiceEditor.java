@@ -26,12 +26,18 @@
 
 package settings;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.event.*;
-import java.awt.event.*;
-import javax.swing.border.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
 
 public class ChoiceEditor implements SettingEditor, ActionListener, FocusListener
 {

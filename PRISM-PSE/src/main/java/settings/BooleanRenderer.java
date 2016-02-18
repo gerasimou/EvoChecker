@@ -26,10 +26,17 @@
 
 package settings;
 
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.util.ArrayList;
+
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 public class BooleanRenderer implements SettingRenderer
 {

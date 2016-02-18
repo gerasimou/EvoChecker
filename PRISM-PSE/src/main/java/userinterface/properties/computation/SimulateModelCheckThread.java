@@ -28,16 +28,25 @@
 
 package userinterface.properties.computation;
 
-import java.util.*;
-import javax.swing.*;
+import java.util.ArrayList;
 
-import parser.*;
-import parser.ast.*;
-import prism.*;
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+
+import parser.Values;
+import parser.ast.Expression;
+import parser.ast.PropertiesFile;
+import prism.PrismException;
+import prism.PrismSettings;
+import prism.Result;
 import simulator.method.SimulationMethod;
-import userinterface.*;
-import userinterface.util.*;
-import userinterface.properties.*;
+import userinterface.GUIComputationThread;
+import userinterface.GUIPrism;
+import userinterface.SimulationInformation;
+import userinterface.properties.GUIMultiProperties;
+import userinterface.properties.GUIPropertiesEvent;
+import userinterface.properties.GUIProperty;
+import userinterface.util.GUIComputationEvent;
 
 /**
  * Thread that executes approximate (simulation-based) model checking of a property via PRISM.

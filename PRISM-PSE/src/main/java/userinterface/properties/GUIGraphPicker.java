@@ -27,18 +27,25 @@
 
 package userinterface.properties;
 
-import java.util.Vector;
+import java.awt.BorderLayout;
 import java.util.ArrayList;
-import javax.swing.*;
-import java.awt.*;
-import org.jfree.data.xy.*;
+import java.util.Vector;
 
-import userinterface.*;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+
+import org.jfree.data.xy.XYDataItem;
+
+import parser.Values;
+import parser.type.TypeInterval;
+import prism.DefinedConstant;
+import prism.Interval;
+import prism.PrismException;
+import prism.ResultsCollection;
+import userinterface.GUIPlugin;
+import userinterface.GUIPrism;
 import userinterface.graph.Graph;
 import userinterface.graph.GraphResultListener;
-import prism.*;
-import parser.*;
-import parser.type.TypeInterval;
 
 public class GUIGraphPicker extends javax.swing.JDialog
 {

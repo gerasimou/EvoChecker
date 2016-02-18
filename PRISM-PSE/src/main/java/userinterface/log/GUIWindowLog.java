@@ -27,12 +27,14 @@
 
 package userinterface.log;
 
-import javax.swing.*;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 
-import prism.*;
+import prism.PrismLog;
+import prism.PrismSettings;
 import userinterface.util.GUIEvent;
 
 public class GUIWindowLog extends PrismLog

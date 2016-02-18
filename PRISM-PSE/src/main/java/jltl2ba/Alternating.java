@@ -27,10 +27,9 @@
 
 package jltl2ba;
 
-import java.util.Vector;
 import java.io.PrintStream;
+import java.util.Vector;
 
-import jltl2ba.SimpleLTL;
 import prism.PrismException;
 
 public class Alternating {

@@ -27,9 +27,15 @@
 
 package userinterface.util;
 
-import javax.swing.table.*;
-import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 
 @SuppressWarnings("serial")
 public class PropertyTableModel extends AbstractTableModel implements Observer

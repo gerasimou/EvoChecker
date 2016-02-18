@@ -27,15 +27,37 @@
 
 package userinterface.log;
 
-import java.io.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
-import userinterface.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+
 import prism.PrismLog;
-import userinterface.util.*;
-import prism.*;
+import prism.PrismSettings;
+import prism.PrismSettingsListener;
+import userinterface.GUIClipboardEvent;
+import userinterface.GUIPlugin;
+import userinterface.GUIPrism;
+import userinterface.OptionsPanel;
+import userinterface.util.GUIEvent;
+import userinterface.util.GUILogEvent;
+import userinterface.util.GUIPrismFileFilter;
 
 @SuppressWarnings("serial")
 public class GUILog extends GUIPlugin implements MouseListener, PrismSettingsListener

@@ -22,7 +22,9 @@
 package jltl2dstar;
 
 import java.io.PrintStream;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 
 import jltl2ba.APElement;
 import jltl2ba.APSet;

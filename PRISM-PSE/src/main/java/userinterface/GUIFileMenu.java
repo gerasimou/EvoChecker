@@ -27,15 +27,16 @@
 
 package userinterface;
 
-import javax.swing.JMenu;
-import javax.swing.Action;
-import javax.swing.AbstractAction;
-
 import java.awt.Toolkit;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-import userinterface.util.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JMenu;
+import javax.swing.KeyStroke;
+
+import userinterface.util.GUIEvent;
 
 public class GUIFileMenu extends GUIPlugin
 {

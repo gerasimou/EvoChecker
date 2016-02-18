@@ -28,9 +28,11 @@
 package userinterface.model.graphicModel;
 
 //Java Packages
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 
-import java.awt.geom.*;
-import userinterface.util.*;
+import userinterface.util.PropertyConstants;
+import userinterface.util.SingleProperty;
 
 
 /** This class is overrides State to gain access to its drag and drop facilities.

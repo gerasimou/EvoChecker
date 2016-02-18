@@ -26,13 +26,31 @@
 
 package prism;
 
-import java.util.Vector;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Vector;
 
-import jdd.*;
-import parser.*;
-import parser.ast.*;
+import jdd.JDD;
+import jdd.JDDNode;
+import jdd.JDDVars;
+import parser.Values;
+import parser.VarList;
+import parser.ast.Command;
+import parser.ast.Expression;
+import parser.ast.Module;
+import parser.ast.ModulesFile;
+import parser.ast.RewardStruct;
+import parser.ast.SystemBrackets;
+import parser.ast.SystemDefn;
+import parser.ast.SystemFullParallel;
+import parser.ast.SystemHide;
+import parser.ast.SystemInterleaved;
+import parser.ast.SystemModule;
+import parser.ast.SystemParallel;
+import parser.ast.SystemReference;
+import parser.ast.SystemRename;
+import parser.ast.Update;
+import parser.ast.Updates;
 
 // class to translate a modules description file into an MTBDD model
 
