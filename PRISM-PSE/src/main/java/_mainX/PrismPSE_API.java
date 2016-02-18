@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import parser.Values;
 import parser.ast.ModulesFile;
@@ -13,14 +12,9 @@ import parser.ast.Property;
 import prism.Prism;
 import prism.PrismException;
 import prism.PrismFileLog;
-import prism.PrismLangException;
 import prism.PrismLog;
 import prism.Result;
-import prism.ResultsCollection;
-import pse.BoxRegion;
-import pse.BoxRegionValues;
 import pse.DecompositionProcedure;
-import pse.BoxRegionValues.StateValuesPair;
 
 public class PrismPSE_API {
 
