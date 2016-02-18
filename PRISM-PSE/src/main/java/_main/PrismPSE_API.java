@@ -1,4 +1,4 @@
-package _mainX;
+package _main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
