@@ -83,6 +83,13 @@
 			<version>1.0</version>
 		</dependency>
 
+		<!--  GSON, i.e., Google's JSON -->
+	  	<dependency>
+	  		<groupId>com.google.code.gson</groupId>
+	  		<artifactId>gson</artifactId>
+	  		<version>2.5</version>
+	  	</dependency>
+
     </dependencies>
 
   <build>
