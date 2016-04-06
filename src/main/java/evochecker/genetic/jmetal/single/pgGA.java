@@ -69,6 +69,9 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 
   /** Parallel Evaluator handle*/
   private IParallelEvaluator parallelEvaluator_ ;
+  
+  /** Knowledge*/
+  private Knowledge knowledge;
 
   
   /**
@@ -93,10 +96,10 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 
 	  //Initialize the variables
 	  population 			= new SolutionSet(populationSize);
-	  offspringPopulation = new SolutionSet(populationSize) ;
+	  offspringPopulation 	= new SolutionSet(populationSize) ;
 
 	  //Read the operators
-	  mutationOperator = operators_.get("mutation");
+	  mutationOperator 	= operators_.get("mutation");
 	  crossoverOperator = operators_.get("crossover");
 	  selectionOperator = operators_.get("selection");
 
@@ -105,6 +108,9 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 	  
 	  //Start the parallel evaluator
 	  parallelEvaluator_.startEvaluator(problem_) ;
+	  
+	  //initialise knowledge
+	  knowledge = new Knowledge(populationSize);
   }
   
   
@@ -155,6 +161,19 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 					  newSolution = new Solution(problem_);
 					  parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
 				  }
+			  }
+		  }
+		  else if (seeding.equals("LEARNING")){
+			  int i=0;
+			  //add individual from knowledge
+			  for (; i<knowledge.size(); i++){
+				  parallelEvaluator_.addSolutionForEvaluation(new Solution(knowledge.get(i)));
+			  }
+			  // Create the initial solutionSet
+			  Solution newSolution;
+			  for (; i < populationSize; i++) {
+				  newSolution = new Solution(problem_);
+				  parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
 			  }
 		  }
 		  else throw new Exception();
@@ -287,6 +306,9 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 		  evaluations += 500;
 	  }
 	  
+	  //update knowledge
+	  knowledge.update();
+	  
 	  // Return a population with the best individual
 	  SolutionSet resultPopulation = new SolutionSet(1) ;
 	  resultPopulation.add(population.get(0)) ;
@@ -332,5 +354,68 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 		Utility.printVariablesToFile("data/VAR_SGA_"+ seeding +"_E"+ EvoChecker.adaptationStep +"_"+ iterations,
 						   population.get(0), true);
   }
+  
+  
+  
+  /**
+   * Inner class representing knowledge acquired through adaptation 
+   * @author sgerasimou
+   *
+   */
+  class Knowledge extends SolutionSet{
+	  
+	  /**
+	   * Private constructor
+	   * Create a knowledge with maximum size
+	   * @param maximumSize
+	   */
+	  private Knowledge (int maximumSize){
+		  super(maximumSize);
+	  }
+	  
+//	  SolutionSet knowledgeSet = new SolutionSet(populationSize);
+	  
+	  
+	  /** Updates knowledge based on the seeding technique*/
+	  private void update() throws ClassNotFoundException {
+		  seeding = Utility.getProperty("SEEDING").toUpperCase();	  
+	  
+		  try{
+			  if (seeding.equals("NORMAL")){
+				  //clear knowledge and start fresh
+				  this.clear();
+			  }
+			  else if (seeding.equals("BEST")){
+				  //keep the best two individuals from the last population
+				  this.clear();
+				  this.add(new Solution(population.get(0)));
+				  this.add(new Solution(population.get(1)));
+			  }
+			  else if (seeding.equals("POPULATION")){
+				  //keep the entire population from last adaptation event
+				  this.clear();
+				  // Create the SAME solutionSet
+				  if (population.size() == populationSize){
+					  for (int i = 0; i < populationSize; i++) {
+						  this.add(new Solution(population.get(i))) ;
+					  }
+				  }
+			  }
+			  else if (seeding.equals("LEARNING")){
+				  //add to the knowledge the best two individuals from the population of the best adaptation event
+				  this.add(new Solution(population.get(0)));
+				  this.add(new Solution(population.get(1)));
+			  }
+			  else throw new Exception();
+		  }
+		  catch (Exception e){
+			  e.printStackTrace();
+			  System.exit(0);
+		  }
+	  }
+	  
+	  
+  }
+  
   
 } // pgGA
