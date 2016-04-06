@@ -87,7 +87,11 @@ public class EvoChecker {
 			evoChecker.initialiseAlgorithm();
 			
 			//execute adaptation step
-			evoChecker.adaptSystem("models/FX/runtime/fxMedium1.pm");
+			String str 	= Utility.getProperty("MODEL_TEMPLATE_FILE");
+			str			= StringUtils.replace(str, "FX/", "FX/runtime/");
+			str 		= StringUtils.replace(str, ".", "1.");
+			evoChecker.adaptSystem(str);
+//			"models/FX/runtime/fxMedium1.pm");
 //			evoChecker.adaptSystemStep("models/FX/runtime/fxSmall_.pm", 1, 13);
 			
 			//close down
@@ -233,7 +237,7 @@ public class EvoChecker {
 		
 		// Execute the Algorithm
 		SolutionSet population = algorithm.execute();
-
+ 
 		
 		//Print results to console
 		System.out.println("-------------------------------------------------");
