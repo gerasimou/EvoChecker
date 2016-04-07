@@ -308,6 +308,7 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 	  
 	  //update knowledge
 	  knowledge.update();
+	  System.out.println("Knowledge size():\t" + knowledge.size());
 	  
 	  // Return a population with the best individual
 	  SolutionSet resultPopulation = new SolutionSet(1) ;

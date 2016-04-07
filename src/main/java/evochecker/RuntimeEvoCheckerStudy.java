@@ -13,20 +13,20 @@ public class RuntimeEvoCheckerStudy {
 	public static void main(String[] args) {
 		EvoChecker evoChecker = new EvoChecker();
 
-		int MAXRUNS = 1;
+		int MAXRUNS = 30;
 
 		System.out.println(Utility.getProperty("SEEDING"));
 		//run for MAXRUNS
-		for (int run=0; run<MAXRUNS; run++){
-			setupDisruptiveEvent("models/FX/runtime/fxSmall13Template.pm", "models/FX/runtime/fxSmall13.pm");
-			evoChecker.main(null);
-		}
+//		for (int run=0; run<MAXRUNS; run++){
+//			setupDisruptiveEvent("models/FX/runtime/fxSmall13Template.pm", "models/FX/runtime/fxSmall13.pm");
+//			evoChecker.main(null);
+//		}
 		
 
 		//run for MAXRUNS
-//		for (int run=0; run<MAXRUNS; run++){
-//			evoChecker.main(null);	
-//		}
+		for (int run=0; run<MAXRUNS; run++){
+			evoChecker.main(null);	
+		}
 	}
 
 	
