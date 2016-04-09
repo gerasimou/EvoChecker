@@ -85,7 +85,6 @@ const double op3S4Time=2.9; //response time of service 3 op3
 const double op4S1Time=4.8; //response time of service 1 op3
 const double op4S2Time=3.9; //response time of service 2 op3
 const double op4S3Time=3.5; //response time of service 3 op3
-const double op4S3Time=3.5; //response time of service 3 op4
 const double op4S4Time=5.4; //response time of service 3 op4
 
 const double op5S1Time=4.1; //response time of service 1 op5
