@@ -1,0 +1,26 @@
+module strategyOp%
+	operation% : [0..6] init 0;
+	stepOp%	 : [1..4] init 1;
+
+	[startOp%]	operation% = 0			-> 1.0 : (operation%'=1);
+
+	[check%1]	operation% = 1 & stepOp% = 1	-> ((seqOp%=1 | seqOp%=2)? 1 : 0) : (operation%'=2) +
+                                           	   	   ((seqOp%=3 | seqOp%=4)? 1 : 0) : (operation%'=3) +
+                                           	   	   ((seqOp%=5 | seqOp%=6)? 1 : 0) : (operation%'=4) ;
+
+	[check%2]	operation% = 1 & stepOp% = 2	-> ((seqOp%=3 | seqOp%=5)? 1 : 0) : (operation%'=2) +
+                                           	   	   ((seqOp%=1 | seqOp%=6)? 1 : 0) : (operation%'=3) +
+                                           	   	   ((seqOp%=2 | seqOp%=4)? 1 : 0) : (operation%'=4) ;
+
+	[check%3]	operation% = 1 & stepOp% = 3	-> ((seqOp%=4 | seqOp%=6)? 1 : 0) : (operation%'=2) +
+                                           	   	   ((seqOp%=2 | seqOp%=5)? 1 : 0) : (operation%'=3) +
+                                           	   	   ((seqOp%=1 | seqOp%=3)? 1 : 0) : (operation%'=4) ;
+	[check%4]	operation% = 1 & stepOp% > 3 -> 1.0 : (operation%'=5);
+
+	[runS%1]	operation% = 2		-> (op%S1=1?1.0:0)*(1-op%S1Fail) : (operation%'=6) + (op%S1=0?1.0:op%S1Fail) : (operation%'=1) & (stepOp%'=min(STEPMAX,stepOp%+1));
+	[runS%2]	operation% = 3		-> (op%S2=1?1.0:0)*(1-op%S2Fail) : (operation%'=6) + (op%S2=0?1.0:op%S2Fail) : (operation%'=1) & (stepOp%'=min(STEPMAX,stepOp%+1));
+	[runS%3]	operation% = 4		-> (op%S3=1?1.0:0)*(1-op%S3Fail) : (operation%'=6) + (op%S3=0?1.0:op%S3Fail) : (operation%'=1) & (stepOp%'=min(STEPMAX,stepOp%+1));	
+
+	[endOp%Fail]	operation% = 5		->	1.0 : (operation%'=0);//failed
+	[endOp%Succ]	operation% = 6		->	1.0 : (operation%'=0); //succ
+endmodule

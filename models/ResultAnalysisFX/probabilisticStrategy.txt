@@ -1,0 +1,19 @@
+//PROB
+module strategyOp%
+	operation% : [0..8] init 0;
+
+	//select a service probabilistically
+	[startOp%] 	operation% = 0 	->	probOp%1 : (operation%'=1) + probOp%2 : (operation%'=5) + probOp%3 : (operation%'=6); 
+
+	[checkS%1]	operation% = 1	->	(1) : (operation%'=2);// + (1-op%S1) : (operation%'=7); //service1 start
+	[runS%1]     	operation% = 2  ->	1-op%S1Fail : (operation%'=8) + op%S1Fail : (operation%'=7); 		
+
+	[checkS%2]	operation% = 5	->	(1) : (operation%'=3);// + (1-op%S2) : (operation%'=7); //service1 start
+	[runS%2]     	operation% = 3  ->	1-op%S2Fail : (operation%'=8) + op%S2Fail : (operation%'=7); 		
+
+	[checkS%3]	operation% = 6	->	(1) : (operation%'=4);// + (1-op%S3) : (operation%'=7); //service1 start
+	[runS%3]     	operation% = 4  ->	1-op%S3Fail : (operation%'=8) + op%S3Fail : (operation%'=7); 		
+
+	[endOp%Fail]	operation% = 7	->	1.0 : (operation%'=0);//failed
+	[endOp%Succ]	operation% = 8	->	1.0 : (operation%'=0); //succ
+endmodule

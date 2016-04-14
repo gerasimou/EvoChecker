@@ -111,10 +111,10 @@ public class Utility {
 	}
 
 	
-	public static void exportToFile(List<String> outputList, String fileName){
+	public static void exportToFile(List<Object> outputList, String fileName){
 		try {
 			FileWriter writer = new FileWriter(fileName);
-			for (String str : outputList){	
+			for (Object str : outputList){	
 				writer.append(str +"\n");
 			}
 				writer.flush();
