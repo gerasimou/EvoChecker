@@ -1,3 +1,5 @@
-R{"measurement"}=? [ C<=100/sp ]
+R{"measurements"}=? [ C<=100/sp ]
 
 R{"energy"}=? [ C<=100/sp ]
+
+//R{"energy"}=? [ C<=100/sp ]

@@ -2,7 +2,7 @@ package evochecker.auxiliary;
 
 public class UUVModelGenerator {
 
-	private final static int SENSORS 			= 3;
+	private final static int SENSORS 			= 8;
 	
 	private final static double R[] 			= new double[]{5, 4, 4.5, 6, 8, 5.5, 3.5, 6, 6.5, 7, 5};
 	
@@ -83,7 +83,7 @@ public class UUVModelGenerator {
 		for (int i=0; i<SENSORS; i++){
 			String temp = template.replaceAll("%", (i+1)+"");
 			temp		= temp.replaceAll("£", ENERGY_ON[i]+"");
-			temp		= temp.replaceAll("@", ENERGY_OFF[i]+"");
+			temp		= temp.replaceAll("@", "0");//ENERGY_OFF[i]+"");
 			temp		= temp.replaceAll("<>", ENERGY_M[i]+"");
 			str.append(temp);
 		}
