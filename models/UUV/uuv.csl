@@ -1,7 +1,3 @@
-R{"measurement"}=? [ C<=10/s ]
+R{"measurement"}=? [ C<=100/sp ]
 
-R{"energy"}=? [ C<=10/s ]
-
-//R{"energy"}<=120 [ C<=10/s ]
-
-//R{"measurement"}>=20 [ C<=10/s ]
+R{"energy"}=? [ C<=100/sp ]
