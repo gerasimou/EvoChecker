@@ -20,6 +20,7 @@
 
 package evochecker.genetic.jmetal.single;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -104,7 +105,7 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 	  selectionOperator = operators_.get("selection");
 
 	  // Initialise single objective comparator
-	  comparator = new ObjectiveComparator(3) ; 
+	  comparator = new ObjectiveComparator(problem_.getNumberOfObjectives()-1) ; 
 	  
 	  //Start the parallel evaluator
 	  parallelEvaluator_.startEvaluator(problem_) ;
@@ -203,8 +204,13 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 	  createInitialPopulation();
     
 	  //Run parallel evaluation
+//	  List<Object> timingsList = new ArrayList<>();
+//	  long before = System.currentTimeMillis();
 	  List<Solution> solutionList = parallelEvaluator_.parallelEvaluation() ;
-    
+//	  long after = System.currentTimeMillis();
+//	  System.out.println((after - before)/1000.0/solutionList.size());
+//	  timingsList.add(after-before);
+	  
 	  //Clear the population 
 	  population.clear();
 	  
@@ -249,7 +255,12 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 		  }// for
 
 		  //Run parallel evaluation
+//		  before = System.currentTimeMillis();
 		  solutionList = parallelEvaluator_.parallelEvaluation() ;
+//		  after = System.currentTimeMillis();
+//		  System.out.println((after - before)/1000.0/solutionList.size());
+//		  timingsList.add(after-before);
+
 
 		  //Add solutionList to the population
 		  for (Solution solution : solutionList) {
@@ -294,6 +305,7 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 	  //export evaluations to file
 	  System.out.println("Evaluations: " + evaluations ) ;
 	  Utility.exportToFile("data/EVAL_SGA_"+seeding, evaluations+"", true);
+//	  Utility.exportToFile(timingsList, "data/timingsMedium.csv" );
 	  
 	  //update the intermediate log
 	    //find the nearest %500 == 
