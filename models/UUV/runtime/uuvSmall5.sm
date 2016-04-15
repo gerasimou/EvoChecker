@@ -148,3 +148,5 @@ rewards "energy"
 	[failS10]  true : 0.8;
 
 endrewards
+
+
