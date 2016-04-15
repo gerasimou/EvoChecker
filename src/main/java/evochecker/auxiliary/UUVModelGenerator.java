@@ -2,7 +2,7 @@ package evochecker.auxiliary;
 
 public class UUVModelGenerator {
 
-	private final static int SENSORS 			= 8;
+	private final static int SENSORS 			= 10;
 	
 	private final static double R[] 			= new double[]{5, 4, 4.5, 6, 8, 5.5, 3.5, 6, 6.5, 7, 5};
 	
@@ -17,8 +17,8 @@ public class UUVModelGenerator {
 	public static void main(String[] args) {
 		
 		System.out.println(makeConstants());
-		System.out.println(makeModule(getModule()));
 		System.out.println(makeParams());
+		System.out.println(makeModule(getModule()));
 		System.out.println(makeMesurementsReward());
 		System.out.println(makeEnergyReward());
 	}
@@ -27,10 +27,9 @@ public class UUVModelGenerator {
 	
 	private static String makeConstants(){
 		return "ctmc\n\n"
-				+ "const double sp;\n"
 				+ "const int rON	= 10;\n"
 				+ "const int rOFF	= 20;\n"
-				+ "const int rPREP	= 100;";
+				+ "const int rPREP	= 100;\n";
 	}
 	
 	
@@ -52,11 +51,19 @@ public class UUVModelGenerator {
 		String template		= "const int x%;\n"
 							  + "const double r%	= £;\n"
 							  + "const double p%	= 1-<>*sp;\n";
+		
+		str.append(	"evolve const double sp [1..5];\n\n");
+		
 		for (int i=0; i<SENSORS; i++){
-			String temp = template.replaceAll("%", (i+1)+"");
-			temp		= temp.replaceAll("£", R[i]+"");
-			temp		= temp.replaceFirst("<>", ALPHA[i]+"");
-			str.append(temp);			
+			str.append("evolve const int x% [0..1];\n".replaceAll("%", (i+1)+""));
+		}
+		str.append("\n");
+		for (int i=0; i<SENSORS; i++){
+			str.append("const double r%	= £;\n".replaceAll("£", R[i]+"").replaceAll("%", (i+1)+""));
+		}
+		str.append("\n");
+		for (int i=0; i<SENSORS; i++){
+			str.append("const double p%	= 1-<>*sp;\n".replaceFirst("<>", ALPHA[i]+"").replaceAll("%", (i+1)+""));
 		}
 		return str.toString();
 	}
