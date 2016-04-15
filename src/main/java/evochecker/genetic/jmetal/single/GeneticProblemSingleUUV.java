@@ -54,13 +54,13 @@ public class GeneticProblemSingleUUV extends GeneticProblemSingle {
 		//UUV constraints
 		double totalViolation 				= 0;
 		
-		double measurementsConstraint 	= 1000;
+		double measurementsConstraint 	= 500;
 		double measurementsResult 		= Double.parseDouble(fitnessList.get(0));
 		double measurementsViolation	= measurementsResult - measurementsConstraint;
 		if (measurementsViolation < 0)
 			totalViolation = measurementsViolation;
 
-		double energyConstraint			= 1500;
+		double energyConstraint			= 1000;
 		double energyResult				= Double.parseDouble(fitnessList.get(1));
 		double energyViolation			= energyConstraint - energyResult; 
 		if (energyViolation < 0)

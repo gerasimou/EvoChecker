@@ -15,7 +15,7 @@ public class RuntimeEvoCheckerStudy {
 
 		int MAXRUNS = 30;
 
-		System.out.println(Utility.getProperty("SEEDING"));
+//		System.out.println(Utility.getProperty("SEEDING"));
 		//run for MAXRUNS
 //		for (int run=0; run<MAXRUNS; run++){
 //			setupDisruptiveEvent("models/FX/runtime/fxSmall13Template.pm", "models/FX/runtime/fxSmall13.pm");
