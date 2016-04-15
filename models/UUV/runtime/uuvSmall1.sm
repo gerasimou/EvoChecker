@@ -1,43 +1,32 @@
 ctmc
 
-evolve const double sp[1..5];
-
-evolve const int x1 [0..1];
-evolve const int x2 [0..1];
-evolve const int x3 [0..1];
-evolve const int x4 [0..1];
-evolve const int x5 [0..1];
-evolve const int x6 [0..1];
-evolve const int x7 [0..1];
-evolve const int x8 [0..1];
-
-const double r1	= 5.0;
-const double p1	= 1-0.05*sp;
-
-const double r2	= 4.0;
-const double p2	= 1-0.04*sp;
-
-const double r3	= 4.5;
-const double p3	= 1-0.045*sp;
-
-const double r4	= 6.0;
-const double p4	= 1-0.05*sp;
-
-const double r5	= 8.0;
-const double p5	= 1-0.04*sp;
-
-const double r6	= 5.5;
-const double p6	= 1-0.045*sp;
-
-const double r7	= 3.5;
-const double p7	= 1-0.05*sp;
-
-const double r8	= 6.0;
-const double p8	= 1-0.04*sp;
-
 const int rON	= 10;
 const int rOFF	= 20;
 const int rPREP	= 100;
+
+
+const double r1	= 5.0;
+const double r2	= 4.0;
+const double r3	= 4.5;
+const double r4	= 6.0;
+const double r5	= 8.0;
+const double r6	= 5.5;
+const double r7	= 3.5;
+const double r8	= 6.0;
+const double r9	= 6.5;
+const double r10	= 7.0;
+
+const double p1	= 1-0.05*sp;
+const double p2	= 1-0.04*sp;
+const double p3	= 1-0.045*sp;
+const double p4	= 1-0.05*sp;
+const double p5	= 1-0.04*sp;
+const double p6	= 1-0.045*sp;
+const double p7	= 1-0.05*sp;
+const double p8	= 1-0.04*sp;
+const double p9	= 1-0.045*sp;
+const double p10	= 1-0.04*sp;
+
 
 module sensor1
 	s1: [0..2] init 0;
@@ -95,6 +84,20 @@ module sensor8
 	[failS8]  s8=1 -> (1-p8)*r1: (s8'=2);	[prepS8]  s8=2 -> rPREP   	: (s8'=1);
 endmodule
 
+module sensor9
+	s9: [0..2] init 0;
+	[startS9] s9=0 -> x9*rON 	: (s9'=1) + (1-x9)*rOFF: (s9'=0);
+	[succS9]  s9=1 -> p9*r9   	: (s9'=2);
+	[failS9]  s9=1 -> (1-p9)*r1: (s9'=2);	[prepS9]  s9=2 -> rPREP   	: (s9'=1);
+endmodule
+
+module sensor10
+	s10: [0..2] init 0;
+	[startS10] s10=0 -> x10*rON 	: (s10'=1) + (1-x10)*rOFF: (s10'=0);
+	[succS10]  s10=1 -> p10*r10   	: (s10'=2);
+	[failS10]  s10=1 -> (1-p10)*r1: (s10'=2);	[prepS10]  s10=2 -> rPREP   	: (s10'=1);
+endmodule
+
 
 rewards "measurements"
 	[succS1] true : 1;
@@ -105,6 +108,8 @@ rewards "measurements"
 	[succS6] true : 1;
 	[succS7] true : 1;
 	[succS8] true : 1;
+	[succS9] true : 1;
+	[succS10] true : 1;
 endrewards
 
 
@@ -133,6 +138,12 @@ rewards "energy"
 	[startS8] true : x8=1 ? 9.0 : 0;
 	[succS8]  true : 0.55;
 	[failS8]  true : 0.55;
+	[startS9] true : x9=1 ? 7.0 : 0;
+	[succS9]  true : 0.4;
+	[failS9]  true : 0.4;
+	[startS10] true : x10=1 ? 8.0 : 0;
+	[succS10]  true : 0.8;
+	[failS10]  true : 0.8;
 
 endrewards
 
