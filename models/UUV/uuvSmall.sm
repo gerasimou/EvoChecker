@@ -4,7 +4,7 @@ const int rON	= 10;
 const int rOFF	= 20;
 const int rPREP	= 100;
 
-evolve const double sp [1..5];
+evolve const double sp [1..10];
 
 evolve const int x1 [0..1];
 evolve const int x2 [0..1];

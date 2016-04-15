@@ -1,4 +1,4 @@
-//Nominal sensor rates
+//S1 Down (5.0 -> 1.0); S5 Down (8.0 -> 3.0)
 
 ctmc
 
@@ -6,11 +6,12 @@ const int rON	= 10;
 const int rOFF	= 20;
 const int rPREP	= 100;
 
-const double r1		= 5.0;
+
+const double r1		= 1.0;
 const double r2		= 4.0;
 const double r3		= 4.5;
 const double r4		= 6.0;
-const double r5		= 8.0;
+const double r5		= 3.0;
 const double r6		= 5.5;
 const double r7		= 3.5;
 const double r8		= 6.0;
@@ -147,5 +148,3 @@ rewards "energy"
 	[failS10]  true : 0.8;
 
 endrewards
-
-
