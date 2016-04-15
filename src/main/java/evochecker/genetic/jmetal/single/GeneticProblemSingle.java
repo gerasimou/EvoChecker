@@ -16,7 +16,7 @@ import evochecker.genetic.jmetal.GeneticProblem;
 import evochecker.parser.InstantiatorInterface;
 import evochecker.prism.Property;
 
-public class GeneticProblemSingle extends GeneticProblem {
+public abstract class GeneticProblemSingle extends GeneticProblem {
 
 	private static final long serialVersionUID = 1L;
 
@@ -58,33 +58,36 @@ public class GeneticProblemSingle extends GeneticProblem {
 	}
 	
 	
-	private void evaluateObjectives(Solution solution, List<String> fitnessList){
-		for (int index = 0; index < this.numberOfObjectives_-1; index++) {
-			Property p = this.properties.get(index);
-			double result = Double.parseDouble(fitnessList.get(index));
-			solution.setObjective(index, result);
-//			System.out.printf("FITNESS: %.3f\t", result);
-		}			
-	}
+	protected abstract void evaluateObjectives(Solution solution, List<String> fitnessList);
+//	{
+//		for (int index = 0; index < this.numberOfObjectives_-1; index++) {
+////			Property p = this.properties.get(index);
+//			double result = Double.parseDouble(fitnessList.get(index));
+//			solution.setObjective(index, result);
+////			System.out.printf("FITNESS: %.3f\t", result);
+//		}			
+//	}
 	
 	
-	public void evaluateConstraints(Solution solution, List<String> fitnessList, boolean cost) throws JMException {
-		double reliabilityConstraint = Double.parseDouble(Utility.getProperty("RELIABILITY_THRESHOLD", "0.97"));
-		for (int i=0; i < this.numberOfConstraints_; i++){
-			int index		= numberOfObjectives_ -1 + i;
-			double result 	= Double.parseDouble(fitnessList.get(index));
-			double violation = result-reliabilityConstraint;
-			
-//			System.out.printf("Constraint: %.3f\n", result);
-			if (violation < 0){
-				solution.setOverallConstraintViolation(violation);
-				solution.setNumberOfViolatedConstraint(1);
-			}
-			else{
-				solution.setOverallConstraintViolation(0);
-				solution.setNumberOfViolatedConstraint(0);
-			}
-		}
+	public abstract void evaluateConstraints(Solution solution, List<String> fitnessList, boolean cost) throws JMException; //throws JMException;
+	
+//	{
+//		double reliabilityConstraint = Double.parseDouble(Utility.getProperty("RELIABILITY_THRESHOLD", "0.97"));
+//		for (int i=0; i < this.numberOfConstraints_; i++){
+//			int index		= numberOfObjectives_ -1 + i;
+//			double result 	= Double.parseDouble(fitnessList.get(index));
+//			double violation = result-reliabilityConstraint;
+//			
+////			System.out.printf("Constraint: %.3f\n", result);
+//			if (violation < 0){
+//				solution.setOverallConstraintViolation(violation);
+//				solution.setNumberOfViolatedConstraint(1);
+//			}
+//			else{
+//				solution.setOverallConstraintViolation(0);
+//				solution.setNumberOfViolatedConstraint(0);
+//			}
+//		}
 		
 //		double timeThreshold = 20;
 //		double result 	= Double.parseDouble(fitnessList.get(2));
@@ -94,6 +97,5 @@ public class GeneticProblemSingle extends GeneticProblem {
 //			solution.setOverallConstraintViolation(violation+solution.getOverallConstraintViolation());
 //			solution.setNumberOfViolatedConstraint(1);
 //		}
-
-	}
+//	}
 }

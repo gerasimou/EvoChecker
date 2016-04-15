@@ -212,7 +212,6 @@ public class GeneticProblem extends Problem {
 	
 	
 	public void parallelEvaluate(Solution solution, PrintWriter out, BufferedReader in) throws JMException {
-//		double[] x = new double[numberOfVariables_];
 		this.populateGenesWithRealSolution(solution);
 		this.populateGenesWithIntSolution(solution);
 

@@ -18,6 +18,7 @@ import evochecker.genetic.jmetal.GeneticProblem;
 import evochecker.genetic.jmetal.experiments.Experiment;
 import evochecker.genetic.jmetal.single.AlgorithmSteps;
 import evochecker.genetic.jmetal.single.GeneticProblemSingle;
+import evochecker.genetic.jmetal.single.GeneticProblemSingleFX;
 import evochecker.genetic.jmetal.single.RandomSearchSingle_Settings;
 import evochecker.genetic.jmetal.single.SingleGA_Settings;
 import evochecker.parser.ParserEngine;
@@ -157,7 +158,7 @@ public class EvoCheckerStudySingleObjective extends Experiment{
 	
 	
 		//6) instantiate the problem
-		problem = new GeneticProblemSingle(genes, propertyList, parserEngine, numOfConstraints);
+		problem = new GeneticProblemSingleFX(genes, propertyList, parserEngine, numOfConstraints);
 	}
 		
   

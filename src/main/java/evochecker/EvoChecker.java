@@ -19,6 +19,8 @@ import evochecker.genetic.jmetal.metaheuristics.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.SPEA2_Settings;
 import evochecker.genetic.jmetal.single.AlgorithmSteps;
 import evochecker.genetic.jmetal.single.GeneticProblemSingle;
+import evochecker.genetic.jmetal.single.GeneticProblemSingleFX;
+import evochecker.genetic.jmetal.single.GeneticProblemSingleUUV;
 import evochecker.genetic.jmetal.single.RandomSearchSingle_Settings;
 import evochecker.genetic.jmetal.single.SingleGA_Settings;
 import evochecker.parser.ParserEngine;
@@ -88,7 +90,7 @@ public class EvoChecker {
 			
 			//execute adaptation step
 			String str 	= Utility.getProperty("MODEL_TEMPLATE_FILE");
-			str			= StringUtils.replace(str, "FX/", "FX/runtime/");
+			str			= StringUtils.replace(str, "UUV/", "UUV/runtime/");
 			str 		= StringUtils.replace(str, ".", "1.");
 			evoChecker.adaptSystem(str);
 //			"models/FX/runtime/fxMedium1.pm");
@@ -165,14 +167,32 @@ public class EvoChecker {
 		propertyList = new ArrayList<Property>();
 
 		//FX
+//		propertyList.add(new Property(true));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(true));
+//		int numOfConstraints = 1;
+		
+		//UUV
 		propertyList.add(new Property(true));
 		propertyList.add(new Property(false));
 		propertyList.add(new Property(false));
-		propertyList.add(new Property(true));
-		int numOfConstraints = 1;
+		propertyList.add(new Property(false));
+		propertyList.add(new Property(false));
+		int numOfConstraints = 2;
+		
 
 		//6) instantiate the problem
-		problem = new GeneticProblem(genes, propertyList, parserEngine, numOfConstraints);
+		if ( Utility.getProperty("ALGORITHM").toUpperCase().equals("SGA") ||
+			 Utility.getProperty("ALGORITHM").toUpperCase().equals("RANDOM_SINGLE")){
+			if (modelFilename.toUpperCase().contains("UUV"))
+				problem = new GeneticProblemSingleUUV(genes, propertyList, parserEngine, numOfConstraints);
+			else 
+				problem = new GeneticProblemSingleFX(genes, propertyList, parserEngine, numOfConstraints);
+		}
+		else{
+			problem = new GeneticProblem(genes, propertyList, parserEngine, numOfConstraints);
+		}
 	}
 	
 
@@ -200,15 +220,11 @@ public class EvoChecker {
 				algorithm = mocellSettings.configure();
 			}
 			else if (algorithmStr.equals("SGA")){
-				int numOfConstraints = 1;
-				problem = new GeneticProblemSingle(genes, propertyList, parserEngine, numOfConstraints);
 				SingleGA_Settings sga_settings = new SingleGA_Settings("GeneticProblem", problem);
 				algorithm = sga_settings.configure();
 				((AlgorithmSteps)algorithm).initialise(); //only for single-objective algorithms
 			}
 			else if (algorithmStr.equals("RANDOM_SINGLE")){
-				int numOfConstraints = 1;
-				problem = new GeneticProblemSingle(genes, propertyList, parserEngine, numOfConstraints);
 				RandomSearchSingle_Settings rss_settings = new RandomSearchSingle_Settings("GeneticProblem", problem);
 				algorithm = rss_settings.configure();
 				((AlgorithmSteps)algorithm).initialise(); //only for single-objective algorithms
