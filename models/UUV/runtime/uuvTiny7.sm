@@ -1,0 +1,84 @@
+ctmc
+
+const int rON	= 10;
+const int rOFF	= 20;
+
+const double r1		= 5.0;
+const double r2		= 1.0;
+const double r3		= 4.5;
+const double r4		= 6.0;
+const double r5		= 8.0;
+
+
+const double p1	= 1-0.05*sp;
+const double p2	= 1-0.04*sp;
+const double p3	= 1-0.045*sp;
+const double p4	= 1-0.05*sp;
+const double p5	= 1-0.04*sp;
+
+
+module sensor1
+	s1: [0..2] init 0;
+	[startS1] s1=0 -> x1*rON 	: (s1'=1) + (1-x1)*rOFF: (s1'=0);
+	[succS1]  s1=1 -> p1*r1   	: (s1'=2);
+	[failS1]  s1=1 -> (1-p1)*r1: (s1'=2);	[prepS1]  s1=2 -> rPREP1   	: (s1'=1);
+endmodule
+
+module sensor2
+	s2: [0..2] init 0;
+	[startS2] s2=0 -> x2*rON 	: (s2'=1) + (1-x2)*rOFF: (s2'=0);
+	[succS2]  s2=1 -> p2*r2   	: (s2'=2);
+	[failS2]  s2=1 -> (1-p2)*r1: (s2'=2);	[prepS2]  s2=2 -> rPREP2   	: (s2'=1);
+endmodule
+
+module sensor3
+	s3: [0..2] init 0;
+	[startS3] s3=0 -> x3*rON 	: (s3'=1) + (1-x3)*rOFF: (s3'=0);
+	[succS3]  s3=1 -> p3*r3   	: (s3'=2);
+	[failS3]  s3=1 -> (1-p3)*r1: (s3'=2);	[prepS3]  s3=2 -> rPREP3   	: (s3'=1);
+endmodule
+
+module sensor4
+	s4: [0..2] init 0;
+	[startS4] s4=0 -> x4*rON 	: (s4'=1) + (1-x4)*rOFF: (s4'=0);
+	[succS4]  s4=1 -> p4*r4   	: (s4'=2);
+	[failS4]  s4=1 -> (1-p4)*r1: (s4'=2);	[prepS4]  s4=2 -> rPREP4   	: (s4'=1);
+endmodule
+
+module sensor5
+	s5: [0..2] init 0;
+	[startS5] s5=0 -> x5*rON 	: (s5'=1) + (1-x5)*rOFF: (s5'=0);
+	[succS5]  s5=1 -> p5*r5   	: (s5'=2);
+	[failS5]  s5=1 -> (1-p5)*r1: (s5'=2);	[prepS5]  s5=2 -> rPREP5   	: (s5'=1);
+endmodule
+
+
+rewards "measurements"
+	[succS1] true : 1;
+	[succS2] true : 1;
+	[succS3] true : 1;
+	[succS4] true : 1;
+	[succS5] true : 1;
+endrewards
+
+
+rewards "energy"
+	[startS1] true : x1=1 ? 10.0 : 0;
+	[succS1]  true : 0.4;
+	[failS1]  true : 0.4;
+	[startS2] true : x2=1 ? 8.0 : 0;
+	[succS2]  true : 0.5;
+	[failS2]  true : 0.5;
+	[startS3] true : x3=1 ? 9.0 : 0;
+	[succS3]  true : 0.6;
+	[failS3]  true : 0.6;
+	[startS4] true : x4=1 ? 5.0 : 0;
+	[succS4]  true : 0.65;
+	[failS4]  true : 0.65;
+	[startS5] true : x5=1 ? 9.0 : 0;
+	[succS5]  true : 0.55;
+	[failS5]  true : 0.55;
+
+endrewards
+
+
