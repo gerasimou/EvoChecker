@@ -18,7 +18,6 @@ import evochecker.genetic.jmetal.metaheuristics.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.SPEA2_Settings;
 import evochecker.genetic.jmetal.single.AlgorithmSteps;
-import evochecker.genetic.jmetal.single.GeneticProblemSingle;
 import evochecker.genetic.jmetal.single.GeneticProblemSingleFX;
 import evochecker.genetic.jmetal.single.GeneticProblemSingleUUV;
 import evochecker.genetic.jmetal.single.RandomSearchSingle_Settings;
@@ -142,6 +141,7 @@ public class EvoChecker {
 			adaptationStep	= 13;
 		}
 	}
+	
 	
 	/**
 	 * Initialise the problem and the properties associated with the problem
