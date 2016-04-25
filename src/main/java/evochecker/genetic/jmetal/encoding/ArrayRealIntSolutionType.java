@@ -34,5 +34,15 @@ public class ArrayRealIntSolutionType extends SolutionType {
 						numberOfRealVariables_ + numberOfIntVariables_));
 		return variables;
 	} // createVariables
+	
+	
+	public Variable[] createVariables(ArrayReal arrayReal, ArrayInt arrayInt) throws ClassNotFoundException {
+		Variable[] variables = new Variable[2];
+
+		variables[0] = new ArrayReal(arrayReal);
+		variables[1] = new ArrayInt(arrayInt);
+		return variables;
+	} // createVariables
+	
 } // ArrayRealAndBinarySolutionType
 

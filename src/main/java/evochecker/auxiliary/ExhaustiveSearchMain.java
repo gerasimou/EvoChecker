@@ -1,7 +1,9 @@
 package evochecker.auxiliary;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -18,6 +20,7 @@ import evochecker.parser.ParserEngine;
 import evochecker.prism.Property;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
+import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.util.JMException;
 
@@ -87,6 +90,7 @@ public class ExhaustiveSearchMain {
 			String str 	= Utility.getProperty("MODEL_TEMPLATE_FILE");
 			str			= StringUtils.replace(str, "UUV/", "UUV/runtime/");
 			str 		= StringUtils.replace(str, ".", "1.");
+			exSearch.adaptSystem(str);
 			
 			//close down
 			exSearch.closeDown();
@@ -142,15 +146,14 @@ public class ExhaustiveSearchMain {
 		
 
 		//6) instantiate the problem
-		if ( Utility.getProperty("ALGORITHM").toUpperCase().equals("SGA") ||
-			 Utility.getProperty("ALGORITHM").toUpperCase().equals("RANDOM_SINGLE")){
+		if ( Utility.getProperty("ALGORITHM").toUpperCase().equals("EX_SEARCH")){
 			if (modelFilename.toUpperCase().contains("UUV"))
 				problem = new GeneticProblemSingleUUV(genes, propertyList, parserEngine, numOfConstraints);
 			else 
 				problem = new GeneticProblemSingleFX(genes, propertyList, parserEngine, numOfConstraints);
 		}
 		else{
-			problem = new GeneticProblem(genes, propertyList, parserEngine, numOfConstraints);
+			throw new Exception("Algorithm not recognised");
 		}
 	}
 
@@ -162,8 +165,8 @@ public class ExhaustiveSearchMain {
 	private void initialiseAlgorithm() throws Exception{
 		String algorithmStr = Utility.getProperty("ALGORITHM").toUpperCase();
 		if (algorithmStr != null){
-			if (algorithmStr.equals("EXSEARCH")){
-				algorithm = new ExhaustiveSearch("GeneticProblem", problem);
+			if (algorithmStr.equals("EX_SEARCH")){
+				algorithm = new ExhaustiveSearch("GeneticProblem", problem, parserEngine.getEvolvableList());
 				((AlgorithmSteps)algorithm).initialise(); //only for single-objective algorithms
 			}
 			else 
@@ -171,6 +174,54 @@ public class ExhaustiveSearchMain {
 		}
 	}
 	
+	
+	
+	/**
+	 * Perform an adaptation scenario
+	 * @param modelFilename
+	 * @throws Exception
+	 */
+	private void adaptSystem(String modelFilename) throws Exception{		
+		while (new File(modelFilename).exists()){
+			System.out.println(modelFilename);
+			parserEngine.updateInternalModelRepresentation(Utility.readFile(modelFilename));
+			execute();
+			modelFilename = StringUtils.replace(modelFilename, adaptationStep + ".", ++adaptationStep + ".", 1);
+		}
+	}
+	
+	
+	
+	/**
+	 * Execute
+	 * @throws Exception
+	 */
+	private void execute() throws Exception{
+		
+		// Execute the Algorithm
+		SolutionSet population = algorithm.execute();
+ 
+		
+		//Print results to console
+		System.out.println("-------------------------------------------------");
+		System.out.println("SOLUTION: \t" + population.size());
+		for (int i=0; i<population.size(); i++){
+			Solution solution = population.get(i);
+			for (int objective=0; objective<solution.getNumberOfObjectives(); objective++){
+				System.out.printf("%.3f\t", solution.getObjective(objective));
+			}
+			double constraintValue = solution.getOverallConstraintViolation();
+			if (constraintValue<0){
+				System.out.println(constraintValue +"\t"+ Arrays.toString(solution.getDecisionVariables()));
+			}
+		}
+		
+		//Store results
+		String algorithmStr = Utility.getProperty("ALGORITHM").toUpperCase();
+		String seeding = Utility.getProperty("SEEDING").toUpperCase();
+		Utility.exportToFile("data/FUN_"+algorithmStr +"_"+ seeding, population.get(0).toString(), true);
+		Utility.printVariablesToFile("data/VAR_"+algorithmStr +"_"+ seeding, population.get(0), true);
+	}	
 	
 	
 	/**

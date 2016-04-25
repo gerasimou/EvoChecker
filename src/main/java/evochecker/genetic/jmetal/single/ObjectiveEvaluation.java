@@ -17,7 +17,7 @@ public class ObjectiveEvaluation {
 	   * @param solutionList
 	 * @throws JMException 
 	   */
-	  protected static void evaluateObjectives(SolutionSet population, int totalNumberOfObjectives) throws JMException{
+	  public static void evaluateObjectives(SolutionSet population, int totalNumberOfObjectives) throws JMException{
 		  //get populationSize
 		  int populationSize = population.size();
 		  

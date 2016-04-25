@@ -92,7 +92,7 @@ public class ArrayReal extends Variable {
 	 * @param arrayReal
 	 *            The arrayReal to copy
 	 */
-	private ArrayReal(ArrayReal arrayReal) {
+	ArrayReal(ArrayReal arrayReal) {
 		problem_ = arrayReal.problem_;
 		size_ = arrayReal.size_;
 		array_ = new Double[size_];

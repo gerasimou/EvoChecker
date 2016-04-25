@@ -136,7 +136,7 @@ public class ArrayInt extends Variable {
 	 * @param arrayInt
 	 *            The arrayInt to copy
 	 */
-	private ArrayInt(ArrayInt arrayInt) {
+	ArrayInt(ArrayInt arrayInt) {
 		size_ = arrayInt.size_;
 		array_ = new int[size_];
 
