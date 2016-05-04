@@ -35,6 +35,8 @@ public class ExhaustiveSearch extends Algorithm implements AlgorithmSteps {
 	SolutionType solutionType;
 	  
 	
+	public static double LOWER_BOUND=1;
+	public static double UPPER_BOUND=2;
 	
 	  
 	/**
@@ -86,10 +88,10 @@ public class ExhaustiveSearch extends Algorithm implements AlgorithmSteps {
 			
 			int arrayRealSize 	= ((ArrayReal)solution.getDecisionVariables()[0]).getLength();
 			for (int i=0; i<arrayRealSize; i++){
-				double lowerBound 			= ((ArrayReal)solution.getDecisionVariables()[0]).getLowerBound(i);
-				double upperBound 			= ((ArrayReal)solution.getDecisionVariables()[0]).getUpperBound(i);
+				double lowerBound 			= LOWER_BOUND;//((ArrayReal)solution.getDecisionVariables()[0]).getLowerBound(i);
+				double upperBound 			= UPPER_BOUND;//	((ArrayReal)solution.getDecisionVariables()[0]).getUpperBound(i);
 				List<Double> doubleOptions	= new ArrayList<Double> ();
-				for (double j=lowerBound; j<=upperBound; j+=0.1){//0.01){
+				for (double j=lowerBound; j<=upperBound; j+=0.01){//0.01){
 					doubleOptions.add(j);
 				}
 				doubleOptionsList.add(doubleOptions.toArray());
@@ -176,31 +178,53 @@ public class ExhaustiveSearch extends Algorithm implements AlgorithmSteps {
 	public SolutionSet execute() throws JMException, ClassNotFoundException {
 		createInitialPopulation();
 		
-		SolutionSet solutionSet = new SolutionSet(population.size());
+		int STEP				= 10000;
+		int START				= population.size()/4;
+		int END					= population.size();
+		int evaluatorRuns		= 1;
 		
-		for (int i=0; i<population.size(); i++){
+		SolutionSet solutionSet = new SolutionSet(STEP+1);
+		
+		for (int i=START; i<END; i++){
 			Solution solution = population.get(i);
 			parallelEvaluator_.addSolutionForEvaluation(solution);
 			
-			if (i%1001 == 1000){
+			if (i-START == STEP){
+				START = i;
 				List<Solution> solutionList = parallelEvaluator_.parallelEvaluation();
 				
+
 				  //Add solutionList to the population
-				  for (Solution sol : solutionList) {
-					  solutionSet.add(solution) ;
-				  }
+				solutionSet.clear();
+				for (Solution sol : solutionList) {
+					solutionSet.add(solution) ;
+				}
+
+				//Evaluate objectives
+				ObjectiveEvaluation.evaluateObjectives(solutionSet, problem_.getNumberOfObjectives());
+							    
+				//Sort population
+				solutionSet.sort(comparator) ;
+				
+				System.out.println(i +"\t"+ solutionSet.get(0).toString());
+				logIntermediateData(i, solutionSet.get(0));
+				
+				try {
+					//reset evaluator every 10 evaluator runs
+					if (evaluatorRuns==10){
+						parallelEvaluator_.stopEvaluators();
+						Thread.sleep(1000);
+						parallelEvaluator_ 	= new MultiProcessPrismEvaluator(0);
+						  parallelEvaluator_.startEvaluator(problem_) ;
+						evaluatorRuns 		= 1; 
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				evaluatorRuns++;
 			}
 		}
-		
-		
-		for (int i=0; i<solutionSet.size(); i++){ 
-			//Evaluate objectives
-			ObjectiveEvaluation.evaluateObjectives(solutionSet, problem_.getNumberOfObjectives());
-    
-			//Sort population
-			solutionSet.sort(comparator) ;
-		}
-		
+				
 		return null;
 	}
 
@@ -217,10 +241,8 @@ public class ExhaustiveSearch extends Algorithm implements AlgorithmSteps {
 	/**
 	 * Log intermediate data
 	 */ 
-	private void logIntermediateData(int iterations){
-//		Utility.exportToFile("data/FUN_SGA_"+ seeding +"_E"+ EvoChecker.adaptationStep +"_"+ iterations, 
-//				  			   population.get(0).toString(), true);
-//		Utility.printVariablesToFile("data/VAR_SGA_"+ seeding +"_E"+ EvoChecker.adaptationStep +"_"+ iterations,
-//							   population.get(0), true);  
+	private void logIntermediateData(int iterations, Solution solution){
+		Utility.exportToFile("data/FUN_EXHAUST_E1_", solution.toString(), true);
+		Utility.printVariablesToFile("data/VAR_EXHAUST_E1_", solution, true);  
 	}	
 }

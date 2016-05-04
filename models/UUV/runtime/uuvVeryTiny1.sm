@@ -1,0 +1,43 @@
+ctmc
+
+const int rON	= 10;
+const int rOFF	= 20;
+
+const double r1	= 6.0;
+const double r2	= 8.0;
+
+const double p1	= 1-0.05*sp;
+const double p2	= 1-0.04*sp;
+
+
+module sensor1
+	s1: [0..2] init 0;
+	[startS1] s1=0 -> x1*rON 	: (s1'=1) + (1-x1)*rOFF: (s1'=0);
+	[succS1]  s1=1 -> p1*r1   	: (s1'=2);
+	[failS1]  s1=1 -> (1-p1)*r1: (s1'=2);	[prepS1]  s1=2 -> rPREP1   	: (s1'=1);
+endmodule
+
+module sensor2
+	s2: [0..2] init 0;
+	[startS2] s2=0 -> x2*rON 	: (s2'=1) + (1-x2)*rOFF: (s2'=0);
+	[succS2]  s2=1 -> p2*r2   	: (s2'=2);
+	[failS2]  s2=1 -> (1-p2)*r1: (s2'=2);	[prepS2]  s2=2 -> rPREP2   	: (s2'=1);
+endmodule
+
+
+rewards "measurements"
+	[succS1] true : 1;
+	[succS2] true : 1;
+endrewards
+
+
+rewards "energy"
+	[startS1] true : x1=1 ? 10.0 : 0;
+	[succS1]  true : 0.4;
+	[failS1]  true : 0.4;
+	[startS2] true : x2=1 ? 8.0 : 0;
+	[succS2]  true : 0.5;
+	[failS2]  true : 0.5;
+endrewards
+
+

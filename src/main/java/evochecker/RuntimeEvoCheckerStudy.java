@@ -5,28 +5,37 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import evochecker.auxiliary.ExhaustiveSearch;
+import evochecker.auxiliary.ExhaustiveSearchMain;
 import evochecker.auxiliary.Utility;
 
 public class RuntimeEvoCheckerStudy {
 
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		EvoChecker evoChecker = new EvoChecker();
 
 		int MAXRUNS = 30;
 
 //		System.out.println(Utility.getProperty("SEEDING"));
-		//run for MAXRUNS
-//		for (int run=0; run<MAXRUNS; run++){
-//			setupDisruptiveEvent("models/FX/runtime/fxSmall13Template.pm", "models/FX/runtime/fxSmall13.pm");
+//		run for MAXRUNS
+		for (int run=0; run<1; run++){
+			setupDisruptiveEvent("models/FX/runtime/fxSmall13Template.pm", "models/FX/runtime/fxSmall13.pm");
 //			evoChecker.main(null);
-//		}
+		}
 		
 
-		//run for MAXRUNS
-		for (int run=0; run<MAXRUNS; run++){
-			evoChecker.main(null);	
-		}
+//		run for MAXRUNS
+//		for (int run=0; run<MAXRUNS; run++){
+//			evoChecker.main(null);	
+//			Thread.sleep(1000);
+//		}
+		
+//		for (int i=0; i<8; i++){
+//			ExhaustiveSearchMain.main(null);
+//			ExhaustiveSearch.LOWER_BOUND += 1; 
+//			ExhaustiveSearch.UPPER_BOUND += 1;
+//		}
 	}
 
 	

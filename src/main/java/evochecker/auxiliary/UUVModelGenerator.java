@@ -28,8 +28,8 @@ public class UUVModelGenerator {
 	private static String makeConstants(){
 		return "ctmc\n\n"
 				+ "const int rON	= 10;\n"
-				+ "const int rOFF	= 20;\n"
-				+ "const int rPREP	= 100;\n";
+				+ "const int rOFF	= 20;\n";
+//				+ "const int rPREP	= 100;\n";
 	}
 	
 	
@@ -52,11 +52,17 @@ public class UUVModelGenerator {
 							  + "const double r%	= £;\n"
 							  + "const double p%	= 1-<>*sp;\n";
 		
-		str.append(	"evolve const double sp [1..5];\n\n");
+		str.append(	"evolve const double sp [1..10];\n\n");
 		
 		for (int i=0; i<SENSORS; i++){
 			str.append("evolve const int x% [0..1];\n".replaceAll("%", (i+1)+""));
 		}
+
+		str.append("\n");
+		for (int i=0; i<SENSORS; i++){
+			str.append("evolve const int rPREP%	 [1..100];\n".replaceAll("%", (i+1)+""));
+		}
+
 		str.append("\n");
 		for (int i=0; i<SENSORS; i++){
 			str.append("const double r%	= £;\n".replaceAll("£", R[i]+"").replaceAll("%", (i+1)+""));
@@ -94,7 +100,7 @@ public class UUVModelGenerator {
 			temp		= temp.replaceAll("<>", ENERGY_M[i]+"");
 			str.append(temp);
 		}
-		str.append("\nendrewards\n\n");
+		str.append("endrewards\n\n");
 		return str.toString();
 	}	
 	
@@ -114,8 +120,8 @@ public class UUVModelGenerator {
 				+ "\ts%: [0..2] init 0;\n"
 				+ "\t[startS%] s%=0 -> x%*rON 	: (s%'=1) + (1-x%)*rOFF: (s%'=0);\n"
 				+ "\t[succS%]  s%=1 -> p%*r%   	: (s%'=2);\n"
-				+ "\t[failS%]  s%=1 -> (1-p%)*r1: (s%'=2);"
-				+ "\t[prepS%]  s%=2 -> rPREP   	: (s%'=1);\n"
+				+ "\t[failS%]  s%=1 -> (1-p%)*r1: (s%'=2);\n"
+				+ "\t[prepS%]  s%=2 -> rPREP%   	: (s%'=1);\n"
 				+ "endmodule";
 
 	}
