@@ -1,0 +1,215 @@
+// Workstation cluster [HHK00]
+// dxp/gxn 11/01/00
+
+ctmc
+
+const int N=10; // Number of workstations in each cluster
+const int left_mx = N; // Number of work stations in left cluster
+const int right_mx = N; // Number of work stations in right cluster
+const int init_N = 5;
+
+// Minimum QoS requires 3/4 connected workstations operational
+const int k = floor(0.75*N);
+const int l = floor(1.25*N);
+
+//formula minimum = (left_n>=k & toleft_n) | (right_n>=k & toright_n) | ((left_n+right_n)>=k & toleft_n & line_n & toright_n);
+//label "minimum" = (left_n>=k & toleft_n) | (right_n>=k & toright_n) | ((left_n+right_n)>=k & toleft_n & line_n & toright_n);
+//label "premium" = (left_n+right_n)>=l & toleft_n & line_n & toright_n;
+//formula requiredOperational = 60 <= 100*(left_n+right_n)/(2*N) & 100*(left_n+right_n)/(2*N) <= 80;
+
+// Failure rates
+evolve const double ws_fail [0.001..0.1]; // Single workstation: average time to fail = 500 hrs [0.001,051]
+const double switch_fail = 1/4000; // Switch: average time to fail = 4000 hrs
+const double line_fail = 1/5000; // Backbone: average time to fail = 5000 hrs
+
+// Inspection rates (more interesting, these are controllable while failures in general are not)
+// One might find e.g. that is sufficient to check the backbone less often than the workstations
+evolve const double ws_check [0.1..5.1];
+const double switch_check = 10;
+const double line_check = 10;
+
+evolve const double ws_repair [0.01..1.0];
+
+evolve const int i [1..1];
+
+
+
+// One could even have a reward that counts the number of working hours of the repairman and try to minimise them
+// like R{"working_hours"}=?[F minimum] starting from a state where !minimum holds
+
+
+// Left cluster
+module Left 
+	
+	left_n : [0..left_mx] init 5; // Number of workstations operational
+	left : [0..1] init 0; // Being repaired?
+	
+	[startLeft] left=0 & (left_n<left_mx) -> 1 : (left'=1);
+	[repairLeft] left=1 & (left_n<left_mx) -> 1 : (left'=0) & (left_n'=left_n+1);
+	[crepairLeft] left=1 & (left_n<left_mx) -> 1 : (left'=0) & (left_n'=left_n+1);
+	[nrepairLeft] left=1 & (left_n<left_mx) -> 1 : (left'=0);
+	[] (left_n>0) -> ws_fail*left_n : (left_n'=left_n-1);
+	
+endmodule
+
+
+
+// Right cluster
+module Right
+
+    right_n : [0..right_mx] init 5; // Number of workstations operational
+	right : [0..1] init 0; // Being repaired?
+
+	[startRight] right=0 & (right_n<right_mx) -> 1 : (right'=1);
+	[repairRight] right=1 & (right_n<right_mx) -> 1 : (right'=0) & (right_n'=right_n+1);
+	[crepairRight] right=1 & (right_n<right_mx) -> 1 : (right'=0) & (right_n'=right_n+1);
+	[nrepairRight] right=1 & (right_n<right_mx) -> 1 : (right'=0);
+	[] (right_n>0) -> ws_fail*right_n : (right_n'=right_n-1);
+endmodule
+
+
+// Repair unit
+module Repairman
+	
+	r : [0..1] init 0; // Repairing?
+	
+	[startLeft]    r=0 -> ws_check 		: (r'=1); // Inspect Left
+	[startRight]   r=0 -> ws_check 		: (r'=1); // Inspect Right
+	[startToLeft]  r=0 -> switch_check 	: (r'=1); // Inspect ToLeft
+	[startToRight] r=0 -> switch_check 	: (r'=1); // Inspect ToRight
+	[startLine]    r=0 -> line_check 	: (r'=1); // Inspect Line
+	
+	[repairLeft]    r=1 -> ws_repair    : (r'=0); // Repair Left
+	[repairRight]   r=1 -> ws_repair    : (r'=0); // Repair Right
+	[repairToLeft]  r=1 -> 0.25  		: (r'=0); // Repair ToLeft
+	[repairToRight] r=1 -> 0.25  		: (r'=0); // Repair ToRight
+	[repairLine]    r=1 -> 0.125 		: (r'=0); // Repair Line
+	
+	[nrepairLeft]    false -> ws_repair	: (r'=0); // no Repair Left 
+	[nrepairRight]   false -> ws_repair : (r'=0); // no Repair Right
+	[nrepairToLeft]  false -> 0.25  	: (r'=0); // no Repair ToLeft
+	[nrepairToRight] false -> 0.25  	: (r'=0); // no Repair no ToRight
+	[nrepairLine]    false -> 0.125 	: (r'=0); // no Repair Line
+
+	[crepairLeft]    false -> ws_repair : (r'=0); // Repair Left 
+	[crepairRight]   false -> ws_repair : (r'=0); // Repair Right
+	[crepairToLeft]  false -> 0.25  	: (r'=0); // Repair ToLeft
+	[crepairToRight] false -> 0.25  	: (r'=0); // Repair ToRight
+	[crepairLine]    false -> 0.125 	: (r'=0); // Repair Line
+endmodule
+
+
+
+// Line/backbone
+module Line 
+	
+	line : [0..1] init 0; // Being repaired?
+	line_n :[0..1] init 1; // Working?
+	
+	[startLine] line=0 & line_n=0 -> 1 		: (line'=1);
+	[repairLine] line=1 & line_n=0 -> 1 	: (line'=0) & (line_n'=1);
+	[crepairLine] line=1 & line_n=0 -> 1 	: (line'=0) & (line_n'=1);
+	[nrepairLine] line=1 & line_n=0 -> 1 : (line'=0);
+	[] line_n=1 -> line_fail : (line_n'=0);
+endmodule
+
+
+
+// Left switch
+module ToLeft
+
+	toleft : [0..1] init 0; // Being repaired?
+	toleft_n :[0..1] init 1; // Working?
+
+	[startToLeft] toleft=0 & toleft_n=0 -> 1 	: (toleft'=1);
+	[repairToLeft] toleft=1 & toleft_n=0 -> 1 	: (toleft'=0) & (toleft_n'=1);
+	[crepairToLeft] toleft=1 & toleft_n=0 -> 1 	: (toleft'=0) & (toleft_n'=1);
+	[nrepairToLeft] toleft=1 & toleft_n=0 -> 1 	: (toleft'=0);
+	[] toleft_n=1 -> switch_fail : (toleft_n'=0);
+endmodule
+
+
+// Right switch
+module ToRight
+
+	toright : [0..1] init 0; // Being repaired?
+	toright_n :[0..1] init 1; // Working?
+
+	[startToRight] toright=0 & toright_n=0 -> 1 	: (toright'=1);
+	[repairToRight] toright=1 & toright_n=0 -> 1 	: (toright'=0) & (toright_n'=1);
+	[crepairToRight] toright=1 & toright_n=0 -> 1 	: (toright'=0) & (toright_n'=1);
+	[nrepairToRight] toright=1 & toright_n=0 -> 1 	: (toright'=0);
+	[] toright_n=1 -> switch_fail : (toright_n'=0);
+endmodule
+
+
+
+
+
+// Reward structures
+
+// Percentage of operational workstations stations
+rewards "percent_op"
+	true : 100*(left_n+right_n)/(2*N);
+endrewards
+
+// Time that the system is not delivering at least minimum QoS
+//rewards "time_not_min"
+//	!minimum : 1; 
+//endrewards
+
+// Number of repairs
+rewards "num_repairs"
+	[repairLeft]    true : 1;
+	[repairRight]   true : 1;
+	[repairToLeft]  true : 1;
+	[repairToRight] true : 1;
+	[repairLine]    true : 1;
+endrewards
+
+//// Number of repairs
+//rewards "working_hours"
+//	r:1;
+//endrewards
+
+// Number of repairs
+rewards "cost"
+	//r:left_n + right_n;
+	//!r: left_n + right_n;
+	[repairToLeft]  true : left_n ;
+	[repairToRight] true : right_n;
+	[repairLine]    true : left_n + right_n;
+endrewards
+
+//rewards "cost1"
+//	r:left_n + right_n;
+//	//!r: left_n + right_n;
+//endrewards
+
+rewards "cost2"
+	[repairLeft]    true : 1;
+	[repairRight]   true : 1;
+	[repairToLeft]  true : 20*left_n ;
+	[repairToRight] true : 20*right_n;
+	[repairLine]    true : 50*(left_n + right_n);
+endrewards
+
+rewards "required_operational"
+	60 <= 100*(left_n+right_n)/(2*N) & 100*(left_n+right_n)/(2*N) <= 80 : 1;
+endrewards
+
+
+rewards "cost3"
+	[repairLeft]    true : 1;
+	[repairRight]   true : 1;
+	[repairToLeft]  true : 2 + 20*left_n ;
+	[repairToRight] true : 2 + 20*right_n;
+	[repairLine]    true : 8 + 50*(left_n + right_n);
+	
+	[crepairLeft]    true : 1;
+	[crepairRight]   true : 1;
+	[crepairToLeft]  true : 2 + 10*left_n ;
+	[crepairToRight] true : 2 + 10*right_n;
+	[crepairLine]    true : 8 + 25*(left_n + right_n);
+endrewards
+
