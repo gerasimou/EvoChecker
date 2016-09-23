@@ -32,13 +32,49 @@ public class PrismBaseListener implements PrismListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterModule(PrismParser.ModuleContext ctx) { }
+	@Override public void enterModuleSimple(PrismParser.ModuleSimpleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitModule(PrismParser.ModuleContext ctx) { }
+	@Override public void exitModuleSimple(PrismParser.ModuleSimpleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterModuleRenaming(PrismParser.ModuleRenamingContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitModuleRenaming(PrismParser.ModuleRenamingContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterModuleRenamingVarSimple(PrismParser.ModuleRenamingVarSimpleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitModuleRenamingVarSimple(PrismParser.ModuleRenamingVarSimpleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterModuleRenamingVarMulti(PrismParser.ModuleRenamingVarMultiContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitModuleRenamingVarMulti(PrismParser.ModuleRenamingVarMultiContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -87,6 +123,18 @@ public class PrismBaseListener implements PrismListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitRewardPrecBoolean(PrismParser.RewardPrecBooleanContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRewardPrecExpressBoolean(PrismParser.RewardPrecExpressBooleanContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRewardPrecExpressBoolean(PrismParser.RewardPrecExpressBooleanContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -291,6 +339,18 @@ public class PrismBaseListener implements PrismListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitGuardBool(PrismParser.GuardBoolContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGuardString(PrismParser.GuardStringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGuardString(PrismParser.GuardStringContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

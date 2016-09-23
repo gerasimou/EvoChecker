@@ -22,15 +22,53 @@ public interface PrismListener extends ParseTreeListener {
 	 */
 	void exitModel(PrismParser.ModelContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PrismParser#module}.
+	 * Enter a parse tree produced by the {@code moduleSimple}
+	 * labeled alternative in {@link PrismParser#module}.
 	 * @param ctx the parse tree
 	 */
-	void enterModule(PrismParser.ModuleContext ctx);
+	void enterModuleSimple(PrismParser.ModuleSimpleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PrismParser#module}.
+	 * Exit a parse tree produced by the {@code moduleSimple}
+	 * labeled alternative in {@link PrismParser#module}.
 	 * @param ctx the parse tree
 	 */
-	void exitModule(PrismParser.ModuleContext ctx);
+	void exitModuleSimple(PrismParser.ModuleSimpleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code moduleRenaming}
+	 * labeled alternative in {@link PrismParser#module}.
+	 * @param ctx the parse tree
+	 */
+	void enterModuleRenaming(PrismParser.ModuleRenamingContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code moduleRenaming}
+	 * labeled alternative in {@link PrismParser#module}.
+	 * @param ctx the parse tree
+	 */
+	void exitModuleRenaming(PrismParser.ModuleRenamingContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code moduleRenamingVarSimple}
+	 * labeled alternative in {@link PrismParser#moduleRenamingVar}.
+	 * @param ctx the parse tree
+	 */
+	void enterModuleRenamingVarSimple(PrismParser.ModuleRenamingVarSimpleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code moduleRenamingVarSimple}
+	 * labeled alternative in {@link PrismParser#moduleRenamingVar}.
+	 * @param ctx the parse tree
+	 */
+	void exitModuleRenamingVarSimple(PrismParser.ModuleRenamingVarSimpleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code moduleRenamingVarMulti}
+	 * labeled alternative in {@link PrismParser#moduleRenamingVar}.
+	 * @param ctx the parse tree
+	 */
+	void enterModuleRenamingVarMulti(PrismParser.ModuleRenamingVarMultiContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code moduleRenamingVarMulti}
+	 * labeled alternative in {@link PrismParser#moduleRenamingVar}.
+	 * @param ctx the parse tree
+	 */
+	void exitModuleRenamingVarMulti(PrismParser.ModuleRenamingVarMultiContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PrismParser#reward}.
 	 * @param ctx the parse tree
@@ -75,6 +113,18 @@ public interface PrismListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitRewardPrecBoolean(PrismParser.RewardPrecBooleanContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code rewardPrecExpressBoolean}
+	 * labeled alternative in {@link PrismParser#rewardPrecondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterRewardPrecExpressBoolean(PrismParser.RewardPrecExpressBooleanContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code rewardPrecExpressBoolean}
+	 * labeled alternative in {@link PrismParser#rewardPrecondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitRewardPrecExpressBoolean(PrismParser.RewardPrecExpressBooleanContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PrismParser#function}.
 	 * @param ctx the parse tree
@@ -269,6 +319,18 @@ public interface PrismListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitGuardBool(PrismParser.GuardBoolContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code guardString}
+	 * labeled alternative in {@link PrismParser#guard}.
+	 * @param ctx the parse tree
+	 */
+	void enterGuardString(PrismParser.GuardStringContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code guardString}
+	 * labeled alternative in {@link PrismParser#guard}.
+	 * @param ctx the parse tree
+	 */
+	void exitGuardString(PrismParser.GuardStringContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code transitionEntry}
 	 * labeled alternative in {@link PrismParser#transition}.

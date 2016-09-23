@@ -1,3 +1,15 @@
+//==============================================================================
+//	
+ //	Copyright (c) 2015-
+//	Authors:
+//	* Simos Gerasimou (University of York)
+//	
+//------------------------------------------------------------------------------
+//	
+//	This file is part of EvoChecker.
+//	
+//==============================================================================
+
 package evochecker.parser.handler;
 
 import java.util.HashMap;
@@ -6,6 +18,12 @@ import java.util.Map;
 import evochecker.parser.src.gen.PrismBaseListener;
 import evochecker.parser.src.gen.PrismParser;
 
+
+/**
+ * Class representing a prism listener
+ * @author sgerasimou
+ *
+ */
 public class PrismListener extends PrismBaseListener {
 	
 	PrismParser parser;
@@ -24,7 +42,7 @@ public class PrismListener extends PrismBaseListener {
 	}
 	
 	@Override 
-	public void enterModule(PrismParser.ModuleContext ctx) {
+	public void enterModuleSimple (PrismParser.ModuleSimpleContext ctx) {
 		String str = ctx.name.getText();
 //		ctx.variables.
 		memory.put("module " + str, ctx.getText());

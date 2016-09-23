@@ -1,3 +1,15 @@
+//==============================================================================
+//	
+ //	Copyright (c) 2015-
+//	Authors:
+//	* Simos Gerasimou (University of York)
+//	
+//------------------------------------------------------------------------------
+//	
+//	This file is part of EvoChecker.
+//	
+//==============================================================================
+
 package evochecker.parser.handler;
 
 import java.util.ArrayList;
@@ -15,6 +27,7 @@ import evochecker.parser.src.gen.PrismParser;
 import evochecker.parser.src.gen.PrismParser.CommandContext;
 import evochecker.parser.src.gen.PrismParser.ConstantContext;
 import evochecker.parser.src.gen.PrismParser.EvolvableContext;
+import evochecker.parser.src.gen.PrismParser.FormulaContext;
 import evochecker.parser.src.gen.PrismParser.ModuleContext;
 import evochecker.parser.src.gen.PrismParser.RewardContext;
 import evochecker.parser.src.gen.PrismParser.RewardItemContext;
@@ -26,21 +39,40 @@ import evochecker.parser.src.gen.PrismParser.VarDeclarationContext;
  * 2) assemble a template of the model
  */
 
+/**
+ * Class representing a Prism Visitor that parses 
+ * an evochecker template and creates a list of evolvable elements
+ * @author sgerasimou
+ *
+ */
 public class PrismVisitor extends PrismBaseVisitor<String> {
 
 	/** "memory" for our calculator; variable/value pairs go here */ 
 //	Map<String, Integer> memory = new HashMap<String, Integer>();
 	
+	/** list of evolvables*/
 	private List<Evolvable> 			evolvableList 	 			= new ArrayList<Evolvable>();
+	
+	/** list of evolvable doubles*/
 	private List<EvolvableDouble>		evolvableDoubleList	 		= new ArrayList<EvolvableDouble>();
+	
+	/** list of evolvable integers*/
 	private List<EvolvableInteger>		evolvableIntegerList 		= new ArrayList<EvolvableInteger>();
+	
+	/** list of evolvable distributions*/
 	private List<EvolvableDistribution>	evolvableDistributionList	= new ArrayList<EvolvableDistribution>();
+	
+	/** list of evolvable modules*/
 	private List<EvolvableModule>		evolvableModuleList			= new ArrayList<EvolvableModule>();
+	
+	/** list of evolvable alternative modules*/
 	private List<EvolvableModuleAlternative> evolvableModuleSuperList		= new ArrayList<EvolvableModuleAlternative>();
 	
+	/** model as a string*/
 	private StringBuilder modelString 		= new StringBuilder(100);
 
 		
+	/** Run visitor and create the evolvables list*/
 	@Override
 	public String visitModel(PrismParser.ModelContext ctx) {
 		String str;
@@ -53,6 +85,11 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		for (ConstantContext constant :  ctx.constant()){
 			str = visit(constant) + "\n";
 //			System.out.println(str);
+			modelString.append(str);
+		}
+		//visit formulae
+		for (FormulaContext formula : ctx.formula()){
+			str = "\n"+visit(formula) + "\n";
 			modelString.append(str);
 		}
 		//visit modules
@@ -96,7 +133,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	
 	
 	@Override
-	public String visitModule(PrismParser.ModuleContext ctx){
+	public String visitModuleSimple(PrismParser.ModuleSimpleContext ctx){
 		StringBuilder str = new StringBuilder("\nmodule ");
 		str.append(ctx.name.getText() + "\n");
 		//parse variable declarations
@@ -109,6 +146,43 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 			str.append(visit(command));
 		}
 		str.append("endmodule \n\n");
+		return str.toString();
+	}
+	
+	
+	public String visitModuleRenaming(PrismParser.ModuleRenamingContext ctx){
+		StringBuilder str = new StringBuilder("\nmodule ");
+		str.append(ctx.newModuleName.getText() +"="+ ctx.oldModuleName.getText());
+		str.append("[ ");
+		str.append(visit(ctx.moduleRenamingVar()));
+		str.append("] ");
+		str.append("endmodule \n\n");
+		return str.toString();
+	}
+	
+	
+	@Override
+	public String visitModuleRenamingVarSimple (PrismParser.ModuleRenamingVarSimpleContext ctx){
+		StringBuilder str = new StringBuilder();
+		str.append(ctx.newVar.getText() +"="+ ctx.oldVar.getText());
+		return str.toString();
+	}
+	
+	@Override
+	public String visitModuleRenamingVarMulti (PrismParser.ModuleRenamingVarMultiContext ctx){
+		StringBuilder str = new StringBuilder();
+		str.append(ctx.newVar.getText() +"="+ ctx.oldVar.getText() +",");
+		str.append(visit(ctx.moduleRenamingVar()));
+		visit(ctx.moduleRenamingVar());
+		return str.toString();
+	}
+	
+	@Override
+	/**'formula' name=ID '=' expression ';' */
+	public String visitFormula (PrismParser.FormulaContext ctx){
+		StringBuilder str = new StringBuilder("formula ");
+		str.append(ctx.name.getText() +" = ");
+		str.append(visit(ctx.expression()) +";");
 		return str.toString();
 	}
 	
@@ -156,6 +230,11 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	/** BOOLEAN */
 	public String visitGuardBool (PrismParser.GuardBoolContext ctx){
 		return ctx.BOOLEAN().getText();
+	}
+	
+	
+	public String visitGuardString (PrismParser.GuardStringContext ctx){
+		return ctx.ID().getText();
 	}
 
 	
@@ -325,11 +404,9 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	
 	@Override 
 	public String visitRewardItem (PrismParser.RewardItemContext ctx){
-//		('['(transitionID=variable)?']')? rewardPrecondition ':' expression  ';'
+//		('['(transitionID=variable)?']')? rewardPrecondition ':' expression  ';'	
 		StringBuilder str = new StringBuilder();
-		if (ctx.transitionID!=null){
-			str.append("[" + ctx.transitionID.getText() + "] ");
-		}
+		str.append(ctx.transitionID!=null ? "[" + ctx.transitionID.getText() +"]" : "");
 		str.append(visit(ctx.rewardPrecondition()));
 		str.append(":");
 		str.append(visit(ctx.expression()) +";");
@@ -339,13 +416,19 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	
 	@Override
 	public String visitRewardPrecExpression (PrismParser.RewardPrecExpressionContext ctx){
-		return (ctx.variable().getText() +" "+ ctx.operator().getText() +" "+ visit(ctx.expression()));
+//		return (ctx.variable().getText() +" "+ ctx.operator().getText() +" "+ visit(ctx.expression()));
+		return visit(ctx.expression());
 	}
 
 	
 	@Override
 	public String visitRewardPrecBoolean (PrismParser.RewardPrecBooleanContext ctx){
 		return (" "+ ctx.BOOLEAN().getText() +" ");
+	}
+	
+	@Override
+	public String visitRewardPrecExpressBoolean (PrismParser.RewardPrecExpressBooleanContext ctx){
+		return (ctx.variable().getText() +" "+ ctx.operator().getText() +" "+ ctx.BOOLEAN().getText());
 	}
 	
 	

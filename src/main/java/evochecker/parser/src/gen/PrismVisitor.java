@@ -21,11 +21,33 @@ public interface PrismVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitModel(PrismParser.ModelContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PrismParser#module}.
+	 * Visit a parse tree produced by the {@code moduleSimple}
+	 * labeled alternative in {@link PrismParser#module}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitModule(PrismParser.ModuleContext ctx);
+	T visitModuleSimple(PrismParser.ModuleSimpleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code moduleRenaming}
+	 * labeled alternative in {@link PrismParser#module}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitModuleRenaming(PrismParser.ModuleRenamingContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code moduleRenamingVarSimple}
+	 * labeled alternative in {@link PrismParser#moduleRenamingVar}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitModuleRenamingVarSimple(PrismParser.ModuleRenamingVarSimpleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code moduleRenamingVarMulti}
+	 * labeled alternative in {@link PrismParser#moduleRenamingVar}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitModuleRenamingVarMulti(PrismParser.ModuleRenamingVarMultiContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PrismParser#reward}.
 	 * @param ctx the parse tree
@@ -52,6 +74,13 @@ public interface PrismVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRewardPrecBoolean(PrismParser.RewardPrecBooleanContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code rewardPrecExpressBoolean}
+	 * labeled alternative in {@link PrismParser#rewardPrecondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRewardPrecExpressBoolean(PrismParser.RewardPrecExpressBooleanContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PrismParser#function}.
 	 * @param ctx the parse tree
@@ -166,6 +195,13 @@ public interface PrismVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitGuardBool(PrismParser.GuardBoolContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code guardString}
+	 * labeled alternative in {@link PrismParser#guard}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGuardString(PrismParser.GuardStringContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code transitionEntry}
 	 * labeled alternative in {@link PrismParser#transition}.
