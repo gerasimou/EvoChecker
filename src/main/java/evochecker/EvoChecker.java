@@ -88,12 +88,14 @@ public class EvoChecker {
 			evoChecker.initialiseAlgorithm();
 			
 			//execute adaptation step
-			String str 	= Utility.getProperty("MODEL_TEMPLATE_FILE");
-			str			= StringUtils.replace(str, "UUV/", "UUV/runtime/");
-			str 		= StringUtils.replace(str, ".", "1.");
-			evoChecker.adaptSystem(str);
+//			String str 	= Utility.getProperty("MODEL_TEMPLATE_FILE");
+//			str			= StringUtils.replace(str, "UUV/", "UUV/runtime/");
+//			str 		= StringUtils.replace(str, ".", "1.");
+//			evoChecker.adaptSystem(str);
 //			"models/FX/runtime/fxMedium1.pm");
 //			evoChecker.adaptSystemStep("models/FX/runtime/fxSmall_.pm", 1, 13);
+			
+			evoChecker.execute();
 			
 			//close down
 			evoChecker.closeDown();
@@ -174,12 +176,17 @@ public class EvoChecker {
 //		int numOfConstraints = 1;
 		
 		//UUV
+//		propertyList.add(new Property(true));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(false));
+//		int numOfConstraints = 2;
+		
+		//Cluster
 		propertyList.add(new Property(true));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		int numOfConstraints = 2;
+		propertyList.add(new Property(true));
+		int numOfConstraints = 0;
 		
 
 		//6) instantiate the problem
@@ -272,9 +279,9 @@ public class EvoChecker {
 		//Store results
 		String algorithmStr = Utility.getProperty("ALGORITHM").toUpperCase();
 		String seeding = Utility.getProperty("SEEDING").toUpperCase();
-		Utility.exportToFile("data/FUN_"+algorithmStr +"_"+ seeding, population.get(0).toString(), true);
-		Utility.printVariablesToFile("data/VAR_"+algorithmStr +"_"+ seeding, population.get(0), true);
-//		population.printObjectivesToFile("data/FUN_"+algorithmStr +"_"+ seeding);
-//		population.printVariablesToFile("data/VAR_"+algorithmStr  +"_"+ seeding);
+//		Utility.exportToFile("data/FUN_"+algorithmStr +"_"+ seeding, population.get(0).toString(), true);
+//		Utility.printVariablesToFile("data/VAR_"+algorithmStr +"_"+ seeding, population.get(0), true);
+		population.printObjectivesToFile("data/FUN_"+algorithmStr +"_"+ seeding);
+		population.printVariablesToFile("data/VAR_"+algorithmStr  +"_"+ seeding);
 	}	
 }
