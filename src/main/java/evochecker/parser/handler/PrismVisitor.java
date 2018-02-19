@@ -31,12 +31,12 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	/** "memory" for our calculator; variable/value pairs go here */ 
 //	Map<String, Integer> memory = new HashMap<String, Integer>();
 	
-	private List<Evolvable> 			evolvableList 	 			= new ArrayList<Evolvable>();
+	private List<Evolvable> 			evolvableList 	 				= new ArrayList<Evolvable>();
 	private List<EvolvableDouble>		evolvableDoubleList	 		= new ArrayList<EvolvableDouble>();
 	private List<EvolvableInteger>		evolvableIntegerList 		= new ArrayList<EvolvableInteger>();
 	private List<EvolvableDistribution>	evolvableDistributionList	= new ArrayList<EvolvableDistribution>();
 	private List<EvolvableModule>		evolvableModuleList			= new ArrayList<EvolvableModule>();
-	private List<EvolvableModuleAlternative> evolvableModuleSuperList		= new ArrayList<EvolvableModuleAlternative>();
+	private List<EvolvableModuleAlternative> evolvableModuleSuperList	= new ArrayList<EvolvableModuleAlternative>();
 	
 	private StringBuilder modelString 		= new StringBuilder(100);
 

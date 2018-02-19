@@ -76,12 +76,12 @@ public class EvoChecker {
 		propertyList = new ArrayList<Property>();
 		
 		//DPM properties (true for maximisation)
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		int numOfConstraints = 2;
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(false));
+//		propertyList.add(new Property(false));
+//		int numOfConstraints = 2;
 
 		//FX
 //		propertyList.add(new Property(true));
@@ -95,6 +95,14 @@ public class EvoChecker {
 //		propertyList.add(new Property(false));
 //		propertyList.add(new Property(true));
 //		int numOfConstraints = 0;
+		
+		
+		//COPE
+		propertyList.add(new Property(true));
+		propertyList.add(new Property(false));
+		propertyList.add(new Property(true));
+		int numOfConstraints = 1;
+		
 
 		problem = new GeneticProblem(genes, propertyList, parserEngine, numOfConstraints);
 		
