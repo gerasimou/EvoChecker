@@ -3,8 +3,8 @@ package evochecker.parser.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import evochecker.parser.src.gen.PrismBaseListener;
-import evochecker.parser.src.gen.PrismParser;
+import org.spg.language.grammar.antlr.src.gen.PrismBaseListener;
+import org.spg.language.grammar.antlr.src.gen.PrismParser;
 
 public class PrismListener extends PrismBaseListener {
 	
@@ -24,7 +24,7 @@ public class PrismListener extends PrismBaseListener {
 	}
 	
 	@Override 
-	public void enterModule(PrismParser.ModuleContext ctx) {
+	public void enterModuleSimple (PrismParser.ModuleSimpleContext ctx) {
 		String str = ctx.name.getText();
 //		ctx.variables.
 		memory.put("module " + str, ctx.getText());

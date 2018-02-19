@@ -3,6 +3,17 @@ package evochecker.parser.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.spg.language.grammar.antlr.src.gen.PrismBaseVisitor;
+import org.spg.language.grammar.antlr.src.gen.PrismParser;
+import org.spg.language.grammar.antlr.src.gen.PrismParser.CommandContext;
+import org.spg.language.grammar.antlr.src.gen.PrismParser.ConstantContext;
+import org.spg.language.grammar.antlr.src.gen.PrismParser.EvolvableContext;
+import org.spg.language.grammar.antlr.src.gen.PrismParser.FormulaContext;
+import org.spg.language.grammar.antlr.src.gen.PrismParser.ModuleContext;
+import org.spg.language.grammar.antlr.src.gen.PrismParser.RewardContext;
+import org.spg.language.grammar.antlr.src.gen.PrismParser.RewardItemContext;
+import org.spg.language.grammar.antlr.src.gen.PrismParser.VarDeclarationContext;
+
 import evochecker.parser.evolvable.Evolvable;
 import evochecker.parser.evolvable.EvolvableDistribution;
 import evochecker.parser.evolvable.EvolvableDouble;
@@ -10,15 +21,6 @@ import evochecker.parser.evolvable.EvolvableID;
 import evochecker.parser.evolvable.EvolvableInteger;
 import evochecker.parser.evolvable.EvolvableModule;
 import evochecker.parser.evolvable.EvolvableModuleAlternative;
-import evochecker.parser.src.gen.PrismBaseVisitor;
-import evochecker.parser.src.gen.PrismParser;
-import evochecker.parser.src.gen.PrismParser.CommandContext;
-import evochecker.parser.src.gen.PrismParser.ConstantContext;
-import evochecker.parser.src.gen.PrismParser.EvolvableContext;
-import evochecker.parser.src.gen.PrismParser.ModuleContext;
-import evochecker.parser.src.gen.PrismParser.RewardContext;
-import evochecker.parser.src.gen.PrismParser.RewardItemContext;
-import evochecker.parser.src.gen.PrismParser.VarDeclarationContext;
 
 /* TODO
  * This class needs to parse the model and 
@@ -31,12 +33,12 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	/** "memory" for our calculator; variable/value pairs go here */ 
 //	Map<String, Integer> memory = new HashMap<String, Integer>();
 	
-	private List<Evolvable> 			evolvableList 	 				= new ArrayList<Evolvable>();
+	private List<Evolvable> 			evolvableList 	 			= new ArrayList<Evolvable>();
 	private List<EvolvableDouble>		evolvableDoubleList	 		= new ArrayList<EvolvableDouble>();
 	private List<EvolvableInteger>		evolvableIntegerList 		= new ArrayList<EvolvableInteger>();
 	private List<EvolvableDistribution>	evolvableDistributionList	= new ArrayList<EvolvableDistribution>();
 	private List<EvolvableModule>		evolvableModuleList			= new ArrayList<EvolvableModule>();
-	private List<EvolvableModuleAlternative> evolvableModuleSuperList	= new ArrayList<EvolvableModuleAlternative>();
+	private List<EvolvableModuleAlternative> evolvableModuleSuperList		= new ArrayList<EvolvableModuleAlternative>();
 	
 	private StringBuilder modelString 		= new StringBuilder(100);
 
@@ -53,6 +55,11 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		for (ConstantContext constant :  ctx.constant()){
 			str = visit(constant) + "\n";
 //			System.out.println(str);
+			modelString.append(str);
+		}
+		//visit formulae
+		for (FormulaContext formula : ctx.formula()){
+			str = "\n"+visit(formula) + "\n";
 			modelString.append(str);
 		}
 		//visit modules
@@ -96,7 +103,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	
 	
 	@Override
-	public String visitModule(PrismParser.ModuleContext ctx){
+	public String visitModuleSimple(PrismParser.ModuleSimpleContext ctx){
 		StringBuilder str = new StringBuilder("\nmodule ");
 		str.append(ctx.name.getText() + "\n");
 		//parse variable declarations
@@ -109,6 +116,43 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 			str.append(visit(command));
 		}
 		str.append("endmodule \n\n");
+		return str.toString();
+	}
+	
+	
+	public String visitModuleRenaming(PrismParser.ModuleRenamingContext ctx){
+		StringBuilder str = new StringBuilder("\nmodule ");
+		str.append(ctx.newModuleName.getText() +"="+ ctx.oldModuleName.getText());
+		str.append("[ ");
+		str.append(visit(ctx.moduleRenamingVar()));
+		str.append("] ");
+		str.append("endmodule \n\n");
+		return str.toString();
+	}
+	
+	
+	@Override
+	public String visitModuleRenamingVarSimple (PrismParser.ModuleRenamingVarSimpleContext ctx){
+		StringBuilder str = new StringBuilder();
+		str.append(ctx.newVar.getText() +"="+ ctx.oldVar.getText());
+		return str.toString();
+	}
+	
+	@Override
+	public String visitModuleRenamingVarMulti (PrismParser.ModuleRenamingVarMultiContext ctx){
+		StringBuilder str = new StringBuilder();
+		str.append(ctx.newVar.getText() +"="+ ctx.oldVar.getText() +",");
+		str.append(visit(ctx.moduleRenamingVar()));
+		visit(ctx.moduleRenamingVar());
+		return str.toString();
+	}
+	
+	@Override
+	/**'formula' name=ID '=' expression ';' */
+	public String visitFormula (PrismParser.FormulaContext ctx){
+		StringBuilder str = new StringBuilder("formula ");
+		str.append(ctx.name.getText() +" = ");
+		str.append(visit(ctx.expression()) +";");
 		return str.toString();
 	}
 	
@@ -156,6 +200,11 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	/** BOOLEAN */
 	public String visitGuardBool (PrismParser.GuardBoolContext ctx){
 		return ctx.BOOLEAN().getText();
+	}
+	
+	
+	public String visitGuardString (PrismParser.GuardStringContext ctx){
+		return ctx.ID().getText();
 	}
 
 	
@@ -325,11 +374,9 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	
 	@Override 
 	public String visitRewardItem (PrismParser.RewardItemContext ctx){
-//		('['(transitionID=variable)?']')? rewardPrecondition ':' expression  ';'
+//		('['(transitionID=variable)?']')? rewardPrecondition ':' expression  ';'	
 		StringBuilder str = new StringBuilder();
-		if (ctx.transitionID!=null){
-			str.append("[" + ctx.transitionID.getText() + "] ");
-		}
+		str.append(ctx.transitionID!=null ? "[" + ctx.transitionID.getText() +"]" : "");
 		str.append(visit(ctx.rewardPrecondition()));
 		str.append(":");
 		str.append(visit(ctx.expression()) +";");
@@ -339,7 +386,8 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	
 	@Override
 	public String visitRewardPrecExpression (PrismParser.RewardPrecExpressionContext ctx){
-		return (ctx.variable().getText() +" "+ ctx.operator().getText() +" "+ visit(ctx.expression()));
+//		return (ctx.variable().getText() +" "+ ctx.operator().getText() +" "+ visit(ctx.expression()));
+		return visit(ctx.expression());
 	}
 
 	
@@ -348,6 +396,10 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		return (" "+ ctx.BOOLEAN().getText() +" ");
 	}
 	
+	@Override
+	public String visitRewardPrecExpressBoolean (PrismParser.RewardPrecExpressBooleanContext ctx){
+		return (ctx.variable().getText() +" "+ ctx.operator().getText() +" "+ ctx.BOOLEAN().getText());
+	}
 	
 	@Override
 	public String visitIntOrVarInt (PrismParser.IntOrVarIntContext ctx){
@@ -467,10 +519,11 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	public List<Evolvable> getEvolvableList(){
 		return this.evolvableList;
 	}
-	
-	public String getModelString (){
+		
+	public String getInternalModelRepresentation (){
 		return this.modelString.toString();
 	}
+
 	
 	/**
 	 * Scan through the model string and check for evolvable distribution within NON-evolvable modules
