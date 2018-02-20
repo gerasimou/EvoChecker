@@ -13,19 +13,19 @@
 package evochecker.genetic.genes;
 
 /**
- * Class representing an alternative module gene
+ * Class representing an integer gene
  * @author sgerasimou
  *
  */
-public class AlternativeModuleGene extends AbstractGene {
-
+public class IntegerGene extends AbstractGene{
 	
 	/**
 	 * Class constructor
 	 * @param name
-	 * @param numberOfAlternatives
+	 * @param minValue
+	 * @param maxValue
 	 */
-	public AlternativeModuleGene(String name, int numberOfAlternatives) {
-		super(name, 0, numberOfAlternatives-1, 0);
+	public IntegerGene(String name, int minValue, int maxValue){
+		super(name, minValue, maxValue, 0);
 	}
 }
