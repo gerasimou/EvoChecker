@@ -17,6 +17,9 @@ public class Constraint extends Property {
 	}
 	
 	
+	/**
+	 * Constraints are inclusive
+	 */
 	@Override
 	public double evaluate(double result) {
 		if ((maximization) &&

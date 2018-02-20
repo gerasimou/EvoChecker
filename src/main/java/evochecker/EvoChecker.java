@@ -28,7 +28,6 @@ import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.DiscreteDistributionGene;
-import evochecker.genetic.jmetal.GeneticModelProblem;
 import evochecker.genetic.jmetal.GeneticProblem;
 import evochecker.genetic.jmetal.metaheuristics.MOCell_Settings;
 import evochecker.genetic.jmetal.metaheuristics.NSGAII_Settings;
@@ -50,13 +49,11 @@ import jmetal.util.JMException;
  */
 public class EvoChecker {
 
-	private static Properties prop = new Properties();
 	
 	/** problem trying to solve*/
 	private Problem problem;
 	
 	/** properties list*/
-//	private List<Property> propertyList;
 	private List<Property> objectivesList;
 	private List<Property> constraintsList;
 
@@ -85,8 +82,12 @@ public class EvoChecker {
 		long start = System.currentTimeMillis();
 		
 		try {
+			//check configuration script
+			checkConfiguration();
+
 			//instantiate evochecker
 			EvoChecker evoChecker = new EvoChecker();
+			
 			//initialise problem
 			evoChecker.initializeProblem();
 			
@@ -303,6 +304,12 @@ public class EvoChecker {
 		//check model checking engine
 		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN))
 			errors.append(Constants.MODEL_CHECKING_ENGINE + " not found in configuration script!\n");
+		else {
+			File engine = new File(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE));
+			if (!engine.exists())
+				errors.append(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE) + " does not exist!\n");
+		}
+			
 
 		if (errors.length()!=0)
 			throw new EvoCheckerException(errors.toString().split("\r\n|\r|\n").length +"\n"+ errors.toString());

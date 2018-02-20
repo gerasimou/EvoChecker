@@ -72,6 +72,7 @@ public class GeneticProblem extends GeneticModelProblem {
 
 		//Prepare params
 		String model = instantiator.getValidModelInstance(this.genes);
+//		System.out.println(model);
 		String propertyFile = instantiator.getPrismPropertyFileName();
 //		Utility.exportToFile("model.txt", model);
 

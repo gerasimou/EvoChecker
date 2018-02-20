@@ -1,7 +1,7 @@
 package evochecker.prism;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,7 +63,7 @@ public class PropertyFactory {
 			list.add(constaintsList);
 			return list;
 		} 
-		catch (FileNotFoundException | PrismLangException | EvoCheckerException e) {
+		catch (PrismLangException | EvoCheckerException | IOException e) {
 			e.printStackTrace();
 		}	
 		//never happens

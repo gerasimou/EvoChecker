@@ -122,8 +122,9 @@ public class MultiProcessEvaluator implements IParallelEvaluator {
 				params[4] = String.valueOf(i+1);
 				do {
 					Process p = Runtime.getRuntime().exec(params);
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 					isAlive = p.isAlive();
+					
 				} 
 				while (!isAlive);
 
@@ -131,7 +132,7 @@ public class MultiProcessEvaluator implements IParallelEvaluator {
 				 makeConnection(portNum, i, params);
 			}
 			Thread.sleep(1000);
-		} catch (IOException | InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
