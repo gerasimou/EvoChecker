@@ -1,35 +1,53 @@
+//==============================================================================
+//	
+ //	Copyright (c) 2015-
+//	Authors:
+//	* Simos Gerasimou (University of York)
+//	
+//------------------------------------------------------------------------------
+//	
+//	This file is part of EvoChecker.
+//	
+//==============================================================================
+
 package evochecker.prism;
 
-public class Property {
+
+/**
+ * Class representing a property to be checked
+ * TODO: add constraint handling and property evaluation
+ * @author sgerasimou
+ *
+ */
+public abstract class Property {
 	
-	private boolean maximization;
+	protected boolean maximization;
 	
-	private double result;
-	
-	public Property(){
-		this.maximization = true;
-	}
-	
-	public Property(boolean maximization){
-		this.maximization = maximization;
+	protected String expression;
+			
+
+	public Property(boolean maximization, String expression){
+		this.maximization 	= maximization;
+		this.expression		= expression;
 	}
 
+	
 	public boolean isMaximization() {
 		return maximization;
 	}
 
+	
 	public void setMaximization(boolean maximization) {
 		this.maximization = maximization;
 	}
-
-	public double getResult() {
-		return result;
-	}
-
-	public void setResult(double result) {
-		this.result = result;
+	
+	
+	public Property (Property aProperty){
+		this.maximization 	= aProperty.maximization;
 	}
 	
+	
+	public abstract double evaluate (double result);// {return 0;};
 	
 
 }
