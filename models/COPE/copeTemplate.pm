@@ -22,19 +22,19 @@
 dtmc
 
 //Action command parameters
-const int action_Chool = 2; // lower:1, upper:2
-const int action_Fare = 2; // lower:1, upper:3
-const int pA_Greta = 1; // lower:1, upper:1
-const int action_Hurratta = 2; // lower:1, upper:4
-const int action_J1 = 3; // lower:1, upper:3
-const int action_J2 = 1; // lower:1, upper:2
-const int action_J3 = 3; // lower:1, upper:3
-const int action_J4 = 1; // lower:1, upper:3
-const int action_Kremshaw = 2; // lower:1, upper:2
-const int action_Moona = 2; // lower:1, upper:3
-const int action_Pretch = 2; // lower:1, upper:3
-const int action_Treebach = 1; // lower:1, upper:3
-const int action_Ulla = 2; // lower:1, upper:2
+evolve int action_Chool [1..2];
+evolve int action_Fare [1..3];
+evolve int pA_Greta [1..1];
+evolve int action_Hurratta [1..4];
+evolve int action_J1 [1..3];
+evolve int action_J2 [1..2];
+evolve int action_J3 [1..3];
+evolve int action_J4 [1..3];
+evolve int action_Kremshaw [1..2];
+evolve int action_Moona [1..3];
+evolve int action_Pretch [1..3];
+evolve int action_Treebach [1..3];
+evolve int action_Ulla [1..2];
 
 const double psChool_J4 = 0.7;
 const double prChool_J4 = 0.25;

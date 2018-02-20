@@ -1,0 +1,25 @@
+label "Chool" = l = 0;
+label "Fare" = l = 1;
+label "Greta" = l = 2;
+label "Hurratta" = l = 3;
+label "J1" = l = 4;
+label "J2" = l = 5;
+label "J3" = l = 6;
+label "J4" = l = 7;
+label "Kremshaw" = l = 8;
+label "Moona" = l = 9;
+label "Pretch" = l = 10;
+label "Treebach" = l = 11;
+label "Ulla" = l = 12;
+
+
+//objective, min
+R{"time"}=? [ F "Chool" ][F "Chool"]
+
+
+//objective, max
+P=? [ F "Chool" ]
+
+
+//constraint, max, 50
+R{"time"}=? [ F "Chool" ][F "Chool"]
