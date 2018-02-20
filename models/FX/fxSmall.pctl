@@ -4,13 +4,25 @@ label "done" = state=5 |state=15;
 
 
 // maximisation [0..1]
+
+//objective, max
 P=? [ F "success" ]
 
-// minimisation [0..R+]
+
+//minimisation [0..R+]
+
+//objective, min
 R{"cost"}=? [ F "done"]
 
+
 // minimisation [0..R+]
+
+//objective, min
 R{"time"}=? [ F "done" ]
 
+
+
 // maximisation [0..1]
+
+//objective, max
 P=? [ F "success" ]

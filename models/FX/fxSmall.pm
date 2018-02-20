@@ -3,17 +3,17 @@ dtmc
 
 //Evoxxx defined params
 //Which services are enabled
-evolve const int op1Code [1..7]; //possible combinations for services implementing operation 1
-evolve const int op2Code [1..7]; //possible combinations for services implementing operation 2
-evolve const int op4Code [1..7]; //possible combinations for services implementing operation 4
-evolve const int op5Code [1..7]; //possible combinations for services implementing operation 3
+evolve int op1Code [1..7]; //possible combinations for services implementing operation 1
+evolve int op2Code [1..7]; //possible combinations for services implementing operation 2
+evolve int op4Code [1..7]; //possible combinations for services implementing operation 4
+evolve int op5Code [1..7]; //possible combinations for services implementing operation 3
 
 
 //Sequence of service execution
-evolve const int seqOp1  [1..6]; //(#services op1)!
-evolve const int seqOp2  [1..6]; //(#services op2)!
-evolve const int seqOp4  [1..6]; //(#services op3)!
-evolve const int seqOp5  [1..6]; //(#services op3)!
+evolve int seqOp1  [1..6]; //(#services op1)!
+evolve int seqOp2  [1..6]; //(#services op2)!
+evolve int seqOp4  [1..6]; //(#services op3)!
+evolve int seqOp5  [1..6]; //(#services op3)!
 
 //distribution for probabilistic selection
 evolve distribution probOp1 [3];
