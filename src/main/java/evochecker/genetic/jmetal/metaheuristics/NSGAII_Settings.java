@@ -34,7 +34,7 @@ import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
 import evochecker.auxiliary.Utility;
 import evochecker.genetic.jmetal.GeneticProblem;
-import evochecker.genetic.jmetal.MultiProcessPrismEvaluator;
+import evochecker.genetic.jmetal.MultiProcessEvaluator;
 import evochecker.genetic.jmetal.operators.CrossoverFactory;
 import evochecker.genetic.jmetal.operators.MutationFactory;
 
@@ -83,7 +83,7 @@ public class NSGAII_Settings extends Settings {
 		HashMap<String, Double> parameters; // Operator parameters
 
 		// Creating the algorithm. There are two choices: NSGAII and its steady-state variant ssNSGAII
-		MultiProcessPrismEvaluator evaluator = new MultiProcessPrismEvaluator(0);
+		MultiProcessEvaluator evaluator = new MultiProcessEvaluator(0);
 		algorithm = new pNSGAII(problem_, evaluator);
 		// algorithm = new ssNSGAII(problem_) ;
 
