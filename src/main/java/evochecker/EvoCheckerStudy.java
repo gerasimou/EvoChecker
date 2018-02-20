@@ -9,27 +9,30 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jmetal.core.Algorithm;
-import jmetal.core.Problem;
+import org.spg.language.parser.ParserEngine;
+
 import evochecker.auxiliary.Utility;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.jmetal.GeneticProblem;
 import evochecker.genetic.jmetal.experiments.Experiment;
-import evochecker.genetic.jmetal.experiments.util.Friedman;
 import evochecker.genetic.jmetal.metaheuristics.MOCell_Settings;
 import evochecker.genetic.jmetal.metaheuristics.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.SPEA2_Settings;
-import evochecker.parser.ParserEngine;
 import evochecker.prism.Property;
+import evochecker.prism.PropertyFactory;
+import jmetal.core.Algorithm;
+import jmetal.core.Problem;
 import jmetal.experiments.Settings;
 import jmetal.util.JMException;
 
 public class EvoCheckerStudy extends Experiment{
 	private static Properties prop = new Properties();
 	
-	private List<Property> propertyList;
+//	private List<Property> propertyList;
+	private List<Property> objectivesList;
+	private List<Property> constraintsList;
 	private Problem problem;
 	private List<AbstractGene> genes = new ArrayList<AbstractGene>();
 	
@@ -194,30 +197,17 @@ public class EvoCheckerStudy extends Experiment{
 		genes				= GenotypeFactory.createChromosome(parserEngine.getEvolvableList());
 		parserEngine.createMapping();
 		
-		propertyList = new ArrayList<Property>();
-		//FX
-//		propertyList.add(new Property(true));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(true));
-//		int numOfConstraints = 1;
+		String str = parserEngine.getValidModelInstance(genes);
+		List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
+		objectivesList  = list.get(0);
+		constraintsList = list.get(1);
 		
-		//DPM properties (true for maximisation)
-		// Also change to  evaluateConstraintsDPM function in parallelleEvaluate
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		propertyList.add(new Property(false));
-		int numOfConstraints = 2;
+		for (Property p : objectivesList)
+			System.out.println("O: "+p.toString());
+		for (Property p : constraintsList)
+			System.out.println("C: "+p.toString());
 
-		
-		//Zeroconf
-//			propertyList.add(new Property(false));
-//			propertyList.add(new Property(false));
-//			propertyList.add(new Property(true));
-
-		problem = new GeneticProblem(genes, propertyList, parserEngine, numOfConstraints);
+		problem = new GeneticProblem(genes, parserEngine, objectivesList, constraintsList, "GeneticProblem");		
 		
 	}
   
