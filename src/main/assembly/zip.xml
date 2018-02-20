@@ -1,0 +1,47 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>${pom.version}</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+    
+      	<!-- add launch script -->
+        <fileSet>
+            <directory>${project.basedir}/scripts</directory>
+            <outputDirectory/>
+             <includes>
+                <include>launch.sh</include>
+            </includes>
+        </fileSet>
+
+     	<!-- add models -->
+    		<fileSet>
+          <directory>${project.basedir}/models</directory>
+          <outputDirectory>models</outputDirectory>
+        </fileSet>
+
+        <!--  add resources -->
+        <fileSet>
+            <directory>${project.basedir}/resources</directory>
+            <outputDirectory>resources</outputDirectory>
+        </fileSet>
+
+        <!--  add repo -->
+        <fileSet>
+            <directory>${project.basedir}/lib</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+
+
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory/>
+            <includes>
+                <include>${pom.name}-${pom.version}.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

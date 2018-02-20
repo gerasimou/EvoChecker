@@ -7,7 +7,7 @@
   	<groupId>org</groupId>
   	<artifactId>EvoChecker</artifactId>
   	<packaging>jar</packaging>
-  	<version>1.0-SNAPSHOT</version>
+  	<version>1.0.1</version>
   	<name>EvoChecker</name>
   	<url>http://maven.apache.org</url>
 
@@ -21,7 +21,7 @@
 	<repositories>
 		<repository>
 	   		<id>localRepository</id>
-	   		<url>file://${basedir}/repo</url>
+	   		<url>file://${project.basedir}/repo/</url>
 	 	</repository>
 	</repositories>
 
@@ -36,15 +36,6 @@
 	      	<scope>test</scope>
 	    </dependency>
 
-		<!--  PRISM model checker -->
-		<!-- <dependency>
-			<groupId>org.checker.prism</groupId>
-			<artifactId>pepa</artifactId>
-			<version>4.2.1</version>
-			<type>zip</type>
-		</dependency>
-		-->
-
 		<!--  Antlr4 -->
 		<dependency>
 			<groupId>org.antlr</groupId>
@@ -58,13 +49,25 @@
 			<artifactId>jmetal</artifactId>
 			<version>4.5</version>
 		</dependency>	
-  </dependencies>
+	
+		<!--  Prism from local repository for property analysis -->
+	  	<dependency>
+	  		<groupId>org.modelchecker.prism</groupId>
+   			<artifactId>prism-tacas17</artifactId>
+	  		<version>1.0</version>
+<!-- 
+   	  		<artifactId>prism</artifactId>
+	  		<version>4.2.1</version> 	  		  		
+ --> 		</dependency>
+	  	
+ 	  </dependencies>
   
   
   <build>
   		<finalName>EvoChecker</finalName>
   
   		<plugins>
+  		
 			<!-- download source code in Eclipse, best practice -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -75,6 +78,7 @@
 					<downloadJavadocs>false</downloadJavadocs>
 				</configuration>
 			</plugin>
+			
 			
 			<!-- Set a compiler level -->
 			<plugin>
@@ -87,35 +91,159 @@
 				</configuration>
 			</plugin>
 			
+			
+			<!--  Copy resources to target directory -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+				
+					<!--  Copy models directory -->
+					<execution>
+						<id>copy-models</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory> ${basedir}/target/models</outputDirectory>
+							<resources>
+								<resource>
+									<directory>models</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					
+					<!--  Copy lib directory -->
+					<execution>
+						<id>copy-lib</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory> ${basedir}/target/lib</outputDirectory>
+							<resources>
+								<resource>
+									<directory>lib</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					
+					<!--  Copy launch script -->
+					<execution>
+						<id>copy-launch</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory> ${basedir}/target</outputDirectory>
+							<resources>
+								<resource>
+									<directory>scripts</directory>
+									<includes>
+										<include>launch.sh</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					
+					<!--  Copy resources directory -->
+					<execution>
+						<id>copy-resources-dir</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory> ${basedir}/target/resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>resources</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			
 			<!-- Maven Assembly Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.4.1</version>
-				<configuration>
-					<!-- get all project dependencies -->
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<!-- MainClass in mainfest make a executable jar -->
-					<archive>
-					  <manifest>
-						<mainClass>evochecker.EvoChecker</mainClass>
-					  </manifest>
-					</archive>
- 
-				</configuration>
 				<executions>
-				  <execution>
-					<id>make-assembly</id>
-                    <!-- bind to the packaging phase -->
-					<phase>package</phase> 
-					<goals>
-						<goal>single</goal>
-					</goals>
-				  </execution>
+					<!--  prepare uber jar -->
+					<execution>
+						<id>jar-with-dependencies</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<!-- get all project dependencies -->
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>							
+							<!-- MainClass in mainfest make a executable jar -->
+							<archive>
+							  <manifest>
+		 						<mainClass>evochecker.EvoChecker</mainClass>
+							  </manifest>
+							</archive>
+						</configuration>
+					</execution>
+					
+					<!--  prepare zip -->
+					<execution>
+						<id>create-zip</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+					        		<descriptor>src/main/assembly/zip.xml</descriptor>
+							</descriptors>	
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
+			
+			
+			<!--  Maven shade plugin -->
+			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-shade-plugin</artifactId>
+		        <version>3.1.0</version>
+		        <executions>
+		        		<execution>
+		        			<id>rename-uber-jar</id>
+		        			<phase>package</phase>
+		        			<goals>
+		        				<goal>shade</goal>
+		        			</goals>
+		        			<configuration>
+		        				<finalName>${pom.name}-${pom.version}</finalName>
+		        				<!-- All dependencies to be packaged in the jar -->
+		        				<!-- <shadedArtifactAttached>true</shadedArtifactAttached>-->
+		        				<!-- <shadedClassifierName>jar-with-dependencies</shadedClassifierName>-->
+		        				<transformers>
+		        					<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+		 								<mainClass>evochecker.EvoChecker</mainClass>
+			        						<!--<Build-Number>1.0.1</Build-Number>-->
+		        					</transformer>
+		        				</transformers>
+		        			</configuration>
+		        		</execution>
+		        </executions>				 
+			</plugin>
+			
   			
 			<!-- Clean plugin  -->
 			<plugin>
