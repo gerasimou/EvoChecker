@@ -259,16 +259,22 @@ public class EvoChecker {
 		System.out.println("SOLUTIONS: \t" + solutions.size());
 
 		String identifier	= problemName +"_"+ algorithmName +"_"+ Utility.getTimeStamp();
-		solutions.printObjectivesToFile(outputDir + identifier + "_Front");
-		solutions.printVariablesToFile(outputDir  + identifier + "_Set");
-//		for (int i=0; i<solutions.size(); i++){
-//			Solution solution = solutions.get(i);
-//			double constraintValue = solution.getOverallConstraintViolation();
-//			if (constraintValue<0){
-//				System.out.println(constraintValue +"\t"+ Arrays.toString(solution.getDecisionVariables()));
-//			}
-//		}
+		String frontFile		= outputDir + identifier + "_Front";
+		String setFile		= outputDir  + identifier + "_Set";
 		
+		//generate and save headers
+		StringBuilder header = new StringBuilder();
+		for (AbstractGene gene : genes)
+			header.append(gene.getName() +" ");
+		Utility.exportToFile(setFile, header +"\n");
+		
+		List<Solution> solutionList = new ArrayList<Solution>();
+		for (int i=0; i<solutions.size(); i++)
+			solutionList.add(solutions.get(i));
+		Utility.printObjectivesToFile(frontFile, solutionList);
+		Utility.printVariablesToFile(setFile, solutionList);
+//		solutions.printObjectivesToFile(frontFile);
+//		solutions.printVariablesToFile(setFile);
 	}
 	
 
