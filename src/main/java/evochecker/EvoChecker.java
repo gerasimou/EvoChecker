@@ -263,15 +263,20 @@ public class EvoChecker {
 		String setFile		= outputDir  + identifier + "_Set";
 		
 		//generate and save headers
-		StringBuilder header = new StringBuilder();
+		StringBuilder setHeader = new StringBuilder();
 		for (AbstractGene gene : genes)
-			header.append(gene.getName() +" ");
-		Utility.exportToFile(setFile, header +"\n");
+			setHeader.append(gene.getName() +" ");
+		Utility.exportToFile(setFile, setHeader +"\n");
+		StringBuilder frontHeader = new StringBuilder();
+		for (Property p : objectivesList) {
+			frontHeader.append(p.getExpression() +"\t");
+		}
+		Utility.exportToFile(frontFile, frontHeader +"\n");
 		
 		List<Solution> solutionList = new ArrayList<Solution>();
 		for (int i=0; i<solutions.size(); i++)
 			solutionList.add(solutions.get(i));
-		Utility.printObjectivesToFile(frontFile, solutionList);
+		Utility.printObjectivesToFile(frontFile, solutionList, objectivesList);
 		Utility.printVariablesToFile(setFile, solutionList);
 //		solutions.printObjectivesToFile(frontFile);
 //		solutions.printVariablesToFile(setFile);

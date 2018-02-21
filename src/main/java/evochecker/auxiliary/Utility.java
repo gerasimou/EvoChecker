@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Properties;
 
 import evochecker.exception.EvoCheckerException;
+import evochecker.properties.Property;
 import jmetal.core.Solution;
 import jmetal.util.Configuration;
 
@@ -145,16 +146,23 @@ public class Utility {
 	   * objects into the set in a file.
 	   * @param path The output file name
 	   */
-	  public static void printObjectivesToFile(String path, List<Solution> solutions){
+	  public static void printObjectivesToFile(String path, List<Solution> solutions, List<Property> objectivesList){
 	    try {
 	      /* Open the file */
 	      FileOutputStream fos   = new FileOutputStream(path, true)     ;
 	      OutputStreamWriter osw = new OutputStreamWriter(fos)    ;
 	      BufferedWriter bw      = new BufferedWriter(osw)        ;
 
-	      for (Solution aSolutionsList_ : solutions) {
-	        //if (this.vector[i].getFitness()<1.0) {
-	        bw.write(aSolutionsList_.toString());
+	      int numOfObjectives = objectivesList.size();
+	      for (Solution solution : solutions) {
+	    	  StringBuilder objString = new StringBuilder();
+	    	    for (int i = 0; i < numOfObjectives; i++) {
+	    	    		if (objectivesList.get(i).isMaximization())
+	    	    			objString.append((solution.getObjective(i)*-1) + " ");
+	    	    		else
+	    	    			objString.append(solution.getObjective(i) +" ");
+	    	    }
+	        bw.write(objString.toString());	    	  
 	        bw.newLine();
 	        //}
 	      }
