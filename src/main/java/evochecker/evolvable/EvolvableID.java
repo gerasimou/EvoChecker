@@ -1,7 +1,7 @@
 /**
  * 
  */
-package evochecker.parser.evolvable;
+package evochecker.evolvable;
 
 /**
  * An enumerator that keeps all the evolvable model identifies 

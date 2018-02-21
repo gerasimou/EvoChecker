@@ -10,14 +10,14 @@
 //	
 //==============================================================================
 
-package evochecker.parser.evolvable;
+package evochecker.evolvable;
 
 /**
- * Class representing and evolvable integer element
+ * Class representing an evolvable double element
  * @author sgerasimou
  *
  */
-public class EvolvableInteger extends Evolvable{
+public class EvolvableDouble extends Evolvable {
 	
 	/**
 	 * Class constructor
@@ -25,8 +25,8 @@ public class EvolvableInteger extends Evolvable{
 	 * @param minValue
 	 * @param maxValue
 	 */
-	public EvolvableInteger(String name, Number minValue, Number maxValue){
-		super(name, minValue, maxValue, EvolvableID.CONSTANT_INT);
+	public EvolvableDouble(String name, Number minValue, Number maxValue){
+		super(name, minValue, maxValue, EvolvableID.CONSTANT_DOUBLE);
 	}
 	
 	
@@ -39,17 +39,20 @@ public class EvolvableInteger extends Evolvable{
 		return str;
 	}
 
-	
+
 	/**
-	 * Get command
+	 * Get command 
 	 */
 	@Override
 	public String getCommand(Object variable) {
-		return "const int " + name +" = "+ (int)variable  +";\n";
+		//change made to accommodate PrismPSY
+//		return "const double " + name +";";
+		return "const double " + name +" = "+ (double)variable  +";\n";
 	}
 	
-	public EvolvableInteger (Evolvable anEvolvable){
+	
+	public EvolvableDouble (Evolvable anEvolvable){
 		this(anEvolvable.name, anEvolvable.minValue, anEvolvable.maxValue);
 	}
-	
 }
+

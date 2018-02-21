@@ -1,4 +1,4 @@
-package evochecker.parser.evolvable;
+package evochecker.evolvable;
 
 import java.util.ArrayList;
 import java.util.List;

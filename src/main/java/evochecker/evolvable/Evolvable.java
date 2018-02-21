@@ -1,4 +1,4 @@
-package evochecker.parser.evolvable;
+package evochecker.evolvable;
 
 public abstract class Evolvable {
 	
