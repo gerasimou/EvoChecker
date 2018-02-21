@@ -10,7 +10,7 @@
 //	
 //==============================================================================
 
-package evochecker.prism;
+package evochecker.properties;
 
 
 /**
@@ -46,6 +46,10 @@ public abstract class Property {
 		this.maximization 	= aProperty.maximization;
 	}
 	
+	
+	public String getExpression() {
+		return this.expression;
+	}
 	
 	public abstract double evaluate (double result);// {return 0;};
 	

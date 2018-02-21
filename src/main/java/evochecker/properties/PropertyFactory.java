@@ -1,4 +1,4 @@
-package evochecker.prism;
+package evochecker.properties;
 
 import java.io.File;
 import java.io.IOException;

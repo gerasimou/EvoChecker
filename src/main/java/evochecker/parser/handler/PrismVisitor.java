@@ -25,13 +25,13 @@ import org.spg.language.grammar.antlr.src.gen.PrismParser.RewardContext;
 import org.spg.language.grammar.antlr.src.gen.PrismParser.RewardItemContext;
 import org.spg.language.grammar.antlr.src.gen.PrismParser.VarDeclarationContext;
 
-import evochecker.parser.evolvable.Evolvable;
-import evochecker.parser.evolvable.EvolvableDistribution;
-import evochecker.parser.evolvable.EvolvableDouble;
-import evochecker.parser.evolvable.EvolvableID;
-import evochecker.parser.evolvable.EvolvableInteger;
-import evochecker.parser.evolvable.EvolvableModule;
-import evochecker.parser.evolvable.EvolvableModuleAlternative;
+import evochecker.evolvable.Evolvable;
+import evochecker.evolvable.EvolvableDistribution;
+import evochecker.evolvable.EvolvableDouble;
+import evochecker.evolvable.EvolvableID;
+import evochecker.evolvable.EvolvableInteger;
+import evochecker.evolvable.EvolvableModule;
+import evochecker.evolvable.EvolvableModuleAlternative;
 
 /* TODO
  * This class needs to parse the model and 

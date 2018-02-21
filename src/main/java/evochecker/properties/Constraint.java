@@ -1,4 +1,4 @@
-package evochecker.prism;
+package evochecker.properties;
 
 public class Constraint extends Property {
 

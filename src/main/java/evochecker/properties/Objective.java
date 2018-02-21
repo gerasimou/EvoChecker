@@ -1,4 +1,4 @@
-package evochecker.prism;
+package evochecker.properties;
 
 public class Objective extends Property {
 

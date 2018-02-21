@@ -25,7 +25,7 @@ import org.spg.language.parser.InstantiatorInterface;
 import evochecker.exception.EvoCheckerException;
 //import org.apache.commons.lang.NotImplementedException;
 import evochecker.genetic.genes.AbstractGene;
-import evochecker.prism.Property;
+import evochecker.properties.Property;
 import jmetal.core.Solution;
 import jmetal.util.JMException;
 

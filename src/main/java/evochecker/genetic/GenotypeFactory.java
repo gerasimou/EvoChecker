@@ -16,18 +16,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import evochecker.evolvable.Evolvable;
+import evochecker.evolvable.EvolvableDistribution;
+import evochecker.evolvable.EvolvableDouble;
+import evochecker.evolvable.EvolvableInteger;
+import evochecker.evolvable.EvolvableModule;
+import evochecker.evolvable.EvolvableModuleAlternative;
 import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.AlternativeModuleGene;
 import evochecker.genetic.genes.DiscreteDistributionGene;
 import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
-import evochecker.parser.evolvable.Evolvable;
-import evochecker.parser.evolvable.EvolvableDistribution;
-import evochecker.parser.evolvable.EvolvableDouble;
-import evochecker.parser.evolvable.EvolvableInteger;
-import evochecker.parser.evolvable.EvolvableModule;
-import evochecker.parser.evolvable.EvolvableModuleAlternative;
 
 /**
  * Factory constructing the genotype of a proble
