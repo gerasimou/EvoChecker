@@ -78,7 +78,6 @@ public class GeneticProblem extends GeneticModelProblem {
 
 		List<String> resultsList;
 		try {
-			String outputStr = model + "@" + propertyFile + "\nEND\n";
 			resultsList = this.invokePrism(model, propertyFile, out, in);
 
 			for (int i = 0; i < numberOfObjectives_; i++) {

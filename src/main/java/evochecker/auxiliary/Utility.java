@@ -8,6 +8,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 
 import evochecker.exception.EvoCheckerException;
@@ -123,5 +126,11 @@ public class Utility {
 		}
 		return null;
 	}
+	
+	
+	public static String getTimeStamp() {
+		Date date = Calendar.getInstance().getTime();
+	    SimpleDateFormat sdf = new SimpleDateFormat("hhmmss_ddMMyy");
+	    return sdf.format(date);	}
 	
 }

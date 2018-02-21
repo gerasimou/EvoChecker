@@ -71,47 +71,65 @@ public class EvoChecker {
 	
 	/** algorithm to be executed*/
 	private Algorithm algorithm;
+	
+	/** problem name*/
+	private String algorithmName;
 
+	/** problem name*/
+	private String problemName;
+	
+
+	
+	public EvoChecker() {
+		
+	}
 	
 	
 	/**
 	 * Main 
 	 * @param args
+	 * @throws EvoCheckerException 
 	 */	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws EvoCheckerException {
+		//check configuration script
+		checkConfiguration();
+
+		//instantiate evochecker
+		EvoChecker evoChecker = new EvoChecker();
+		evoChecker.start();
+	}
+
+	
+	public void start() {
 		long start = System.currentTimeMillis();
 		
 		try {
-			//check configuration script
-			checkConfiguration();
-
-			//instantiate evochecker
-			EvoChecker evoChecker = new EvoChecker();
+			//1) initialise problem
+			initializeProblem();
 			
-			//initialise problem
-			evoChecker.initializeProblem();
+			//2) initialise algorithm
+			initialiseAlgorithm();
 			
-			//initialise algorithm
-			evoChecker.initialiseAlgorithm();
+			//3) initialise data structures and variables for saving data
+			String outputDir = initialiseOutputData();
+
+			//4) execute and save results
+			SolutionSet solutions = execute();
+
+			//5) save solutions
+			exportResults(outputDir, solutions);
 			
-			//initialise data structures and variables for saving data
-			evoChecker.initialiseOutputData();
-
-			//execute and save results
-			evoChecker.execute();
-
-			//close down
-			evoChecker.closeDown();
+			//6) close down
+			closeDown();
 			
 			long end = System.currentTimeMillis();
-
 			System.err.printf("Time:\t%s\n", (end - start)/1000.0);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	
 	/**
 	 * Initialise the problem and the properties associated with the problem
@@ -123,6 +141,8 @@ public class EvoChecker {
 		//1 Get model and properties filenames
 		modelFilename 		= Utility.getProperty(Constants.MODEL_FILE_KEYWORD);
 		propertiesFilename	= Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD);
+		algorithmName		= Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
+		problemName   		= Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
 
 		//2) parse model template
 		parserEngine 		= new ParserEngine(modelFilename, propertiesFilename);
@@ -132,8 +152,6 @@ public class EvoChecker {
 
 		//4) create (gene,evolvable element) pairs
 		parserEngine.createMapping();
-		
-		
 		
 		//5) create properties list
 		//dummy code to enable parsing properties files when evolvables include an evolvable distribution
@@ -153,9 +171,8 @@ public class EvoChecker {
 		for (Property p : constraintsList)
 			System.out.println("C: "+p.toString());
 
-
 		//6) instantiate the problem
-		problem = new GeneticProblem(genes, parserEngine, objectivesList, constraintsList, "GeneticProblem");
+		problem = new GeneticProblem(genes, parserEngine, objectivesList, constraintsList, problemName);
 	}	
 	
 	
@@ -164,22 +181,22 @@ public class EvoChecker {
 	 * @throws Exception
 	 */
 	private void initialiseAlgorithm() throws Exception{
-		String algorithmStr = Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
-		if (algorithmStr != null){
-			if (algorithmStr.equals(Constants.ALGORITHM.NSGAII.toString())){
-				NSGAII_Settings nsgaiiSettings = new NSGAII_Settings("GeneticProblem", problem);
+		
+		if (algorithmName != null){
+			if (algorithmName.equals(Constants.ALGORITHM.NSGAII.toString())){
+				NSGAII_Settings nsgaiiSettings = new NSGAII_Settings(problemName, problem);
 				algorithm = nsgaiiSettings.configure();
 			}
-			else if (algorithmStr.equals(Constants.ALGORITHM.RANDOM.toString())){
-				RandomSearch_Settings rsSettings = new RandomSearch_Settings("GeneticProblem", problem);
+			else if (algorithmName.equals(Constants.ALGORITHM.RANDOM.toString())){
+				RandomSearch_Settings rsSettings = new RandomSearch_Settings(problemName, problem);
 				algorithm = rsSettings.configure();
 			}
-			else if (algorithmStr.equals(Constants.ALGORITHM.SPEA2.toString())){
-				SPEA2_Settings spea2Settings = new SPEA2_Settings("GeneticProblem", problem);
+			else if (algorithmName.equals(Constants.ALGORITHM.SPEA2.toString())){
+				SPEA2_Settings spea2Settings = new SPEA2_Settings(problemName, problem);
 				algorithm = spea2Settings.configure();
 			}
-			else if (algorithmStr.equals(Constants.ALGORITHM.MOCELL.toString())){
-				MOCell_Settings mocellSettings = new MOCell_Settings("GeneticProblem", problem);
+			else if (algorithmName.equals(Constants.ALGORITHM.MOCELL.toString())){
+				MOCell_Settings mocellSettings = new MOCell_Settings(problemName, problem);
 				algorithm = mocellSettings.configure();
 			}
 //			else if (algorithmStr.equals("SGA")){
@@ -197,12 +214,14 @@ public class EvoChecker {
 	/**
 	 * Initialise data structure and variables for saving execution results
 	 */
-	private void initialiseOutputData() {
+	private String initialiseOutputData() {
 		//create output dir
 		String outputDir = "data" + File.separator 
 							+ Utility.getProperty(Constants.PROBLEM_KEYWORD)   + File.separator 
 							+ Utility.getProperty(Constants.ALGORITHM_KEYWORD) + File.separator;
 		Utility.createDir(outputDir);
+		
+		return outputDir;
 
 //		int run				= RODESExperimentRuns.getRun();
 //		String outputFileSuffix = tolerance +"_"+ epsilon +"_"+ run;
@@ -214,12 +233,11 @@ public class EvoChecker {
 	 * Execute
 	 * @throws Exception
 	 */
-	private void execute() throws Exception{
+	private SolutionSet execute() throws Exception{
 		//Execute the Algorithm
-		SolutionSet population = algorithm.execute();
-
-		//Save results
-		exportResults(population);
+		SolutionSet solutions = algorithm.execute();
+		
+		return solutions;
 	}
 	
 	
@@ -230,22 +248,26 @@ public class EvoChecker {
 	}
 	
 	
-	private void exportResults(SolutionSet population) throws JMException {
-		//export final population
+	/**
+	 * Export solutions into files
+	 * @param population
+	 * @throws JMException
+	 */
+	private void exportResults(String outputDir, SolutionSet solutions) throws JMException {
 		//Print results to console
 		System.out.println("-------------------------------------------------");
-		System.out.println("SOLUTIONS: \t" + population.size());
+		System.out.println("SOLUTIONS: \t" + solutions.size());
 
-		String algorithmStr = Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
-		population.printObjectivesToFile("data/FUN_"+algorithmStr);
-		population.printVariablesToFile("data/VAR_"+algorithmStr);
-		for (int i=0; i<population.size(); i++){
-			Solution solution = population.get(i);
-			double constraintValue = solution.getOverallConstraintViolation();
-			if (constraintValue<0){
-				System.out.println(constraintValue +"\t"+ Arrays.toString(solution.getDecisionVariables()));
-			}
-		}
+		String identifier	= problemName +"_"+ algorithmName +"_"+ Utility.getTimeStamp();
+		solutions.printObjectivesToFile(outputDir + identifier + "_Front");
+		solutions.printVariablesToFile(outputDir  + identifier + "_Set");
+//		for (int i=0; i<solutions.size(); i++){
+//			Solution solution = solutions.get(i);
+//			double constraintValue = solution.getOverallConstraintViolation();
+//			if (constraintValue<0){
+//				System.out.println(constraintValue +"\t"+ Arrays.toString(solution.getDecisionVariables()));
+//			}
+//		}
 		
 	}
 	
@@ -318,6 +340,10 @@ public class EvoChecker {
 	}
 	
 	
+	/**
+	 * Print the current EvoChecker configuration
+	 * @return
+	 */
 	private static String getConfiguration() {
 		StringBuilder str = new StringBuilder();
 		
@@ -332,6 +358,7 @@ public class EvoChecker {
 		
 		return str.toString();
 	}
+	
 	
 	
 	public void executeRandomSearch() throws FileNotFoundException, IOException {
@@ -358,13 +385,13 @@ public class EvoChecker {
 		} 
 	}
 	
-	
-	  private void setupIndicators(Algorithm algorithm, Problem problem, String paretoFrontFile){
+	 
+	private void setupIndicators(Algorithm algorithm, Problem problem, String paretoFrontFile){
 		// Object to get quality indicators
 		  QualityIndicator indicators ;
 		  indicators = new QualityIndicator(problem, paretoFrontFile);
 		  
 		  // Add the indicator object to the algorithm
-		    algorithm.setInputParameter("indicators", indicators) ;
-	  }
+		    algorithm.setInputParameter("indicators", indicators) ;  
+	}
 }
