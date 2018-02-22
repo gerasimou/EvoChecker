@@ -91,9 +91,6 @@ public class EvoChecker {
 	 * @throws EvoCheckerException 
 	 */	
 	public static void main(String[] args) throws EvoCheckerException {
-		//check configuration script
-		checkConfiguration();
-
 		//instantiate evochecker
 		EvoChecker evoChecker = new EvoChecker();
 		evoChecker.start();
@@ -104,6 +101,9 @@ public class EvoChecker {
 		long start = System.currentTimeMillis();
 		
 		try {
+			//0) check configuration script
+			checkConfiguration();
+
 			//1) initialise problem
 			initializeProblem();
 			

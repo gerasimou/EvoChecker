@@ -54,6 +54,10 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	private StringBuilder modelString 		= new StringBuilder(100);
 
 		
+	public PrismVisitor() {
+		
+	}
+	
 	@Override
 	public String visitModel(PrismParser.ModelContext ctx) {
 		String str;
