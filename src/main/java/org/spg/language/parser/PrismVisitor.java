@@ -9,7 +9,7 @@
 //	This file is part of EvoChecker.
 //	
 //==============================================================================
-package evochecker.parser.handler;
+package org.spg.language.parser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import evochecker.evolvable.EvolvableModuleAlternative;
  * 2) assemble a template of the model
  */
 
-public class PrismVisitor extends PrismBaseVisitor<String> {
+class PrismVisitor extends PrismBaseVisitor<String> {
 
 	/** "memory" for our calculator; variable/value pairs go here */ 
 //	Map<String, Integer> memory = new HashMap<String, Integer>();

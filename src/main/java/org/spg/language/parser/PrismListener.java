@@ -1,4 +1,4 @@
-package evochecker.parser.handler;
+package org.spg.language.parser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 import org.spg.language.grammar.antlr.src.gen.PrismBaseListener;
 import org.spg.language.grammar.antlr.src.gen.PrismParser;
 
-public class PrismListener extends PrismBaseListener {
+class PrismListener extends PrismBaseListener {
 	
 	PrismParser parser;
 	

@@ -31,8 +31,6 @@ import evochecker.genetic.genes.AlternativeModuleGene;
 import evochecker.genetic.genes.DiscreteDistributionGene;
 import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
-import evochecker.parser.handler.PrismListener;
-import evochecker.parser.handler.PrismVisitor;
 
 public class ParserEngine implements InstantiatorInterface {
 
