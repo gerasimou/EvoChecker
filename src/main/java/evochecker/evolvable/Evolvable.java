@@ -7,7 +7,7 @@ public abstract class Evolvable {
 	protected Number minValue;
 	protected Number maxValue;
 
-	public Evolvable (String name, Number minValue, Number maxValue, EvolvableID evolvableID){
+	protected Evolvable (String name, Number minValue, Number maxValue, EvolvableID evolvableID){
 		this.name 		= name;
 		this.minValue	= minValue;
 		this.maxValue	= maxValue;

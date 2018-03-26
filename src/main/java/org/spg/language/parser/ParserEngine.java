@@ -18,6 +18,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.spg.language.grammar.antlr.src.gen.PrismLexer;
 import org.spg.language.grammar.antlr.src.gen.PrismParser;
 
+import evochecker.auxiliary.Utility;
 import evochecker.evolvable.Evolvable;
 import evochecker.evolvable.EvolvableDistribution;
 import evochecker.evolvable.EvolvableDouble;
@@ -52,7 +53,7 @@ public class ParserEngine implements InstantiatorInterface {
 
 	
 	public ParserEngine(String fileName, String propertiesFilename) {
-		String modelString = readFile(fileName);
+		String modelString = Utility.readFile(fileName); 
 
 		this.modelFilename = modelFilename;
 		this.propertiesFilename = propertiesFilename;
