@@ -169,11 +169,11 @@ public class EvoChecker {
 		propertyList = new ArrayList<Property>();
 
 		//FX
-//		propertyList.add(new Property(true));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(false));
-//		propertyList.add(new Property(true));
-//		int numOfConstraints = 1;
+		propertyList.add(new Property(true));
+		propertyList.add(new Property(false));
+		propertyList.add(new Property(false));
+		propertyList.add(new Property(true));
+		int numOfConstraints = 1;
 		
 		//UUV
 //		propertyList.add(new Property(true));
@@ -184,9 +184,9 @@ public class EvoChecker {
 //		int numOfConstraints = 2;
 		
 		//Cluster
-		propertyList.add(new Property(true));
-		propertyList.add(new Property(true));
-		int numOfConstraints = 0;
+//		propertyList.add(new Property(true));
+//		propertyList.add(new Property(true));
+//		int numOfConstraints = 0;
 		
 
 		//6) instantiate the problem
