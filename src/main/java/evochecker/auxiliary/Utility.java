@@ -137,7 +137,7 @@ public class Utility {
 	
 	public static String getTimeStamp() {
 		Date date = Calendar.getInstance().getTime();
-	    SimpleDateFormat sdf = new SimpleDateFormat("hhmmss_ddMMyy");
+	    SimpleDateFormat sdf = new SimpleDateFormat("HHmmss_ddMMyy");
 	    return sdf.format(date);	
     }
 	
