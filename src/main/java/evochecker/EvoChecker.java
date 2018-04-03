@@ -78,6 +78,12 @@ public class EvoChecker {
 	/** problem name*/
 	private String problemName;
 	
+	/** Pareto front filename*/
+	private String paretoFrontFile;
+
+	/** Pareto set filename*/
+	private String paretoSetFile;
+
 
 	
 	public EvoChecker() {
@@ -278,11 +284,33 @@ public class EvoChecker {
 			solutionList.add(solutions.get(i));
 		Utility.printObjectivesToFile(frontFile, solutionList, objectivesList);
 		Utility.printVariablesToFile(setFile, solutionList);
+		
+		//Assign 
+		paretoFrontFile  = frontFile;
+		paretoSetFile	 = setFile; 
 //		solutions.printObjectivesToFile(frontFile);
 //		solutions.printVariablesToFile(setFile);
 	}
+
+	
+	/**
+	 * Return Pareto front file name
+	 * @return
+	 */
+	public String getParetoFrontFileName() {
+		return paretoFrontFile;
+	}
 	
 
+	/**
+	 * Return Pareto set file name
+	 * @return
+	 */
+	public String getParetoSetFileName() {
+		return paretoSetFile;
+	}
+
+	
 	/**
 	 * Check whether the experiment has been configured correctly 
 	 * @throws EvoCheckerException 
