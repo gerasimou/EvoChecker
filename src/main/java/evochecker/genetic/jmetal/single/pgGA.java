@@ -221,7 +221,7 @@ public class pgGA extends Algorithm implements AlgorithmSteps{
 	  }
 
 	  //Evaluate objective
-	  ObjectiveEvaluation.evaluateObjectivesFX(population, problem_.getNumberOfObjectives());
+	  ObjectiveEvaluation.evaluateObjectives(population, problem_.getNumberOfObjectives());
 
 	  //Sort population
 	  population.sort(comparator) ;
