@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -122,11 +123,26 @@ public class MultiProcessEvaluator implements IParallelEvaluator {
 				params[4] = String.valueOf(i+1);
 				do {
 					Process p = Runtime.getRuntime().exec(params);
-					Thread.sleep(2000);
+//					String par = "java -cp /Users/sgerasimou/Documents/Programming/workspaceJavaOxygen/org.spg.PrismExecutor org.spg.prismexecutor.PrismExecutor";
+//					Process p = Runtime.getRuntime().exec(par);
+					Thread.sleep(5000);
 					isAlive = p.isAlive();
-					
+//					
 				} 
 				while (!isAlive);
+//				String paramA = 	"/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/bin/java" 
+//										+ 	" -jar "
+//										+	"lib/PrismTacas17.jar "
+//										+	"8866 1";
+//										
+//				Process p = null;
+//				do {
+//					System.out.println("Connecting to " + Arrays.toString(params));
+//					System.out.println("Connecting to " + paramA);
+//					p = Runtime.getRuntime().exec(params);
+//					Thread.sleep(5000);
+//				} 
+//				while (!p.isAlive());
 
 				System.out.println("Connecting");
 				 makeConnection(portNum, i, params);

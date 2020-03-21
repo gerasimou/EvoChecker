@@ -4,25 +4,14 @@ public abstract class Evolvable {
 	
 	protected String name;
 	protected String identifier;
-	protected Number minValue;
-	protected Number maxValue;
+	protected boolean param;
 
-	protected Evolvable (String name, Number minValue, Number maxValue, EvolvableID evolvableID){
+	protected Evolvable (String name, EvolvableID evolvableID, boolean param){
 		this.name 		= name;
-		this.minValue	= minValue;
-		this.maxValue	= maxValue;
-		this.identifier	= EvolvableID.getEvolvableIDLiteral(evolvableID) + name; 
+		this.identifier	= EvolvableID.getEvolvableIDLiteral(evolvableID);// +name;
+		this.param		= param;
 	}
 	
-	
-	public Number getMinValue(){
-		return this.minValue;
-	}
-	
-	public Number getMaxValue(){
-		return this.maxValue;
-	}
-		
 	public String getName(){
 		return this.name;
 	}
@@ -31,8 +20,13 @@ public abstract class Evolvable {
 		return this.identifier;
 	}
 	
+	public boolean isParam(){
+		return this.param;
+	}
+	
 	public String toString(){
-		return (this.name +" ("+ this.identifier +")"); 
+		String paramStr = param ? ", param" : ""; 
+		return (this.name +" ("+ this.identifier + paramStr +")"); 
 	}
 	
 	public abstract String getCommand(Object variable);

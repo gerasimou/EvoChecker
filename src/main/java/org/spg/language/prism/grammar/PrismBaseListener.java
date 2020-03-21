@@ -1,6 +1,6 @@
 // Generated from grammar/Prism.g4 by ANTLR 4.5
 
-  package org.spg.language.grammar.antlr.src.gen;
+  package org.spg.language.prism.grammar;
   import java.util.*;
 
 
@@ -200,13 +200,25 @@ public class PrismBaseListener implements PrismListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEvolveConst(PrismParser.EvolveConstContext ctx) { }
+	@Override public void enterEvolveRange(PrismParser.EvolveRangeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEvolveConst(PrismParser.EvolveConstContext ctx) { }
+	@Override public void exitEvolveRange(PrismParser.EvolveRangeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEvolveDiscrete(PrismParser.EvolveDiscreteContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEvolveDiscrete(PrismParser.EvolveDiscreteContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -260,13 +272,73 @@ public class PrismBaseListener implements PrismListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBounds(PrismParser.BoundsContext ctx) { }
+	@Override public void enterBoundsRange(PrismParser.BoundsRangeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBounds(PrismParser.BoundsContext ctx) { }
+	@Override public void exitBoundsRange(PrismParser.BoundsRangeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBoundsDiscrete(PrismParser.BoundsDiscreteContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBoundsDiscrete(PrismParser.BoundsDiscreteContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDiscreteOptionDoubleMulti(PrismParser.DiscreteOptionDoubleMultiContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDiscreteOptionDoubleMulti(PrismParser.DiscreteOptionDoubleMultiContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDiscreteOptionDoubleSingle(PrismParser.DiscreteOptionDoubleSingleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDiscreteOptionDoubleSingle(PrismParser.DiscreteOptionDoubleSingleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDiscreteOptionIntSingle(PrismParser.DiscreteOptionIntSingleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDiscreteOptionIntSingle(PrismParser.DiscreteOptionIntSingleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDiscreteOptionIntMulti(PrismParser.DiscreteOptionIntMultiContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDiscreteOptionIntMulti(PrismParser.DiscreteOptionIntMultiContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -17,7 +17,7 @@ package evochecker.evolvable;
  * @author sgerasimou
  *
  */
-public class EvolvableDouble extends Evolvable {
+public class EvolvableDouble extends EvolvableRange {
 	
 	/**
 	 * Class constructor
@@ -25,8 +25,8 @@ public class EvolvableDouble extends Evolvable {
 	 * @param minValue
 	 * @param maxValue
 	 */
-	public EvolvableDouble(String name, Number minValue, Number maxValue){
-		super(name, minValue, maxValue, EvolvableID.CONSTANT_DOUBLE);
+	public EvolvableDouble(String name, Number minValue, Number maxValue, boolean param){
+		super(name, minValue, maxValue, EvolvableID.CONSTANT_DOUBLE, param);
 	}
 	
 	
@@ -51,8 +51,8 @@ public class EvolvableDouble extends Evolvable {
 	}
 	
 	
-	public EvolvableDouble (Evolvable anEvolvable){
-		this(anEvolvable.name, anEvolvable.minValue, anEvolvable.maxValue);
+	public EvolvableDouble (EvolvableDouble anEvolvable){
+		this(anEvolvable.name, anEvolvable.minValue, anEvolvable.maxValue, anEvolvable.param);
 	}
 }
 

@@ -13,6 +13,7 @@ package org.spg.language.parser;
 
 import java.util.List;
 
+import evochecker.evolvable.Evolvable;
 import evochecker.genetic.genes.AbstractGene;
 
 
@@ -36,4 +37,10 @@ public interface InstantiatorInterface {
 	 * Return the name of properties file
 	 */
 	public String getPrismPropertyFileName();	
+	
+	
+	public void createMapping();
+	
+	public List<Evolvable> getEvolvableList ();
+
 }

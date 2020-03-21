@@ -17,7 +17,7 @@ package evochecker.evolvable;
  * @author sgerasimou
  *
  */
-public class EvolvableInteger extends Evolvable{
+public class EvolvableInteger extends EvolvableRange{
 	
 	/**
 	 * Class constructor
@@ -25,8 +25,8 @@ public class EvolvableInteger extends Evolvable{
 	 * @param minValue
 	 * @param maxValue
 	 */
-	public EvolvableInteger(String name, Number minValue, Number maxValue){
-		super(name, minValue, maxValue, EvolvableID.CONSTANT_INT);
+	public EvolvableInteger(String name, Number minValue, Number maxValue, boolean param){
+		super(name, minValue, maxValue, EvolvableID.CONSTANT_INT, param);
 	}
 	
 	
@@ -48,8 +48,8 @@ public class EvolvableInteger extends Evolvable{
 		return "const int " + name +" = "+ (int)variable  +";\n";
 	}
 	
-	public EvolvableInteger (Evolvable anEvolvable){
-		this(anEvolvable.name, anEvolvable.minValue, anEvolvable.maxValue);
+	public EvolvableInteger (EvolvableInteger anEvolvable){
+		this(anEvolvable.name, anEvolvable.minValue, anEvolvable.maxValue, anEvolvable.param);
 	}
 	
 }

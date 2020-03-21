@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import evochecker.auxiliary.FileUtil;
 import evochecker.auxiliary.Utility;
 
 public class EvoCheckerStudyRandomFXFeatures {
@@ -54,7 +55,7 @@ public class EvoCheckerStudyRandomFXFeatures {
 		int dotIndex 				= baseModelFileName.lastIndexOf("_");
 		String outputModelFileName	= baseModelFileName.substring(hashIndex+1, dotIndex) + ".pm";
 //		System.out.println(outputModelFileName);		
-		Utility.createFileAndExport(baseModelFileName, outputModelFileName, output.toString());
+		FileUtil.createFileAndExport(baseModelFileName, outputModelFileName, output.toString());
 
 		try {				
 			String df = dateFormat.format(date);

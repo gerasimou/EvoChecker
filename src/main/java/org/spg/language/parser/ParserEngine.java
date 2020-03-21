@@ -15,10 +15,10 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.spg.language.grammar.antlr.src.gen.PrismLexer;
-import org.spg.language.grammar.antlr.src.gen.PrismParser;
+import org.spg.language.prism.grammar.PrismLexer;
+import org.spg.language.prism.grammar.PrismParser;
 
-import evochecker.auxiliary.Utility;
+import evochecker.auxiliary.FileUtil;
 import evochecker.evolvable.Evolvable;
 import evochecker.evolvable.EvolvableDistribution;
 import evochecker.evolvable.EvolvableDouble;
@@ -29,7 +29,7 @@ import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.AlternativeModuleGene;
-import evochecker.genetic.genes.DiscreteDistributionGene;
+import evochecker.genetic.genes.DistributionGene;
 import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
 
@@ -53,7 +53,7 @@ public class ParserEngine implements InstantiatorInterface {
 
 	
 	public ParserEngine(String fileName, String propertiesFilename) {
-		String modelString = Utility.readFile(fileName); 
+		String modelString = FileUtil.readFile(fileName); 
 
 		this.modelFilename = modelFilename;
 		this.propertiesFilename = propertiesFilename;
@@ -72,9 +72,9 @@ public class ParserEngine implements InstantiatorInterface {
 		this.evolvableList					= new ArrayList<Evolvable>();
 		for (Evolvable element : parser.evolvableList)
 			if (element instanceof EvolvableInteger)
-				this.evolvableList.add(new EvolvableInteger(element));
+				this.evolvableList.add(new EvolvableInteger((EvolvableInteger)element));
 			else if (element instanceof EvolvableDouble)
-				this.evolvableList.add(new EvolvableDouble(element));
+				this.evolvableList.add(new EvolvableDouble((EvolvableDouble)element));
 			else if (element instanceof EvolvableDistribution)
 				this.evolvableList.add(new EvolvableDistribution((EvolvableDistribution)element));
 			else if (element instanceof EvolvableModuleAlternative)
@@ -236,7 +236,7 @@ public class ParserEngine implements InstantiatorInterface {
 			else if (gene instanceof DoubleGene) {
 				concreteModel.append(elementsMap.get(gene).getCommand(gene.getAllele()));
 			} 
-			else if (gene instanceof DiscreteDistributionGene) {
+			else if (gene instanceof DistributionGene) {
 				concreteModel.append(elementsMap.get(gene)
 										.getCommand((double[]) 
 												gene.getAllele()));

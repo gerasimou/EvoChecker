@@ -20,14 +20,14 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.spg.language.parser.EvoCheckerInstantiator;
 import org.spg.language.parser.InstantiatorInterface;
-import org.spg.language.parser.ParserEngine;
 
 import evochecker.exception.EvoCheckerException;
 //import org.apache.commons.lang.NotImplementedException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.AlternativeModuleGene;
-import evochecker.genetic.genes.DiscreteDistributionGene;
+import evochecker.genetic.genes.DistributionGene;
 import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
 import evochecker.genetic.jmetal.encoding.ArrayInt;
@@ -115,8 +115,8 @@ public abstract class GeneticModelProblem extends Problem {
 		for (AbstractGene g : genes) {
 			// Discrete distribution generates a number of genes 
 			// equal to the number of their outcomes
-			if (g instanceof DiscreteDistributionGene) {
-				int outcomes = ((DiscreteDistributionGene) g).getNumberOfOutcomes();
+			if (g instanceof DistributionGene) {
+				int outcomes = ((DistributionGene) g).getNumberOfOutcomes();
 				this.numberOfVariables_ += outcomes;
 			} 
 			else {
@@ -136,8 +136,8 @@ public abstract class GeneticModelProblem extends Problem {
 	private int computeRealVariables(int baseIndex) {
 		int realVariables = baseIndex;
 		for (AbstractGene g : genes) {
-			if (g instanceof DiscreteDistributionGene) {
-				int outcomes = ((DiscreteDistributionGene) g).getNumberOfOutcomes();
+			if (g instanceof DistributionGene) {
+				int outcomes = ((DistributionGene) g).getNumberOfOutcomes();
 				int total = realVariables + outcomes;
 				for (int j = realVariables; j < total; j++) {
 					lowerLimit_[j] = g.getMinValue().doubleValue();
@@ -190,8 +190,8 @@ public abstract class GeneticModelProblem extends Problem {
 
 		for (int i = 0; i < genes.size(); i++) {
 			AbstractGene g = genes.get(i);
-			if (g instanceof DiscreteDistributionGene) {
-				int outcomes = ((DiscreteDistributionGene) g).getNumberOfOutcomes();
+			if (g instanceof DistributionGene) {
+				int outcomes = ((DistributionGene) g).getNumberOfOutcomes();
 				double cumulative = 0;
 				double[] outcomesValues = new double[outcomes];
 				int index = 0;
@@ -324,12 +324,12 @@ public abstract class GeneticModelProblem extends Problem {
 	
 	public GeneticModelProblem(GeneticModelProblem aProblem) throws EvoCheckerException{
 		
-		if (aProblem.instantiator instanceof ParserEngine)
-			this.instantiator 			= new ParserEngine((ParserEngine)aProblem.instantiator);
+		if (aProblem.instantiator instanceof  EvoCheckerInstantiator)
+			this.instantiator 			= new EvoCheckerInstantiator((EvoCheckerInstantiator)aProblem.instantiator);
 		else
 			throw new EvoCheckerException("Invalid Instantiator inteface!");
 
-		this.genes 					= ((ParserEngine)instantiator).getGeneList(); 
+		this.genes 					= ((EvoCheckerInstantiator)instantiator).getGeneList(); 
 										
 		
 		this.numberOfConstraints_ 	= aProblem.numberOfConstraints_;

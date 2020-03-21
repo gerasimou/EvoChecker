@@ -3,6 +3,8 @@
  */
 package evochecker.evolvable;
 
+import evochecker.exception.LanguageException;
+
 /**
  * An enumerator that keeps all the evolvable model identifies 
  * @author sgerasimou
@@ -10,25 +12,34 @@ package evochecker.evolvable;
  */
 
 public enum EvolvableID {
-	CONSTANT_INT, CONSTANT_DOUBLE, DISTRIBUTION, MODULE;
+	CONSTANT_INT, CONSTANT_DOUBLE, DISTRIBUTION, MODULE, OPTION;
 	
-	 public static char getEvolvableIDLiteral(EvolvableID evolvableID){
+	 public static String getEvolvableIDLiteral(EvolvableID evolvableID) {
 		switch (evolvableID){
 			case CONSTANT_INT:{
-				return '%';
+				return "int";
 			}
 			case CONSTANT_DOUBLE:{
-				return '%';
+				return "double";
 			}
 			case DISTRIBUTION:{
-				return '#';
+				return "dist";
 			}
 			case MODULE:{
-				return '$';
+				return "module";
+			}
+			case OPTION:{
+				return "option";
 			}
 			default:{
-				throw new RuntimeException("Evolvable ID not recognised");
+				try {
+					throw new LanguageException("Evolvable ID not recognised");
+				}
+				catch (LanguageException e) {
+					e.printStackTrace();
+				}
 			}
 		}
+		return null;
 	}
 }

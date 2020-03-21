@@ -20,14 +20,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.spg.language.parser.ParserEngine;
+import org.spg.language.parser.EvoCheckerInstantiator;
+import org.spg.language.parser.InstantiatorInterface;
 
 import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.FileUtil;
 import evochecker.auxiliary.Utility;
 import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
-import evochecker.genetic.genes.DiscreteDistributionGene;
+import evochecker.genetic.genes.DistributionGene;
 import evochecker.genetic.jmetal.GeneticProblem;
 import evochecker.genetic.jmetal.metaheuristics.MOCell_Settings;
 import evochecker.genetic.jmetal.metaheuristics.NSGAII_Settings;
@@ -61,7 +63,7 @@ public class EvoChecker {
 	private List<AbstractGene> genes = new ArrayList<AbstractGene>();
 	
 	/** parser engine handler*/
-	private ParserEngine parserEngine;
+	private InstantiatorInterface parserEngine;
 
 	/** model filename*/
 	private String 		modelFilename;
@@ -151,7 +153,7 @@ public class EvoChecker {
 		problemName   		= Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
 
 		//2) parse model template
-		parserEngine 		= new ParserEngine(modelFilename, propertiesFilename);
+		parserEngine 		= new EvoCheckerInstantiator(modelFilename, propertiesFilename);
 
 		//3) create chromosome
 		genes				= GenotypeFactory.createChromosome(parserEngine.getEvolvableList());
@@ -162,8 +164,8 @@ public class EvoChecker {
 		//5) create properties list
 		//dummy code to enable parsing properties files when evolvables include an evolvable distribution
 		for (AbstractGene gene :genes) {
-			if (gene instanceof DiscreteDistributionGene) {
-				int numOfOutcomes = ((DiscreteDistributionGene)gene).getNumberOfOutcomes();
+			if (gene instanceof DistributionGene) {
+				int numOfOutcomes = ((DistributionGene)gene).getNumberOfOutcomes();
 				gene.setAllele(new double[numOfOutcomes]);
 			}
 		}
@@ -225,7 +227,7 @@ public class EvoChecker {
 		String outputDir = "data" + File.separator 
 							+ Utility.getProperty(Constants.PROBLEM_KEYWORD)   + File.separator 
 							+ Utility.getProperty(Constants.ALGORITHM_KEYWORD) + File.separator;
-		Utility.createDir(outputDir);
+		FileUtil.createDir(outputDir);
 		
 		return outputDir;
 
@@ -272,12 +274,12 @@ public class EvoChecker {
 		StringBuilder setHeader = new StringBuilder();
 		for (AbstractGene gene : genes)
 			setHeader.append(gene.getName() +" ");
-		Utility.exportToFile(setFile, setHeader +"\n");
+		FileUtil.saveToFile(setFile, setHeader +"\n", true);
 		StringBuilder frontHeader = new StringBuilder();
 		for (Property p : objectivesList) {
 			frontHeader.append(p.getExpression() +"\t");
 		}
-		Utility.exportToFile(frontFile, frontHeader +"\n");
+		FileUtil.saveToFile(frontFile, frontHeader +"\n", true);
 		
 		List<Solution> solutionList = new ArrayList<Solution>();
 		for (int i=0; i<solutions.size(); i++)

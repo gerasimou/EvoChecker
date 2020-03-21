@@ -1,6 +1,6 @@
 //==============================================================================
 //	
-//	Copyright (c) 2015-
+ //	Copyright (c) 2015-
 //	Authors:
 //	* Simos Gerasimou (University of York)
 //	
@@ -11,19 +11,21 @@
 //==============================================================================
 package org.spg.language.parser;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.spg.language.grammar.antlr.src.gen.PrismBaseVisitor;
-import org.spg.language.grammar.antlr.src.gen.PrismParser;
-import org.spg.language.grammar.antlr.src.gen.PrismParser.CommandContext;
-import org.spg.language.grammar.antlr.src.gen.PrismParser.ConstantContext;
-import org.spg.language.grammar.antlr.src.gen.PrismParser.EvolvableContext;
-import org.spg.language.grammar.antlr.src.gen.PrismParser.FormulaContext;
-import org.spg.language.grammar.antlr.src.gen.PrismParser.ModuleContext;
-import org.spg.language.grammar.antlr.src.gen.PrismParser.RewardContext;
-import org.spg.language.grammar.antlr.src.gen.PrismParser.RewardItemContext;
-import org.spg.language.grammar.antlr.src.gen.PrismParser.VarDeclarationContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
+import org.spg.language.prism.grammar.PrismBaseVisitor;
+import org.spg.language.prism.grammar.PrismParser;
+import org.spg.language.prism.grammar.PrismParser.CommandContext;
+import org.spg.language.prism.grammar.PrismParser.ConstantContext;
+import org.spg.language.prism.grammar.PrismParser.EvolvableContext;
+import org.spg.language.prism.grammar.PrismParser.FormulaContext;
+import org.spg.language.prism.grammar.PrismParser.ModuleContext;
+import org.spg.language.prism.grammar.PrismParser.RewardContext;
+import org.spg.language.prism.grammar.PrismParser.RewardItemContext;
+import org.spg.language.prism.grammar.PrismParser.VarDeclarationContext;
 
 import evochecker.evolvable.Evolvable;
 import evochecker.evolvable.EvolvableDistribution;
@@ -32,6 +34,8 @@ import evochecker.evolvable.EvolvableID;
 import evochecker.evolvable.EvolvableInteger;
 import evochecker.evolvable.EvolvableModule;
 import evochecker.evolvable.EvolvableModuleAlternative;
+import evochecker.evolvable.EvolvableOption;
+import evochecker.evolvable.VariableType;
 
 /* TODO
  * This class needs to parse the model and 
@@ -39,25 +43,22 @@ import evochecker.evolvable.EvolvableModuleAlternative;
  * 2) assemble a template of the model
  */
 
-class PrismVisitor extends PrismBaseVisitor<String> {
+public class PrismVisitor extends PrismBaseVisitor<String> {
 
 	/** "memory" for our calculator; variable/value pairs go here */ 
 //	Map<String, Integer> memory = new HashMap<String, Integer>();
 	
-	private List<Evolvable> 			evolvableList 	 			= new ArrayList<Evolvable>();
-	private List<EvolvableDouble>		evolvableDoubleList	 		= new ArrayList<EvolvableDouble>();
-	private List<EvolvableInteger>		evolvableIntegerList 		= new ArrayList<EvolvableInteger>();
-	private List<EvolvableDistribution>	evolvableDistributionList	= new ArrayList<EvolvableDistribution>();
-	private List<EvolvableModule>		evolvableModuleList			= new ArrayList<EvolvableModule>();
-	private List<EvolvableModuleAlternative> evolvableModuleSuperList		= new ArrayList<EvolvableModuleAlternative>();
+	private List<Evolvable> 				 evolvableList 	 			= new ArrayList<Evolvable>();
+	private List<EvolvableDouble>			 evolvableDoubleList	 	= new ArrayList<EvolvableDouble>();
+	private List<EvolvableInteger>			 evolvableIntegerList 		= new ArrayList<EvolvableInteger>();
+	private List<EvolvableDistribution>		 evolvableDistributionList	= new ArrayList<EvolvableDistribution>();
+	private List<EvolvableModule>			 evolvableModuleList		= new ArrayList<EvolvableModule>();
+	private List<EvolvableModuleAlternative> evolvableModuleSuperList	= new ArrayList<EvolvableModuleAlternative>();
+	private List<EvolvableOption>			 evolvableOptionsList		= new ArrayList<EvolvableOption>();
 	
 	private StringBuilder modelString 		= new StringBuilder(100);
 
 		
-	public PrismVisitor() {
-		
-	}
-	
 	@Override
 	public String visitModel(PrismParser.ModelContext ctx) {
 		String str;
@@ -432,29 +433,74 @@ class PrismVisitor extends PrismBaseVisitor<String> {
 	//Evolvable elements here
 	
 	@Override 
-	public String visitEvolveConst (PrismParser.EvolveConstContext ctx){
+	//evolve param double detect2 [0.5..1.0];
+	//evolve param int op1Code [0..7];
+	public String visitEvolveRange (PrismParser.EvolveRangeContext ctx){
 		StringBuilder str 	= new StringBuilder("const ");
 		String name			= ctx.variable().getText();
-		String[] bounds 	= visit(ctx.bounds()).split(",");
+		String[] bounds 	= visit(ctx.boundsRange()).split(",");
 		Number minValue;
 		Number maxValue;
-
+		
+		//check if it is a param or structural parameter
+		boolean param = isParam(ctx.PARAM());
+		
 		if (ctx.CONSTANTTYPE.getText().equals("int")){
 			str.append("int ");
 			minValue	= Integer.parseInt(bounds[0]);
 			maxValue	= Integer.parseInt(bounds[1]);
-			evolvableIntegerList.add(new EvolvableInteger(name, minValue, maxValue));
-			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.CONSTANT_INT) + name +";\n");
+			EvolvableInteger ev = new EvolvableInteger(name, minValue, maxValue, param);
+			evolvableIntegerList.add(ev);
+//			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.CONSTANT_INT) + name +";\n");
+			str.append(ev.toString());
 		}
 		else{
 			str.append("double ");
 			minValue	= Double.parseDouble(bounds[0]);
 			maxValue	= Double.parseDouble(bounds[1]);
-			evolvableDoubleList.add(new EvolvableDouble(name, minValue, maxValue));
-			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.CONSTANT_DOUBLE) + name +";\n");
+			EvolvableDouble ev = new EvolvableDouble(name, minValue, maxValue, param);
+			evolvableDoubleList.add(ev);
+//			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.CONSTANT_DOUBLE) + name +";\n");
+			str.append(ev.toString());
 		}
 		
-		return "//"+str.toString();
+		return "//"+str.toString() +";\n";
+	}
+	
+	
+	@Override
+	//evolve param int op1Code {0, 7};		
+	public String visitEvolveDiscrete (PrismParser.EvolveDiscreteContext ctx) {
+		StringBuilder str 	= new StringBuilder("const ");
+		String name			= ctx.variable().getText();
+		String[] options 	= visit(ctx.boundsDiscrete()).split(",");
+//		System.out.println("Options\t" + Arrays.toString(options));
+		
+		List<Number> optionsList = new ArrayList<Number>();
+		
+		//check if it is a param or structural parameter
+		boolean param = isParam(ctx.PARAM());
+
+		
+		if (ctx.CONSTANTTYPE.getText().equals("int")){
+			str.append("int ");
+			for (int i=0; i<options.length; i++)
+				optionsList.add(new Integer(options[i]));
+			EvolvableOption ev = new EvolvableOption(name, optionsList, VariableType.INT, EvolvableID.OPTION, param);
+			evolvableOptionsList.add(ev);
+//			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.OPTION) + name +";\n");
+			str.append(ev.toString());
+		}
+		else {
+			str.append("double ");
+			for (int i=0; i<options.length; i++)
+				optionsList.add(new Double(options[i]));
+			EvolvableOption ev = new EvolvableOption(name, optionsList, VariableType.DOUBLE, EvolvableID.OPTION, param);
+			evolvableOptionsList.add(ev);
+//			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.OPTION) + name +";\n");
+			str.append(ev.toString());
+		}
+		return "//"+str.toString() +";\n";
 	}
 	
 	
@@ -465,14 +511,17 @@ class PrismVisitor extends PrismBaseVisitor<String> {
 		
 		String name		= ctx.variable().getText();
 		
+		//check if it is a param or structural parameter
+		boolean param = isParam(ctx.PARAM());
+
 		//get the number of transitions
 		int cardinality = Integer.parseInt(ctx.cardinality.getText());		
 		//create an auxiliary 2D-double array to keep the bounds for each transition
 		double[][] transitionsBounds = new double [cardinality][2];
 		//retrieve (if given) or make default (0,1) if not given
 		for (int index=0; index<cardinality; index++){
-			if (ctx.bounds(index) != null){
-				String[] bounds = visit(ctx.bounds(index)).split(",");
+			if (ctx.boundsRange(index) != null){
+				String[] bounds = visit(ctx.boundsRange(index)).split(",");
 				transitionsBounds[index][0] = Double.parseDouble(bounds[0]);
 				transitionsBounds[index][1] = Double.parseDouble(bounds[1]);
 			}
@@ -482,9 +531,11 @@ class PrismVisitor extends PrismBaseVisitor<String> {
 			}
 		}
 		
-		EvolvableDistribution evolvableDistrbution = new EvolvableDistribution(name, transitionsBounds);
+		EvolvableDistribution evolvableDistrbution = new EvolvableDistribution(name, transitionsBounds, param);
 		evolvableDistributionList.add(evolvableDistrbution);
-		return "//evolvable distribution\n";//cardinality+"";
+//		return "//evolvable distribution\n";//cardinality+"";
+		return "//"+evolvableDistrbution.toString() +";\n";
+
 	}
 	
 	
@@ -509,25 +560,63 @@ class PrismVisitor extends PrismBaseVisitor<String> {
 		
 		//check cardinality
 		int minValue = 1, maxValue = 1;
-		if (ctx.bounds() != null){
-			String[] bounds = visit(ctx.bounds()).split(",");
+		if (ctx.boundsRange() != null){
+			String[] bounds = visit(ctx.boundsRange()).split(",");
 			minValue 	= Integer.parseInt(bounds[0]);
 			maxValue	= Integer.parseInt(bounds[1]);
 		}
-		EvolvableModule evolvableModule = new EvolvableModule(name, minValue, maxValue, str.toString());
+		EvolvableModule evolvableModule = new EvolvableModule(name, minValue, maxValue, str.toString(), false);
 		evolvableModuleList.add(evolvableModule);
 			
-//		System.err.println("module will evolve");
 
 		return "";//str.toString();
 	}
 	
 	
 	@Override
-	public String visitBounds (PrismParser.BoundsContext ctx){
+	public String visitBoundsRange (PrismParser.BoundsRangeContext ctx){
 		return ctx.minValue.getText() +","+ ctx.maxValue.getText();
 	}
 	
+	
+	@Override
+	public String visitBoundsDiscrete(PrismParser.BoundsDiscreteContext ctx) {
+		if (ctx.str.equals("int")){
+			return visit(ctx.discreteOptionInt());
+		}
+		else {
+			return visit(ctx.discreteOptionDouble());
+		}
+	}
+	
+	@Override
+	public String visitDiscreteOptionIntSingle(PrismParser.DiscreteOptionIntSingleContext ctx) {
+		return ctx.value.getText();
+	}
+
+	@Override
+	public String visitDiscreteOptionIntMulti(PrismParser.DiscreteOptionIntMultiContext ctx) {
+		return visit(ctx.discreteOptionInt(0)) +","+ visit(ctx.discreteOptionInt(1));
+	}
+
+	@Override
+	public String visitDiscreteOptionDoubleSingle(PrismParser.DiscreteOptionDoubleSingleContext ctx) {
+		return ctx.value.getText();
+	}
+
+	@Override
+	public String visitDiscreteOptionDoubleMulti (PrismParser.DiscreteOptionDoubleMultiContext ctx) {
+		return visit(ctx.discreteOptionDouble(0)) +","+ visit(ctx.discreteOptionDouble(1));
+	}
+	
+	
+	private boolean isParam (TerminalNode n) {
+		if (n != null)
+			return true;
+		return false;
+	}
+
+
 	
 	///////////////////////////////////
 	// Access methods
@@ -673,6 +762,9 @@ class PrismVisitor extends PrismBaseVisitor<String> {
 		}
 		for (EvolvableModuleAlternative evoModuleSuper : evolvableModuleSuperList){
 			evolvableList.add(evoModuleSuper);
+		}		
+		for (EvolvableOption evoOption : evolvableOptionsList){
+			evolvableList.add(evoOption);
 		}		
 	}
 	

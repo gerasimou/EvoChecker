@@ -8,8 +8,8 @@ public class EvolvableDistribution extends Evolvable {
 	private List<EvolvableDouble> evolvableDoubleList;
 	private int cardinality;
 
-	public EvolvableDistribution(String name, double[][] transitionsBounds){
-		super(name, 0, 1, EvolvableID.DISTRIBUTION);
+	public EvolvableDistribution(String name, double[][] transitionsBounds, boolean param){
+		super(name, EvolvableID.DISTRIBUTION, param);
 		
 		this.evolvableDoubleList = new ArrayList<EvolvableDouble>();
 		this.cardinality		 = transitionsBounds.length;
@@ -22,7 +22,7 @@ public class EvolvableDistribution extends Evolvable {
 	 * @param name
 	 */
 	public EvolvableDistribution (EvolvableDistribution evolvableDistribution){
-		super(evolvableDistribution.getName(), 0, 1, EvolvableID.DISTRIBUTION);
+		super(evolvableDistribution.getName(), EvolvableID.DISTRIBUTION, evolvableDistribution.param);
 		
 		this.evolvableDoubleList = new ArrayList<EvolvableDouble>();
 		this.cardinality		 = evolvableDistribution.cardinality;
@@ -31,7 +31,7 @@ public class EvolvableDistribution extends Evolvable {
 		for (int transitionIndex=0; transitionIndex<numOfTransitions; transitionIndex++){
 			double minValue 	= (double) evolvableDistribution.evolvableDoubleList.get(transitionIndex).minValue;
 			double maxValue 	= (double) evolvableDistribution.evolvableDoubleList.get(transitionIndex).maxValue;			
-			this.evolvableDoubleList.add(new EvolvableDouble(name+(transitionIndex+1), minValue, maxValue));
+			this.evolvableDoubleList.add(new EvolvableDouble(name+(transitionIndex+1), minValue, maxValue, evolvableDistribution.param));
 		}		
 	}
 	
@@ -41,7 +41,7 @@ public class EvolvableDistribution extends Evolvable {
 		for (int transitionIndex=0; transitionIndex<numOfTransitions; transitionIndex++){
 			double minValue 	= transitionsBounds[transitionIndex][0];
 			double maxValue	= transitionsBounds[transitionIndex][1];
-			this.evolvableDoubleList.add(new EvolvableDouble(name+(transitionIndex+1), minValue, maxValue));
+			this.evolvableDoubleList.add(new EvolvableDouble(name+(transitionIndex+1), minValue, maxValue, param));
 		}
 	}
 	

@@ -1,6 +1,6 @@
 // Generated from grammar/Prism.g4 by ANTLR 4.5
 
-  package org.spg.language.grammar.antlr.src.gen;
+  package org.spg.language.prism.grammar;
   import java.util.*;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -114,12 +114,19 @@ public interface PrismVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitConstant(PrismParser.ConstantContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code evolveConst}
+	 * Visit a parse tree produced by the {@code evolveRange}
 	 * labeled alternative in {@link PrismParser#evolvable}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitEvolveConst(PrismParser.EvolveConstContext ctx);
+	T visitEvolveRange(PrismParser.EvolveRangeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code evolveDiscrete}
+	 * labeled alternative in {@link PrismParser#evolvable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEvolveDiscrete(PrismParser.EvolveDiscreteContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code evolveDistribution}
 	 * labeled alternative in {@link PrismParser#evolvable}.
@@ -149,11 +156,45 @@ public interface PrismVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIntVarDeclaration(PrismParser.IntVarDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PrismParser#bounds}.
+	 * Visit a parse tree produced by {@link PrismParser#boundsRange}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBounds(PrismParser.BoundsContext ctx);
+	T visitBoundsRange(PrismParser.BoundsRangeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PrismParser#boundsDiscrete}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBoundsDiscrete(PrismParser.BoundsDiscreteContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code discreteOptionDoubleMulti}
+	 * labeled alternative in {@link PrismParser#discreteOptionDouble}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDiscreteOptionDoubleMulti(PrismParser.DiscreteOptionDoubleMultiContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code discreteOptionDoubleSingle}
+	 * labeled alternative in {@link PrismParser#discreteOptionDouble}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDiscreteOptionDoubleSingle(PrismParser.DiscreteOptionDoubleSingleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code discreteOptionIntSingle}
+	 * labeled alternative in {@link PrismParser#discreteOptionInt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDiscreteOptionIntSingle(PrismParser.DiscreteOptionIntSingleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code discreteOptionIntMulti}
+	 * labeled alternative in {@link PrismParser#discreteOptionInt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDiscreteOptionIntMulti(PrismParser.DiscreteOptionIntMultiContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PrismParser#command}.
 	 * @param ctx the parse tree

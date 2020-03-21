@@ -21,7 +21,7 @@ import java.util.List;
  * @author sgerasimou
  *
  */
-public class EvolvableModuleAlternative extends Evolvable {
+public class EvolvableModuleAlternative extends EvolvableRange {
 
 	/** a list of evolvable modules*/
 	List<EvolvableModule> evolvableModuleList;
@@ -32,7 +32,7 @@ public class EvolvableModuleAlternative extends Evolvable {
 	 * @param name
 	 */
 	public EvolvableModuleAlternative (String name){
-		super(name, 0, 0, EvolvableID.MODULE);
+		super(name, 0, 0, EvolvableID.MODULE, true);//by default an alternative module changes the structure of the model, hence param = true
 		this.evolvableModuleList = new ArrayList<EvolvableModule>();
 	}
 	
@@ -58,23 +58,13 @@ public class EvolvableModuleAlternative extends Evolvable {
 	
 	
 	/**
-	 * Return the number of alternative modules
-	 */
-	@Override
-	public Number getMaxValue(){
-		return super.getMaxValue();
-	}
-
-	
-	/**
 	 * Get command
 	 */
 	@Override
 	public String getCommand(Object variable) {
 		int index = (int)variable;
-		return evolvableModuleList.get(index).moduleString + rewardStructureSpecific(index);
-//		return "const double " + name +" = "+ (double)variables[0]  +";";
-	}
+		return evolvableModuleList.get(index).getModuleString() + rewardStructureSpecific(index);
+ 	}
 	
 	
 	private String rewardStructureSpecific(int index){
@@ -82,12 +72,19 @@ public class EvolvableModuleAlternative extends Evolvable {
 	}
 	
 	
+	public String toString(){
+		String str = super.toString();
+		str += " Modules: "+ evolvableModuleList.size();
+		return str;
+	}
+	
+	
 	/**
-	 * Class constructor
+	 * Copy constructor
 	 * @param name
 	 */
 	public EvolvableModuleAlternative (EvolvableModuleAlternative anEvolvable){
-		super(anEvolvable.name, anEvolvable.minValue, anEvolvable.maxValue, EvolvableID.MODULE);
+		super(anEvolvable.name, anEvolvable.minValue, anEvolvable.maxValue, EvolvableID.MODULE, true);
 		this.evolvableModuleList = new ArrayList<EvolvableModule>();
 		for (EvolvableModule evolvableModule : anEvolvable.evolvableModuleList){
 			this.evolvableModuleList.add(new EvolvableModule(evolvableModule));

@@ -3,8 +3,8 @@ package org.spg.language.parser;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.spg.language.grammar.antlr.src.gen.PrismBaseListener;
-import org.spg.language.grammar.antlr.src.gen.PrismParser;
+import org.spg.language.prism.grammar.PrismBaseListener;
+import org.spg.language.prism.grammar.PrismParser;
 
 class PrismListener extends PrismBaseListener {
 	

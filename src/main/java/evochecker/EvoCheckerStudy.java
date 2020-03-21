@@ -20,8 +20,10 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.spg.language.parser.ParserEngine;
+import org.spg.language.parser.EvoCheckerInstantiator;
+import org.spg.language.parser.InstantiatorInterface;
 
+import evochecker.auxiliary.FileUtil;
 import evochecker.auxiliary.Utility;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
@@ -47,7 +49,7 @@ public class EvoCheckerStudy extends Experiment{
 	private Problem problem;
 	private List<AbstractGene> genes = new ArrayList<AbstractGene>();
 	
-	private ParserEngine parserEngine;
+	private InstantiatorInterface parserEngine;
 	private String 		modelFilename;		//= "models/DPM/dpm.pm";
 	private String 		propertiesFilename;// 	= "models/DPM/dpm.pctl";
 
@@ -193,7 +195,7 @@ public class EvoCheckerStudy extends Experiment{
 			long timeUsed = (end - start)/1000;
 			System.err.println("Run " + runNum +":\t" + timeUsed);
 			String fileName = Utility.getProperty("OUTPUTDIR") + Utility.getProperty("EXPERIMENT") + "/run.csv";
-			Utility.exportToFile(fileName, timeUsed+"");
+			FileUtil.saveToFile(fileName, timeUsed+"", true);
 		  }
 	  }
 
@@ -204,7 +206,7 @@ public class EvoCheckerStudy extends Experiment{
 		modelFilename 		= Utility.getProperty("MODEL_TEMPLATE_FILE","models/DPM/dpm.pm");
 		propertiesFilename	= Utility.getProperty("PROPERTIES_FILE", "models/DPM/dpm.pctl");
 	
-		parserEngine 		= new ParserEngine(modelFilename, propertiesFilename);
+		parserEngine 		= new EvoCheckerInstantiator(modelFilename, propertiesFilename);
 		genes				= GenotypeFactory.createChromosome(parserEngine.getEvolvableList());
 		parserEngine.createMapping();
 		

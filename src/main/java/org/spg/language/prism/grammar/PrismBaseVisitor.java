@@ -1,6 +1,6 @@
 // Generated from grammar/Prism.g4 by ANTLR 4.5
 
-  package org.spg.language.grammar.antlr.src.gen;
+  package org.spg.language.prism.grammar;
   import java.util.*;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -126,7 +126,14 @@ public class PrismBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitEvolveConst(PrismParser.EvolveConstContext ctx) { return visitChildren(ctx); }
+	@Override public T visitEvolveRange(PrismParser.EvolveRangeContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitEvolveDiscrete(PrismParser.EvolveDiscreteContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -161,7 +168,42 @@ public class PrismBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBounds(PrismParser.BoundsContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBoundsRange(PrismParser.BoundsRangeContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitBoundsDiscrete(PrismParser.BoundsDiscreteContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDiscreteOptionDoubleMulti(PrismParser.DiscreteOptionDoubleMultiContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDiscreteOptionDoubleSingle(PrismParser.DiscreteOptionDoubleSingleContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDiscreteOptionIntSingle(PrismParser.DiscreteOptionIntSingleContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDiscreteOptionIntMulti(PrismParser.DiscreteOptionIntMultiContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

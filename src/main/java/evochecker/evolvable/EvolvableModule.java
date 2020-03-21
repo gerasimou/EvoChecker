@@ -3,29 +3,25 @@ package evochecker.evolvable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EvolvableModule extends Evolvable {
+public class EvolvableModule extends EvolvableRange {
 	
 	List<EvolvableDistribution> evolvableDistributionList;
 	String moduleString;
 	
-	public EvolvableModule(String name, int minValue, int maxValue, String moduleString){
-		super(name, minValue, maxValue, EvolvableID.MODULE);
+	public EvolvableModule(String name, int minValue, int maxValue, String moduleString, boolean param){
+		super(name, minValue, maxValue, EvolvableID.MODULE, param);
 		this.evolvableDistributionList = new ArrayList<EvolvableDistribution>();
 		this.moduleString = new String(moduleString);
 	}
 	
 	public EvolvableModule (EvolvableModule evolvableModule){
-		this(evolvableModule.name, 0, 1, evolvableModule.moduleString);
+		this(evolvableModule.name, 0, 1, evolvableModule.moduleString, evolvableModule.param);
 		for (EvolvableDistribution evolvableDistribution : evolvableModule.evolvableDistributionList){
 			appendEvolvableDistribution(evolvableDistribution);
 		}
 	}
 
 	
-//	public EvolvableModule(EvolvableModule evolvableModule) {
-//		 TODO Auto-generated constructor stub
-//	}
-
 	public String getModuleString(){
 		return this.moduleString;
 	}
