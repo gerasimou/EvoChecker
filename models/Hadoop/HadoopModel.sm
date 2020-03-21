@@ -1,0 +1,48 @@
+ctmc
+
+const int DataSize = 3072;
+const double T;
+
+const double mapRate = 0.2;
+const double reduceRate = 0.3;
+
+const int MaxSplit = 128;
+const int MinSplit = 1;
+const int BlockSize = 64; // this could be: evolve const int BlockSize [64..128];
+
+const int cloudVM = 2; // evolve const int cloudVM [1..5];
+const int NodeManagerMemory = 4096;
+const int YarnMinMemory = 1024;
+const int MapMemory = 1024;
+const int ReduceMemory = 1024;
+
+//Number of Tasks for Map and Reduce
+formula mTasks = ceil(DataSize/max(MinSplit, min(MaxSplit,BlockSize))); 
+formula rTasks = 10;
+
+//Number of Containers
+formula mContainer = cloudVM * floor(NodeManagerMemory / max(MapMemory,YarnMinMemory)); 
+formula rContainer= cloudVM * floor(NodeManagerMemory / max(ReduceMemory,YarnMinMemory));
+
+//Number of Rounds
+formula MapRound =  ceil(mTasks/mContainer);
+formula ReduceRound = ceil(rTasks/rContainer);
+
+module MapReduce
+
+stage : [0..2] init 0; // 0= map , 1= reduce , 2= finish
+iMap : [0..mTasks] init mTasks;
+iReduce : [0..rTasks] init rTasks;
+
+//Map
+[map] stage = 0 & iMap <= MapRound & iMap > 0 -> MapRound * mapRate: (iMap' =iMap - iMap);
+[map] stage = 0 & iMap > MapRound -> MapRound * mapRate: (iMap' =iMap - MapRound);
+[reduce] stage = 0 & iMap <= 0 -> (stage' =1);
+
+//Reduce
+[reduce] stage = 1 & iReduce <= ReduceRound & iReduce > 0 -> ReduceRound * reduceRate: (iReduce' =iReduce - iReduce);
+[reduce] stage = 1 & iReduce > ReduceRound -> ReduceRound * reduceRate: (iReduce' =iReduce - ReduceRound);
+[finish] stage = 1 & iReduce <= 0 -> (stage' =2);
+
+
+endmodule
