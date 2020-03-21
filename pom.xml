@@ -12,16 +12,20 @@
   	<url>http://maven.apache.org</url>
 
 
+  	<!--  Properties -->
 	<properties>
-		<jdk.version>1.8</jdk.version>
+		<jdk.version>11</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- <log4j.configuration>./resources/log4j.properties</log4j.configuration> -->
 	</properties>
+
 	
   	<!-- Repositories -->
 	<repositories>
 		<repository>
+			<name>Local repository</name>
 	   		<id>localRepository</id>
-	   		<url>file://${project.basedir}/repo/</url>
+        	<url>file://${project.basedir}/libs</url>
 	 	</repository>
 	</repositories>
 
@@ -53,12 +57,11 @@
 		<!--  Prism from local repository for property analysis -->
 	  	<dependency>
 	  		<groupId>org.modelchecker.prism</groupId>
-   			<artifactId>prism-tacas17</artifactId>
+<!--    			<artifactId>prism-tacas17</artifactId>
 	  		<version>1.0</version>
-<!-- 
-   	  		<artifactId>prism</artifactId>
-	  		<version>4.2.1</version> 	  		  		
- --> 		</dependency>
+ -->  		<artifactId>prism</artifactId>
+	  		<version>4.5</version> 	  		  		
+  		</dependency>
 	  	
  	  </dependencies>
   
