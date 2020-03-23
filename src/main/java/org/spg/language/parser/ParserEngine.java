@@ -31,7 +31,7 @@ import evochecker.evolvable.EvolvableModuleAlternative;
 
 
 
-public class ParserEngine2{
+public class ParserEngine{
 
 	/** String that keeps the model template */
 	protected String internalModelRepresentation;
@@ -51,7 +51,7 @@ public class ParserEngine2{
 	 * @param modelFilename
 	 * @param propertiesFilename
 	 */
-	public ParserEngine2(String modelFilename, String propertiesFilename){
+	public ParserEngine(String modelFilename, String propertiesFilename){
 		this.modelFilename 		= modelFilename;
 		this.propertiesFilename	= propertiesFilename;		
 		
@@ -61,7 +61,7 @@ public class ParserEngine2{
 	/**
 	 * Parser engine default copy constructor
 	 */
-	public ParserEngine2(ParserEngine2 aParser){
+	public ParserEngine(ParserEngine aParser){
 		this.modelFilename 					= aParser.modelFilename;
 		this.propertiesFilename				= aParser.propertiesFilename;
 		this.internalModelRepresentation	= aParser.internalModelRepresentation;
@@ -111,7 +111,7 @@ public class ParserEngine2{
 			propertiesFilename 	= args[1];
 		}
 
-		ParserEngine2 parser = new ParserEngine2(modelFilename, propertiesFilename);
+		ParserEngine parser = new ParserEngine(modelFilename, propertiesFilename);
 
 		//Parse model
 		System.out.println("Checking " + modelFilename);

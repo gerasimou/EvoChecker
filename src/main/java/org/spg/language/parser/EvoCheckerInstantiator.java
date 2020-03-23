@@ -15,7 +15,7 @@ import evochecker.genetic.genes.DistributionGene;
 import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
 
-public class EvoCheckerInstantiator extends ParserEngine2 implements InstantiatorInterface {
+public class EvoCheckerInstantiator extends ParserEngine implements InstantiatorInterface {
 
 	/** map that keeps pairs of genes and evolvable elements*/
 	private Map<AbstractGene, Evolvable> elementsMap;
@@ -39,8 +39,7 @@ public class EvoCheckerInstantiator extends ParserEngine2 implements Instantiato
 		super(aParser);
 		
 		genesList = GenotypeFactory.createChromosome(evolvableList);
-//		
-////		GenotypeFactory.createChromosome(evolvableList);
+
 		this.elementsMap					= new LinkedHashMap<AbstractGene, Evolvable>();
 		for (int i=0; i<genesList.size(); i++){
 			this.elementsMap.put(genesList.get(i), evolvableList.get(i));

@@ -33,7 +33,7 @@ import evochecker.genetic.genes.DistributionGene;
 import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
 
-public class ParserEngine implements InstantiatorInterface {
+public class ParserEngineOld implements InstantiatorInterface {
 
 	private String modelFilename;
 	
@@ -52,7 +52,7 @@ public class ParserEngine implements InstantiatorInterface {
 	List<AbstractGene> genesList;
 
 	
-	public ParserEngine(String fileName, String propertiesFilename) {
+	public ParserEngineOld(String fileName, String propertiesFilename) {
 		String modelString = FileUtil.readFile(fileName); 
 
 		this.modelFilename = modelFilename;
@@ -65,8 +65,8 @@ public class ParserEngine implements InstantiatorInterface {
 	}
 	
 	
-	public ParserEngine (ParserEngine aParser) throws EvoCheckerException{
-		ParserEngine parser = (ParserEngine)aParser;
+	public ParserEngineOld (ParserEngineOld aParser) throws EvoCheckerException{
+		ParserEngineOld parser = (ParserEngineOld)aParser;
 		this.internalModelRepresentation	= parser.internalModelRepresentation;
 		this.propertiesFilename				= parser.propertiesFilename;
 		this.evolvableList					= new ArrayList<Evolvable>();
