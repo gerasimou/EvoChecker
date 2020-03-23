@@ -52,17 +52,22 @@
 			<groupId>org.jmetal</groupId>
 			<artifactId>jmetal</artifactId>
 			<version>4.5</version>
-		</dependency>	
-	
-		<!--  Prism from local repository for property analysis -->
-	  	<dependency>
-	  		<groupId>org.modelchecker.prism</groupId>
-<!--    			<artifactId>prism-tacas17</artifactId>
-	  		<version>1.0</version>
- -->  		<artifactId>prism</artifactId>
-	  		<version>4.5</version> 	  		  		
-  		</dependency>
-	  	
+		</dependency>		
+		
+	    <!--  PRISM model checker -->
+<!-- 		<dependency>
+			<groupId>org.modelChecker.prism</groupId>
+			<artifactId>prism</artifactId>
+			<version>4.5</version>
+			<type>jar</type>
+		</dependency>
+ -->
+		<dependency>
+			<groupId>org.modelChecker</groupId>
+			<artifactId>PrismAPI</artifactId>
+			<version>1.0.1</version>
+			<type>jar</type>
+		</dependency>	  	
  	  </dependencies>
   
   
@@ -223,7 +228,7 @@
 			<plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-shade-plugin</artifactId>
-		        <version>3.1.0</version>
+		        <version>3.2.2</version>
 		        <executions>
 		        		<execution>
 		        			<id>rename-uber-jar</id>
