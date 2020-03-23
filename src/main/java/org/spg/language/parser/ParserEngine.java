@@ -1,20 +1,23 @@
+//==============================================================================
+//	
+ //	Copyright (c) 2015-
+//	Authors:
+//	* Simos Gerasimou (University of York)
+//	
+//------------------------------------------------------------------------------
+//	
+//	This file is part of EvoChecker.
+//	
+//==============================================================================
 package org.spg.language.parser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.spg.language.prism.grammar.PrismLexer;
 import org.spg.language.prism.grammar.PrismParser;
 
@@ -25,52 +28,46 @@ import evochecker.evolvable.EvolvableDouble;
 import evochecker.evolvable.EvolvableInteger;
 import evochecker.evolvable.EvolvableModule;
 import evochecker.evolvable.EvolvableModuleAlternative;
-import evochecker.exception.EvoCheckerException;
-import evochecker.genetic.GenotypeFactory;
-import evochecker.genetic.genes.AbstractGene;
-import evochecker.genetic.genes.AlternativeModuleGene;
-import evochecker.genetic.genes.DistributionGene;
-import evochecker.genetic.genes.DoubleGene;
-import evochecker.genetic.genes.IntegerGene;
 
-public class ParserEngine implements InstantiatorInterface {
 
-	private String modelFilename;
-	
-	/** properties filename */
-	private String propertiesFilename;
 
-	/** list of evolvable elements*/
-	private List<Evolvable> evolvableList;
+public class ParserEngine2{
 
 	/** String that keeps the model template */
-	private String internalModelRepresentation;
+	protected String internalModelRepresentation;
+
+	/** properties filename */
+	protected String propertiesFilename;
+
+	/** list of evolvable elements*/
+	protected List<Evolvable> evolvableList;	
 	
-	/** map that keeps pairs of genes and evolvable elements*/
-	private Map<AbstractGene, Evolvable> elementsMap;
-
-	List<AbstractGene> genesList;
+	protected String modelFilename;
+	
 
 	
-	public ParserEngine(String fileName, String propertiesFilename) {
-		String modelString = FileUtil.readFile(fileName); 
-
-		this.modelFilename = modelFilename;
-		this.propertiesFilename = propertiesFilename;
-		elementsMap = new HashMap<AbstractGene, Evolvable>();
-
-		// generatedAntlrFiles("Prism.g4");
-		runVisitor(modelString);
-		// runListener(model);
+	/**
+	 * Parser Engine Constructor
+	 * @param modelFilename
+	 * @param propertiesFilename
+	 */
+	public ParserEngine2(String modelFilename, String propertiesFilename){
+		this.modelFilename 		= modelFilename;
+		this.propertiesFilename	= propertiesFilename;		
+		
+		parse();			
 	}
-	
-	
-	public ParserEngine (ParserEngine aParser) throws EvoCheckerException{
-		ParserEngine parser = (ParserEngine)aParser;
-		this.internalModelRepresentation	= parser.internalModelRepresentation;
-		this.propertiesFilename				= parser.propertiesFilename;
+
+	/**
+	 * Parser engine default copy constructor
+	 */
+	public ParserEngine2(ParserEngine2 aParser){
+		this.modelFilename 					= aParser.modelFilename;
+		this.propertiesFilename				= aParser.propertiesFilename;
+		this.internalModelRepresentation	= aParser.internalModelRepresentation;
+		
 		this.evolvableList					= new ArrayList<Evolvable>();
-		for (Evolvable element : parser.evolvableList)
+		for (Evolvable element : aParser.evolvableList)
 			if (element instanceof EvolvableInteger)
 				this.evolvableList.add(new EvolvableInteger((EvolvableInteger)element));
 			else if (element instanceof EvolvableDouble)
@@ -79,17 +76,108 @@ public class ParserEngine implements InstantiatorInterface {
 				this.evolvableList.add(new EvolvableDistribution((EvolvableDistribution)element));
 			else if (element instanceof EvolvableModuleAlternative)
 				this.evolvableList.add(new EvolvableModuleAlternative((EvolvableModuleAlternative)element));
+			//TODO
+//			else if (element instanceof EvolvableOption)
+//				this.evolvableList.add(new EvolvableOption((EvolvableOption))element);
+	}
+
+	
+	public static void main (String args[]){	
+//		String 		modelFilename		= "models/Cluster/clusterTemplate2.sm";
+//		String 		propertiesFilename 	= "models/Cluster/cluster.csl";
+
+//		String 		modelFilename		= "models/COPE/cope.pm";
+//		String 		propertiesFilename 	= "models/COPE/cope.pctl";
+
+//		String 		modelFilename		= "models/DPM/DPM.pm";
+//		String 		propertiesFilename 	= "models/DPM/dpm.pctl";
+
+//		String 		modelFilename		= "models/FX/fx.pm";
+//		String 		propertiesFilename 	= "models/FX/fx.pctl";
 		
-		genesList = GenotypeFactory.createChromosome(evolvableList);
-//		
-////		GenotypeFactory.createChromosome(evolvableList);
-		this.elementsMap					= new LinkedHashMap<AbstractGene, Evolvable>();
-		for (int i=0; i<genesList.size(); i++){
-			this.elementsMap.put(genesList.get(i), evolvableList.get(i));
+//		String 	modelFilename		= "models/Hadoop/HadoopTemplate.sm";
+//		String	propertiesFilename 	= "models/Hadoop/HadoopTemplate.pctl";
+
+//		String 		modelFilename		= "models/UUV/uuv.sm";
+//		String 		propertiesFilename 	= "models/UUV/uuv.csl";
+
+		String 		modelFilename		= "models/VIRUS/virus.pm";
+		String 		propertiesFilename 	= "models/VIRUS/virus.pm";
+
+
+		
+		if (args.length == 2){
+			modelFilename		= args[0];
+			propertiesFilename 	= args[1];
 		}
+
+		ParserEngine2 parser = new ParserEngine2(modelFilename, propertiesFilename);
+
+		//Parse model
+		System.out.println("Checking " + modelFilename);
+		parser.parse();			
+		
+		
+		//print some information
+//		parser.print();
+//		System.out.println(Arrays.toString(parser.evolvableList.toArray()));
+		
+		FileUtil.createDir("tests/Virus");
+		FileUtil.saveToFile("tests/Virus/ParsedEvolvables.txt", Arrays.toString(parser.evolvableList.toArray()), false);
+		FileUtil.saveToFile("tests/Virus/ParsedInternalRepresentation.txt", parser.internalModelRepresentation, false);
+		
+		System.out.println("DONE");
 	}
 	
 
+	/** 
+	 * Parse input
+	 */
+	public void parse() {
+		String modelString = FileUtil.readFile(modelFilename);
+		runVisitor(modelString);
+//		runListener(modelString);
+
+	}
+	
+
+	
+	
+	/**
+	 * Run visitor
+	 * @param inputString
+	 */
+	@SuppressWarnings("unused")
+	private  void runVisitor(String inputString){
+		 // create a CharStream that reads from standard input
+		ANTLRInputStream input = new ANTLRInputStream(inputString); 
+		// create a lexer that feeds off of input CharStream
+		PrismLexer lexer = new PrismLexer(input); 
+		// create a buffer of tokens pulled from the lexer
+		CommonTokenStream tokens = new CommonTokenStream(lexer); 
+		// create a parser that feeds off the tokens buffer
+		PrismParser parser = new PrismParser(tokens);
+		// begin parsing at prog rule
+		ParseTree tree = parser.model();
+		//Create the visitor
+		PrismVisitor visitor = new PrismVisitor();
+		// and visit the nodes
+		visitor.visit(tree);
+		
+		//generate list with evolvable elements
+		List<Evolvable> evolvableList = visitor.getEvolvableList();
+		setEvolvableList(evolvableList);
+
+		//get internal model representation
+		String modelString = visitor.getInternalModelRepresentation();
+		setInternalModelRepresentation(modelString);		
+	}
+	
+	
+	
+	/**
+	 * Print the evolvable elements
+	 */
 	public void print() {
 		for (Evolvable evolvable : evolvableList) {
 			if (evolvable instanceof EvolvableDouble) {
@@ -107,101 +195,36 @@ public class ParserEngine implements InstantiatorInterface {
 				// System.out.println(evolvable.toString());
 			} 
 			else if (evolvable instanceof EvolvableModuleAlternative) {
-				System.out.println(evolvable.toString());
+//				System.out.println(evolvable.toString());
 			}
 
-			// System.out.println(evolvable.toString());
+			 System.out.println(evolvable.toString());
 		}
 
 		System.out.println(internalModelRepresentation + evolvableList.size());
-		//
 	}
-
-//	@SuppressWarnings("unused")
-//	private void generatedAntlrFiles(String inputFile) {
-//		String[] arg0 = { "-visitor", inputFile, "-o",
-//				"./src/org/spg/antlr/src/gen" };
-//		// "-package", "org.spg.antlr.src.gen"};
-//		org.antlr.v4.Tool.main(arg0);
-//	}
-
-	@SuppressWarnings("unused")
-	private void runListener(String inputString) {
-		// create a CharStream that reads from standard input
-		ANTLRInputStream input = new ANTLRInputStream(inputString);
-		// create a lexer that feeds off of input CharStream
-		PrismLexer lexer = new PrismLexer(input);
-		// create a buffer of tokens pulled from the lexer
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		// create a parser that feeds off the tokens buffer
-		PrismParser parser = new PrismParser(tokens);
-		// begin parsing at model rule
-		ParseTree tree = parser.model();
-
-		// Create a generic parse tree walker that can trigger callbacks
-		ParseTreeWalker walker = new ParseTreeWalker();
-		// Create a listener
-		PrismListener listener = new PrismListener(parser);
-		// Walk the tree created during the parse, trigger callbacks
-		walker.walk(listener, tree);
-
-		listener.printMemory();
-	}
-
-	@SuppressWarnings("unused")
-	private void runVisitor(String inputString) {
-		// create a CharStream that reads from standard input
-		ANTLRInputStream input = new ANTLRInputStream(inputString);
-		// create a lexer that feeds off of input CharStream
-		PrismLexer lexer = new PrismLexer(input);
-		// create a buffer of tokens pulled from the lexer
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		// create a parser that feeds off the tokens buffer
-		PrismParser parser = new PrismParser(tokens);
-		// begin parsing at prog rule
-		ParseTree tree = parser.model();
-		// Create the visitor
-		PrismVisitor visitor = new PrismVisitor();
-		// and visit the nodes
-		visitor.visit(tree);
-
-		//generate list with evolvable elements
-		List<Evolvable> evolvableList = visitor.getEvolvableList();
-		setEvolvableList(evolvableList);
-
-		//get internal model representation
-		String modelString = visitor.getInternalModelRepresentation();
-		setInternalModelRepresentation(modelString);
-	}
-
-	@SuppressWarnings("resource")
-	private String readFile(String fileName) {
-		StringBuilder model = new StringBuilder(100);
-		BufferedReader bfr = null;
-
-		try {
-			bfr = new BufferedReader(new FileReader(new File(fileName)));
-			String line = null;
-			while ((line = bfr.readLine()) != null) {
-				model.append(line + "\n");
-			}
-			model.delete(model.length() - 1, model.length());
-			return model.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private void setEvolvableList(List<Evolvable> evolvableList) {
+	
+	
+	
+	/**
+	 * Set evolvable list
+	 * @param evolvableList
+	 */
+	private void setEvolvableList (List<Evolvable> evolvableList){
 		this.evolvableList = evolvableList;
 	}
-
-
-	public List<Evolvable> getEvolvableList() {
+	
+	
+	/**
+	 * Get list of evolvable elements
+	 * @return
+	 */
+	public List<Evolvable> getEvolvableList (){
 		return this.evolvableList;
 	}
 
+	
+	
 	/**
 	 * Set the internal model representation as string
 	 * @param modelString
@@ -210,52 +233,8 @@ public class ParserEngine implements InstantiatorInterface {
 		this.internalModelRepresentation = modelString;
 	}
 
-
-	/**
-	 * Return the internal model representation
-	 * @return
-	 */
 	public String getInternalModelRepresentation() {
-		return internalModelRepresentation;
+		return this.internalModelRepresentation;
 	}
 	
-	public void createMapping() {
-		Map<AbstractGene, Evolvable> map = GenotypeFactory.getMapping();
-		for (Map.Entry<AbstractGene, Evolvable> entry : map.entrySet()) {
-			this.elementsMap.put(entry.getKey(), entry.getValue());
-		}
-	}
-
-	@Override
-	public String getValidModelInstance(List<AbstractGene> genes) {
-		StringBuilder concreteModel = new StringBuilder(this.internalModelRepresentation);
-		for (AbstractGene gene : genes) {
-			if (gene instanceof IntegerGene) {
-				concreteModel.append(elementsMap.get(gene).getCommand(gene.getAllele()));
-			} 
-			else if (gene instanceof DoubleGene) {
-				concreteModel.append(elementsMap.get(gene).getCommand(gene.getAllele()));
-			} 
-			else if (gene instanceof DistributionGene) {
-				concreteModel.append(elementsMap.get(gene)
-										.getCommand((double[]) 
-												gene.getAllele()));
-			} 
-			else if (gene instanceof AlternativeModuleGene) {
-				concreteModel.append(elementsMap.get(gene).getCommand(gene.getAllele()));
-			}
-		}
-		// System.err.println(concreteModel);
-		return concreteModel.toString();
-	}
-
-	@Override
-	public String getPrismPropertyFileName() {
-		return this.propertiesFilename;
-	}
-	
-	public List<AbstractGene> getGeneList(){
-		return (List<AbstractGene>)Arrays.asList(this.elementsMap.keySet().toArray(new AbstractGene[0]));				
-	}
-
 }

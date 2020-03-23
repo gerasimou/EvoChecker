@@ -121,15 +121,15 @@ public class MultiProcessEvaluator implements IParallelEvaluator {
 			
 				params[3] = String.valueOf(portNum);
 				params[4] = String.valueOf(i+1);
-//				do {
-//					Process p = Runtime.getRuntime().exec(params);
-////					String par = "java -cp /Users/sgerasimou/Documents/Programming/workspaceJavaOxygen/org.spg.PrismExecutor org.spg.prismexecutor.PrismExecutor";
-////					Process p = Runtime.getRuntime().exec(par);
-//					Thread.sleep(5000);
-//					isAlive = p.isAlive();
-////					
-//				} 
-//				while (!isAlive);
+				do {
+					Process p = Runtime.getRuntime().exec(params);
+//					String par = "java -cp /Users/sgerasimou/Documents/Programming/workspaceJavaOxygen/org.spg.PrismExecutor org.spg.prismexecutor.PrismExecutor";
+//					Process p = Runtime.getRuntime().exec(par);
+					Thread.sleep(5000);
+					isAlive = p.isAlive();
+//					
+				} 
+				while (!isAlive);
 
 				System.out.println("Connecting");
 				 makeConnection(portNum, i, params);

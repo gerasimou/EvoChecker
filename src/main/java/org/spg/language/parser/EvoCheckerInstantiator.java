@@ -1,6 +1,5 @@
 package org.spg.language.parser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -8,10 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import evochecker.evolvable.Evolvable;
-import evochecker.evolvable.EvolvableDistribution;
-import evochecker.evolvable.EvolvableDouble;
-import evochecker.evolvable.EvolvableInteger;
-import evochecker.evolvable.EvolvableModuleAlternative;
 import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
@@ -42,21 +37,6 @@ public class EvoCheckerInstantiator extends ParserEngine2 implements Instantiato
 	 */
 	public EvoCheckerInstantiator (EvoCheckerInstantiator aParser) throws EvoCheckerException{
 		super(aParser);
-		EvoCheckerInstantiator parser = (EvoCheckerInstantiator)aParser;
-		this.internalModelRepresentation	= parser.internalModelRepresentation;
-		this.propertiesFilename				= parser.propertiesFilename;
-		this.evolvableList					= new ArrayList<Evolvable>();
-		for (Evolvable element : parser.evolvableList)
-			if (element instanceof EvolvableInteger)
-				this.evolvableList.add(new EvolvableInteger((EvolvableInteger)element));
-			else if (element instanceof EvolvableDouble)
-				this.evolvableList.add(new EvolvableDouble((EvolvableDouble)element));
-			else if (element instanceof EvolvableDistribution)
-				this.evolvableList.add(new EvolvableDistribution((EvolvableDistribution)element));
-			else if (element instanceof EvolvableModuleAlternative)
-				this.evolvableList.add(new EvolvableModuleAlternative((EvolvableModuleAlternative)element));
-//			else if (element instanceof EvolvableOption)
-//				this.evolvableList.add(new EvolvableOption((EvolvableOption))element);
 		
 		genesList = GenotypeFactory.createChromosome(evolvableList);
 //		

@@ -41,7 +41,7 @@ public class Utility {
 
 	public static String getProperty (String key){
 		loadPropertiesInstance();
-		String result = properties.getProperty(key); 
+		String result = properties.getProperty(key).strip(); 
 		if (result == null)
 			  throw new IllegalArgumentException(key.toUpperCase() + " name not found!");
 		return result;		

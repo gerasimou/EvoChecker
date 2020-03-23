@@ -16,5 +16,5 @@ R{"time"}=? [ F "done" ]
 
 
 
-//objective, max
+//constraint, max, 0.9
 P=? [ F "success" ]

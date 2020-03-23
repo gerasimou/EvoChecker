@@ -1,13 +1,13 @@
 //constraint, : Use of High Priority Queue < 90%
 
-//constraint, min, 0.9
+//constraint, max, 0.9
 R{"QHLength"}<((QmaxH)*0.9) [ S ]
 
 
 
 //constraint, : Use of Low Priority Queue < 90%
 
-//constraint, min, 0.9
+//constraint, max, 0.9
 R{"QLLength"}<((QmaxL)*0.9) [ S ]
 
 
