@@ -1,0 +1,2 @@
+Accepting from port: 8860
+java.lang.UnsatisfiedLinkError: no prism in java.library.path: [/Users/sgerasimou/Library/Java/Extensions, /Library/Java/Extensions, /Network/Library/Java/Extensions, /System/Library/Java/Extensions, /usr/lib/java, .]
