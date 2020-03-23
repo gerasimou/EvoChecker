@@ -31,10 +31,10 @@ import jmetal.experiments.Settings;
 import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
 import evochecker.auxiliary.Utility;
-import evochecker.genetic.jmetal.GeneticProblem;
-import evochecker.genetic.jmetal.MultiProcessEvaluator;
 import evochecker.genetic.jmetal.operators.CrossoverFactory;
 import evochecker.genetic.jmetal.operators.MutationFactory;
+import evochecker.genetic.problem.GeneticProblem;
+import evochecker.genetic.problem.MultiProcessEvaluator;
 
 /**
  * Settings class of algorithm SPEA2

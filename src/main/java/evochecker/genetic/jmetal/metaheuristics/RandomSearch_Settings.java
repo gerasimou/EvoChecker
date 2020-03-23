@@ -21,7 +21,7 @@
 package evochecker.genetic.jmetal.metaheuristics;
 
 import evochecker.auxiliary.Utility;
-import evochecker.genetic.jmetal.MultiProcessEvaluator;
+import evochecker.genetic.problem.MultiProcessEvaluator;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.experiments.Settings;

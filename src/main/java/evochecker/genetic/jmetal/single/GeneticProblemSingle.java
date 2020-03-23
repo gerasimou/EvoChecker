@@ -5,7 +5,7 @@ import java.util.List;
 import org.spg.language.parser.InstantiatorInterface;
 
 import evochecker.genetic.genes.AbstractGene;
-import evochecker.genetic.jmetal.GeneticProblem;
+import evochecker.genetic.problem.GeneticProblem;
 import evochecker.properties.Property;
 
 public class GeneticProblemSingle extends GeneticProblem {

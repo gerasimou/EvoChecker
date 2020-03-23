@@ -71,6 +71,8 @@ public class EvoCheckerInstantiator extends ParserEngine implements Instantiator
 			else if (gene instanceof AlternativeModuleGene) {
 				concreteModel.append(elementsMap.get(gene).getCommand(gene.getAllele()));
 			}
+			
+			
 		}
 		// System.err.println(concreteModel);
 		return concreteModel.toString();

@@ -10,7 +10,7 @@
 //	
 //==============================================================================
 
-package evochecker.genetic.jmetal;
+package evochecker.genetic.problem;
 
 import java.io.BufferedReader;
 import java.io.IOException;

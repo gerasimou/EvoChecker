@@ -10,7 +10,7 @@
 //	
 //==============================================================================
 
-package evochecker.genetic.jmetal;
+package evochecker.genetic.problem;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,7 +54,6 @@ public abstract class GeneticModelProblem extends Problem {
 	protected List<AbstractGene> genes;
 	
 	/** List of properties*/
-//	protected List<Property> properties;
 	protected List<Property> objectivesList;
 	protected List<Property> constraintsList;
 
