@@ -26,6 +26,6 @@ public class IntegerGene extends AbstractGene{
 	 * @param maxValue
 	 */
 	public IntegerGene(String name, int minValue, int maxValue){
-		super(name, minValue, maxValue, 0);
+		super(name, minValue, maxValue, (minValue+maxValue)/2);
 	}
 }

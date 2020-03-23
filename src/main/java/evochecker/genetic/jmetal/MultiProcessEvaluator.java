@@ -121,33 +121,20 @@ public class MultiProcessEvaluator implements IParallelEvaluator {
 			
 				params[3] = String.valueOf(portNum);
 				params[4] = String.valueOf(i+1);
-				do {
-					Process p = Runtime.getRuntime().exec(params);
-//					String par = "java -cp /Users/sgerasimou/Documents/Programming/workspaceJavaOxygen/org.spg.PrismExecutor org.spg.prismexecutor.PrismExecutor";
-//					Process p = Runtime.getRuntime().exec(par);
-					Thread.sleep(5000);
-					isAlive = p.isAlive();
-//					
-				} 
-				while (!isAlive);
-//				String paramA = 	"/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/bin/java" 
-//										+ 	" -jar "
-//										+	"lib/PrismTacas17.jar "
-//										+	"8866 1";
-//										
-//				Process p = null;
 //				do {
-//					System.out.println("Connecting to " + Arrays.toString(params));
-//					System.out.println("Connecting to " + paramA);
-//					p = Runtime.getRuntime().exec(params);
+//					Process p = Runtime.getRuntime().exec(params);
+////					String par = "java -cp /Users/sgerasimou/Documents/Programming/workspaceJavaOxygen/org.spg.PrismExecutor org.spg.prismexecutor.PrismExecutor";
+////					Process p = Runtime.getRuntime().exec(par);
 //					Thread.sleep(5000);
+//					isAlive = p.isAlive();
+////					
 //				} 
-//				while (!p.isAlive());
+//				while (!isAlive);
 
 				System.out.println("Connecting");
 				 makeConnection(portNum, i, params);
 			}
-			Thread.sleep(1000);
+//			Thread.sleep(1000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

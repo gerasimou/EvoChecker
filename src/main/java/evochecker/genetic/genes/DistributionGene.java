@@ -31,7 +31,12 @@ public class DistributionGene extends AbstractGene {
 	public DistributionGene(String name, int numberOfOutcomes) {
 		super(name, 0.0, 1.0, 0);
 		this.numberOfOutcomes = numberOfOutcomes;
-//		this.setAllele(allele);
+
+		double outcomes[] = new double[numberOfOutcomes];
+		for (int i=0; i<numberOfOutcomes; i++)
+			outcomes[i] = 1.0/numberOfOutcomes;
+		
+		setAllele(outcomes);
 	}
 
 	

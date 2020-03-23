@@ -1,18 +1,15 @@
 package evochecker.properties;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.spg.PrismAPI.PrismAPI;
+
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.exception.EvoCheckerException;
-import parser.ast.ModulesFile;
 import parser.ast.PropertiesFile;
-import prism.Prism;
-import prism.PrismLangException;
 
 public class PropertyFactory {
 
@@ -28,14 +25,14 @@ public class PropertyFactory {
 		List<Property> objectivesList = new ArrayList<Property>();		
 		List<Property> constaintsList = new ArrayList<Property>();		
 		
+		
 		try {
-			File propsStrFile 	= new File(propertiesFilename);
+			PrismAPI api = new PrismAPI(null);
+			api.parseModelAndProperties(internalModel, propertiesFilename);
+	
+			PropertiesFile  propsFile = api.getPrismPropertiesFile();
 			
-			Prism prism = new Prism(null);
 			
-			ModulesFile modelFile = prism.parseModelString(internalModel);// (modelStrFile);
-			
-			PropertiesFile propsFile = prism.parsePropertiesFile(modelFile, propsStrFile);
 			int numProps = propsFile.getNumProperties();
 			for (int i=0; i<numProps; i++) {
 				parser.ast.Property prop = propsFile.getPropertyObject(i);
@@ -63,7 +60,7 @@ public class PropertyFactory {
 			list.add(constaintsList);
 			return list;
 		} 
-		catch (PrismLangException | EvoCheckerException | IOException e) {
+		catch (EvoCheckerException e) {
 			e.printStackTrace();
 		}	
 		//never happens

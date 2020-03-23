@@ -41,6 +41,7 @@ public class EvoCheckerInstantiator extends ParserEngine2 implements Instantiato
 	 * @throws EvoCheckerException
 	 */
 	public EvoCheckerInstantiator (EvoCheckerInstantiator aParser) throws EvoCheckerException{
+		super(aParser);
 		EvoCheckerInstantiator parser = (EvoCheckerInstantiator)aParser;
 		this.internalModelRepresentation	= parser.internalModelRepresentation;
 		this.propertiesFilename				= parser.propertiesFilename;

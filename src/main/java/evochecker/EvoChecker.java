@@ -163,12 +163,12 @@ public class EvoChecker {
 		
 		//5) create properties list
 		//dummy code to enable parsing properties files when evolvables include an evolvable distribution
-		for (AbstractGene gene :genes) {
-			if (gene instanceof DistributionGene) {
-				int numOfOutcomes = ((DistributionGene)gene).getNumberOfOutcomes();
-				gene.setAllele(new double[numOfOutcomes]);
-			}
-		}
+//		for (AbstractGene gene :genes) {
+//			if (gene instanceof DistributionGene) {
+//				int numOfOutcomes = ((DistributionGene)gene).getNumberOfOutcomes();
+//				gene.setAllele(new double[numOfOutcomes]);
+//			}
+//		}
 		String str = parserEngine.getValidModelInstance(genes);
 		List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
 		objectivesList  = list.get(0);

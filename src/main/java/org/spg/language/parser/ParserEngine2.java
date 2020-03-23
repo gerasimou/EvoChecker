@@ -60,8 +60,9 @@ public class ParserEngine2{
 	/**
 	 * Parser engine default constructor
 	 */
-	public ParserEngine2(){
-		this(null, null);
+	public ParserEngine2(ParserEngine2 aParser){
+		this.modelFilename 		= aParser.modelFilename;
+		this.propertiesFilename	= aParser.propertiesFilename;
 	}
 
 	
