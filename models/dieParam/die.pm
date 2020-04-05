@@ -1,9 +1,9 @@
 dtmc
 
-evolve double p [0.4 .. 0.6];
-evolve double q [0.4 .. 0.6];
+evolve param double p [0.4 .. 0.6];
+evolve param double q [0.4 .. 0.6];
 
-evolve param int z [1..1];
+evolve int z [1..5];
 
 module die
 

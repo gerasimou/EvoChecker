@@ -13,7 +13,6 @@
 package evochecker.genetic.problem;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import evochecker.exception.EvoCheckerException;
-//import org.apache.commons.lang.NotImplementedException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.AlternativeModuleGene;
 import evochecker.genetic.genes.DistributionGene;
@@ -59,7 +57,7 @@ public abstract class GeneticModelProblem extends Problem {
 	protected List<Property> constraintsList;
 
 	/** Reference to the instantiator instance*/
-	protected IModelInstantiator instantiator;
+	protected IModelInstantiator modelInstantiator;
 	
 	/** Reference to the model invokers instance*/
 	protected IModelInvoker modelInvoker;
@@ -81,7 +79,7 @@ public abstract class GeneticModelProblem extends Problem {
 	public GeneticModelProblem(List<AbstractGene> genes, IModelInstantiator instantiator, 
 							   List<Property> objectivesList, List<Property> constraintsList, String problemName){
 		this.genes 					= genes;
-		this.instantiator 			= instantiator;
+		this.modelInstantiator 		= instantiator;
 		this.numberOfConstraints_ 	= constraintsList.size();
 		this.numberOfObjectives_ 	= objectivesList.size();
 		this.objectivesList			= objectivesList;
@@ -304,6 +302,8 @@ public abstract class GeneticModelProblem extends Problem {
 			double value  = Double.parseDouble(resultsList.get(index));
 			double result =  new BigDecimal(value).setScale(4, RoundingMode.HALF_DOWN).doubleValue();
 
+			System.out.print("C" +(i+1) + "):"+ result +"\t");
+
 			double constraint = p.evaluate(result); 
 			if (constraint !=0) {
 				totalViolation +=constraint;
@@ -323,12 +323,12 @@ public abstract class GeneticModelProblem extends Problem {
 	 */
 	public GeneticModelProblem(GeneticModelProblem aProblem) throws EvoCheckerException{
 		
-		if (aProblem.instantiator instanceof  EvoCheckerInstantiator)
-			this.instantiator 			= new EvoCheckerInstantiator((EvoCheckerInstantiator)aProblem.instantiator);
+		if (aProblem.modelInstantiator instanceof  EvoCheckerInstantiator)
+			this.modelInstantiator 			= new EvoCheckerInstantiator((EvoCheckerInstantiator)aProblem.modelInstantiator);
 		else
 			throw new EvoCheckerException("Invalid Instantiator inteface!");
 
-		this.genes 					= ((EvoCheckerInstantiator)instantiator).getGeneList(); 
+		this.genes 					= ((EvoCheckerInstantiator)modelInstantiator).getGeneList(); 
 										
 		
 		this.numberOfConstraints_ 	= aProblem.numberOfConstraints_;

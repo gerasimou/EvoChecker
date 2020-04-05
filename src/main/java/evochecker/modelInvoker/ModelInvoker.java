@@ -38,8 +38,6 @@ public class ModelInvoker implements IModelInvoker {
 	// not necessary first ones
 	@Override
 	public List<String> invoke(String model, String propertyFile, PrintWriter out, BufferedReader in, List<AbstractGene> genes) throws IOException {
-
-		
 		// TODO: need to modify to allow parametric model checking
 		String names[] = new String[genes.size()];
 		String lbs[] = new String[names.length]; // lower bounds
@@ -50,7 +48,7 @@ public class ModelInvoker implements IModelInvoker {
 			lbs[i] = g.getMinValue().toString();
 			ubs[i] = g.getMaxValue().toString();
 		}
-		out.print(model + "#" + propertyFile + "#" + names + "#" + lbs + "#" + ubs + "\nEND\n");
+		out.print(model + "#" + propertyFile + "#" + Arrays.toString(names) + "#" + Arrays.toString(lbs) + "#" + Arrays.toString(ubs) + "\nEND\n");
 		out.flush();
 
 		String line;
