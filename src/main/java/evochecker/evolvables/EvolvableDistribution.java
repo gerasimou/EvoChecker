@@ -3,7 +3,7 @@ package evochecker.evolvables;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EvolvableDistribution extends Evolvable {
+public class EvolvableDistribution extends Evolvable implements IStructuralEvolvable{
 	
 	private List<EvolvableDouble> evolvableDoubleList;
 	private int cardinality;
@@ -68,14 +68,22 @@ public class EvolvableDistribution extends Evolvable {
 	
 
 	@Override
-	public String getCommand(Object variable) {
+	public String getConcreteCommand(Object variable) {
 		StringBuilder str = new StringBuilder();
 		double[] transitionProb = (double[])variable;
 		for (int index=0; index<transitionProb.length; index++){
-			str.append(evolvableDoubleList.get(index).getCommand(transitionProb[index]));
+			str.append(evolvableDoubleList.get(index).getConcreteCommand(transitionProb[index]));
 		}
 		return str.toString();
 	}
 
-		
+	@Override
+	public String getParametricCommand() {
+		StringBuilder str = new StringBuilder();
+//		double[] transitionProb = (double[])variable;
+		for (int index=0; index<cardinality; index++){
+			str.append(evolvableDoubleList.get(index).getParametricCommand());
+		}
+		return str.toString();
+	}		
 }

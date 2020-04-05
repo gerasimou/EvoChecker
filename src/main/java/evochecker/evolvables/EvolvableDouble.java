@@ -17,7 +17,7 @@ package evochecker.evolvables;
  * @author sgerasimou
  *
  */
-public class EvolvableDouble extends EvolvableRange {
+public class EvolvableDouble extends EvolvableRange implements IStructuralEvolvable{
 	
 	/**
 	 * Class constructor
@@ -41,15 +41,24 @@ public class EvolvableDouble extends EvolvableRange {
 
 
 	/**
-	 * Get command 
+	 * Get concrete command 
 	 */
 	@Override
-	public String getCommand(Object variable) {
+	public String getConcreteCommand(Object variable) {
 		//change made to accommodate PrismPSY
 //		return "const double " + name +";";
 		return "const double " + name +" = "+ (double)variable  +";\n";
 	}
+
 	
+	/**
+	 * Get parametric command 
+	 */
+	@Override
+	public String getParametricCommand() {
+		return "const double " + name +";\n";
+	}
+
 	
 	public EvolvableDouble (EvolvableDouble anEvolvable){
 		this(anEvolvable.name, anEvolvable.minValue, anEvolvable.maxValue, anEvolvable.param);

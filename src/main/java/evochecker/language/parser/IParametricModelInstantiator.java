@@ -14,7 +14,6 @@ package evochecker.language.parser;
 
 import java.util.List;
 
-import evochecker.evolvables.Evolvable;
 import evochecker.genetic.genes.AbstractGene;
 
 
@@ -23,25 +22,14 @@ import evochecker.genetic.genes.AbstractGene;
  * @author sgerasimou
  *
  */
-public interface IModelInstantiator extends IParametricModelInstantiator{
+public interface IParametricModelInstantiator{
 	
 	
 	/**
-	 * Return a valid model instance
+	 * Return a valid <b>parametric</b> model instance
 	 * @param genes
 	 * @return
 	 */
-	public String getConcreteModel(List<AbstractGene> genes);
+	public String getParametricModel(List<AbstractGene> genes, List<AbstractGene> structGenes);	
 	
-	
-	/**
-	 * Return the name of properties file
-	 */
-	public String getPropertyFileName();	
-	
-	
-	public void createMapping();
-
-	
-	public List<Evolvable> getEvolvableList ();
 }

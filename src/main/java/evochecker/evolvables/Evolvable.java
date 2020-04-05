@@ -29,5 +29,6 @@ public abstract class Evolvable {
 		return (this.name +" ("+ this.identifier + paramStr +")"); 
 	}
 	
-	public abstract String getCommand(Object variable);
+	public abstract String getConcreteCommand(Object variable);
+
 }

@@ -61,7 +61,7 @@ public class EvolvableModuleAlternative extends EvolvableRange {
 	 * Get command
 	 */
 	@Override
-	public String getCommand(Object variable) {
+	public String getConcreteCommand(Object variable) {
 		int index = (int)variable;
 		return evolvableModuleList.get(index).getModuleString() + rewardStructureSpecific(index);
  	}

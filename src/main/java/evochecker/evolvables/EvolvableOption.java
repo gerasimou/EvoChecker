@@ -6,7 +6,7 @@ import java.util.List;
 
 import evochecker.exception.LanguageException;
 
-public class EvolvableOption extends Evolvable{
+public class EvolvableOption extends Evolvable implements IStructuralEvolvable{
 	
 	protected List<Number> optionsList;
 	protected VariableType type;
@@ -34,7 +34,24 @@ public class EvolvableOption extends Evolvable{
 	 * Get command
 	 */
 	@Override
-	public String getCommand(Object variable) {
+	public String getConcreteCommand(Object variable) {
+		try {
+			throw new LanguageException("EvolvableOption (" + this.getName() + ") currently unsupported ");
+		}
+		catch (LanguageException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+//		return "const " + VariableType.getVariableTypeLiteral(type) + " " + name +" = "+ variable  +";\n";
+		return  null;
+	}
+	
+	
+	/**
+	 * Get command
+	 */
+	@Override
+	public String getParametricCommand() {
 		try {
 			throw new LanguageException("EvolvableOption (" + this.getName() + ") currently unsupported ");
 		}

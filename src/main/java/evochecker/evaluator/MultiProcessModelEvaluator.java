@@ -24,7 +24,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
-import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.problem.GeneticModelProblem;
 import evochecker.genetic.problem.GeneticProblem;
 import jmetal.core.Problem;
@@ -105,7 +104,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 				}
 			}
 		}
-		catch (EvoCheckerException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

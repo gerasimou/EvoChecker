@@ -17,7 +17,7 @@ package evochecker.evolvables;
  * @author sgerasimou
  *
  */
-public class EvolvableInteger extends EvolvableRange{
+public class EvolvableInteger extends EvolvableRange implements IStructuralEvolvable{
 	
 	/**
 	 * Class constructor
@@ -44,8 +44,17 @@ public class EvolvableInteger extends EvolvableRange{
 	 * Get command
 	 */
 	@Override
-	public String getCommand(Object variable) {
+	public String getConcreteCommand(Object variable) {
 		return "const int " + name +" = "+ (int)variable  +";\n";
+	}
+	
+	
+	/**
+	 * Get parametric command 
+	 */
+	@Override
+	public String getParametricCommand() {
+		return "const int " + name +";\n";
 	}
 	
 	public EvolvableInteger (EvolvableInteger anEvolvable){

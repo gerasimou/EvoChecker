@@ -45,9 +45,7 @@ public class EvolvableModule extends EvolvableRange {
 	}
 	
 	@Override
-	public String getCommand(Object variable) {
+	public String getConcreteCommand(Object variable) {
 		return "//Not Implemented Yet";//const double " + name +" = "+ (double)variables[0]  +";";
 	}
-
-	
 }
