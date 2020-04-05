@@ -16,14 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import evochecker.evolvable.Evolvable;
-import evochecker.evolvable.EvolvableDistribution;
-import evochecker.evolvable.EvolvableDouble;
-import evochecker.evolvable.EvolvableInteger;
-import evochecker.evolvable.EvolvableModule;
-import evochecker.evolvable.EvolvableModuleAlternative;
-import evochecker.evolvable.EvolvableOption;
-import evochecker.evolvable.EvolvableRange;
+import evochecker.evolvables.Evolvable;
+import evochecker.evolvables.EvolvableDistribution;
+import evochecker.evolvables.EvolvableDouble;
+import evochecker.evolvables.EvolvableInteger;
+import evochecker.evolvables.EvolvableModule;
+import evochecker.evolvables.EvolvableModuleAlternative;
+import evochecker.evolvables.EvolvableOption;
+import evochecker.evolvables.EvolvableRange;
 import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.AlternativeModuleGene;
@@ -32,14 +32,14 @@ import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
 
 /**
- * Factory constructing the genotype of a proble
+ * Factory constructing the genotype of an evochecker construct
  * @author sgerasimou
  *
  */
 public class GenotypeFactory{
 	
 	/** Map between a gene and an evolvable element*/
-	private static Map<AbstractGene,Evolvable> elementsMap = new HashMap<AbstractGene, Evolvable>();
+	private static Map<AbstractGene,Evolvable> geneEvolvableMap = new HashMap<AbstractGene, Evolvable>();
 
 	/**
 	 * Create a list chromosome (or individual) as a sequence of genes
@@ -49,7 +49,7 @@ public class GenotypeFactory{
 		for (Evolvable evolvable : evolvableList){
 			AbstractGene gene = initialiseGene(evolvable);
 			genes.add(gene);
-			elementsMap.put(gene, evolvable);
+			geneEvolvableMap.put(gene, evolvable);
 		}
 			return genes;		
 	}
@@ -97,7 +97,7 @@ public class GenotypeFactory{
 	 * Get the generated pair of genes and evolvable elements
 	 * @return
 	 */
-	public static Map<AbstractGene, Evolvable> getMapping(){
-		return elementsMap;
+	public static Map<AbstractGene, Evolvable> getGeneEvolvableMap(){
+		return geneEvolvableMap;
 	}	
 }

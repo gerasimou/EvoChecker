@@ -1,3 +1,15 @@
+//==============================================================================
+//	
+ //	Copyright (c) 2015-
+//	Authors:
+//	* Simos Gerasimou (University of York)
+//  * Faisal Alhwikem (University of York)
+//	
+//------------------------------------------------------------------------------
+//	
+//	This file is part of EvoChecker.
+//	
+//==============================================================================
 package evochecker.properties;
 
 import java.util.ArrayList;
@@ -34,8 +46,8 @@ public class PropertyFactory {
 			
 			
 			int numProps = propsFile.getNumProperties();
-			for (int i=0; i<numProps; i++) {
-				parser.ast.Property prop = propsFile.getPropertyObject(i);
+			for (int index=0; index<numProps; index++) {
+				parser.ast.Property prop = propsFile.getPropertyObject(index);
 
 //				System.out.println(prop);
 				String comment = prop.getComment();
@@ -43,9 +55,9 @@ public class PropertyFactory {
 					String[] commentElements = comment.trim().split(",");
 					
 					if (commentElements[0].trim().toUpperCase().equals(OBJECTIVE))
-						objectivesList.add(createObjective(commentElements, prop.toString()));					
+						objectivesList.add(createObjective(commentElements, prop.toString(), index));					
 					else if (commentElements[0].trim().toUpperCase().equals(CONSTRAINT))
-						constaintsList.add(createConstraint(commentElements, prop.toString()));
+						constaintsList.add(createConstraint(commentElements, prop.toString(), index));
 					else 
 						throw new EvoCheckerException("Property " + prop + " is neither a constraint nor an objective "+ prop.getComment());
 				}
@@ -68,22 +80,22 @@ public class PropertyFactory {
 	}
  
 	
-	private static Objective createObjective(String[] objElements, String prop) throws EvoCheckerException {
+	private static Objective createObjective(String[] objElements, String prop, int index) throws EvoCheckerException {
 		
 		if (objElements.length != 2)
 			throw new EvoCheckerException("2 elements are required for specifying an objective (Objective, MAX|MIN), " 
 										   + objElements.length +" provided!");
 		
 		if (objElements[1].trim().toUpperCase().equals(MAX)) 
-				return new Objective(true, prop);
+				return new Objective(true, prop, index);
 		else if (objElements[1].trim().toUpperCase().equals(MIN))
-			return new Objective(false, prop);
+			return new Objective(false, prop, index);
 		else
 			throw new EvoCheckerException("MAX|MIN not specified for objective: " + prop);			
 	}
 	
 	
-	private static Constraint createConstraint(String[] constraintElements, String prop) throws EvoCheckerException {		
+	private static Constraint createConstraint(String[] constraintElements, String prop, int index) throws EvoCheckerException {		
 		if (constraintElements.length != 3)
 			throw new EvoCheckerException("3 elements are required for specifying a constraint (Constraint, MAX|MIN, Limit), " 
 					   + "Provided: " + Arrays.toString(constraintElements));
@@ -92,9 +104,9 @@ public class PropertyFactory {
 		String limit 	= constraintElements[2].trim().toUpperCase();
 		
 		if (maxMin.equals(MAX) && isDouble(limit) )
-				return new Constraint(true, Double.parseDouble(limit), prop);
+				return new Constraint(true, Double.parseDouble(limit), prop, index);
 		else  if (maxMin.equals(MIN) && isDouble(limit) )
-				return new Constraint(false, Double.parseDouble(limit), prop);
+				return new Constraint(false, Double.parseDouble(limit), prop, index);
 		else
 			throw new EvoCheckerException("Incorrect specification "+ Arrays.toString(constraintElements) +" for constraints: " + prop);
 			

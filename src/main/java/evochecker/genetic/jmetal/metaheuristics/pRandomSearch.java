@@ -3,6 +3,7 @@ package evochecker.genetic.jmetal.metaheuristics;
 import java.util.List;
 import java.util.Random;
 
+import evochecker.evaluator.IParallelEvaluator;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.core.Solution;

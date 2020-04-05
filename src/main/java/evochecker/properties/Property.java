@@ -1,5 +1,3 @@
-//==============================================================================
-//	
  //	Copyright (c) 2015-
 //	Authors:
 //	* Simos Gerasimou (University of York)
@@ -24,11 +22,16 @@ public abstract class Property {
 	protected boolean maximization;
 	
 	protected String expression;
+	
+	/** indicating its position in the properties file
+	 *  this is used later when evaluating the solutions **/
+	protected int index;
 			
 
-	public Property(boolean maximization, String expression){
+	public Property(boolean maximization, String expression, int index){
 		this.maximization 	= maximization;
 		this.expression		= expression;
+		this.index			= index;
 	}
 
 	
@@ -49,6 +52,11 @@ public abstract class Property {
 	
 	public String getExpression() {
 		return this.expression;
+	}
+	
+	
+	public int getIndex() {
+		return this.index;
 	}
 	
 	public abstract double evaluate (double result);// {return 0;};

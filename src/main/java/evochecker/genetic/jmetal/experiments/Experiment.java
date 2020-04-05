@@ -44,9 +44,9 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import evochecker.genetic.jmetal.experiments.util.RBoxplot;
-import evochecker.genetic.jmetal.experiments.util.RWilcoxon;
-import evochecker.genetic.jmetal.experiments.util.RunExperiment;
+import evochecker.experiments.util.RBoxplot;
+import evochecker.experiments.util.RWilcoxon;
+import evochecker.experiments.util.RunExperiment;
 
 /**
  * Abstract class representing jMetal experiments

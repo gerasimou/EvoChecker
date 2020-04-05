@@ -1,8 +1,9 @@
 //==============================================================================
 //	
-//	Copyright (c) 2015-
+ //	Copyright (c) 2015-
 //	Authors:
 //	* Simos Gerasimou (University of York)
+//  * Faisal Alhwikem (University of York)
 //	
 //------------------------------------------------------------------------------
 //	
@@ -17,24 +18,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
-import org.spg.language.parser.EvoCheckerInstantiator;
-import org.spg.language.parser.InstantiatorInterface;
-
+import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.FileUtil;
 import evochecker.auxiliary.Utility;
 import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
-import evochecker.genetic.genes.DistributionGene;
-import evochecker.genetic.jmetal.metaheuristics.MOCell_Settings;
-import evochecker.genetic.jmetal.metaheuristics.NSGAII_Settings;
-import evochecker.genetic.jmetal.metaheuristics.RandomSearch_Settings;
-import evochecker.genetic.jmetal.metaheuristics.SPEA2_Settings;
+import evochecker.genetic.jmetal.metaheuristics.settings.MOCell_Settings;
+import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
+import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
+import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
 import evochecker.genetic.problem.GeneticProblem;
+import evochecker.language.parser.EvoCheckerInstantiator;
+import evochecker.language.parser.IModelInstantiator;
 import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
 import jmetal.core.Algorithm;
@@ -43,6 +41,7 @@ import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
+
 
 /**
  * Main EvoChecker class
@@ -63,7 +62,7 @@ public class EvoChecker {
 	private List<AbstractGene> genes = new ArrayList<AbstractGene>();
 	
 	/** parser engine handler*/
-	private InstantiatorInterface parserEngine;
+	private IModelInstantiator modelInstantiator;
 
 	/** model filename*/
 	private String 		modelFilename;
@@ -110,7 +109,7 @@ public class EvoChecker {
 		
 		try {
 			//0) check configuration script
-			checkConfiguration();
+			ConfigurationChecker.checkConfiguration();
 
 			//1) initialise problem
 			initializeProblem();
@@ -153,13 +152,13 @@ public class EvoChecker {
 		problemName   		= Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
 
 		//2) parse model template
-		parserEngine 		= new EvoCheckerInstantiator(modelFilename, propertiesFilename);
+		modelInstantiator 		= new EvoCheckerInstantiator(modelFilename, propertiesFilename);
 
 		//3) create chromosome
-		genes				= GenotypeFactory.createChromosome(parserEngine.getEvolvableList());
+		genes				= GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList());
 
 		//4) create (gene,evolvable element) pairs
-		parserEngine.createMapping();
+		modelInstantiator.createMapping();
 		
 		//5) create properties list
 		//dummy code to enable parsing properties files when evolvables include an evolvable distribution
@@ -169,7 +168,7 @@ public class EvoChecker {
 //				gene.setAllele(new double[numOfOutcomes]);
 //			}
 //		}
-		String str = parserEngine.getValidModelInstance(genes);
+		String str = modelInstantiator.getConcreteModel(genes);
 		List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
 		objectivesList  = list.get(0);
 		constraintsList = list.get(1);
@@ -180,7 +179,7 @@ public class EvoChecker {
 			System.out.println("C: "+p.toString());
 
 		//6) instantiate the problem
-		problem = new GeneticProblem(genes, parserEngine, objectivesList, constraintsList, problemName);
+		problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName);
 	}	
 	
 	
@@ -310,94 +309,6 @@ public class EvoChecker {
 	 */
 	public String getParetoSetFileName() {
 		return paretoSetFile;
-	}
-
-	
-	/**
-	 * Check whether the experiment has been configured correctly 
-	 * @throws EvoCheckerException 
-	 */
-	private static void checkConfiguration() throws EvoCheckerException {
-		StringBuilder errors = new StringBuilder();
-		final String NAN = "NAN";
-		
-		//check algorithm
-		if (Utility.getProperty(Constants.ALGORITHM_KEYWORD, NAN).equals(NAN)) 
-			errors.append(Constants.ALGORITHM_KEYWORD + " not found in configuration script!\n");
-		else {
-			try {
-				Constants.ALGORITHM.valueOf(Utility.getProperty(Constants.ALGORITHM_KEYWORD, NAN));
-			} catch (IllegalArgumentException e) {
-				errors.append(e.getMessage());
-			}
-		}
-		
-		//check population size
-		if (Utility.getProperty(Constants.POPULATION_SIZE_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.POPULATION_SIZE_KEYWORD + " not found in configuration script!\n");
-
-		//check evaluations
-		if (Utility.getProperty(Constants.MAX_EVALUATIONS_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.MAX_EVALUATIONS_KEYWORD + " not found in configuration script!\n");
-
-		//check processors
-		if (Utility.getProperty(Constants.PROCESSORS_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.PROCESSORS_KEYWORD + " not found in configuration script!\n");
-
-		//check model file
-		if (Utility.getProperty(Constants.MODEL_FILE_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.MODEL_FILE_KEYWORD + " not found in configuration script!\n");
-
-		//check properties file
-		if (Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.PROPERTIES_FILE_KEYWORD + " not found in configuration script!\n");
-
-		//check problem name
-		if (Utility.getProperty(Constants.PROBLEM_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.PROBLEM_KEYWORD + " not found in configuration script!\n");
-
-		//check port
-		if (Utility.getProperty(Constants.INITIAL_PORT_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.INITIAL_PORT_KEYWORD + " not found in configuration script!\n");
-
-		//check jvm
-		if (Utility.getProperty(Constants.JVM_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.JVM_KEYWORD + " not found in configuration script!\n");
-
-		//check model checking engine
-		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN))
-			errors.append(Constants.MODEL_CHECKING_ENGINE + " not found in configuration script!\n");
-		else {
-			File engine = new File(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE));
-			if (!engine.exists())
-				errors.append(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE) + " does not exist!\n");
-		}
-			
-
-		if (errors.length()!=0)
-			throw new EvoCheckerException(errors.toString().split("\r\n|\r|\n").length +"\n"+ errors.toString());
-		else
-			System.out.println(getConfiguration());
-	}
-	
-	
-	/**
-	 * Print the current EvoChecker configuration
-	 * @return
-	 */
-	private static String getConfiguration() {
-		StringBuilder str = new StringBuilder();
-		
-		str.append("Configuration script\n");
-		str.append("==========================================\n");
-		
-		Properties props = Utility.getAllProperties();
-		for (Map.Entry<Object, Object> entry : props.entrySet()) {
-			str.append(entry.getKey() +" = "+ entry.getValue() +"\n");
-		}
-		str.append("==========================================\n");
-		
-		return str.toString();
 	}
 	
 	

@@ -90,9 +90,13 @@ public class Constants {
   /** Keyword for output file suffix*/
   public static final String OUTPUT_FILE_SUFFIX 		= "OUTPUT_FILE_SUFFIX";
   
-  /** Keyword for output file model checking engine*/
+  /** Keyword for model checking engine*/
   public static final String MODEL_CHECKING_ENGINE 	= "MODEL_CHECKING_ENGINE";
 
+  /** Keyword for libraries required for running the model checking engine*/
+  public static final String MODEL_CHECKING_ENGINE_LIBS_DIR = "MODEL_CHECKING_ENGINE_LIBS_DIRECTORY";
+
+  
   
   /** Integer REGEX*/
   public static  final String INTEGER_REGEX = "^\\d+$";

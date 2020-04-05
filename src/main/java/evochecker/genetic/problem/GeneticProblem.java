@@ -15,16 +15,13 @@ package evochecker.genetic.problem;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
-
-import org.spg.language.parser.InstantiatorInterface;
 
 import evochecker.exception.EvoCheckerException;
 //import org.apache.commons.lang.NotImplementedException;
 import evochecker.genetic.genes.AbstractGene;
+import evochecker.language.parser.IModelInstantiator;
 import evochecker.properties.Property;
 import jmetal.core.Solution;
 import jmetal.util.JMException;
@@ -36,7 +33,6 @@ public class GeneticProblem extends GeneticModelProblem {
 	public static synchronized int getEval() {
 		return eval;
 	}
-
 	
 	
 	/**
@@ -46,7 +42,7 @@ public class GeneticProblem extends GeneticModelProblem {
 	 * @param instantiator
 	 * @param numOfConstraints
 	 */
-	public GeneticProblem(List<AbstractGene> genes, InstantiatorInterface instantiator,
+	public GeneticProblem(List<AbstractGene> genes, IModelInstantiator instantiator,
 						  List<Property> objectivesList, List<Property> constraintsList, String problemName){
 		super(genes, instantiator, objectivesList, constraintsList, problemName);
 	}
@@ -71,24 +67,20 @@ public class GeneticProblem extends GeneticModelProblem {
 		this.populateGenesWithIntSolution(solution);
 
 		//Prepare params
-		String model = instantiator.getValidModelInstance(this.genes);
+		String model = instantiator.getConcreteModel(this.genes);
 //		System.out.println(model);
-		String propertyFile = instantiator.getPrismPropertyFileName();
+		String propertyFile = instantiator.getPropertyFileName();
 //		Utility.exportToFile("model.txt", model);
 
 		List<String> resultsList;
 		try {
-			resultsList = this.invokePrism(model, propertyFile, out, in);
+			resultsList = this.invokePrism(model, propertyFile, out, in);// 
 
 			for (int i = 0; i < numberOfObjectives_; i++) {
 				Property p = objectivesList.get(i);
-				double result;
-				if (p.isMaximization()) {
-					result = new BigDecimal(- Double.parseDouble(resultsList.get(i))).setScale(3, RoundingMode.HALF_DOWN).doubleValue();
-				}
-				else{
-					result = new BigDecimal(Double.parseDouble(resultsList.get(i))).setScale(3, RoundingMode.HALF_UP).doubleValue();
-				}
+				int index  = p.getIndex();
+				double value  = Double.parseDouble(resultsList.get(index));
+				double result = p.evaluate(value);
 				solution.setObjective(i, result);
 				System.out.print("FITNESS: "+ result +"\t");
 			}
@@ -117,7 +109,7 @@ public class GeneticProblem extends GeneticModelProblem {
 			throws IOException {
 //		System.out.println("Sending to PRISM: "+propertyFile);
 //		System.out.println("Sending to PRISM: "+model);
-		out.print(model + "@" + propertyFile + "\nEND\n");
+		out.print(model + "#" + propertyFile + "\nEND\n");
 		out.flush();
 
 		String line;
@@ -131,7 +123,7 @@ public class GeneticProblem extends GeneticModelProblem {
 			modelBuilder.append("\n");
 		} while (true);
 
-		String res[] = modelBuilder.toString().trim().split("@");
+		String res[] = modelBuilder.toString().trim().split("#");
 //		System.out.println("Received from PRISM: "+ modelBuilder.toString());
 		return Arrays.asList(res);
 	}
@@ -152,7 +144,7 @@ public class GeneticProblem extends GeneticModelProblem {
 			modelBuilder.append("\n");
 		} while (true);
 
-		String res[] = modelBuilder.toString().trim().split("@");
+		String res[] = modelBuilder.toString().trim().split("#");
 //		System.out.println("Received from PRISM: "+ modelBuilder.toString());
 		return Arrays.asList(res);
 	}

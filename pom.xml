@@ -49,9 +49,9 @@
 
 		<!-- JMetal 4.5 -->
 		<dependency>
-			<groupId>org.jmetal</groupId>
+			<groupId>org.uma</groupId>
 			<artifactId>jmetal</artifactId>
-			<version>4.5</version>
+			<version>4.5.2</version>
 		</dependency>		
 		
 	    <!--  PRISM model checker -->

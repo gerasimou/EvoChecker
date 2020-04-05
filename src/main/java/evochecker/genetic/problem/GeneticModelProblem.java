@@ -20,9 +20,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.spg.language.parser.EvoCheckerInstantiator;
-import org.spg.language.parser.InstantiatorInterface;
-
 import evochecker.exception.EvoCheckerException;
 //import org.apache.commons.lang.NotImplementedException;
 import evochecker.genetic.genes.AbstractGene;
@@ -33,6 +30,8 @@ import evochecker.genetic.genes.IntegerGene;
 import evochecker.genetic.jmetal.encoding.ArrayInt;
 import evochecker.genetic.jmetal.encoding.ArrayReal;
 import evochecker.genetic.jmetal.encoding.ArrayRealIntSolutionType;
+import evochecker.language.parser.EvoCheckerInstantiator;
+import evochecker.language.parser.IModelInstantiator;
 import evochecker.properties.Constraint;
 import evochecker.properties.Objective;
 import evochecker.properties.Property;
@@ -58,7 +57,7 @@ public abstract class GeneticModelProblem extends Problem {
 	protected List<Property> constraintsList;
 
 	/** Reference to the instantiator handler*/
-	protected InstantiatorInterface instantiator;
+	protected IModelInstantiator instantiator;
 	
 	/** Number of integer variables*/
 	private int intVariables;
@@ -74,7 +73,7 @@ public abstract class GeneticModelProblem extends Problem {
 	 * @param instantiator
 	 * @param numOfConstraints
 	 */
-	public GeneticModelProblem(List<AbstractGene> genes, InstantiatorInterface instantiator, 
+	public GeneticModelProblem(List<AbstractGene> genes, IModelInstantiator instantiator, 
 							   List<Property> objectivesList, List<Property> constraintsList, String problemName){
 		this.genes 					= genes;
 		this.instantiator 			= instantiator;
@@ -305,9 +304,10 @@ public abstract class GeneticModelProblem extends Problem {
 		double totalViolation 	  = 0;
 		int 	   violatedConstraints = 0;
 		for  (int i=0; i<numberOfConstraints_; i++) {
-			Property p 	= constraintsList.get(i);
-			int index	= numberOfObjectives_ + i;
-			double result =  new BigDecimal(Double.parseDouble(resultsList.get(index))).setScale(4, RoundingMode.HALF_DOWN).doubleValue();
+			Property p 	  = constraintsList.get(i);
+			int index	  = p.getIndex();//numberOfObjectives_ + i;
+			double value  = Double.parseDouble(resultsList.get(index));
+			double result =  new BigDecimal(value).setScale(4, RoundingMode.HALF_DOWN).doubleValue();
 
 			double constraint = p.evaluate(result); 
 			if (constraint !=0) {

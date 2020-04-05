@@ -1,6 +1,6 @@
 //==============================================================================
 //	
- //	Copyright (c) 2015-
+//	Copyright (c) 2015-
 //	Authors:
 //	* Simos Gerasimou (University of York)
 //	

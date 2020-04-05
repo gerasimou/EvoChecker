@@ -2,6 +2,7 @@ package evochecker.genetic.jmetal.metaheuristics;
 
 import java.util.List;
 
+import evochecker.evaluator.IParallelEvaluator;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
