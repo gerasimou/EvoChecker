@@ -11,10 +11,11 @@ P=? [ F "success" ]
 R{"cost"}=? [ F "done"]
 
 
+//constraint, max, 0.9
+P=? [ F "success" ]
+
 //objective, min
 R{"time"}=? [ F "done" ]
 
 
 
-//constraint, max, 0.9
-P=? [ F "success" ]

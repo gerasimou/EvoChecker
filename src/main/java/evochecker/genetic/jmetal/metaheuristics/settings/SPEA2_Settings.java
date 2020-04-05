@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import evochecker.auxiliary.Utility;
-import evochecker.evaluator.MultiProcessEvaluator;
+import evochecker.evaluator.MultiProcessModelEvaluator;
 import evochecker.genetic.jmetal.metaheuristics.pSPEA2;
 import evochecker.genetic.jmetal.operators.CrossoverFactory;
 import evochecker.genetic.jmetal.operators.MutationFactory;
@@ -96,7 +96,7 @@ public class SPEA2_Settings extends Settings {
     HashMap<String, Double>  parameters ; // Operator parameters
 
 	// Creating the algorithm
-	MultiProcessEvaluator evaluator = new MultiProcessEvaluator();
+	MultiProcessModelEvaluator evaluator = new MultiProcessModelEvaluator();
 	algorithm = new pSPEA2(problem_, evaluator); 
     
     // Creating the problem

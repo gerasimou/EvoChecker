@@ -35,7 +35,7 @@ import jmetal.core.Solution;
  * @author sgerasimou
  *
  */
-public class MultiProcessEvaluator implements IParallelEvaluator {
+public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	/** number of parallel executions (processes)*/
 	private int numberOfProcesses;
 
@@ -65,7 +65,7 @@ public class MultiProcessEvaluator implements IParallelEvaluator {
 	 * @param processes
 	 * @throws Exception 
 	 */
-	public MultiProcessEvaluator(){
+	public MultiProcessModelEvaluator(){
 		String processesNum = Utility.getProperty(Constants.PROCESSORS_KEYWORD);
 		if (processesNum!=null)
 			numberOfProcesses = Integer.parseInt(processesNum);

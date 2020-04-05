@@ -3,7 +3,7 @@ package evochecker.genetic.jmetal.metaheuristics.single;
 import java.util.HashMap;
 
 import evochecker.auxiliary.Utility;
-import evochecker.evaluator.MultiProcessEvaluator;
+import evochecker.evaluator.MultiProcessModelEvaluator;
 import evochecker.genetic.jmetal.operators.CrossoverFactory;
 import evochecker.genetic.jmetal.operators.MutationFactory;
 import evochecker.genetic.problem.GeneticProblemSingle;
@@ -62,7 +62,7 @@ public class SingleGA_Settings extends Settings{
 		HashMap<String, Double> parameters; // Operator parameters
 
 		//Create algorithm and parallel objects
-		MultiProcessEvaluator evaluator = new MultiProcessEvaluator();
+		MultiProcessModelEvaluator evaluator = new MultiProcessModelEvaluator();
 		algorithm = new pgGA(problem_, evaluator); //pNSGAII(problem_, evaluator);
 
 		// Algorithm parameters

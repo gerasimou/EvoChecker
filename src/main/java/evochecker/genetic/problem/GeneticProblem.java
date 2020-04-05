@@ -15,7 +15,6 @@ package evochecker.genetic.problem;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.List;
 
 import evochecker.exception.EvoCheckerException;
@@ -29,11 +28,7 @@ import jmetal.util.JMException;
 public class GeneticProblem extends GeneticModelProblem {
 
 	private static final long serialVersionUID = -2679872853510614319L;
-	protected static  int eval = 0;
-	public static synchronized int getEval() {
-		return eval;
-	}
-	
+
 	
 	/**
 	 * Class constructor: create a new Genetic Problem instance
@@ -52,6 +47,7 @@ public class GeneticProblem extends GeneticModelProblem {
 		super((GeneticModelProblem)aProblem);
 	}
 
+	
 	/** 
 	 * Evaluate 
 	 * @param solution
@@ -67,15 +63,13 @@ public class GeneticProblem extends GeneticModelProblem {
 		this.populateGenesWithIntSolution(solution);
 
 		//Prepare params
-		String model = instantiator.getConcreteModel(this.genes);
-//		System.out.println(model);
+		String model 		= instantiator.getConcreteModel(this.genes);
 		String propertyFile = instantiator.getPropertyFileName();
-//		Utility.exportToFile("model.txt", model);
-
-		List<String> resultsList;
+		
 		try {
-			resultsList = this.invokePrism(model, propertyFile, out, in);// 
+			List<String> resultsList = modelInvoker.invoke(model, propertyFile, out, in);
 
+			//evaluate constraints
 			for (int i = 0; i < numberOfObjectives_; i++) {
 				Property p = objectivesList.get(i);
 				int index  = p.getIndex();
@@ -84,70 +78,12 @@ public class GeneticProblem extends GeneticModelProblem {
 				solution.setObjective(i, result);
 				System.out.print("FITNESS: "+ result +"\t");
 			}
-			
-			if (numberOfConstraints_>0)
-				this.evaluateConstraints(solution, resultsList);
-			
-			
+
+			//evaluate constraints
+			this.evaluateConstraints(solution, resultsList);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println();
-	}
-
-
-	/**
-	 * Prism invocation method
-	 * @param model
-	 * @param propertyFile
-	 * @param out
-	 * @param in
-	 * @return
-	 * @throws IOException
-	 */
-	protected List<String> invokePrism(String model, String propertyFile, PrintWriter out, BufferedReader in)
-			throws IOException {
-//		System.out.println("Sending to PRISM: "+propertyFile);
-//		System.out.println("Sending to PRISM: "+model);
-		out.print(model + "#" + propertyFile + "\nEND\n");
-		out.flush();
-
-		String line;
-		StringBuilder modelBuilder = new StringBuilder();
-		do {
-//			System.out.println("Waiting PRISM");
-			line = in.readLine();
-			if (line.endsWith("END"))
-				break;
-			modelBuilder.append(line);
-			modelBuilder.append("\n");
-		} while (true);
-
-		String res[] = modelBuilder.toString().trim().split("#");
-//		System.out.println("Received from PRISM: "+ modelBuilder.toString());
-		return Arrays.asList(res);
-	}
-	
-	
-	protected List<String> invokePrism(BufferedReader in, PrintWriter out, String output) throws IOException {
-		out.print(output);
-		out.flush();
-
-		String line;
-		StringBuilder modelBuilder = new StringBuilder();
-		do {
-//			System.out.println("Waiting PRISM");
-			line = in.readLine();
-			if (line.endsWith("END"))
-				break;
-			modelBuilder.append(line);
-			modelBuilder.append("\n");
-		} while (true);
-
-		String res[] = modelBuilder.toString().trim().split("#");
-//		System.out.println("Received from PRISM: "+ modelBuilder.toString());
-		return Arrays.asList(res);
-	}
-	
-	
+	}	
 }

@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import evochecker.auxiliary.Utility;
-import evochecker.evaluator.MultiProcessEvaluator;
+import evochecker.evaluator.MultiProcessModelEvaluator;
 import evochecker.genetic.jmetal.metaheuristics.pNSGAII;
 import evochecker.genetic.jmetal.operators.CrossoverFactory;
 import evochecker.genetic.jmetal.operators.MutationFactory;
@@ -84,7 +84,7 @@ public class NSGAII_Settings extends Settings {
 		HashMap<String, Double> parameters; // Operator parameters
 
 		// Creating the algorithm. There are two choices: NSGAII and its steady-state variant ssNSGAII
-		MultiProcessEvaluator evaluator = new MultiProcessEvaluator();
+		MultiProcessModelEvaluator evaluator = new MultiProcessModelEvaluator();
 		algorithm = new pNSGAII(problem_, evaluator);
 		// algorithm = new ssNSGAII(problem_) ;
 

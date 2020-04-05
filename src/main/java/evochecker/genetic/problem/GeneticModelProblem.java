@@ -32,6 +32,8 @@ import evochecker.genetic.jmetal.encoding.ArrayReal;
 import evochecker.genetic.jmetal.encoding.ArrayRealIntSolutionType;
 import evochecker.language.parser.EvoCheckerInstantiator;
 import evochecker.language.parser.IModelInstantiator;
+import evochecker.modelInvoker.IModelInvoker;
+import evochecker.modelInvoker.ModelInvoker;
 import evochecker.properties.Constraint;
 import evochecker.properties.Objective;
 import evochecker.properties.Property;
@@ -56,8 +58,11 @@ public abstract class GeneticModelProblem extends Problem {
 	protected List<Property> objectivesList;
 	protected List<Property> constraintsList;
 
-	/** Reference to the instantiator handler*/
+	/** Reference to the instantiator instance*/
 	protected IModelInstantiator instantiator;
+	
+	/** Reference to the model invokers instance*/
+	protected IModelInvoker modelInvoker;
 	
 	/** Number of integer variables*/
 	private int intVariables;
@@ -80,9 +85,11 @@ public abstract class GeneticModelProblem extends Problem {
 		this.numberOfConstraints_ 	= constraintsList.size();
 		this.numberOfObjectives_ 	= objectivesList.size();
 		this.objectivesList			= objectivesList;
-		this.constraintsList			= constraintsList;
+		this.constraintsList		= constraintsList;
 		this.problemName_			= problemName;
 		this.initializeLimits();	
+		
+		this.modelInvoker = new ModelInvoker();//this is a blackbox so no need to have a case here
 	}
 		
 	
@@ -282,18 +289,6 @@ public abstract class GeneticModelProblem extends Problem {
 	 */
 	public abstract void parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException;
 
-	 
-	/**
-	 * Prism invocation method
-	 * @param model
-	 * @param propertyFile
-	 * @param out
-	 * @param in
-	 * @return
-	 * @throws IOException
-	 */
-	 protected abstract List<String> invokePrism(BufferedReader in, PrintWriter out, String output) throws IOException, EvoCheckerException;
-
 
 	 /** 
 	  * Evaluates the constraint overhead of a solution 
@@ -321,6 +316,11 @@ public abstract class GeneticModelProblem extends Problem {
 	}
 
 	
+	/**
+	 * Copy constructor
+	 * @param aProblem
+	 * @throws EvoCheckerException
+	 */
 	public GeneticModelProblem(GeneticModelProblem aProblem) throws EvoCheckerException{
 		
 		if (aProblem.instantiator instanceof  EvoCheckerInstantiator)
@@ -349,5 +349,7 @@ public abstract class GeneticModelProblem extends Problem {
 		
 		this.problemName_			= aProblem.problemName_;
 		this.initializeLimits();
+		
+		this.modelInvoker			= new ModelInvoker (modelInvoker);
 	}
 }

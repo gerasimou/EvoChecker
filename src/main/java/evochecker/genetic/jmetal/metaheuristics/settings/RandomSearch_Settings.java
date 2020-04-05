@@ -21,7 +21,7 @@
 package evochecker.genetic.jmetal.metaheuristics.settings;
 
 import evochecker.auxiliary.Utility;
-import evochecker.evaluator.MultiProcessEvaluator;
+import evochecker.evaluator.MultiProcessModelEvaluator;
 import evochecker.genetic.jmetal.metaheuristics.pRandomSearch;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
@@ -57,7 +57,7 @@ public class RandomSearch_Settings extends Settings{
 	@Override
 	public Algorithm configure() throws JMException {
 		//construct the parallel evaluator
-		MultiProcessEvaluator mpPrismEvaluator = new MultiProcessEvaluator();
+		MultiProcessModelEvaluator mpPrismEvaluator = new MultiProcessModelEvaluator();
 		
 		//create a new algorithm object
 		Algorithm algorithm = new pRandomSearch(problem_, mpPrismEvaluator);

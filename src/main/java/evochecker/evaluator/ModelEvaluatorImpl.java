@@ -18,7 +18,7 @@ public class ModelEvaluatorImpl {
 		if (modelCheckerEngine != null) {
 			switch (modelCheckerEngine) {
 			case "prism":
-				return new MultiProcessEvaluator();
+				return new MultiProcessModelEvaluator();
 			}
 		}
 		throw new IllegalArgumentException("Unspecified model checker engine");
