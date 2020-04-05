@@ -1,0 +1,21 @@
+label "success" = state=15;
+label "done" = state=5 |state=15;
+
+
+
+//objective, max
+P=? [ F "success" ]
+
+
+//objective, min
+R{"cost"}=? [ F "done"]
+
+
+//constraint, max, 0.9
+P=? [ F "success" ]
+
+//objective, min
+R{"time"}=? [ F "done" ]
+
+
+
