@@ -6,4 +6,4 @@ P=? [ F s=7 & d=5 ]
 P=? [ F s=7 & d=4 ]
 
 //Objective, max
-P=? [ F s=7 & d=3 ]
+//P=? [ F s=7 & d=3 ]

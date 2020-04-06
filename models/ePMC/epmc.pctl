@@ -1,0 +1,7 @@
+label "success" = (s=14);
+label "fail" = (s=13);
+label "op3" = (s=9|s=10);
+label "done" = (s=13|s=14);
+
+//objective, max
+P=? [ F s=14]
