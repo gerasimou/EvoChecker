@@ -273,8 +273,8 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			
 			ProcessBuilder pb = new ProcessBuilder(params);
 			Map<String, String> env = pb.environment();
-			env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));
-			env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));
+			env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR)); //OSX
+			env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));   //Linux
 
 			boolean alive = false;
 			do {

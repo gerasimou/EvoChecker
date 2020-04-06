@@ -80,7 +80,6 @@ public class EvolvableDistribution extends Evolvable implements IStructuralEvolv
 	@Override
 	public String getParametricCommand() {
 		StringBuilder str = new StringBuilder();
-//		double[] transitionProb = (double[])variable;
 		for (int index=0; index<cardinality; index++){
 			str.append(evolvableDoubleList.get(index).getParametricCommand());
 		}

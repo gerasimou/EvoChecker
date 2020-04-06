@@ -29,7 +29,7 @@ public class PropertyFactory {
 	
 	private final static String OBJECTIVE 	= "OBJECTIVE";
 	private final static String CONSTRAINT 	= "CONSTRAINT";
-	private final static String MAX 			= "MAX";
+	private final static String MAX 		= "MAX";
 	private final static String MIN		 	= "MIN";
 	
 	
