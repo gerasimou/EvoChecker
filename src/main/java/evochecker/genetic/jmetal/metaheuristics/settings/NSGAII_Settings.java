@@ -63,8 +63,19 @@ public class NSGAII_Settings extends Settings {
 
 		realCrossoverProbability_ 	= 0.9;
 		intCrossoverProbability_ 	= 0.9;//0.5;
-		realMutationProbability_ 	= 1.0 / ((GeneticProblem)problem_).getNumOfRealVariables();//  0.4;
-		intMutationProbability_ 	= 1.0 / ((GeneticProblem)problem_).getNumOfIntVariables();//0.4;
+		
+		int realVars = ((GeneticProblem)problem_).getNumOfRealVariables();
+		if (realVars > 0)
+			realMutationProbability_ 	= 1.0 / realVars;
+		else 
+			realMutationProbability_ 	=0;
+		
+		
+		int intVars = ((GeneticProblem)problem_).getNumOfIntVariables();
+		if (intVars > 0)
+			intMutationProbability_ 	= 1.0 / intVars;
+		else 
+			intMutationProbability_	= 0;
 		distributionIndex_ 			= 20;
 	} // NSGAII_Settings
 

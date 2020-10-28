@@ -61,14 +61,6 @@
 			<version>4.5.2</version>
 		</dependency>		
 		
-	    <!--  PRISM model checker -->
-<!-- 		<dependency>
-			<groupId>org.modelChecker.prism</groupId>
-			<artifactId>prism</artifactId>
-			<version>4.5</version>
-			<type>jar</type>
-		</dependency>
- -->
 		<dependency>
 			<groupId>org.modelChecker</groupId>
 			<artifactId>PrismAPI</artifactId>
@@ -103,10 +95,10 @@
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
-					<excludes>
+<!-- 					<excludes>
 						<exclude>**/evochecker/_test/*</exclude>
 					</excludes>
-				</configuration>
+ -->				</configuration>
 				
 			</plugin>
 			
