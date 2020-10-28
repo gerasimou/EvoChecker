@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import evochecker.auxiliary.ConfigurationChecker;
@@ -33,6 +34,7 @@ import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
 import evochecker.genetic.problem.GeneticProblem;
 import evochecker.language.parser.EvoCheckerInstantiator;
 import evochecker.language.parser.IModelInstantiator;
+import evochecker.plotting.PlotFactory;
 import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
 import jmetal.core.Algorithm;
@@ -266,7 +268,7 @@ public class EvoChecker {
 		System.out.println("SOLUTIONS: \t" + solutions.size());
 
 		String identifier	= problemName +"_"+ algorithmName +"_"+ Utility.getTimeStamp();
-		String frontFile		= outputDir + identifier + "_Front";
+		String frontFile	= outputDir + identifier + "_Front";
 		String setFile		= outputDir  + identifier + "_Set";
 		
 		//generate and save headers
@@ -275,10 +277,15 @@ public class EvoChecker {
 			setHeader.append(gene.getName() +" ");
 		FileUtil.saveToFile(setFile, setHeader +"\n", true);
 		StringBuilder frontHeader = new StringBuilder();
-		for (Property p : objectivesList) {
-			frontHeader.append(p.getExpression() +"\t");
+		Iterator<Property> it = objectivesList.iterator();
+		while (it.hasNext()) {
+//		for (Property p : objectivesList) {
+			Property p = it.next();
+			frontHeader.append(p.getExpression());
+			if (it.hasNext())
+				frontHeader.append("\t");
 		}
-		FileUtil.saveToFile(frontFile, frontHeader +"\n", true);
+		FileUtil.saveToFile(frontFile, frontHeader.toString(), true);
 		
 		List<Solution> solutionList = new ArrayList<Solution>();
 		for (int i=0; i<solutions.size(); i++)
@@ -291,7 +298,14 @@ public class EvoChecker {
 		paretoSetFile	 = setFile; 
 //		solutions.printObjectivesToFile(frontFile);
 //		solutions.printVariablesToFile(setFile);
+		
+		
+		//show Pareto front plot if specified in configuration file
+		boolean plotParetoFront = Boolean.parseBoolean(Utility.getProperty(Constants.PLOT_PARETO_FRONT));
+		if (plotParetoFront)
+			PlotFactory.plotParetoFront(frontFile, identifier, objectivesList.size());
 	}
+
 
 	
 	/**

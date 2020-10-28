@@ -34,10 +34,10 @@ public class Constraint extends Property {
 	 */
 	@Override
 	public double evaluate(double result) {
-		if ((maximization) &&
+		if ((!maximization) &&
 			(result < constraint))
 				return ((result-constraint) * VIOLATION_CONSTANT);
-		else if ( (!maximization) &&
+		else if ( (maximization) &&
 				(result > constraint))
 				return ((constraint-result) * VIOLATION_CONSTANT);
 		else

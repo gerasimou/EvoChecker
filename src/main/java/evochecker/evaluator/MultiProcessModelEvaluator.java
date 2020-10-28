@@ -100,7 +100,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			problems = new Problem[numberOfProcesses];
 			if (problem instanceof GeneticProblem){
 				for (int i=0; i<numberOfProcesses; i++){
-					problems[i] = new GeneticProblem((GeneticProblem) problem);
+					problems[i] = problem;//new GeneticProblem((GeneticProblem) problem);
 				}
 			}
 		}
@@ -265,7 +265,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 
 		public Connection(int portNum) throws Exception {
 			String params[] = new String[4];
-			params[0] = Utility.getProperty(Constants.JVM_KEYWORD);
+			params[0] = Utility.getProperty(Constants.JAVA_KEYWORD);
 			params[1] = "-jar";
 			params[2] = Utility.getProperty(Constants.MODEL_CHECKING_ENGINE);
 			params[3] = String.valueOf(portNum);

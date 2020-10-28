@@ -1,15 +1,10 @@
 package evochecker.auxiliary;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -91,9 +86,11 @@ public class Utility {
 	    	  StringBuilder objString = new StringBuilder();
 	    	    for (int i = 0; i < numOfObjectives; i++) {
 	    	    		if (objectivesList.get(i).isMaximization())
-	    	    			objString.append((solution.getObjective(i)*-1) + " ");
+	    	    			objString.append(-(solution.getObjective(i)));
 	    	    		else
-	    	    			objString.append(solution.getObjective(i) +" ");
+	    	    			objString.append(solution.getObjective(i));
+	    	    		if (i<numOfObjectives-1)
+	    	    			objString.append("\t");
 	    	    }
 	        bw.write(objString.toString());	    	  
 	        bw.newLine();
@@ -122,7 +119,7 @@ public class Utility {
 	      int numberOfVariables = solutions.get(0).getDecisionVariables().length ;
 	      for (Solution aSolutionsList_ : solutions) {
 	    	  	for (int j = 0; j < numberOfVariables; j++)
-	    	  		bw.write(aSolutionsList_.getDecisionVariables()[j].toString() + " ");
+	    	  		bw.write(aSolutionsList_.getDecisionVariables()[j].toString() + "\t");
 	    	  	bw.newLine();
 	      }
 	      bw.close();

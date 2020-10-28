@@ -56,8 +56,8 @@ public class ConfigurationChecker {
 			errors.append(Constants.INITIAL_PORT_KEYWORD + " not found in configuration script!\n");
 
 		//check jvm
-		if (Utility.getProperty(Constants.JVM_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.JVM_KEYWORD + " not found in configuration script!\n");
+		if (Utility.getProperty(Constants.JAVA_KEYWORD, NAN).equals(NAN))
+			errors.append(Constants.JAVA_KEYWORD + " not found in configuration script!\n");
 
 		//check model checking engine
 		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN))

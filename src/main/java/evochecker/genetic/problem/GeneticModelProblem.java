@@ -19,6 +19,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.Utility;
 import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.AlternativeModuleGene;
@@ -69,6 +71,9 @@ public abstract class GeneticModelProblem extends Problem {
 	private int realVariables;
 
 	
+	/** Indicating whether output should be procuded in the console/terminal or not **/
+	protected boolean verbose;
+	
 	/**
 	 * Class constructor: create a new Genetic Problem instance
 	 * @param genes
@@ -88,6 +93,8 @@ public abstract class GeneticModelProblem extends Problem {
 		this.initializeLimits();	
 		
 		this.modelInvoker = new ModelInvoker();//this is a blackbox so no need to have a case here
+		
+		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, "false"));
 	}
 		
 	
@@ -302,7 +309,8 @@ public abstract class GeneticModelProblem extends Problem {
 			double value  = Double.parseDouble(resultsList.get(index));
 			double result =  new BigDecimal(value).setScale(4, RoundingMode.HALF_DOWN).doubleValue();
 
-			System.out.print("C" +(i+1) + "):"+ result +"\t");
+			if (verbose)
+				System.out.print("C" +(i+1) + "):"+ result +"\t");
 
 			double constraint = p.evaluate(result); 
 			if (constraint !=0) {

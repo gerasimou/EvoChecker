@@ -64,7 +64,7 @@ public class Constants {
   public static final String INITIAL_PORT_KEYWORD 	= "INIT_PORT";
 
   /** Keyword for initial JVM*/
-  public static final String JVM_KEYWORD 			= "JVM";
+  public static final String JAVA_KEYWORD 			= "JAVA";
   
   /** Keyword for interval */
   public static final String INTERVAL_KEYWORD 		= "INTERVAL";
@@ -96,6 +96,11 @@ public class Constants {
   /** Keyword for libraries required for running the model checking engine*/
   public static final String MODEL_CHECKING_ENGINE_LIBS_DIR = "MODEL_CHECKING_ENGINE_LIBS_DIRECTORY";
 
+  /** Keyword indicating whether text will be produced during exeecution */
+  public static final String VERBOSE = "VERBOSE";
+
+  /** Keyword indicating whether the plot of Pareto front will be produced once execution terminates */
+  public static final String PLOT_PARETO_FRONT = "PLOT_PARETO_FRONT";
   
   
   /** Integer REGEX*/

@@ -51,7 +51,10 @@ public class GenotypeFactory{
 			genes.add(gene);
 			geneEvolvableMap.put(gene, evolvable);
 		}
-			return genes;		
+		if (genes.size()==0)
+			throw new EvoCheckerException("The moodel contains no evovlables. EvoChecker stops");
+
+		return genes;		
 	}
 		
 		
