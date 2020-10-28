@@ -160,8 +160,8 @@ public class EvoChecker {
 	 */
 	private void initializeProblem() throws Exception {
 		//1 Get model and properties filenames
-		modelFilename 		= Utility.getProperty(Constants.MODEL_FILE_KEYWORD);
-		propertiesFilename	= Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD);
+		modelFilename 		= new File(Utility.getProperty(Constants.MODEL_FILE_KEYWORD)).getAbsolutePath();
+		propertiesFilename	= new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD)).getAbsolutePath();
 		algorithmName		= Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
 		problemName   		= Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
 
