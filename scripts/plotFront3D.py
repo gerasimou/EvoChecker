@@ -24,3 +24,5 @@ ax.set_ylabel(f.columns[1])
 ax.set_zlabel(f.columns[2])
 
 plt.show()
+
+print("Done")

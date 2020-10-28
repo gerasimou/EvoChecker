@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.Utility;
 import evochecker.exception.EvoCheckerException;
 
 public class PlotFactory {
@@ -15,6 +17,7 @@ public class PlotFactory {
 	
 	public static void plotParetoFront(String frontFile, String identifier, int objectivesNum) {
 		try {
+			System.out.println("\nGenerating Pareto Front plot");
 			if (objectivesNum == 2)
 					plotParetoFront(frontFile, true);
 			else if (objectivesNum == 3)
@@ -37,7 +40,9 @@ public class PlotFactory {
 		else
 			scriptFile = "scripts/plotFront3D.py";
 		
-	    ProcessBuilder processBuilder = new ProcessBuilder("/usr/local/bin/python3", scriptFile , paretoFrontPath);
+		String python3Dir = Utility.getProperty(Constants.PYTHON3_DIRECTORY);
+		
+	    ProcessBuilder processBuilder = new ProcessBuilder(python3Dir, scriptFile , paretoFrontPath);
 	    processBuilder.redirectErrorStream(true);
 	 
 	    Process process = processBuilder.start();

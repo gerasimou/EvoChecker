@@ -18,8 +18,12 @@ import jmetal.util.Configuration;
 
 public class Utility {
 	
-	private static String fileName = "resources/config.properties";
+	private static String fileName;
 	private static Properties properties;
+	
+	public static void setPropertiesFile (String filename) {
+		fileName = filename;
+	}
 	
 	private static void loadPropertiesInstance(){
 		try {

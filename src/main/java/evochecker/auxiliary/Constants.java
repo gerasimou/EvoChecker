@@ -96,12 +96,15 @@ public class Constants {
   /** Keyword for libraries required for running the model checking engine*/
   public static final String MODEL_CHECKING_ENGINE_LIBS_DIR = "MODEL_CHECKING_ENGINE_LIBS_DIRECTORY";
 
-  /** Keyword indicating whether text will be produced during exeecution */
+  /** Keyword indicating whether text will be produced during execution */
   public static final String VERBOSE = "VERBOSE";
 
   /** Keyword indicating whether the plot of Pareto front will be produced once execution terminates */
   public static final String PLOT_PARETO_FRONT = "PLOT_PARETO_FRONT";
-  
+
+  /** Keyword for python3 directory */
+  public static final String PYTHON3_DIRECTORY = "PYTHON3_DIRECTORY";
+
   
   /** Integer REGEX*/
   public static  final String INTEGER_REGEX = "^\\d+$";

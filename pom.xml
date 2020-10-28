@@ -99,11 +99,15 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
+					<excludes>
+						<exclude>**/evochecker/_test/*</exclude>
+					</excludes>
 				</configuration>
+				
 			</plugin>
 			
 			
@@ -138,10 +142,10 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory> ${basedir}/target/lib</outputDirectory>
+							<outputDirectory> ${basedir}/target/libs/runtime</outputDirectory>
 							<resources>
 								<resource>
-									<directory>lib</directory>
+									<directory>libs/runtime</directory>
 								</resource>
 							</resources>
 						</configuration>
@@ -155,12 +159,14 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory> ${basedir}/target</outputDirectory>
+							<outputDirectory> ${basedir}/target/scripts</outputDirectory>
 							<resources>
 								<resource>
 									<directory>scripts</directory>
 									<includes>
-										<include>launch.sh</include>
+										<!-- <include>launch.sh</include> -->
+										<include>plotFront2D.py</include>
+										<include>plotFront3D.py</include>
 									</includes>
 								</resource>
 							</resources>
@@ -263,18 +269,24 @@
 			<!-- Clean plugin  -->
 			<plugin>
 			    <artifactId>maven-clean-plugin</artifactId>
-			    <version>2.6.1</version>
+			    <version>3.1.0</version>
 			    <configuration>
 				      <filesets>
 					        <fileset>
 						          <directory>${basedir}</directory>
 						          <includes>
-						            <include>output_Prism.txt</include>
-						            <include>FUN*</include>
-						            <include>VAR</include>
+						            <include>Server*</include>
+						            <include>out*</include>
 						          </includes>
 					          <followSymlinks>false</followSymlinks>
 					        </fileset>
+   					        <fileset>
+ 					      	      <directory>${basedir}/target</directory>
+						          <includes>
+						            <include>libs*</include>
+						            <include>plotFront*</include>
+						          </includes>
+   					        </fileset>
 				      </filesets>
 			    </configuration>
 		  </plugin>

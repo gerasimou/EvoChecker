@@ -101,8 +101,20 @@ public class EvoChecker {
 	 */	
 	public static void main(String[] args) throws EvoCheckerException {
 		//instantiate evochecker
-		EvoChecker evoChecker = new EvoChecker();
-		evoChecker.start();
+		EvoChecker ec = new EvoChecker();
+		
+		if (args.length > 0)
+			ec.setConfigurationFile(args[0]);
+		else 
+			//use default config file
+			ec.setConfigurationFile("resources/config.properties");
+		
+		ec.start();
+	}
+	
+	
+	public void setConfigurationFile(String configFile) {
+		Utility.setPropertiesFile(configFile);
 	}
 
 	
@@ -175,11 +187,13 @@ public class EvoChecker {
 		objectivesList  = list.get(0);
 		constraintsList = list.get(1);
 		
+		System.out.println("Objectives (O)/Constraints(C)");
 		for (Property p : objectivesList)
-			System.out.println("O: "+p.toString());
+			System.out.print("O: "+p.toString());
 		for (Property p : constraintsList)
-			System.out.println("C: "+p.toString());
-
+			System.out.print("C: "+p.toString());
+		System.out.println();
+		
 		//6) instantiate the problem
 		problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName);
 	}	
@@ -244,6 +258,7 @@ public class EvoChecker {
 	 */
 	private SolutionSet execute() throws Exception{
 		//Execute the Algorithm
+		System.out.println("Starting  evolution");
 		SolutionSet solutions = algorithm.execute();
 		
 		return solutions;
@@ -298,6 +313,10 @@ public class EvoChecker {
 		paretoSetFile	 = setFile; 
 //		solutions.printObjectivesToFile(frontFile);
 //		solutions.printVariablesToFile(setFile);
+		
+		System.out.println("\nPareto Front and Pareto set saved at: " + outputDir);
+		System.out.println("Pareto Front: " + frontFile);
+		System.out.println("Pareto Set: "   + setFile);
 		
 		
 		//show Pareto front plot if specified in configuration file

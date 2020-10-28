@@ -94,7 +94,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	 * Initialise evaluator 
 	 */
 	public void startEvaluator(Problem problem) {
-		System.out.println("Cores: " + numberOfProcesses);
+		//System.out.println("Cores: " + numberOfProcesses);
 
 		try {		
 			problems = new Problem[numberOfProcesses];
