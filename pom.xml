@@ -95,10 +95,10 @@
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
-<!-- 					<excludes>
+ 					<excludes>
 						<exclude>**/evochecker/_test/*</exclude>
 					</excludes>
- -->				</configuration>
+				</configuration>
 				
 			</plugin>
 			
@@ -121,6 +121,14 @@
 							<resources>
 								<resource>
 									<directory>models</directory>
+									<excludes>
+										<exclude>**/COPE/**</exclude>
+										<exclude>**/dieParam/**</exclude>
+										<exclude>**/DPMParam/**</exclude>										
+										<exclude>**/ePMC/**</exclude>										
+										<exclude>**/FXParam/**</exclude>										
+										<exclude>**/Hadoop/**</exclude>										
+									</excludes>
 								</resource>
 							</resources>
 						</configuration>
@@ -134,10 +142,13 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory> ${basedir}/target/libs/runtime</outputDirectory>
+							<outputDirectory>${basedir}/target/libs/</outputDirectory>
 							<resources>
 								<resource>
-									<directory>libs/runtime</directory>
+									<directory>libs</directory>
+									<excludes>
+										<exclude>**/org/**</exclude>
+									</excludes>
 								</resource>
 							</resources>
 						</configuration>
