@@ -17,3 +17,8 @@ This branch shows how you can use EvoChecker as a Jar by specifying a configurat
     ec.start();		
     
 The [EvoCheckerRunner class](https://github.com/gerasimou/EvoChecker/blob/evoCheckerJar/src/examples/EvoCheckerRunner.java) in the examples directory provides the complete source-code.
+
+---
+--
+
+Should you have any comments, suggestions or questions, please email simos.gerasimou-at-.york.ac.uk
