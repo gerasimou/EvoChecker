@@ -2,6 +2,7 @@ package evochecker.auxiliary;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -179,6 +180,26 @@ public class Utility {
 		  return out;			 
 	  }
 	  
+	  
+	  public static String runtimeLibsDirSpecified() throws EvoCheckerException {
+		  String os = getOperatingSystem();
+		  String variable = null;
+		  
+		  if (os.contains("mac")) {
+				variable = "DYLD_LIBRARY_PATH";
+			}
+			else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+				variable = "LD_LIBRARY_PATH";
+			}
+			else
+				throw new EvoCheckerException("EvoChecker currently supports only OSX and Unix.");
+		
+		  String out = System.getenv(variable);
+		  if (out==null || !new File(out).isDirectory())
+				return variable;
+			
+		 return null;
+	  }
 		
 		
 	  public static String getOperatingSystem() {
@@ -200,4 +221,5 @@ public class Utility {
 		  return null;
 	}
 	
+	  
 }

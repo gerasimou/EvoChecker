@@ -16,6 +16,11 @@ public class ConfigurationChecker {
 	public static void checkConfiguration() throws EvoCheckerException {
 		StringBuilder errors = new StringBuilder();
 		
+		String runtimeLibDir = Utility.runtimeLibsDirSpecified();
+		if (runtimeLibDir != null)
+			errors.append(runtimeLibDir  + " has not been specified.\n On Eclipse: Run > Run Configurations > Environment > New > Variable: " 
+					+ runtimeLibDir +"; Value:" + Constants.MODEL_CHECKING_ENGINE_LIBS_DIR_DEFAULT);
+		
 		//check algorithm
 		if (Utility.getProperty(Constants.ALGORITHM_KEYWORD, NAN).equals(NAN)) 
 			errors.append(Constants.ALGORITHM_KEYWORD + " not found in configuration script!\n");
