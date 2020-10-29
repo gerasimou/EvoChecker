@@ -10,7 +10,7 @@ This branch shows how you can use EvoChecker as a Jar by specifying a configurat
     EvoChecker ec = new EvoChecker();
 		
     //2) Set configuration file
-    String configFile ="resources/config.properties"; 
+    String configFile ="config.properties"; 
     ec.setConfigurationFile(configFile);
 		
     //3) Start EvoChecker
