@@ -107,7 +107,7 @@ public class EvoChecker {
 			ec.setConfigurationFile(args[0]);
 		else 
 			//use default config file
-			ec.setConfigurationFile("resources/config.properties");
+			ec.setConfigurationFile("config.properties");
 		
 		ec.start();
 	}

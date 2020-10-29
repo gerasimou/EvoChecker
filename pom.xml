@@ -184,10 +184,13 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory> ${basedir}/target/resources</outputDirectory>
+							<outputDirectory> ${basedir}/target/</outputDirectory>
 							<resources>
 								<resource>
-									<directory>resources</directory>
+									<directory>${project.basedir}</directory>
+									<includes>
+										<include>config.properties</include>
+									</includes>
 								</resource>
 							</resources>
 						</configuration>

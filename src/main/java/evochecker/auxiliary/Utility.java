@@ -1,9 +1,11 @@
 package evochecker.auxiliary;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -61,8 +63,7 @@ public class Utility {
 	
 	public static void setProperty (String key, String value) throws EvoCheckerException{
 		loadPropertiesInstance();
-		if (properties.setProperty(key, value) ==null)
-			throw new EvoCheckerException("Key: " + key + " does not exist!");
+		properties.setProperty(key, value);
 	}
 	
 	
@@ -133,5 +134,70 @@ public class Utility {
 	    		e.printStackTrace();
 	    	}       
 	  } // printVariablesToFile
+	  
+	  
+	
+	  public static String findJavaPath() {
+		  try {
+			String bashCommand = null;
+			
+			String os = getOperatingSystem();
+			
+			if (os.contains("mac")) {
+				bashCommand = "/usr/libexec/java_home";
+				return bashInvoker(bashCommand)+"/bin/java";
+			}
+			else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+				bashCommand = "which java";
+				return bashInvoker(bashCommand);
+			}
+			else
+				throw new EvoCheckerException("EvoChecker currently supports only OSX and Unix.");
+				
+		  } 
+		  catch (EvoCheckerException e) {
+			  e.printStackTrace();
+		  }
+		  return null;
+	  }	
+	  
+	  
+	  public static String findAvailablePort (int initPort) {
+		  String result; 
+		  do {
+			  String bashCommand = "lsof -i:" + initPort++;
+			  result = bashInvoker(bashCommand);			 
+		  }
+		  while (result != null);
+			 return --initPort +"";
+	  }
+	  
+	  
+	  public static String findPython3Path () {
+		  String bashCommand = "which python";
+		  String out = bashInvoker(bashCommand); 
+		  return out;			 
+	  }
+	  
+		
+		
+	  public static String getOperatingSystem() {
+		  return System.getProperty("os.name").toLowerCase();
+	  }
+		
+			
+	  public static String bashInvoker(String command) {
+		  try {
+			  ProcessBuilder pb = new ProcessBuilder();
+			  pb.command("/bin/bash", "-c", command);
+			  Process process = pb.start();
+			  BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			  return reader.readLine();
+		  } 
+		  catch (IOException e) {
+			e.printStackTrace();
+		  }
+		  return null;
+	}
 	
 }

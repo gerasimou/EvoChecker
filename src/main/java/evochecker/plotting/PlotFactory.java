@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.exception.EvoCheckerException;
@@ -40,18 +41,23 @@ public class PlotFactory {
 		else
 			scriptFile = "scripts/plotFront3D.py";
 		
-		String python3Dir = Utility.getProperty(Constants.PYTHON3_DIRECTORY);
 		
-	    ProcessBuilder processBuilder = new ProcessBuilder(python3Dir, scriptFile , paretoFrontPath);
-	    processBuilder.redirectErrorStream(true);
-	 
-	    Process process = processBuilder.start();
-	    InputStream is = process.getInputStream();
-	    
-	    List<String> output = new BufferedReader(new InputStreamReader(is)).lines().collect(Collectors.toList());
-	    
-	    System.out.println(Arrays.toString(output.toArray()));
-	 
-	    int exitCode = process.waitFor();
+		String python3Dir = Utility.getProperty(Constants.PYTHON3_DIRECTORY, ConfigurationChecker.NAN);
+		if (python3Dir.equals(ConfigurationChecker.NAN))
+			throw new EvoCheckerException(Constants.PYTHON3_DIRECTORY + " not found in configuration script!\n");
+
+		else {			
+		    ProcessBuilder processBuilder = new ProcessBuilder(python3Dir, scriptFile , paretoFrontPath);
+		    processBuilder.redirectErrorStream(true);
+		 
+		    Process process = processBuilder.start();
+		    InputStream is = process.getInputStream();
+		    
+		    List<String> output = new BufferedReader(new InputStreamReader(is)).lines().collect(Collectors.toList());
+		    
+		    System.out.println(Arrays.toString(output.toArray()));
+		 
+		    int exitCode = process.waitFor();
+		}
 	}
 }

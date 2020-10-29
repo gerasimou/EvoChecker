@@ -92,9 +92,11 @@ public class Constants {
   
   /** Keyword for model checking engine*/
   public static final String MODEL_CHECKING_ENGINE 	= "MODEL_CHECKING_ENGINE";
+  public static final String MODEL_CHECKING_ENGINE_DEFAULT = "libs/PrismExecutor.jar";
 
   /** Keyword for libraries required for running the model checking engine*/
   public static final String MODEL_CHECKING_ENGINE_LIBS_DIR = "MODEL_CHECKING_ENGINE_LIBS_DIRECTORY";
+  public static final String MODEL_CHECKING_ENGINE_LIBS_DIR_DEFAULT = "libs/runtime";
 
   /** Keyword indicating whether text will be produced during execution */
   public static final String VERBOSE = "VERBOSE";

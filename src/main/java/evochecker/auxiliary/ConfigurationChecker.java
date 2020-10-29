@@ -8,13 +8,13 @@ import evochecker.exception.EvoCheckerException;
 
 public class ConfigurationChecker {
 	
+	public final static String NAN = "NAN";
 	/**
 	 * Check whether the experiment has been configured correctly 
 	 * @throws EvoCheckerException 
 	 */
 	public static void checkConfiguration() throws EvoCheckerException {
 		StringBuilder errors = new StringBuilder();
-		final String NAN = "NAN";
 		
 		//check algorithm
 		if (Utility.getProperty(Constants.ALGORITHM_KEYWORD, NAN).equals(NAN)) 
@@ -51,33 +51,54 @@ public class ConfigurationChecker {
 		if (Utility.getProperty(Constants.PROBLEM_KEYWORD, NAN).equals(NAN))
 			errors.append(Constants.PROBLEM_KEYWORD + " not found in configuration script!\n");
 
-		//check port
-		if (Utility.getProperty(Constants.INITIAL_PORT_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.INITIAL_PORT_KEYWORD + " not found in configuration script!\n");
-
-		//check jvm
-		if (Utility.getProperty(Constants.JAVA_KEYWORD, NAN).equals(NAN))
-			errors.append(Constants.JAVA_KEYWORD + " not found in configuration script!\n");
 
 		//check model checking engine
+		File engine;
 		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN))
-			errors.append(Constants.MODEL_CHECKING_ENGINE + " not found in configuration script!\n");
-		else {
-			File engine = new File(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE));
-			if (!engine.exists())
-				errors.append(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE) + " does not exist!\n");
-		}
-
+			engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
+		else 
+			engine = new File(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE));
+		
+		if (!engine.exists())
+			errors.append("Model Checking engine at " + engine.getAbsolutePath() + " does not exist!\n" + 
+						  "You can specify the engine in the configuration script using " + Constants.MODEL_CHECKING_ENGINE_LIBS_DIR +"\n");
+		else
+			Utility.setProperty(Constants.MODEL_CHECKING_ENGINE, engine.getAbsolutePath());
+		
+		
 		//check model checking engine libs directory
+		File engineLibs;
 		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR, NAN).equals(NAN))
-			errors.append(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR + " not found in configuration script!\n");
-		else {
-			File engine = new File(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));
-			if (!engine.exists())
-				errors.append(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR) + " does not exist!\n");
+			engineLibs = new File(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR_DEFAULT);
+		else 
+			engineLibs = new File(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));
+		
+		if (!engineLibs.exists())
+			errors.append("Model checking libs at " + engineLibs.getAbsolutePath() + " do not exist!\n" + 
+						  "You can specify the libs in the configuration script using " + Constants.MODEL_CHECKING_ENGINE_LIBS_DIR +"\n");
+		else
+			Utility.setProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR, engineLibs.getAbsolutePath());
+
+
+		//check and set the Java Path based on operating system 
+		if (Utility.getProperty(Constants.JAVA_KEYWORD, NAN).equals(NAN)) {
+			String javaPath = Utility.findJavaPath();
+			if (javaPath != null)
+				Utility.setProperty(Constants.JAVA_KEYWORD, javaPath);
+			else
+				errors.append(Constants.JAVA_KEYWORD + " not found in configuration script!\n");
 		}
 
 
+		//check port: if unspecified in configuration file, try to fine one randomly
+		if (Utility.getProperty(Constants.INITIAL_PORT_KEYWORD, NAN).equals(NAN)) {
+			String port = Utility.findAvailablePort(8888);
+			Utility.setProperty(Constants.INITIAL_PORT_KEYWORD, port);
+		}
+		//errors.append(Constants.INITIAL_PORT_KEYWORD + " not found in configuration script!\n");
+
+		
+		
 		if (errors.length()!=0)
 			throw new EvoCheckerException(errors.toString().split("\r\n|\r|\n").length +"\n"+ errors.toString());
 		else
