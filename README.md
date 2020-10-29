@@ -18,6 +18,12 @@ This branch shows how you can use EvoChecker as a Jar by specifying a configurat
     
 The [EvoCheckerRunner class](https://github.com/gerasimou/EvoChecker/blob/evoCheckerJar/src/examples/EvoCheckerRunner.java) in the examples directory provides the complete source-code.
 
+
+###### Remember to set the Java library path (DYLD\_LIBRARY\_PATH on OSX; LD\_LIBRARY\_PATH on *NIX)
+* On Eclipse: Run > Run Configurations > Environment > New > Variable: DYLD_LIBRARY_PATH; Value:libs/runtime.
+
+
+
 ---
 --
 
