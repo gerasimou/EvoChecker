@@ -33,7 +33,7 @@ import evochecker.genetic.jmetal.encoding.ArrayRealIntSolutionType;
 import evochecker.language.parser.EvoCheckerInstantiator;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.modelInvoker.IModelInvoker;
-import evochecker.modelInvoker.ModelInvoker;
+import evochecker.modelInvoker.ModelInvokerPrism;
 import evochecker.properties.Constraint;
 import evochecker.properties.Objective;
 import evochecker.properties.Property;
@@ -92,7 +92,7 @@ public abstract class GeneticModelProblem extends Problem {
 		this.problemName_			= problemName;
 		this.initializeLimits();	
 		
-		this.modelInvoker = new ModelInvoker();//this is a blackbox so no need to have a case here
+		this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here
 		
 		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, "false"));
 	}
@@ -358,6 +358,6 @@ public abstract class GeneticModelProblem extends Problem {
 		this.problemName_			= aProblem.problemName_;
 		this.initializeLimits();
 		
-		this.modelInvoker			= new ModelInvoker (modelInvoker);
+		this.modelInvoker			= new ModelInvokerPrism (modelInvoker);
 	}
 }

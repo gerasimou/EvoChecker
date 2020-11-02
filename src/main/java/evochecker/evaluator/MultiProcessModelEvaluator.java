@@ -276,25 +276,25 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR)); //OSX
 			env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));   //Linux
 
-			boolean alive = false;
-			do {
-				Process p = pb.start();
-				alive = p.isAlive();
-				Thread.sleep(1000);
-			} while (!alive);
-
-			boolean successful = false;
-			while (!successful) {
-				try {
+//			boolean alive = false;
+//			do {
+//				Process p = pb.start();
+//				alive = p.isAlive();
+//				Thread.sleep(1000);
+//			} while (!alive);
+//
+//			boolean successful = false;
+//			while (!successful) {
+//				try {
 					socket	= new Socket(HOSTNAME, portNum);
 					in		= new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					out		= new PrintWriter(socket.getOutputStream());
-					successful = true;
-				} catch (IOException | NullPointerException e) {
-					Thread.sleep(1000);
-					pb.start();
-				}
-			}
+//					successful = true;
+//				} catch (IOException | NullPointerException e) {
+//					Thread.sleep(1000);
+//					pb.start();
+//				}
+//			}
 		}		
 		
 		

@@ -115,9 +115,9 @@ public class EvoCheckerInstantiator extends ParserEngine implements IModelInstan
 
 
 	@Override
-	public String getParametricModel(List<AbstractGene> genes, List<AbstractGene> paramGenes) {
+	public String getParametricModel(List<AbstractGene> genes, List<AbstractGene> structGenes) {
 		StringBuilder parametricModel = new StringBuilder(getInternalModelRepresentation());
-		for (AbstractGene gene : paramGenes) {
+		for (AbstractGene gene : structGenes) {
 			if (gene instanceof IntegerGene) {
 				parametricModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
 			} 
@@ -135,7 +135,7 @@ public class EvoCheckerInstantiator extends ParserEngine implements IModelInstan
 		}
 		
 		for (AbstractGene gene : genes) {
-			if (!paramGenes.contains(gene)) {
+			if (!structGenes.contains(gene)) {
 				if (gene instanceof IntegerGene) {
 					parametricModel.append(((EvolvableInteger)elementsMap.get(gene)).getParametricCommand());
 				} 

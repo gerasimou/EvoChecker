@@ -9,7 +9,7 @@
 //	This file is part of EvoChecker.
 //	
 //==============================================================================
-package evochecker._test;
+package evochecker.test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -32,6 +32,7 @@ import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
 import evochecker.genetic.problem.GeneticProblem;
+import evochecker.genetic.problem.GeneticProblemParametric;
 import evochecker.language.parser.EvoCheckerInstantiator;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.plotting.PlotFactory;
@@ -195,7 +196,8 @@ public class EvoChecker {
 		System.out.println();
 		
 		//6) instantiate the problem
-		problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName);
+//		problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName);
+		problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);
 	}	
 	
 	

@@ -32,7 +32,7 @@ public class EvolvableModuleAlternative extends EvolvableRange {
 	 * @param name
 	 */
 	public EvolvableModuleAlternative (String name){
-		super(name, 0, 0, EvolvableID.MODULE, true);//by default an alternative module changes the structure of the model, hence param = true
+		super(name, 0, 0, EvolvableID.MODULE, false);//by default an alternative module changes the structure of the model, hence param = true
 		this.evolvableModuleList = new ArrayList<EvolvableModule>();
 	}
 	

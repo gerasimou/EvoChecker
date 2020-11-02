@@ -1,8 +1,8 @@
 ctmc
 
 
-evolve int QmaxL [1..10]; 
-evolve int QmaxH [1..10]; 
+evolve int QmaxL [1..2]; 
+evolve int QmaxH [1..2]; 
 evolve param distribution evTrans1 [2][0.0 .. 0.8];
 evolve param distribution evTrans2 [2][0.2 .. 0.6];
 

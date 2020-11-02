@@ -1,12 +1,12 @@
 ctmc
 
 
-evolve int QmaxL [1..10]; 
-evolve int QmaxH [1..10]; 
+evolve int QmaxL [1..2]; 
+evolve int QmaxH [1..2]; 
 
-evolve distribution evTrans1 [2][0.0 .. 0.8];
-evolve distribution evTrans2 [2][0.2 .. 0.6];
-evolve distribution evTrans3 [2][0.2 .. 0.6];
+evolve param distribution evTrans1 [2][0.0 .. 0.8];
+evolve param distribution evTrans2 [2][0.2 .. 0.6];
+evolve param distribution evTrans3 [2][0.2 .. 0.6];
 
 
 evolve module PM
