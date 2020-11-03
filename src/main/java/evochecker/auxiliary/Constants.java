@@ -107,6 +107,9 @@ public class Constants {
   /** Keyword for python3 directory */
   public static final String PYTHON3_DIRECTORY = "PYTHON3_DIRECTORY";
 
+  /** Keyword indicating whether parametric EvoChecker should be used*/
+  public static final String EVOCHECKER_PARAMETRIC = "PARAMETRIC_EVOCHECKER";
+
   
   /** Integer REGEX*/
   public static  final String INTEGER_REGEX = "^\\d+$";

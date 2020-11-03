@@ -15,7 +15,6 @@ package evochecker.genetic.problem;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -37,8 +36,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 	private static final long serialVersionUID = -2679872853510614319L;
 
 	private Archive archive;
-//	private Map<List<Object>, List<Function>> algebraicExpessionsArchive;
-
+	
 	/**
 	 * Class constructor: create a new Genetic Problem instance
 	 * @param genes
@@ -88,9 +86,11 @@ public class GeneticProblemParametric extends GeneticProblem{
 			//parametric work goes here
 			List<String> resultsList = null; 
 			resultsList = parametricWork(out, in);
-			System.out.println(Arrays.toString(resultsList.toArray()));
 //			resultsList = evaluateByInvocation(out, in);
 
+			if (resultsList == null)
+				System.exit(-1);
+			
 			//evaluate objectives
 			for (int i = 0; i < numberOfObjectives_; i++) {
 				Property p = objectivesList.get(i);
@@ -147,20 +147,34 @@ public class GeneticProblemParametric extends GeneticProblem{
 				nonStructParamsNames = nonStructParamsNames.substring(0, nonStructParamsNames.length()-1);
 
 				rfList = archive.get(structParamsValues);
-				if (rfList == null) {
+				System.out.print(structParamsValues +"\t");
+				if (rfList == null) {//key does not exist in the archive
+					archive.miss();
 					rfList = new ArrayList<>();
 					List<String> rationalFunctionStringsList = generateRationalFunctions(out, in);
-						
+					
+					if (rationalFunctionStringsList == null) {//model checker did not generate a solution
+						archive.badKey();
+						archive.put(structParamsValues, rfList);//bad key -> empty list
+						return evaluateByInvocation(out, in);
+					}
+					else {
 						for (String functionAsString : rationalFunctionStringsList) {
 							RationalFunction rf = new RationalFunction(functionAsString, nonStructParamsNames);
 							rfList.add(rf);
 						}
-						archive.put(structParamsValues, rfList);	
+						archive.put(structParamsValues, rfList);
+					}
+					return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
 				}
-				
-				return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
+				else if (rfList.isEmpty())//bad key retrieved -> normal evaluation
+					return evaluateByInvocation(out, in);
+				else {//rational functions retrieved -> evaluate the functions
+					archive.hit();
+					return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
+				}				
 			}
-			else {
+			else {//no structural parameters in the model -> normal evaluation (no rational functions)
 				return evaluateByInvocation(out, in);
 			}
 	}

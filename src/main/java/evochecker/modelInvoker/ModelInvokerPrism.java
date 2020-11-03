@@ -86,18 +86,31 @@ public class ModelInvokerPrism implements IModelInvoker {
 	
 	private List<String> processResult(BufferedReader in) throws IOException{
 		String line;
-		StringBuilder modelBuilder = new StringBuilder();
-		do {
-			// retrieve from prism
-			line = in.readLine();
-			if (line.endsWith("END"))
-				break;
-			modelBuilder.append(line);
-			modelBuilder.append("\n");
-		} while (true);
-
+		try {
+			StringBuilder modelBuilder = new StringBuilder();
+			do {
+				// retrieve from prism
+				line = in.readLine();
+				if (line.endsWith("END"))
+					break;
+				modelBuilder.append(line);
+				modelBuilder.append("\n");
+			} while (true);
+			
+			return checkResult(modelBuilder.toString().trim());
+	
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private List<String> checkResult(String resultString){
 		// System.out.println("Received from PRISM: " + modelBuilder.toString());
-		return Arrays.asList(modelBuilder.toString().trim().split("#"));
+		if (resultString.equalsIgnoreCase("NULL"))
+			return null;
+		else
+			return Arrays.asList(resultString.split("#"));
 
 	}
 	

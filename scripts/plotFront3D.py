@@ -8,7 +8,6 @@ import sys
 
 
 paretoFront = str(sys.argv[1])
-#paretoFront = "/Users/sgerasimou/Documents/Git/EvoChecker/data/DPM/NSGAII/DPM_NSGAII_104753_281020_Front"
 
 f = pd.read_csv(paretoFront, header=0, delimiter="\t")
 

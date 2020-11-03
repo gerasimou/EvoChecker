@@ -19,6 +19,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.exception.EvoCheckerException;
@@ -94,7 +95,7 @@ public abstract class GeneticModelProblem extends Problem {
 		
 		this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here
 		
-		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, "false"));
+		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, ConfigurationChecker.FALSE));
 	}
 		
 	
