@@ -60,7 +60,7 @@ public class GeneticProblem extends GeneticModelProblem {
 	 * @throws EvoCheckerException 
 	 */
 	@Override
-	public void parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
+	public boolean parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
 		//Populate genes
 		this.populateGenesWithRealSolution(solution);
 		this.populateGenesWithIntSolution(solution);
@@ -90,6 +90,8 @@ public class GeneticProblem extends GeneticModelProblem {
 		}
 		if (verbose)
 			System.out.println();
+		
+		return true;
 	}	
 	
 

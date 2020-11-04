@@ -76,7 +76,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 	 * @throws EvoCheckerException 
 	 */
 	@Override
-	public void parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
+	public boolean parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
 		//Populate genes
 		this.populateGenesWithRealSolution(solution);
 		this.populateGenesWithIntSolution(solution);
@@ -89,7 +89,9 @@ public class GeneticProblemParametric extends GeneticProblem{
 //			resultsList = evaluateByInvocation(out, in);
 
 			if (resultsList == null)
-				System.exit(-1);
+//				System.exit(-1);
+//				throw new Exception();
+				return false;
 			
 			//evaluate objectives
 			for (int i = 0; i < numberOfObjectives_; i++) {
@@ -109,6 +111,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 		}
 		if (verbose)
 			System.out.println();
+		return true;
 	}	
 	
 	
