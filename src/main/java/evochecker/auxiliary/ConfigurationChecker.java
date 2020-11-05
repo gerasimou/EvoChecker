@@ -9,6 +9,9 @@ import evochecker.exception.EvoCheckerException;
 public class ConfigurationChecker {
 	
 	public final static String NAN = "NAN";
+	public final static String TRUE = "TRUE";
+	public final static String FALSE = "FALSE";
+
 	/**
 	 * Check whether the experiment has been configured correctly 
 	 * @throws EvoCheckerException 
@@ -100,6 +103,7 @@ public class ConfigurationChecker {
 			String port = Utility.findAvailablePort(8888);
 			Utility.setProperty(Constants.INITIAL_PORT_KEYWORD, port);
 		}
+		Utility.setProperty(Constants.INITIAL_PORT_KEYWORD, "8888");
 		//errors.append(Constants.INITIAL_PORT_KEYWORD + " not found in configuration script!\n");
 
 		

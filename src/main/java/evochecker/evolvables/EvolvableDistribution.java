@@ -7,6 +7,7 @@ public class EvolvableDistribution extends Evolvable implements IStructuralEvolv
 	
 	private List<EvolvableDouble> evolvableDoubleList;
 	private int cardinality;
+	private String[] evolvableDoubleNames;
 
 	public EvolvableDistribution(String name, double[][] transitionsBounds, boolean param){
 		super(name, EvolvableID.DISTRIBUTION, param);
@@ -14,6 +15,11 @@ public class EvolvableDistribution extends Evolvable implements IStructuralEvolv
 		this.evolvableDoubleList = new ArrayList<EvolvableDouble>();
 		this.cardinality		 = transitionsBounds.length;
 		generateEvolvableDoubleList(name, transitionsBounds);
+		
+		evolvableDoubleNames = new String[cardinality];
+		for (int i=0; i<cardinality; i++) {
+			evolvableDoubleNames[i] = evolvableDoubleList.get(i).getName();
+		}
 	}
 	
 	
@@ -84,5 +90,9 @@ public class EvolvableDistribution extends Evolvable implements IStructuralEvolv
 			str.append(evolvableDoubleList.get(index).getParametricCommand());
 		}
 		return str.toString();
-	}		
+	}
+	
+	public String[] getEvolvableDoubleNames() {
+		return evolvableDoubleNames;
+	}
 }

@@ -19,6 +19,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.exception.EvoCheckerException;
@@ -33,7 +34,7 @@ import evochecker.genetic.jmetal.encoding.ArrayRealIntSolutionType;
 import evochecker.language.parser.EvoCheckerInstantiator;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.modelInvoker.IModelInvoker;
-import evochecker.modelInvoker.ModelInvoker;
+import evochecker.modelInvoker.ModelInvokerPrism;
 import evochecker.properties.Constraint;
 import evochecker.properties.Objective;
 import evochecker.properties.Property;
@@ -92,9 +93,9 @@ public abstract class GeneticModelProblem extends Problem {
 		this.problemName_			= problemName;
 		this.initializeLimits();	
 		
-		this.modelInvoker = new ModelInvoker();//this is a blackbox so no need to have a case here
+		this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here
 		
-		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, "false"));
+		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, ConfigurationChecker.FALSE));
 	}
 		
 	
@@ -292,8 +293,48 @@ public abstract class GeneticModelProblem extends Problem {
 	 * @throws JMException
 	 * @throws EvoCheckerException 
 	 */
-	public abstract void parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException;
-
+	public boolean parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
+		//Populate genes
+		this.populateGenesWithRealSolution(solution);
+		this.populateGenesWithIntSolution(solution);
+		
+		
+		try {
+			//parametric work goes here
+			List<String> resultsList = null; 
+			resultsList	= evaluate(in, out);
+	
+			if (resultsList == null)
+				return false;
+	
+			
+			//evaluate objectives
+			for (int i = 0; i < numberOfObjectives_; i++) {
+				Property p = objectivesList.get(i);
+				int index  = p.getIndex();
+				double value  = Double.parseDouble(resultsList.get(index));
+				double result = p.evaluate(value);
+				solution.setObjective(i, result);
+				if (verbose)
+					System.out.print("O" +(i+1) + "):"+ result +"\t");
+			}
+	
+			//evaluate constraints
+			this.evaluateConstraints(solution, resultsList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (verbose)
+			System.out.println();
+		
+		return true;
+	}	
+	
+	
+	public abstract List<String> evaluate(BufferedReader in, PrintWriter out) throws Exception;
+		
+		
+	
 
 	 /** 
 	  * Evaluates the constraint overhead of a solution 
@@ -358,6 +399,6 @@ public abstract class GeneticModelProblem extends Problem {
 		this.problemName_			= aProblem.problemName_;
 		this.initializeLimits();
 		
-		this.modelInvoker			= new ModelInvoker (modelInvoker);
+		this.modelInvoker			= new ModelInvokerPrism (modelInvoker);
 	}
 }

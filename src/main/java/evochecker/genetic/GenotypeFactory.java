@@ -12,6 +12,7 @@
 package evochecker.genetic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,8 @@ public class GenotypeFactory{
 	
 	/** Map between a gene and an evolvable element*/
 	private static Map<AbstractGene,Evolvable> geneEvolvableMap = new HashMap<AbstractGene, Evolvable>();
+	
+	private static List<String> evolvableNames = new ArrayList<String>();
 
 	/**
 	 * Create a list chromosome (or individual) as a sequence of genes
@@ -54,10 +57,27 @@ public class GenotypeFactory{
 		if (genes.size()==0)
 			throw new EvoCheckerException("The moodel contains no evovlables. EvoChecker stops");
 
+		setupEvolvableNamesList(evolvableList);
 		return genes;		
 	}
 		
-		
+
+	private static void setupEvolvableNamesList(List<Evolvable> evolvableList) throws EvoCheckerException{
+		List<String> evolvableNamesI = new ArrayList<String>();
+		List<String> evolvableNamesD = new ArrayList<String>();
+		for (Evolvable evolvable : evolvableList){
+			if (evolvable instanceof EvolvableDistribution)
+				evolvableNamesD.addAll(Arrays.asList(((EvolvableDistribution)evolvable).getEvolvableDoubleNames()));
+			else if (evolvable instanceof EvolvableDouble)
+				evolvableNamesD.add(evolvable.getName());
+			else 
+				evolvableNamesI.add(evolvable.getName());
+		}
+		evolvableNames.addAll(evolvableNamesD);
+		evolvableNames.addAll(evolvableNamesI);
+	}
+	
+	
 	/**
 	 * Initialise this gene 
 	 */
@@ -103,4 +123,9 @@ public class GenotypeFactory{
 	public static Map<AbstractGene, Evolvable> getGeneEvolvableMap(){
 		return geneEvolvableMap;
 	}	
+	
+	
+	public static List<String> getEvolvableNames(){
+		return evolvableNames;
+	}
 }

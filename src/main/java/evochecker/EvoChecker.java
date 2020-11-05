@@ -32,6 +32,7 @@ import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
 import evochecker.genetic.problem.GeneticProblem;
+import evochecker.genetic.problem.GeneticProblemParametric;
 import evochecker.language.parser.EvoCheckerInstantiator;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.plotting.PlotFactory;
@@ -137,13 +138,14 @@ public class EvoChecker {
 			//4) execute and save results
 			SolutionSet solutions = execute();
 
+			long end = System.currentTimeMillis();
+
 			//5) save solutions
 			exportResults(outputDir, solutions);
 			
 			//6) close down
 			closeDown();
 			
-			long end = System.currentTimeMillis();
 			System.err.printf("Time:\t%s\n", (end - start)/1000.0);
 		} 
 		catch (Exception e) {
@@ -195,7 +197,10 @@ public class EvoChecker {
 		System.out.println();
 		
 		//6) instantiate the problem
-		problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName);
+		if (Utility.getProperty(Constants.EVOCHECKER_PARAMETRIC, ConfigurationChecker.FALSE).equalsIgnoreCase(ConfigurationChecker.TRUE)) 
+			problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);
+		else
+			problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName);
 	}	
 	
 	
@@ -287,9 +292,10 @@ public class EvoChecker {
 		String setFile		= outputDir  + identifier + "_Set";
 		
 		//generate and save headers
-		StringBuilder setHeader = new StringBuilder();
-		for (AbstractGene gene : genes)
-			setHeader.append(gene.getName() +" ");
+//		StringBuilder setHeader = new StringBuilder();
+//		for (AbstractGene gene : genes)
+//			setHeader.append(gene.getName() +" ");
+		String setHeader = String.join(" ", GenotypeFactory.getEvolvableNames());
 		FileUtil.saveToFile(setFile, setHeader +"\n", true);
 		StringBuilder frontHeader = new StringBuilder();
 		Iterator<Property> it = objectivesList.iterator();
@@ -324,7 +330,6 @@ public class EvoChecker {
 		if (plotParetoFront)
 			PlotFactory.plotParetoFront(frontFile, identifier, objectivesList.size());
 	}
-
 
 	
 	/**
@@ -371,6 +376,7 @@ public class EvoChecker {
 	}
 	
 	 
+	@SuppressWarnings("unused")
 	private void setupIndicators(Algorithm algorithm, Problem problem, String paretoFrontFile){
 		// Object to get quality indicators
 		  QualityIndicator indicators ;

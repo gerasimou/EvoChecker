@@ -51,10 +51,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 
 	/** Array of runnables*/
 	private RunnableExecutor[] runnables;
-	
-	/** Starting port*/
-	static int portId = 8880;
-	
+		
 	/** Set of connections array keeping the evaluators instances*/
 	private Connection connections[];
 
@@ -76,9 +73,8 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		connections = new Connection[numberOfProcesses];
 		for (int i = 0; i < numberOfProcesses; i++) {
 			try {
-				connections[i] = new Connection(initPort + i);
+				connections[i] = new Connection(initPort + i, i, this);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}		
@@ -151,7 +147,8 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	 */
 	private void reset() {	
 		for (int i = 0; i < numberOfProcesses; i++) {
-			runnables[i] = new RunnableExecutor(connections[i].getOutChannel(), connections[i].getInChannel(), problems[i]);
+			runnables[i] = new RunnableExecutor(connections[i], problems[i]); 
+//					new RunnableExecutor(connections[i].getOutChannel(), connections[i].getInChannel(), problems[i]);
 			threads[i] 	 = new Thread(runnables[i]);
 		}
 	}
@@ -190,6 +187,11 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	}
 	
 	
+	
+	public void setConnection(int id, Connection c) {
+		connections[id] = c;
+	}
+	
 	/**
 	 * Inner class
 	 * @author sgerasimou
@@ -208,6 +210,8 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		/** Problem to be handled by this executor*/
 		Problem runnableProblem;
 		
+		Connection connection;
+		
 		
 		/**
 		 * Class constructor: create a new runnable executor
@@ -219,6 +223,15 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			this.out 			 = out;
 			this.runnableProblem = problem;
 			this.solutionsList 	 = new ArrayList<Solution>();
+		}
+		
+		
+		public RunnableExecutor(Connection c, Problem problem) {
+			this.in 			 = c.getInChannel();
+			this.out 			 = c.getOutChannel();
+			this.runnableProblem = problem;
+			this.solutionsList 	 = new ArrayList<Solution>();
+			this.connection		 = c; 
 		}
 
 
@@ -236,7 +249,12 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			for (Solution solution : this.solutionsList) {
 				try {
 					if (runnableProblem instanceof GeneticModelProblem){
-						((GeneticModelProblem) runnableProblem).parallelEvaluate(in, out, solution);
+						boolean OK = ((GeneticModelProblem) runnableProblem).parallelEvaluate(in, out, solution);
+						if (!OK) {
+							this.connection = new Connection(connection);
+							this.in			= connection.getInChannel();
+							this.out		= connection.getOutChannel();
+						}	
 					}
 					else throw new IllegalArgumentException("Problem not recognised");
 				} catch (Exception e) {
@@ -262,8 +280,27 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		private PrintWriter out;
 
 		private final String HOSTNAME = "127.0.0.1";
+		
+		private int portNum;
+		
+		private MultiProcessModelEvaluator evaluator;
+		
+		private int id;
 
-		public Connection(int portNum) throws Exception {
+		public Connection(int portNum, int id, MultiProcessModelEvaluator evaluator) throws Exception {
+			this.portNum 	= portNum;
+			this.evaluator 	= evaluator;
+			this.id			= id;
+			start();
+		}
+		
+		public Connection (Connection c) throws Exception {
+			this(c.portNum, c.id, c.evaluator);
+			evaluator.setConnection(id, this);
+		}
+		
+		
+		public void start() {
 			String params[] = new String[4];
 			params[0] = Utility.getProperty(Constants.JAVA_KEYWORD);
 			params[1] = "-jar";
@@ -271,29 +308,36 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 			params[3] = String.valueOf(portNum);
 			
 			
-			ProcessBuilder pb = new ProcessBuilder(params);
-			Map<String, String> env = pb.environment();
-			env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR)); //OSX
-			env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));   //Linux
-
-			boolean alive = false;
-			do {
-				Process p = pb.start();
-				alive = p.isAlive();
-				Thread.sleep(1000);
-			} while (!alive);
-
-			boolean successful = false;
-			while (!successful) {
-				try {
-					socket	= new Socket(HOSTNAME, portNum);
-					in		= new BufferedReader(new InputStreamReader(socket.getInputStream()));
-					out		= new PrintWriter(socket.getOutputStream());
-					successful = true;
-				} catch (IOException | NullPointerException e) {
+			try {
+				ProcessBuilder pb = new ProcessBuilder(params);
+				Map<String, String> env = pb.environment();
+				env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR)); //OSX
+				env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));   //Linux
+	
+				
+				boolean alive = false;
+				do {
+					Process p;
+						p = pb.start();
+					alive = p.isAlive();
 					Thread.sleep(1000);
-					pb.start();
+				} while (!alive);
+	
+				boolean successful = false;
+				while (!successful) {
+					try {
+						socket	= new Socket(HOSTNAME, portNum);
+						in		= new BufferedReader(new InputStreamReader(socket.getInputStream()));
+						out		= new PrintWriter(socket.getOutputStream());
+						successful = true;
+					} catch (IOException | NullPointerException e) {
+						Thread.sleep(1000);
+						pb.start();
+					}
 				}
+			}
+			catch (IOException | InterruptedException e) {
+				e.printStackTrace();
 			}
 		}		
 		
@@ -305,6 +349,10 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		
 		public PrintWriter getOutChannel() {
 			return out;
+		}
+		
+		protected int getPort() {
+			return portNum;
 		}
 
 		
