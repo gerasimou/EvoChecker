@@ -1,0 +1,20 @@
+//Objective: Minimise Power usage
+
+////Objective, min
+//R{"power"}=? [ S ]
+
+
+//Objective: Minimise lost messages
+
+//Objective, min
+R{"TotalLost"}=? [ S ]
+
+
+//Objective: Minimise queue length
+
+//Objective, min
+R{"TotalLength"}=? [ S ]
+
+
+
+

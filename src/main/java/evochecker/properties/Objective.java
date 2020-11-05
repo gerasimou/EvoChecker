@@ -33,11 +33,21 @@ public class Objective extends Property {
 
 	@Override
 	public double evaluate(double result) {
-		if (isMaximization()) {
-			return new BigDecimal(-result).setScale(3, RoundingMode.HALF_DOWN).doubleValue();
+		try {
+			if (isMaximization()) {
+				return new BigDecimal(-result).setScale(3, RoundingMode.HALF_DOWN).doubleValue();
+			}
+			else{
+				return new BigDecimal(result).setScale(3, RoundingMode.HALF_UP).doubleValue();
+			}
 		}
-		else{
-			return new BigDecimal(result).setScale(3, RoundingMode.HALF_UP).doubleValue();
+		catch (NumberFormatException e) {
+			if (isMaximization()) {
+				return 0.00;
+			}
+			else{
+				return Double.MAX_VALUE;
+			}
 		}
 	}
 	

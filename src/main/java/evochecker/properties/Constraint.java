@@ -34,14 +34,19 @@ public class Constraint extends Property {
 	 */
 	@Override
 	public double evaluate(double result) {
-		if ((!maximization) &&
-			(result < constraint))
-				return ((result-constraint) * VIOLATION_CONSTANT);
-		else if ( (maximization) &&
-				(result > constraint))
-				return ((constraint-result) * VIOLATION_CONSTANT);
-		else
-			return 0;
+		try {
+			if ((!maximization) &&
+				(result < constraint))
+					return ((result-constraint) * VIOLATION_CONSTANT);
+			else if ( (maximization) &&
+					(result > constraint))
+					return ((constraint-result) * VIOLATION_CONSTANT);
+			else
+				return 0;
+		}
+		catch (NumberFormatException e) {
+			return Double.MIN_VALUE;
+		}
 	}
 
 	

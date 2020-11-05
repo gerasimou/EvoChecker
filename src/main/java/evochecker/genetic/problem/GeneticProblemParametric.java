@@ -89,8 +89,6 @@ public class GeneticProblemParametric extends GeneticProblem{
 //			resultsList = evaluateByInvocation(out, in);
 
 			if (resultsList == null)
-//				System.exit(-1);
-//				throw new Exception();
 				return false;
 			
 			//evaluate objectives
@@ -147,7 +145,8 @@ public class GeneticProblemParametric extends GeneticProblem{
 			if (structParamsValues.length()>0) {
 				
 				structParamsValues = structParamsValues.substring(0, structParamsValues.length()-1);
-				nonStructParamsNames = nonStructParamsNames.substring(0, nonStructParamsNames.length()-1);
+				if (nonStructParamsNames.length()>0)
+					nonStructParamsNames = nonStructParamsNames.substring(0, nonStructParamsNames.length()-1);
 
 				rfList = archive.get(structParamsValues);
 				System.out.print(structParamsValues +"\t");

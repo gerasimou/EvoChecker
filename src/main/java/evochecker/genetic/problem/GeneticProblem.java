@@ -72,6 +72,10 @@ public class GeneticProblem extends GeneticModelProblem {
 //			resultsList = parametricWork(out, in);
 			resultsList = evaluateByInvocation(out, in);
 
+			if (resultsList == null)
+				return false;
+
+			
 			//evaluate objectives
 			for (int i = 0; i < numberOfObjectives_; i++) {
 				Property p = objectivesList.get(i);
