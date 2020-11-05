@@ -1,2 +1,5 @@
 //objective, max
 R{"attacks"}=? [F highInfected]
+
+//objective, min
+P=? [F<=50 highInfected]

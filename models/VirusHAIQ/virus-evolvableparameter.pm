@@ -121,7 +121,7 @@ endmodule
 formula uninfected = 0;
 formula infected = 2;
 formula breached = 1;
-const double infect = 0.5;
+evolve double infect [0..1];// = 0.5;
 rewards "attacks"
 	[_attack_highNode_0_barrierNode_2] true : 1;
 	[_attack_highNode_2_barrierNode_2] true : 1;
