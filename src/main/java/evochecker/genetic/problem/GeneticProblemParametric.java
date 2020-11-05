@@ -28,8 +28,6 @@ import evochecker.genetic.problem.parametric.Archive;
 import evochecker.genetic.problem.parametric.RationalFunction;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.properties.Property;
-import jmetal.core.Solution;
-import jmetal.util.JMException;
 
 public class GeneticProblemParametric extends GeneticProblem{
 
@@ -65,55 +63,10 @@ public class GeneticProblemParametric extends GeneticProblem{
 //		algebraicExpessionsArchive = new HashMap<List<Object>, List<Function>>();
 		archive = new Archive();
 	}
-
 	
-	/** 
-	 * Evaluate 
-	 * @param solution
-	 * @param out
-	 * @param in
-	 * @throws JMException
-	 * @throws EvoCheckerException 
-	 */
 	@Override
-	public boolean parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
-		//Populate genes
-		this.populateGenesWithRealSolution(solution);
-		this.populateGenesWithIntSolution(solution);
+	public  List<String> evaluate(BufferedReader in, PrintWriter out) throws Exception{
 		
-		
-		try {
-			//parametric work goes here
-			List<String> resultsList = null; 
-			resultsList = parametricWork(out, in);
-//			resultsList = evaluateByInvocation(out, in);
-
-			if (resultsList == null)
-				return false;
-			
-			//evaluate objectives
-			for (int i = 0; i < numberOfObjectives_; i++) {
-				Property p = objectivesList.get(i);
-				int index  = p.getIndex();
-				double value  = Double.parseDouble(resultsList.get(index));
-				double result = p.evaluate(value);
-				solution.setObjective(i, result);
-				if (verbose)
-					System.out.print("O" +(i+1) + "):"+ result +"\t");
-			}
-
-			//evaluate constraints
-			this.evaluateConstraints(solution, resultsList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (verbose)
-			System.out.println();
-		return true;
-	}	
-	
-	
-	private List<String> parametricWork(PrintWriter out, BufferedReader in) throws Exception{		
 		String structParamsValues = "";
 		String nonStructParamsNames = "";
 		List<Number> nonStructParamsValues = new ArrayList<Number>();
@@ -179,16 +132,6 @@ public class GeneticProblemParametric extends GeneticProblem{
 			else {//no structural parameters in the model -> normal evaluation (no rational functions)
 				return evaluateByInvocation(out, in);
 			}
-	}
-	
-
-	private List<String> evaluateByInvocation(PrintWriter out, BufferedReader in) throws Exception {
-		//Prepare model
-		//System.out.println(genes.get(0).getAllele() +"\t"+ genes.get(1).getAllele() );
-		String model 		= modelInstantiator.getConcreteModel(this.genes);
-		String propertyFile = modelInstantiator.getPropertyFileName();
-		
-		return modelInvoker.invoke(model, propertyFile, out, in);
 	}
 	
 	

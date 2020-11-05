@@ -20,8 +20,6 @@ import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.properties.Property;
-import jmetal.core.Solution;
-import jmetal.util.JMException;
 
 public class GeneticProblem extends GeneticModelProblem {
 
@@ -50,56 +48,13 @@ public class GeneticProblem extends GeneticModelProblem {
 		super((GeneticModelProblem)aProblem);
 	}
 
-	
-	/** 
-	 * Evaluate 
-	 * @param solution
-	 * @param out
-	 * @param in
-	 * @throws JMException
-	 * @throws EvoCheckerException 
-	 */
 	@Override
-	public boolean parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
-		//Populate genes
-		this.populateGenesWithRealSolution(solution);
-		this.populateGenesWithIntSolution(solution);
-		
-		
-		try {
-			//parametric work goes here
-			List<String> resultsList = null; 
-//			resultsList = parametricWork(out, in);
-			resultsList = evaluateByInvocation(out, in);
-
-			if (resultsList == null)
-				return false;
-
-			
-			//evaluate objectives
-			for (int i = 0; i < numberOfObjectives_; i++) {
-				Property p = objectivesList.get(i);
-				int index  = p.getIndex();
-				double value  = Double.parseDouble(resultsList.get(index));
-				double result = p.evaluate(value);
-				solution.setObjective(i, result);
-				if (verbose)
-					System.out.print("O" +(i+1) + "):"+ result +"\t");
-			}
-
-			//evaluate constraints
-			this.evaluateConstraints(solution, resultsList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (verbose)
-			System.out.println();
-		
-		return true;
-	}	
+	public  List<String> evaluate(BufferedReader in, PrintWriter out) throws Exception{
+		return evaluateByInvocation(out, in);
+	}
 	
 
-	private List<String> evaluateByInvocation(PrintWriter out, BufferedReader in) throws Exception {
+	protected List<String> evaluateByInvocation(PrintWriter out, BufferedReader in) throws Exception {
 		//Prepare model
 		//System.out.println(genes.get(0).getAllele() +"\t"+ genes.get(1).getAllele() );
 		String model 		= modelInstantiator.getConcreteModel(this.genes);
