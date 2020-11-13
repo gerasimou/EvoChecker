@@ -26,6 +26,7 @@ import evochecker.evolvables.EvolvableModule;
 import evochecker.evolvables.EvolvableModuleAlternative;
 import evochecker.evolvables.EvolvableOption;
 import evochecker.evolvables.VariableType;
+import evochecker.exception.EvoCheckerException;
 import evochecker.language.parser.gen.PrismBaseVisitor;
 import evochecker.language.parser.gen.PrismParser;
 import evochecker.language.parser.gen.PrismParser.CommandContext;
@@ -58,7 +59,9 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	
 	private StringBuilder modelString 		= new StringBuilder(100);
 
-		
+	private MODEL_TYPE modelType;
+
+	
 	@Override
 	public String visitModel(PrismParser.ModelContext ctx) {
 		String str;
@@ -114,7 +117,21 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	
 	@Override
 	public String visitModelType (PrismParser.ModelTypeContext ctx){
-		return ctx.value.getText() + "\n";
+		String model = ctx.value.getText();
+		try {
+			if (model.equalsIgnoreCase("MDP"))
+				modelType = MODEL_TYPE.MDP;
+			else if (model.equalsIgnoreCase("CTMC"))
+				modelType = MODEL_TYPE.CTMC;
+			else if (model.equalsIgnoreCase("DTMC"))
+				modelType = MODEL_TYPE.DTMC;
+			else
+				throw new EvoCheckerException("Unsupported model type:" + model);
+		}
+		catch (EvoCheckerException e) {
+			e.printStackTrace();
+		}
+		return  model + "\n";
 	}
 	
 	
@@ -616,18 +633,6 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		return false;
 	}
 
-
-	
-	///////////////////////////////////
-	// Access methods
-	public List<Evolvable> getEvolvableList(){
-		return this.evolvableList;
-	}
-		
-	public String getInternalModelRepresentation (){
-		return this.modelString.toString();
-	}
-
 	
 	/**
 	 * Scan through the model string and check for evolvable distribution within NON-evolvable modules
@@ -778,6 +783,20 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		return txt;
 	}
 	
+
 	
+	///////////////////////////////////
+	// Access methods
+	public List<Evolvable> getEvolvableList(){
+		return this.evolvableList;
+	}
+		
+	public String getInternalModelRepresentation (){
+		return this.modelString.toString();
+	}
+
 	
+	public MODEL_TYPE getModelType() {
+		return modelType;
+	}
 }
