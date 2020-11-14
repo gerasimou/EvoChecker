@@ -27,4 +27,7 @@ public interface IModelParser {
 
 	public String getPropertyFileName();
 
+	
+	public MODEL_TYPE getModelType();
+	
 }

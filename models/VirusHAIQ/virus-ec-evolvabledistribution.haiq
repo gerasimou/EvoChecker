@@ -1,0 +1,59 @@
+// ----------------------------------------------------------------------------
+// virus-ec.haiq - Virus propagation HaiQ model (EvoChecker extended version)
+// Author: Javier Camara
+// ----------------------------------------------------------------------------
+// This model is based on the example described in:
+//    http://www.prismmodelchecker.org/casestudies/virus.php
+//-----------------------------------------------------------------------------
+
+const double infect=0.5;
+
+abstract sig node { conn : some node }
+</
+  evolve distribution detect [2];
+  enum modes:{uninfected, breached, infected}
+  var s:[modes] init uninfected;
+  
+  // firewall attacked (from an infected neighbor)
+  [conn:attack] (s=uninfected) ->  detect : (s'=s) + detect : (s'=breached);
+  
+  // if the firewall has been breached tries to infect the node	
+  [] (s=breached) -> infect : (s'=infected) + (1-infect) : (s'=uninfected);
+  [conn:attack] (s=infected) -> (s'=s);
+
+  reward attacks [conn:attack]  true : 1;
+/>
+
+sig barrierNode extends node { }
+</
+/>
+
+sig highNode extends node { }
+</
+/>
+
+sig lowNode extends node { }
+</
+/>
+
+one sig infectedNode extends lowNode{}
+</
+  var s:[modes] init infected;
+/>
+ 
+pred virus{
+  all n : node | node in n.*conn // network is connected
+  no iden & conn // no self-loops
+  disj[lowNode.conn,highNode] // disjoint low-high nodes
+  conn = ~conn // symmetric adjacency relation
+}
+run virus for exactly 3 lowNode, exactly 3 barrierNode, exactly 3 highNode
+
+label highInfected [all highNode:s=2]
+property maxR{attacks} [F highInfected]
+property allP<0.5 [F<=50 highInfected]
+property maxP [F<=50 highInfected]      // Range min-max probability that high nodes will be eventually infected within 50 time units
+property SminP [F<=50 highInfected]       // Configuration that minimizes probability of having all high nodes infected within 50 time units 
+property rangeR{attacks} [F highInfected] // Range min-max number of attacks required to infect all high nodes
+property SmaxR{attacks} [F highInfected]  // Configuration that maximizes number of attacks required to infect all high nodes
+property SminR{attacks} [F highInfected]  // Configuration that minimizes number of attacks required to infect all high nodes

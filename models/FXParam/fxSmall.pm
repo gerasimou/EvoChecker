@@ -16,10 +16,10 @@ evolve int seqOp4  [1..6]; //(#services op3)!
 evolve int seqOp5  [1..6]; //(#services op3)!
 
 //distribution for probabilistic selection
-evolve distribution probOp1 [3];
-evolve distribution probOp2 [3];
-evolve distribution probOp4 [3];
-evolve distribution probOp5 [3];
+evolve param distribution probOp1 [3];
+evolve param distribution probOp2 [3];
+evolve param distribution probOp4 [3];
+evolve param distribution probOp5 [3];
 
 //flag indicating whether a service is selected or not (will be assembled based on the chromosome value)
 const int op1S1 = mod(op1Code,2)>0?1:0;

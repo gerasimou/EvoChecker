@@ -1,4 +1,4 @@
-package evochecker._test;
+package evochecker.test;
 
 import java.io.BufferedReader;
 import java.io.IOException;

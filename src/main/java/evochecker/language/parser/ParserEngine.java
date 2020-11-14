@@ -44,7 +44,9 @@ public class ParserEngine implements IModelParser{
 
 	/** list of evolvable elements*/
 	private List<Evolvable> evolvableList;	
-		
+	
+	/** model type **/
+	MODEL_TYPE modelType;
 
 	
 	/**
@@ -67,6 +69,7 @@ public class ParserEngine implements IModelParser{
 		this.modelFilename 					= aParser.modelFilename;
 		this.propertiesFilename				= aParser.propertiesFilename;
 		this.internalModelRepresentation	= aParser.internalModelRepresentation;
+		this.modelType						= aParser.modelType;
 		
 		this.evolvableList					= new ArrayList<Evolvable>();
 		for (Evolvable element : aParser.evolvableList)
@@ -168,6 +171,9 @@ public class ParserEngine implements IModelParser{
 		//set internal model representation
 		String modelString = visitor.getInternalModelRepresentation();
 		this.internalModelRepresentation = modelString;
+		
+		//get model type
+		this.modelType = visitor.getModelType();
 	}
 	
 	
@@ -213,6 +219,12 @@ public class ParserEngine implements IModelParser{
 	@Override
 	public List<Evolvable> getEvolvableList() {
 		return this.evolvableList;
+	}
+
+
+	@Override
+	public MODEL_TYPE getModelType() {
+		return this.modelType;
 	}
 
 	

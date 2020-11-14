@@ -1,7 +1,7 @@
 //Objective: Minimise Power usage
 
-//Objective, min
-R{"power"}=? [ S ]
+////Objective, min
+//R{"power"}=? [ S ]
 
 
 //Objective: Minimise lost messages
