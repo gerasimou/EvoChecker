@@ -1,0 +1,18 @@
+//maximise the probability that the system recovers service level 1 in the time interval [10,60]
+
+// objective, max 
+P=? [ !((mUp=1)&(R_present>=1)) U[10,60] ((mUp=1)&(R_present>=1)) ]
+
+
+//maximise the expected time the system stays in (optimal) states with at least 0.5M chunk servers up in the first 60 hours of operation
+
+// objective, max
+R{"active"}=?[C<=60]
+
+
+//// objective, min
+//R{"repairCosts"}=?[C<=60]
+
+//// constraint, min, 50
+//R{"replicates"}=? [ C<=60 ]
+
