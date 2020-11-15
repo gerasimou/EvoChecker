@@ -293,8 +293,47 @@ public abstract class GeneticModelProblem extends Problem {
 	 * @throws JMException
 	 * @throws EvoCheckerException 
 	 */
-	public abstract boolean parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException;
-
+	public boolean parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
+		//Populate genes
+		this.populateGenesWithRealSolution(solution);
+		this.populateGenesWithIntSolution(solution);
+		
+		
+		try {
+			//parametric work goes here
+			List<String> resultsList = null; 
+			resultsList	= evaluate(in, out);
+	
+			if (resultsList == null)
+				return false;
+	
+			
+			//evaluate objectives
+			for (int i = 0; i < numberOfObjectives_; i++) {
+				Property p = objectivesList.get(i);
+				int index  = p.getIndex();
+				double value  = Double.parseDouble(resultsList.get(index));
+				double result = p.evaluate(value);
+				solution.setObjective(i, result);
+				if (verbose)
+					System.out.print("O" +(i+1) + "):"+ result +"\t");
+			}
+	
+			//evaluate constraints
+			this.evaluateConstraints(solution, resultsList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (verbose)
+			System.out.println();
+		
+		return true;
+	}	
+	
+	
+	public abstract List<String> evaluate(BufferedReader in, PrintWriter out) throws Exception;
+		
+		
 
 	 /** 
 	  * Evaluates the constraint overhead of a solution 
