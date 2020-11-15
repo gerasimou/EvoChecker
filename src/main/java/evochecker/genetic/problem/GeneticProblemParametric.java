@@ -134,6 +134,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 			}
 	}
 	
+
 	private List<String> generateRationalFunctions(PrintWriter out, BufferedReader in) throws Exception {
 		String model 		= modelInstantiator.getParametricModel(genes, findGenesUsingType(false));
 		String propertyFile = modelInstantiator.getPropertyFileName();

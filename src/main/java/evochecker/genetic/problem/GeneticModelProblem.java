@@ -334,7 +334,6 @@ public abstract class GeneticModelProblem extends Problem {
 	public abstract List<String> evaluate(BufferedReader in, PrintWriter out) throws Exception;
 		
 		
-
 	 /** 
 	  * Evaluates the constraint overhead of a solution 
 	  * @param solution The solution
