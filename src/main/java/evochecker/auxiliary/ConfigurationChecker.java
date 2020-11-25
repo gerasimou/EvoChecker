@@ -1,9 +1,11 @@
 package evochecker.auxiliary;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 
+import evochecker.EvoCheckerType;
 import evochecker.exception.EvoCheckerException;
 
 public class ConfigurationChecker {
@@ -58,20 +60,6 @@ public class ConfigurationChecker {
 		//check problem name
 		if (Utility.getProperty(Constants.PROBLEM_KEYWORD, NAN).equals(NAN))
 			errors.append(Constants.PROBLEM_KEYWORD + " not found in configuration script!\n");
-
-
-		//check model checking engine
-		File engine;
-		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN))
-			engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
-		else 
-			engine = new File(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE));
-		
-		if (!engine.exists())
-			errors.append("Model Checking engine at " + engine.getAbsolutePath() + " does not exist!\n" + 
-						  "You can specify the engine in the configuration script using " + Constants.MODEL_CHECKING_ENGINE_LIBS_DIR +"\n");
-		else
-			Utility.setProperty(Constants.MODEL_CHECKING_ENGINE, engine.getAbsolutePath());
 		
 		
 		//check model checking engine libs directory
@@ -106,6 +94,34 @@ public class ConfigurationChecker {
 		Utility.setProperty(Constants.INITIAL_PORT_KEYWORD, "8888");
 		//errors.append(Constants.INITIAL_PORT_KEYWORD + " not found in configuration script!\n");
 
+		
+		//check if the Evochecker type has been specified correctly
+		EvoCheckerType ecType = null;
+		try {
+			ecType = EvoCheckerType.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_TYPE).toUpperCase());
+		}
+		catch (IllegalArgumentException e) {
+			errors.append(Constants.EVOCHECKER_TYPE + " incorrectly specified. Allowed options: " + 
+						  Arrays.toString(EvoCheckerType.values()) +"\n");			
+		}
+		catch (NullPointerException e) {}
+		
+		
+		//check model checking engine
+		File engine;
+		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN))
+			if (ecType == EvoCheckerType.REGION)
+				engine = new File(Constants.MODEL_CHECKING_ENGINE_REGION);
+			else 
+				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
+		else 
+			engine = new File(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE));
+		
+		if (!engine.exists())
+			errors.append("Model Checking engine at " + engine.getAbsolutePath() + " does not exist!\n" + 
+						  "You can specify the engine in the configuration script using " + Constants.MODEL_CHECKING_ENGINE_LIBS_DIR +"\n");
+		else
+			Utility.setProperty(Constants.MODEL_CHECKING_ENGINE, engine.getAbsolutePath());
 		
 		
 		if (errors.length()!=0)
