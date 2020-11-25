@@ -35,6 +35,7 @@ import evochecker.genetic.problem.GeneticProblem;
 import evochecker.genetic.problem.GeneticProblemParametric;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.language.parser.ModelInstantiator;
+import evochecker.language.parser.ModelInstantiatorParametric;
 import evochecker.plotting.PlotFactory;
 import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
@@ -88,6 +89,8 @@ public class EvoChecker {
 	/** Pareto set filename*/
 	private String paretoSetFile;
 
+	
+	private EvoCheckerType ecType;
 
 	
 	public EvoChecker() {
@@ -166,8 +169,22 @@ public class EvoChecker {
 		propertiesFilename	= new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD)).getAbsolutePath();
 		algorithmName		= Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
 		problemName   		= Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
+		
+		switch (EvoCheckerType.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_TYPE).toUpperCase())) {
+			case NORMAL		: ecType = EvoCheckerType.NORMAL; break;
+			case PARAMETRIC	: ecType = EvoCheckerType.PARAMETRIC; break;
+			case REGION		: ecType = EvoCheckerType.REGION; 
+							  throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting \n");			
+		}
+		
 
 		//2) parse model template
+		switch (ecType) {
+			case NORMAL		: modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename); break;
+			case PARAMETRIC	: modelInstantiator = new ModelInstantiatorParametric(modelFilename, propertiesFilename);break;
+			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting \n");			
+		}
+
 		modelInstantiator 		= new ModelInstantiator(modelFilename, propertiesFilename);
 
 		//3) create chromosome
@@ -190,10 +207,11 @@ public class EvoChecker {
 		System.out.println();
 		
 		//6) instantiate the problem
-		if (Utility.getProperty(Constants.EVOCHECKER_PARAMETRIC, ConfigurationChecker.FALSE).equalsIgnoreCase(ConfigurationChecker.TRUE)) 
-			problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);
-		else
-			problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName);
+		switch (ecType) {
+			case NORMAL		: problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName); break;
+			case PARAMETRIC	: problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
+			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting \n");			
+		}
 	}	
 	
 	

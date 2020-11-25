@@ -104,7 +104,10 @@ public class ConfigurationChecker {
 			errors.append(Constants.EVOCHECKER_TYPE + " incorrectly specified. Allowed options: " + 
 						  Arrays.toString(EvoCheckerType.values()) +"\n");			
 		}
-		catch (NullPointerException e) {}
+		catch (NullPointerException e) {
+			System.err.println("EVOCHECKER_TYPE not specified, using NORMAL; Options: " + Arrays.toString(EvoCheckerType.values()));
+			Utility.setProperty(Constants.EVOCHECKER_TYPE, EvoCheckerType.NORMAL+"");
+		}
 		
 		
 		//check model checking engine
