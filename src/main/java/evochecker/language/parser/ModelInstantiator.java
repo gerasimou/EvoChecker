@@ -47,9 +47,7 @@ public class ModelInstantiator implements IModelInstantiator {
 	 * @throws EvoCheckerException
 	 */
 	public ModelInstantiator (ModelInstantiator instantiator) throws EvoCheckerException{
-		parser = new ModelParser(instantiator.parser);
-		
-		List<Evolvable> evolvableList = getEvolvableList();
+		parser = new ModelParser(instantiator.parser);		
 	}
 	
 	

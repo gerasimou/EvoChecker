@@ -179,7 +179,6 @@ public class Utility {
 	    	BufferedWriter bw      = new BufferedWriter(osw);            
 	      
 	    	for (Solution aSolutionsList_ : solutions) {
-	    		bw.write(aSolutionsList_.getDecisionVariables()[0].toString() + "\t");
 	    		int numOfIntVariables = ((ArrayInt)aSolutionsList_.getDecisionVariables()[1]).getLength();
 	    		int k = 0;
     		  	for (int j=0; j<numOfIntVariables; j++) {
@@ -188,9 +187,9 @@ public class Utility {
     		  			bw.write(evolvableOptionsList.get(k++).getOption(value) +" ");
     		  		}
     		  		else
-    		  			bw.write(value +" ");
-    		  			
+    		  			bw.write(value +" ");    		  			
     		  	}
+    		  	bw.write(aSolutionsList_.getDecisionVariables()[0].toString());
 	    	  	bw.newLine();
 	    	}
 	      bw.close();

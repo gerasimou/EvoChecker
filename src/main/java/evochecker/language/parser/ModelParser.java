@@ -26,6 +26,7 @@ import evochecker.evolvables.EvolvableDouble;
 import evochecker.evolvables.EvolvableInteger;
 import evochecker.evolvables.EvolvableModule;
 import evochecker.evolvables.EvolvableModuleAlternative;
+import evochecker.exception.EvoCheckerException;
 import evochecker.language.parser.grammar.PrismLexer;
 import evochecker.language.parser.grammar.PrismParser;
 
@@ -85,70 +86,29 @@ public class ModelParser implements IModelParser{
 //			else if (element instanceof EvolvableOption)
 //				this.evolvableList.add(new EvolvableOption((EvolvableOption))element);
 	}
-
-	
-	public static void main (String args[]){	
-//		String 		modelFilename		= "models/Cluster/clusterTemplate2.sm";
-//		String 		propertiesFilename 	= "models/Cluster/cluster.csl";
-
-//		String 		modelFilename		= "models/COPE/cope.pm";
-//		String 		propertiesFilename 	= "models/COPE/cope.pctl";
-
-//		String 		modelFilename		= "models/DPM/DPM.pm";
-//		String 		propertiesFilename 	= "models/DPM/dpm.pctl";
-
-//		String 		modelFilename		= "models/FX/fx.pm";
-//		String 		propertiesFilename 	= "models/FX/fx.pctl";
-		
-//		String 	modelFilename		= "models/Hadoop/HadoopTemplate.sm";
-//		String	propertiesFilename 	= "models/Hadoop/HadoopTemplate.pctl";
-
-//		String 		modelFilename		= "models/UUV/uuv.sm";
-//		String 		propertiesFilename 	= "models/UUV/uuv.csl";
-
-		String 		modelFilename		= "models/VIRUS/virus.pm";
-		String 		propertiesFilename 	= "models/VIRUS/virus.pm";
-
-
-		
-		if (args.length == 2){
-			modelFilename		= args[0];
-			propertiesFilename 	= args[1];
-		}
-
-		ModelParser parser = new ModelParser(modelFilename, propertiesFilename);
-
-		//Parse model
-		System.out.println("Checking " + modelFilename);
-		parser.parse();			
-		
-		
-		//print some information
-//		parser.print();
-//		System.out.println(Arrays.toString(parser.evolvableList.toArray()));
-		
-		FileUtil.createDir("tests/Virus");
-		FileUtil.saveToFile("tests/Virus/ParsedEvolvables.txt", Arrays.toString(parser.evolvableList.toArray()), false);
-		FileUtil.saveToFile("tests/Virus/ParsedInternalRepresentation.txt", parser.internalModelRepresentation, false);
-		
-		System.out.println("DONE");
-	}
 	
 
 	/** 
 	 * Parse input
 	 */
 	private void parse() {
-		String modelString = FileUtil.readFile(modelFilename);
-		runVisitor(modelString);
+		try {
+			String modelString = FileUtil.readFile(modelFilename);
+			runVisitor(modelString);
+		} catch (EvoCheckerException e) {
+//			e.printStackTrace();
+			System.err.println(e.getMessage() +".");
+			System.exit(0);
+		}
 	}
 	
 	
 	/**
 	 * Run visitor
 	 * @param inputString
+	 * @throws EvoCheckerException 
 	 */
-	private  void runVisitor(String inputString){
+	private  void runVisitor(String inputString) throws EvoCheckerException{
 		 // create a CharStream that reads from standard input
 		ANTLRInputStream input = new ANTLRInputStream(inputString); 
 		// create a lexer that feeds off of input CharStream
@@ -157,12 +117,19 @@ public class ModelParser implements IModelParser{
 		CommonTokenStream tokens = new CommonTokenStream(lexer); 
 		// create a parser that feeds off the tokens buffer
 		PrismParser parser = new PrismParser(tokens);
+
+		//setup custom error listener
+		parser.removeErrorListeners();
+		ModelParserErrorListener errorListener = new ModelParserErrorListener();
+		parser.addErrorListener(errorListener);
+		
 		// begin parsing at prog rule
 		ParseTree tree = parser.model();
 		//Create the visitor
 		PrismVisitor visitor = new PrismVisitor();
 		// and visit the nodes
 		visitor.visit(tree);
+		
 		
 		//generate list with evolvable elements
 		List<Evolvable> evolvableList = visitor.getEvolvableList();
@@ -174,6 +141,10 @@ public class ModelParser implements IModelParser{
 		
 		//get model type
 		this.modelType = visitor.getModelType();
+		
+		
+		if (errorListener.isInputFaulty())
+			throw new EvoCheckerException ("The input model is incorrect! Please fix the errors and try again. Exiting");
 	}
 	
 	
@@ -227,5 +198,24 @@ public class ModelParser implements IModelParser{
 		return this.modelType;
 	}
 
+	
+	
+	public static void main (String args[]){	
+		String 		modelFilename		= "models//DPMParam/dpmSmall.pm";
+		String 		propertiesFilename 	= "models//DPMParam/dpmSmall.csl";
+		
+		if (args.length == 2){
+			modelFilename		= args[0];
+			propertiesFilename 	= args[1];
+		}
+
+		ModelParser parser = new ModelParser(modelFilename, propertiesFilename);
+
+		//Parse model
+		System.out.println("Checking " + modelFilename);
+		parser.parse();			
+						
+		System.out.println("DONE");
+	}
 	
 }

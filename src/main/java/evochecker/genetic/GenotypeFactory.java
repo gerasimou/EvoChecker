@@ -74,8 +74,8 @@ public class GenotypeFactory{
 			else 
 				evolvableNamesI.add(evolvable.getName());
 		}
-		evolvableNames.addAll(evolvableNamesD);
 		evolvableNames.addAll(evolvableNamesI);
+		evolvableNames.addAll(evolvableNamesD);
 	}
 	
 	
