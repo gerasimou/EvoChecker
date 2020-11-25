@@ -26,8 +26,8 @@ import evochecker.evolvables.EvolvableDouble;
 import evochecker.evolvables.EvolvableInteger;
 import evochecker.evolvables.EvolvableModule;
 import evochecker.evolvables.EvolvableModuleAlternative;
-import evochecker.language.parser.gen.PrismLexer;
-import evochecker.language.parser.gen.PrismParser;
+import evochecker.language.parser.grammar.PrismLexer;
+import evochecker.language.parser.grammar.PrismParser;
 
 
 
@@ -54,7 +54,7 @@ public class ParserEngine implements IModelParser{
 	 * @param modelFilename
 	 * @param propertiesFilename
 	 */
-	protected ParserEngine(String modelFilename, String propertiesFilename){
+	public ParserEngine(String modelFilename, String propertiesFilename){
 		this.modelFilename 		= modelFilename;
 		this.propertiesFilename	= propertiesFilename;		
 		

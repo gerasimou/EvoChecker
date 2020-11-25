@@ -12,7 +12,7 @@ import evochecker.exception.LanguageException;
  */
 
 public enum EvolvableID {
-	CONSTANT_INT, CONSTANT_DOUBLE, DISTRIBUTION, MODULE, OPTION;
+	CONSTANT_INT, CONSTANT_DOUBLE, DISTRIBUTION, MODULE, OPTION, BOOL;
 	
 	 public static String getEvolvableIDLiteral(EvolvableID evolvableID) {
 		switch (evolvableID){
@@ -31,6 +31,9 @@ public enum EvolvableID {
 			case OPTION:{
 				return "option";
 			}
+			case BOOL:{
+				return "bool";
+			}			
 			default:{
 				try {
 					throw new LanguageException("Evolvable ID not recognised");

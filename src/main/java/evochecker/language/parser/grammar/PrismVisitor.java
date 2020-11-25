@@ -1,6 +1,7 @@
 // Generated from grammar/Prism.g4 by ANTLR 4.5
 
-  package evochecker.language.parser.gen;
+//  package org.spg.language.prism.grammar;
+  package evochecker.language.parser.grammar;
   import java.util.*;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -108,11 +109,19 @@ public interface PrismVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFormula(PrismParser.FormulaContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PrismParser#constant}.
+	 * Visit a parse tree produced by the {@code constantEntry}
+	 * labeled alternative in {@link PrismParser#constant}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitConstant(PrismParser.ConstantContext ctx);
+	T visitConstantEntry(PrismParser.ConstantEntryContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code constantBool}
+	 * labeled alternative in {@link PrismParser#constant}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstantBool(PrismParser.ConstantBoolContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code evolveRange}
 	 * labeled alternative in {@link PrismParser#evolvable}.
@@ -141,6 +150,13 @@ public interface PrismVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitEvolveModule(PrismParser.EvolveModuleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code evolveBool}
+	 * labeled alternative in {@link PrismParser#evolvable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEvolveBool(PrismParser.EvolveBoolContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code boolVarDeclaration}
 	 * labeled alternative in {@link PrismParser#varDeclaration}.

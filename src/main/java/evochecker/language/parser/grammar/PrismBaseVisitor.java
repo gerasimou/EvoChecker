@@ -1,6 +1,7 @@
 // Generated from grammar/Prism.g4 by ANTLR 4.5
 
-  package evochecker.language.parser.gen;
+//  package org.spg.language.prism.grammar;
+  package evochecker.language.parser.grammar;
   import java.util.*;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -119,7 +120,14 @@ public class PrismBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitConstant(PrismParser.ConstantContext ctx) { return visitChildren(ctx); }
+	@Override public T visitConstantEntry(PrismParser.ConstantEntryContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitConstantBool(PrismParser.ConstantBoolContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -148,6 +156,13 @@ public class PrismBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitEvolveModule(PrismParser.EvolveModuleContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitEvolveBool(PrismParser.EvolveBoolContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

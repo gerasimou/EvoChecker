@@ -1,6 +1,7 @@
 // Generated from grammar/Prism.g4 by ANTLR 4.5
 
-  package evochecker.language.parser.gen;
+//  package org.spg.language.prism.grammar;
+  package evochecker.language.parser.grammar;
   import java.util.*;
 
 
@@ -188,13 +189,25 @@ public class PrismBaseListener implements PrismListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConstant(PrismParser.ConstantContext ctx) { }
+	@Override public void enterConstantEntry(PrismParser.ConstantEntryContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConstant(PrismParser.ConstantContext ctx) { }
+	@Override public void exitConstantEntry(PrismParser.ConstantEntryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConstantBool(PrismParser.ConstantBoolContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstantBool(PrismParser.ConstantBoolContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -243,6 +256,18 @@ public class PrismBaseListener implements PrismListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitEvolveModule(PrismParser.EvolveModuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEvolveBool(PrismParser.EvolveBoolContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEvolveBool(PrismParser.EvolveBoolContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

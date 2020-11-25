@@ -18,6 +18,7 @@ import java.util.List;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import evochecker.evolvables.Evolvable;
+import evochecker.evolvables.EvolvableBool;
 import evochecker.evolvables.EvolvableDistribution;
 import evochecker.evolvables.EvolvableDouble;
 import evochecker.evolvables.EvolvableID;
@@ -27,16 +28,16 @@ import evochecker.evolvables.EvolvableModuleAlternative;
 import evochecker.evolvables.EvolvableOption;
 import evochecker.evolvables.VariableType;
 import evochecker.exception.EvoCheckerException;
-import evochecker.language.parser.gen.PrismBaseVisitor;
-import evochecker.language.parser.gen.PrismParser;
-import evochecker.language.parser.gen.PrismParser.CommandContext;
-import evochecker.language.parser.gen.PrismParser.ConstantContext;
-import evochecker.language.parser.gen.PrismParser.EvolvableContext;
-import evochecker.language.parser.gen.PrismParser.FormulaContext;
-import evochecker.language.parser.gen.PrismParser.ModuleContext;
-import evochecker.language.parser.gen.PrismParser.RewardContext;
-import evochecker.language.parser.gen.PrismParser.RewardItemContext;
-import evochecker.language.parser.gen.PrismParser.VarDeclarationContext;
+import evochecker.language.parser.grammar.PrismBaseVisitor;
+import evochecker.language.parser.grammar.PrismParser;
+import evochecker.language.parser.grammar.PrismParser.CommandContext;
+import evochecker.language.parser.grammar.PrismParser.ConstantContext;
+import evochecker.language.parser.grammar.PrismParser.EvolvableContext;
+import evochecker.language.parser.grammar.PrismParser.FormulaContext;
+import evochecker.language.parser.grammar.PrismParser.ModuleContext;
+import evochecker.language.parser.grammar.PrismParser.RewardContext;
+import evochecker.language.parser.grammar.PrismParser.RewardItemContext;
+import evochecker.language.parser.grammar.PrismParser.VarDeclarationContext;
 
 /* TODO
  * This class needs to parse the model and 
@@ -56,6 +57,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	private List<EvolvableModule>			 evolvableModuleList		= new ArrayList<EvolvableModule>();
 	private List<EvolvableModuleAlternative> evolvableModuleSuperList	= new ArrayList<EvolvableModuleAlternative>();
 	private List<EvolvableOption>			 evolvableOptionsList		= new ArrayList<EvolvableOption>();
+	private List<EvolvableBool>			 	 evolvableBoolsList			= new ArrayList<EvolvableBool>();
 	
 	private StringBuilder modelString 		= new StringBuilder(100);
 
@@ -320,7 +322,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		
 	
 	@Override
-	public String visitConstant (PrismParser.ConstantContext ctx){
+	public String visitConstantEntry(PrismParser.ConstantEntryContext ctx){
 		StringBuilder str = new StringBuilder("const ");
 		str.append(ctx.CONSTANTTYPE()!=null ? ctx.CONSTANTTYPE().getText() : "");
 		str.append(" " + ctx.variable().getText());
@@ -330,6 +332,19 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		}
 		 str.append(";");
 		return str.toString();
+	}
+	
+	
+	@Override
+	public String visitConstantBool(PrismParser.ConstantBoolContext ctx) {
+		StringBuilder str = new StringBuilder("const bool ");
+		str.append(" " + ctx.variable().getText());
+		if (ctx.expression()!=null){
+			str.append(" = ");
+			str.append(visit(ctx.expression()));
+		}
+		 str.append(";");
+		return str.toString();		
 	}
 	
 	
@@ -502,7 +517,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		if (ctx.CONSTANTTYPE.getText().equals("int")){
 			str.append("int ");
 			for (int i=0; i<options.length; i++)
-				optionsList.add(new Integer(options[i]));
+				optionsList.add(Integer.parseInt(options[i]));
 			EvolvableOption ev = new EvolvableOption(name, optionsList, VariableType.INT, EvolvableID.OPTION, param);
 			evolvableOptionsList.add(ev);
 //			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.OPTION) + name +";\n");
@@ -511,7 +526,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		else {
 			str.append("double ");
 			for (int i=0; i<options.length; i++)
-				optionsList.add(new Double(options[i]));
+				optionsList.add(Double.parseDouble(options[i]));
 			EvolvableOption ev = new EvolvableOption(name, optionsList, VariableType.DOUBLE, EvolvableID.OPTION, param);
 			evolvableOptionsList.add(ev);
 //			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.OPTION) + name +";\n");
@@ -587,6 +602,22 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 			
 
 		return "";//str.toString();
+	}
+	
+	
+	@Override 
+	public String visitEvolveBool(PrismParser.EvolveBoolContext ctx) {
+		StringBuilder str 	= new StringBuilder("const bool ");
+		String name		= ctx.variable().getText();
+		str.append(name +" ");
+		
+		//check if it is a param or structural parameter
+		boolean param = isParam(ctx.PARAM());
+
+		EvolvableBool evBool = new EvolvableBool(name, EvolvableID.BOOL, param);
+		evolvableBoolsList.add(evBool);
+		
+		return "//"+str.toString() +";\n";
 	}
 	
 	
@@ -753,24 +784,21 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	
 	
 	private void concatenateEvolvables(){
-		for (EvolvableDouble evoDouble : evolvableDoubleList){
+		for (EvolvableDouble evoDouble : evolvableDoubleList)
 			evolvableList.add(evoDouble);
-		}
-		for (EvolvableInteger evoInteger : evolvableIntegerList){
+		for (EvolvableInteger evoInteger : evolvableIntegerList)
 			evolvableList.add(evoInteger);
-		}
-		for (EvolvableDistribution evoDistr : evolvableDistributionList){
+		for (EvolvableDistribution evoDistr : evolvableDistributionList)
 			evolvableList.add(evoDistr);
-		}
-		for (EvolvableModule evoModule : evolvableModuleList){
+		for (EvolvableModule evoModule : evolvableModuleList)
 			evolvableList.add(evoModule);
-		}
-		for (EvolvableModuleAlternative evoModuleSuper : evolvableModuleSuperList){
+		for (EvolvableModuleAlternative evoModuleSuper : evolvableModuleSuperList)
 			evolvableList.add(evoModuleSuper);
-		}		
-		for (EvolvableOption evoOption : evolvableOptionsList){
+		for (EvolvableOption evoOption : evolvableOptionsList)
 			evolvableList.add(evoOption);
-		}		
+		for (EvolvableBool evoBool : evolvableBoolsList)
+			evolvableList.add(evoBool);
+		
 	}
 	
 	

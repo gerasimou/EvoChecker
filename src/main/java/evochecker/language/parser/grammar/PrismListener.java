@@ -1,6 +1,7 @@
 // Generated from grammar/Prism.g4 by ANTLR 4.5
 
-  package evochecker.language.parser.gen;
+//  package org.spg.language.prism.grammar;
+  package evochecker.language.parser.grammar;
   import java.util.*;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -170,15 +171,29 @@ public interface PrismListener extends ParseTreeListener {
 	 */
 	void exitFormula(PrismParser.FormulaContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PrismParser#constant}.
+	 * Enter a parse tree produced by the {@code constantEntry}
+	 * labeled alternative in {@link PrismParser#constant}.
 	 * @param ctx the parse tree
 	 */
-	void enterConstant(PrismParser.ConstantContext ctx);
+	void enterConstantEntry(PrismParser.ConstantEntryContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PrismParser#constant}.
+	 * Exit a parse tree produced by the {@code constantEntry}
+	 * labeled alternative in {@link PrismParser#constant}.
 	 * @param ctx the parse tree
 	 */
-	void exitConstant(PrismParser.ConstantContext ctx);
+	void exitConstantEntry(PrismParser.ConstantEntryContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code constantBool}
+	 * labeled alternative in {@link PrismParser#constant}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstantBool(PrismParser.ConstantBoolContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code constantBool}
+	 * labeled alternative in {@link PrismParser#constant}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstantBool(PrismParser.ConstantBoolContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code evolveRange}
 	 * labeled alternative in {@link PrismParser#evolvable}.
@@ -227,6 +242,18 @@ public interface PrismListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitEvolveModule(PrismParser.EvolveModuleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code evolveBool}
+	 * labeled alternative in {@link PrismParser#evolvable}.
+	 * @param ctx the parse tree
+	 */
+	void enterEvolveBool(PrismParser.EvolveBoolContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code evolveBool}
+	 * labeled alternative in {@link PrismParser#evolvable}.
+	 * @param ctx the parse tree
+	 */
+	void exitEvolveBool(PrismParser.EvolveBoolContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code boolVarDeclaration}
 	 * labeled alternative in {@link PrismParser#varDeclaration}.
