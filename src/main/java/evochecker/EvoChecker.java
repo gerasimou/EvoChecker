@@ -33,8 +33,8 @@ import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
 import evochecker.genetic.problem.GeneticProblem;
 import evochecker.genetic.problem.GeneticProblemParametric;
-import evochecker.language.parser.EvoCheckerInstantiator;
 import evochecker.language.parser.IModelInstantiator;
+import evochecker.language.parser.ModelInstantiator;
 import evochecker.plotting.PlotFactory;
 import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
@@ -168,7 +168,7 @@ public class EvoChecker {
 		problemName   		= Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
 
 		//2) parse model template
-		modelInstantiator 		= new EvoCheckerInstantiator(modelFilename, propertiesFilename);
+		modelInstantiator 		= new ModelInstantiator(modelFilename, propertiesFilename);
 
 		//3) create chromosome
 		genes				= GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList());
@@ -177,13 +177,6 @@ public class EvoChecker {
 		modelInstantiator.createMapping();
 		
 		//5) create properties list
-		//dummy code to enable parsing properties files when evolvables include an evolvable distribution
-//		for (AbstractGene gene :genes) {
-//			if (gene instanceof DistributionGene) {
-//				int numOfOutcomes = ((DistributionGene)gene).getNumberOfOutcomes();
-//				gene.setAllele(new double[numOfOutcomes]);
-//			}
-//		}
 		String str = modelInstantiator.getConcreteModel(genes);
 		List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
 		objectivesList  = list.get(0);

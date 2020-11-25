@@ -27,6 +27,7 @@ import evochecker.genetic.genes.DistributionGene;
 import evochecker.genetic.problem.parametric.Archive;
 import evochecker.genetic.problem.parametric.RationalFunction;
 import evochecker.language.parser.IModelInstantiator;
+import evochecker.language.parser.IModelInstantiatorParametric;
 import evochecker.properties.Property;
 
 public class GeneticProblemParametric extends GeneticProblem{
@@ -41,10 +42,14 @@ public class GeneticProblemParametric extends GeneticProblem{
 	 * @param properties
 	 * @param instantiator
 	 * @param numOfConstraints
+	 * @throws EvoCheckerException 
 	 */
 	public GeneticProblemParametric(List<AbstractGene> genes, IModelInstantiator instantiator,
-						  List<Property> objectivesList, List<Property> constraintsList, String problemName){
+						  List<Property> objectivesList, List<Property> constraintsList, String problemName) throws EvoCheckerException{
 		super(genes, instantiator, objectivesList, constraintsList, problemName);
+
+		if (! (instantiator instanceof IModelInstantiatorParametric))
+			throw new EvoCheckerException(instantiator + " not instance of IModelInstantiatorParametric");
 		
 		// construct a dictionary for archiving
 		archive = new Archive();
@@ -60,7 +65,6 @@ public class GeneticProblemParametric extends GeneticProblem{
 		super((GeneticProblem)aProblem);
 
 		// construct a dictionary for archiving
-//		algebraicExpessionsArchive = new HashMap<List<Object>, List<Function>>();
 		archive = new Archive();
 	}
 	
@@ -136,7 +140,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 	
 	
 	private List<String> generateRationalFunctions(PrintWriter out, BufferedReader in) throws Exception {
-		String model 		= modelInstantiator.getParametricModel(genes, findGenesUsingType(false));
+		String model 		= ((IModelInstantiatorParametric)modelInstantiator).getParametricModel(genes, findGenesUsingType(false));
 		String propertyFile = modelInstantiator.getPropertyFileName();
 //		return modelInvoker.invokeParam(model, propertyFile, out, in, findGenesUsingType(true));
 		return modelInvoker.invokeParam(model, propertyFile, out, in);

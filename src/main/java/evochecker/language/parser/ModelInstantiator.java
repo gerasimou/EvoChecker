@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import evochecker.evolvables.Evolvable;
-import evochecker.evolvables.EvolvableDistribution;
-import evochecker.evolvables.EvolvableDouble;
-import evochecker.evolvables.EvolvableInteger;
 import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
@@ -30,16 +27,18 @@ import evochecker.genetic.genes.DistributionGene;
 import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
 
-public class EvoCheckerInstantiator extends ParserEngine implements IModelInstantiator {
+public class ModelInstantiator implements IModelInstantiator {
 
 	/** map that keeps pairs of genes and evolvable elements*/
-	private Map<AbstractGene, Evolvable> elementsMap;
+	protected Map<AbstractGene, Evolvable> elementsMap;
 
 	List<AbstractGene> genesList;
 
+	ModelParser parser;
 	
-	public EvoCheckerInstantiator(String modelFilename, String propertiesFilename) {
-		super(modelFilename, propertiesFilename);
+	
+	public ModelInstantiator(String modelFilename, String propertiesFilename) {
+		parser = new ModelParser(modelFilename, propertiesFilename);
 		
 		elementsMap = new HashMap<AbstractGene, Evolvable>();
 	}
@@ -47,11 +46,11 @@ public class EvoCheckerInstantiator extends ParserEngine implements IModelInstan
 	
 	/**
 	 * Copy constructor
-	 * @param aParser
+	 * @param instantiator
 	 * @throws EvoCheckerException
 	 */
-	public EvoCheckerInstantiator (EvoCheckerInstantiator aParser) throws EvoCheckerException{
-		super(aParser);
+	public ModelInstantiator (ModelInstantiator instantiator) throws EvoCheckerException{
+		parser = new ModelParser(instantiator.parser);
 		
 		List<Evolvable> evolvableList = getEvolvableList();
 		
@@ -63,6 +62,7 @@ public class EvoCheckerInstantiator extends ParserEngine implements IModelInstan
 		}
 	}
 	
+	
 	public void createMapping() {
 		Map<AbstractGene, Evolvable> map = GenotypeFactory.getGeneEvolvableMap(); 
 		for (Map.Entry<AbstractGene, Evolvable> entry : map.entrySet()) {
@@ -70,9 +70,10 @@ public class EvoCheckerInstantiator extends ParserEngine implements IModelInstan
 		}
 	}
 
+	
 	@Override
 	public String getConcreteModel(List<AbstractGene> genes) {
-		StringBuilder concreteModel = new StringBuilder(getInternalModelRepresentation());
+		StringBuilder concreteModel = new StringBuilder(parser.getInternalModelRepresentation());
 		for (AbstractGene gene : genes) {
 			if (gene instanceof IntegerGene) {
 				concreteModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
@@ -96,7 +97,7 @@ public class EvoCheckerInstantiator extends ParserEngine implements IModelInstan
 	
 	@Override
 	public String getPropertyFileName() {
-		return super.getPropertyFileName();
+		return parser.getPropertyFileName();
 	}
 	
 	
@@ -106,49 +107,10 @@ public class EvoCheckerInstantiator extends ParserEngine implements IModelInstan
 	 */
 	@Override
 	public List<Evolvable> getEvolvableList (){
-		return super.getEvolvableList();
+		return parser.getEvolvableList();
 	}
 	
 	public List<AbstractGene> getGeneList(){
 		return (List<AbstractGene>)Arrays.asList(this.elementsMap.keySet().toArray(new AbstractGene[0]));				
 	}
-
-
-	@Override
-	public String getParametricModel(List<AbstractGene> genes, List<AbstractGene> structGenes) {
-		StringBuilder parametricModel = new StringBuilder(getInternalModelRepresentation());
-		for (AbstractGene gene : structGenes) {
-			if (gene instanceof IntegerGene) {
-				parametricModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
-			} 
-			else if (gene instanceof DoubleGene) {
-				parametricModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
-			} 
-			else if (gene instanceof DistributionGene) {
-				parametricModel.append(elementsMap.get(gene)
-										.getConcreteCommand((double[]) 
-												gene.getAllele()));
-			} 
-			else if (gene instanceof AlternativeModuleGene) {
-				parametricModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
-			}	
-		}
-		
-		for (AbstractGene gene : genes) {
-			if (!structGenes.contains(gene)) {
-				if (gene instanceof IntegerGene) {
-					parametricModel.append(((EvolvableInteger)elementsMap.get(gene)).getParametricCommand());
-				} 
-				else if (gene instanceof DoubleGene) {
-					parametricModel.append(((EvolvableDouble)elementsMap.get(gene)).getParametricCommand());
-				} 
-				else if (gene instanceof DistributionGene) {
-					parametricModel.append(((EvolvableDistribution)elementsMap.get(gene)).getParametricCommand());
-				} 
-				else
-					throw new IllegalArgumentException("Incorrectly generated chromosome");				
-			}
-		}
-		return parametricModel.toString();	}
-
 }

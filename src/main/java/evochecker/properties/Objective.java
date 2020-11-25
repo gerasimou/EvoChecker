@@ -17,12 +17,9 @@ import java.math.RoundingMode;
 
 public class Objective extends Property {
 
-	protected boolean isMaximization;
-
 	
 	public Objective(boolean maximization, String expression, int index) {
 		super(maximization, expression, index );
-		this.isMaximization = maximization;
 	}
 	
 	

@@ -23,7 +23,7 @@ import evochecker.genetic.genes.AbstractGene;
  * @author sgerasimou
  *
  */
-public interface IModelInstantiator extends IParametricModelInstantiator{
+public interface IModelInstantiator {
 	
 	
 	/**
@@ -44,4 +44,6 @@ public interface IModelInstantiator extends IParametricModelInstantiator{
 
 	
 	public List<Evolvable> getEvolvableList ();
+
+	public List<AbstractGene> getGeneList();
 }

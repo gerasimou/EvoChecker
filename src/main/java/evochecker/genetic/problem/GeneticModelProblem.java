@@ -31,8 +31,8 @@ import evochecker.genetic.genes.IntegerGene;
 import evochecker.genetic.jmetal.encoding.ArrayInt;
 import evochecker.genetic.jmetal.encoding.ArrayReal;
 import evochecker.genetic.jmetal.encoding.ArrayRealIntSolutionType;
-import evochecker.language.parser.EvoCheckerInstantiator;
 import evochecker.language.parser.IModelInstantiator;
+import evochecker.language.parser.ModelInstantiator;
 import evochecker.modelInvoker.IModelInvoker;
 import evochecker.modelInvoker.ModelInvokerPrism;
 import evochecker.properties.Constraint;
@@ -304,21 +304,13 @@ public abstract class GeneticModelProblem extends Problem {
 			List<String> resultsList = null; 
 			resultsList	= evaluate(in, out);
 	
+			//check if a problem has occured and act accordingly
 			if (resultsList == null)
 				return false;
-	
 			
 			//evaluate objectives
-			for (int i = 0; i < numberOfObjectives_; i++) {
-				Property p = objectivesList.get(i);
-				int index  = p.getIndex();
-				double value  = Double.parseDouble(resultsList.get(index));
-				double result = p.evaluate(value);
-				solution.setObjective(i, result);
-				if (verbose)
-					System.out.print("O" +(i+1) + "):"+ result +"\t");
-			}
-	
+			evaluateObjectives(solution, resultsList);
+			
 			//evaluate constraints
 			this.evaluateConstraints(solution, resultsList);
 		} catch (Exception e) {
@@ -329,6 +321,20 @@ public abstract class GeneticModelProblem extends Problem {
 		
 		return true;
 	}	
+	
+	
+	private void evaluateObjectives(Solution solution, List<String> resultsList) {
+		//evaluate objectives
+		for (int i = 0; i < numberOfObjectives_; i++) {
+			Property p = objectivesList.get(i);
+			int index  = p.getIndex();
+			double value  = Double.parseDouble(resultsList.get(index));
+			double result = p.evaluate(value);
+			solution.setObjective(i, result);
+			if (verbose)
+				System.out.print("O" +(i+1) + "):"+ result +"\t");
+		}
+	}
 	
 	
 	public abstract List<String> evaluate(BufferedReader in, PrintWriter out) throws Exception;
@@ -372,12 +378,12 @@ public abstract class GeneticModelProblem extends Problem {
 	 */
 	public GeneticModelProblem(GeneticModelProblem aProblem) throws EvoCheckerException{
 		
-		if (aProblem.modelInstantiator instanceof  EvoCheckerInstantiator)
-			this.modelInstantiator 			= new EvoCheckerInstantiator((EvoCheckerInstantiator)aProblem.modelInstantiator);
+		if (aProblem.modelInstantiator instanceof  ModelInstantiator)
+			this.modelInstantiator 			= new ModelInstantiator((ModelInstantiator)aProblem.modelInstantiator);
 		else
 			throw new EvoCheckerException("Invalid Instantiator inteface!");
 
-		this.genes 					= ((EvoCheckerInstantiator)modelInstantiator).getGeneList(); 
+		this.genes 					= ((ModelInstantiator)modelInstantiator).getGeneList(); 
 										
 		
 		this.numberOfConstraints_ 	= aProblem.numberOfConstraints_;

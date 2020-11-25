@@ -31,7 +31,7 @@ import evochecker.language.parser.grammar.PrismParser;
 
 
 
-public class ParserEngine implements IModelParser{
+public class ModelParser implements IModelParser{
 
 	/** properties filename */
 	private String propertiesFilename;
@@ -54,7 +54,7 @@ public class ParserEngine implements IModelParser{
 	 * @param modelFilename
 	 * @param propertiesFilename
 	 */
-	public ParserEngine(String modelFilename, String propertiesFilename){
+	public ModelParser(String modelFilename, String propertiesFilename){
 		this.modelFilename 		= modelFilename;
 		this.propertiesFilename	= propertiesFilename;		
 		
@@ -65,7 +65,7 @@ public class ParserEngine implements IModelParser{
 	/**
 	 * Parser engine default copy constructor
 	 */
-	protected ParserEngine(ParserEngine aParser){
+	protected ModelParser(ModelParser aParser){
 		this.modelFilename 					= aParser.modelFilename;
 		this.propertiesFilename				= aParser.propertiesFilename;
 		this.internalModelRepresentation	= aParser.internalModelRepresentation;
@@ -116,7 +116,7 @@ public class ParserEngine implements IModelParser{
 			propertiesFilename 	= args[1];
 		}
 
-		ParserEngine parser = new ParserEngine(modelFilename, propertiesFilename);
+		ModelParser parser = new ModelParser(modelFilename, propertiesFilename);
 
 		//Parse model
 		System.out.println("Checking " + modelFilename);
