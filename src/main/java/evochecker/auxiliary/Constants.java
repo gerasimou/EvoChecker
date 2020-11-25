@@ -93,6 +93,7 @@ public class Constants {
   /** Keyword for model checking engine*/
   public static final String MODEL_CHECKING_ENGINE 	= "MODEL_CHECKING_ENGINE";
   public static final String MODEL_CHECKING_ENGINE_DEFAULT = "libs/PrismExecutor.jar";
+  public static final String MODEL_CHECKING_ENGINE_REGION = "libs/PRISM-PSY-fat-1.0.2.jar";
 
   /** Keyword for libraries required for running the model checking engine*/
   public static final String MODEL_CHECKING_ENGINE_LIBS_DIR = "MODEL_CHECKING_ENGINE_LIBS_DIRECTORY";
@@ -108,7 +109,7 @@ public class Constants {
   public static final String PYTHON3_DIRECTORY = "PYTHON3_DIRECTORY";
 
   /** Keyword indicating whether parametric EvoChecker should be used*/
-  public static final String EVOCHECKER_PARAMETRIC = "PARAMETRIC_EVOCHECKER";
+  public static final String EVOCHECKER_TYPE = "EVOCHECKER_TYPE";
 
   
   /** Integer REGEX*/
