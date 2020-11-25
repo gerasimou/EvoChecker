@@ -6,17 +6,20 @@ import java.util.List;
 
 import evochecker.exception.LanguageException;
 
-public class EvolvableOption extends Evolvable implements IStructuralEvolvable{
+public abstract class EvolvableOption extends Evolvable implements IStructuralEvolvable{
 	
 	protected List<Number> optionsList;
-	protected VariableType type;
 
-	public EvolvableOption (String name, List<Number> options, VariableType type, EvolvableID evolvableID, boolean param){
+	public EvolvableOption (String name, List<Number> options, EvolvableID evolvableID, boolean param){
 		super(name, evolvableID, param);
-		this.type = type;
 		optionsList = new ArrayList<Number>();
 		for (Number option : options) 
 			optionsList.add(option);
+	}
+	
+	
+	public int getOptionsSize() {
+		return optionsList.size();
 	}
 	
 	/**
@@ -42,7 +45,6 @@ public class EvolvableOption extends Evolvable implements IStructuralEvolvable{
 			e.printStackTrace();
 			System.exit(0);
 		}
-//		return "const " + VariableType.getVariableTypeLiteral(type) + " " + name +" = "+ variable  +";\n";
 		return  null;
 	}
 	
@@ -59,12 +61,17 @@ public class EvolvableOption extends Evolvable implements IStructuralEvolvable{
 			e.printStackTrace();
 			System.exit(0);
 		}
-//		return "const " + VariableType.getVariableTypeLiteral(type) + " " + name +" = "+ variable  +";\n";
 		return  null;
 	}
 	
+	
 	public EvolvableOption (EvolvableOption anEvolvable){
-		this(anEvolvable.name, anEvolvable.optionsList, anEvolvable.type, EvolvableID.OPTION, anEvolvable.param);
+		this(anEvolvable.name, anEvolvable.optionsList, EvolvableID.OPTION, anEvolvable.param);
+	}
+	
+	
+	public Number getOption (Object variable) {
+		return optionsList.get((int)variable);
 	}
 	
 }

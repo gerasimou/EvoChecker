@@ -9,15 +9,24 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import evochecker.evolvables.Evolvable;
+import evochecker.evolvables.EvolvableOption;
 import evochecker.exception.EvoCheckerException;
+import evochecker.genetic.genes.AbstractGene;
+import evochecker.genetic.genes.IntegerGene;
+import evochecker.genetic.jmetal.encoding.ArrayInt;
 import evochecker.properties.Property;
 import jmetal.core.Solution;
+import jmetal.core.Variable;
 import jmetal.util.Configuration;
+import jmetal.util.JMException;
 
 public class Utility {
 	
@@ -124,8 +133,10 @@ public class Utility {
 
 	      int numberOfVariables = solutions.get(0).getDecisionVariables().length ;
 	      for (Solution aSolutionsList_ : solutions) {
-	    	  	for (int j = 0; j < numberOfVariables; j++)
-	    	  		bw.write(aSolutionsList_.getDecisionVariables()[j].toString() + "\t");
+	    	  	for (int j = 0; j < numberOfVariables; j++) {
+	    	  		Variable v = aSolutionsList_.getDecisionVariables()[j];
+	    	  		bw.write(v.toString() + "\t");
+	    	  	}
 	    	  	bw.newLine();
 	      }
 	      bw.close();
@@ -137,7 +148,54 @@ public class Utility {
 	  } // printVariablesToFile
 	  
 	  
+	  /**
+	   * Writes the decision encodings.variable values of the <code>Solution</code>
+	   * solutions objects into the set in a file.
+	   * @param path The output file name
+	   */
+	  public static void printVariablesToFile2(String path, List<Solution> solutions, Map<AbstractGene, Evolvable> elementsMap, List<AbstractGene> genes){
+		  List<Integer> indexes = new ArrayList<>();
+		  List<EvolvableOption> evolvableOptionsList = new ArrayList<EvolvableOption>(); 
+		  int i = -1;
+		  for (AbstractGene g : genes) {
+			  if (g instanceof IntegerGene){ 
+				 i++;
+				 if (elementsMap.get(g) instanceof EvolvableOption){
+					 indexes.add(i);
+					 evolvableOptionsList.add((EvolvableOption)elementsMap.get(g));
+				 }				 
+			  } 
+		  }
+		  
+	    try {
+	    	FileOutputStream fos   = new FileOutputStream(path, true);
+	    	OutputStreamWriter osw = new OutputStreamWriter(fos);
+	    	BufferedWriter bw      = new BufferedWriter(osw);            
+	      
+	    	for (Solution aSolutionsList_ : solutions) {
+	    		bw.write(aSolutionsList_.getDecisionVariables()[0].toString() + "\t");
+	    		int numOfIntVariables = ((ArrayInt)aSolutionsList_.getDecisionVariables()[1]).getLength();
+	    		int k = 0;
+    		  	for (int j=0; j<numOfIntVariables; j++) {
+    		  		int value = ((ArrayInt)aSolutionsList_.getDecisionVariables()[1]).getValue(j);
+    		  		if (indexes.contains(j)) {
+    		  			bw.write(evolvableOptionsList.get(k++).getOption(value) +" ");
+    		  		}
+    		  		else
+    		  			bw.write(value +" ");
+    		  			
+    		  	}
+	    	  	bw.newLine();
+	    	}
+	      bw.close();
+	    }
+    	catch (IOException | JMException e) {
+	    		Configuration.logger_.severe("Error acceding to the file");
+	    		e.printStackTrace();
+	    	}       
+	  } // printVariablesToFile
 	
+	  
 	  public static String findJavaPath() {
 		  try {
 			String bashCommand = null;

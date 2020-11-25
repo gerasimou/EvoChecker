@@ -305,7 +305,7 @@ public class EvoChecker {
 		for (int i=0; i<solutions.size(); i++)
 			solutionList.add(solutions.get(i));
 		Utility.printObjectivesToFile(frontFile, solutionList, objectivesList);
-		Utility.printVariablesToFile(setFile, solutionList);
+		Utility.printVariablesToFile2(setFile, solutionList, GenotypeFactory.getGeneEvolvableMap(), genes);
 		
 		//Assign 
 		paretoFrontFile  = frontFile;

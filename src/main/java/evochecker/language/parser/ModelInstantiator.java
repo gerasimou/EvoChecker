@@ -14,7 +14,6 @@ package evochecker.language.parser;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +30,6 @@ public class ModelInstantiator implements IModelInstantiator {
 
 	/** map that keeps pairs of genes and evolvable elements*/
 	protected Map<AbstractGene, Evolvable> elementsMap;
-
-	List<AbstractGene> genesList;
 
 	ModelParser parser;
 	
@@ -53,13 +50,6 @@ public class ModelInstantiator implements IModelInstantiator {
 		parser = new ModelParser(instantiator.parser);
 		
 		List<Evolvable> evolvableList = getEvolvableList();
-		
-		genesList = GenotypeFactory.createChromosome(evolvableList);
-
-		this.elementsMap					= new LinkedHashMap<AbstractGene, Evolvable>();
-		for (int i=0; i<genesList.size(); i++){
-			this.elementsMap.put(genesList.get(i), evolvableList.get(i));
-		}
 	}
 	
 	

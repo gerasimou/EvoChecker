@@ -26,6 +26,8 @@ import evochecker.evolvables.EvolvableInteger;
 import evochecker.evolvables.EvolvableModule;
 import evochecker.evolvables.EvolvableModuleAlternative;
 import evochecker.evolvables.EvolvableOption;
+import evochecker.evolvables.EvolvableOptionDouble;
+import evochecker.evolvables.EvolvableOptionInteger;
 import evochecker.evolvables.VariableType;
 import evochecker.exception.EvoCheckerException;
 import evochecker.language.parser.grammar.PrismBaseVisitor;
@@ -518,7 +520,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 			str.append("int ");
 			for (int i=0; i<options.length; i++)
 				optionsList.add(Integer.parseInt(options[i]));
-			EvolvableOption ev = new EvolvableOption(name, optionsList, VariableType.INT, EvolvableID.OPTION, param);
+			EvolvableOption ev = new EvolvableOptionInteger(name, optionsList, EvolvableID.OPTION, param);
 			evolvableOptionsList.add(ev);
 //			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.OPTION) + name +";\n");
 			str.append(ev.toString());
@@ -527,7 +529,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 			str.append("double ");
 			for (int i=0; i<options.length; i++)
 				optionsList.add(Double.parseDouble(options[i]));
-			EvolvableOption ev = new EvolvableOption(name, optionsList, VariableType.DOUBLE, EvolvableID.OPTION, param);
+			EvolvableOption ev = new EvolvableOptionDouble(name, optionsList, EvolvableID.OPTION, param);
 			evolvableOptionsList.add(ev);
 //			str.append(name +" = "+ EvolvableID.getEvolvableIDLiteral(EvolvableID.OPTION) + name +";\n");
 			str.append(ev.toString());

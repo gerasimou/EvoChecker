@@ -107,9 +107,9 @@ public class GenotypeFactory{
 		else if (evolvable instanceof EvolvableModule){
 			throw new EvoCheckerException("EvolvableModule not yet supported");
 		}
-		//TODO here we will modules that can be replicated - not supported at the moment **/
 		else if (evolvable instanceof EvolvableOption){
-			throw new EvoCheckerException("EvolvableOption not yet supported");
+			int maxValue = ((EvolvableOption)evolvable).getOptionsSize()-1;
+			return new IntegerGene(name, 0, maxValue);
 		}
 
 		throw new EvoCheckerException ("Error in Genotype Factory");
