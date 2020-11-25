@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import evochecker.evolvables.Evolvable;
+import evochecker.evolvables.EvolvableBool;
 import evochecker.evolvables.EvolvableDistribution;
 import evochecker.evolvables.EvolvableDouble;
 import evochecker.evolvables.EvolvableInteger;
@@ -110,6 +111,9 @@ public class GenotypeFactory{
 		else if (evolvable instanceof EvolvableOption){
 			int maxValue = ((EvolvableOption)evolvable).getOptionsSize()-1;
 			return new IntegerGene(name, 0, maxValue);
+		}
+		else if (evolvable instanceof EvolvableBool) {
+			return new IntegerGene(name, 0, 1);
 		}
 
 		throw new EvoCheckerException ("Error in Genotype Factory");
