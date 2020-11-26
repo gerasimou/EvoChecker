@@ -15,8 +15,6 @@ package evochecker.language.parser;
 import java.util.List;
 
 import evochecker.evolvables.EvolvableDistribution;
-import evochecker.evolvables.EvolvableDouble;
-import evochecker.evolvables.EvolvableInteger;
 import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.AlternativeModuleGene;
@@ -64,10 +62,10 @@ public class ModelInstantiatorParametric extends ModelInstantiator implements IM
 		for (AbstractGene gene : genes) {
 			if (!structGenes.contains(gene)) {
 				if (gene instanceof IntegerGene) {
-					parametricModel.append(((EvolvableInteger)elementsMap.get(gene)).getParametricCommand());
+					parametricModel.append(elementsMap.get(gene).getParametricCommand());
 				} 
 				else if (gene instanceof DoubleGene) {
-					parametricModel.append(((EvolvableDouble)elementsMap.get(gene)).getParametricCommand());
+					parametricModel.append(elementsMap.get(gene).getParametricCommand());
 				} 
 				else if (gene instanceof DistributionGene) {
 					parametricModel.append(((EvolvableDistribution)elementsMap.get(gene)).getParametricCommand());

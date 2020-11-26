@@ -174,18 +174,15 @@ public class EvoChecker {
 			case NORMAL		: ecType = EvoCheckerType.NORMAL; break;
 			case PARAMETRIC	: ecType = EvoCheckerType.PARAMETRIC; break;
 			case REGION		: ecType = EvoCheckerType.REGION; 
-							  throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting \n");			
+							  throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
 		}
-		
 
 		//2) parse model template
 		switch (ecType) {
 			case NORMAL		: modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename); break;
 			case PARAMETRIC	: modelInstantiator = new ModelInstantiatorParametric(modelFilename, propertiesFilename);break;
-			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting \n");			
+			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
 		}
-
-		modelInstantiator 		= new ModelInstantiator(modelFilename, propertiesFilename);
 
 		//3) create chromosome
 		genes				= GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList());
@@ -210,7 +207,7 @@ public class EvoChecker {
 		switch (ecType) {
 			case NORMAL		: problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName); break;
 			case PARAMETRIC	: problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
-			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting \n");			
+			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
 		}
 	}	
 	

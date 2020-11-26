@@ -3,7 +3,7 @@ package evochecker.evolvables;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EvolvableDistribution extends Evolvable implements IStructuralEvolvable{
+public class EvolvableDistribution extends Evolvable{
 	
 	private List<EvolvableDouble> evolvableDoubleList;
 	private int cardinality;

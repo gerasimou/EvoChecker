@@ -1,6 +1,6 @@
 package evochecker.evolvables;
 
-public abstract class Evolvable {
+public abstract class Evolvable implements IStructuralEvolvable{
 	
 	protected String name;
 	protected String identifier;

@@ -15,6 +15,8 @@ package evochecker.evolvables;
 import java.util.ArrayList;
 import java.util.List;
 
+import evochecker.exception.EvoCheckerException;
+
 
 /**
  * Class representing an evolvable module (with alternatives) element
@@ -89,6 +91,17 @@ public class EvolvableModuleAlternative extends EvolvableRange {
 		for (EvolvableModule evolvableModule : anEvolvable.evolvableModuleList){
 			this.evolvableModuleList.add(new EvolvableModule(evolvableModule));
 		}
+	}
+
+
+	@Override
+	public String getParametricCommand() {
+		try {
+			throw new EvoCheckerException ("Unsupported Function");
+		} catch (EvoCheckerException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	

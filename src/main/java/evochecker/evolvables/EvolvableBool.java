@@ -1,6 +1,6 @@
 package evochecker.evolvables;
 
-public class EvolvableBool extends Evolvable implements IStructuralEvolvable{
+public class EvolvableBool extends Evolvable{
 
 	public EvolvableBool(String name, EvolvableID evolvableID, boolean param) {
 		super(name, evolvableID, param);

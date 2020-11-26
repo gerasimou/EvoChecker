@@ -3,6 +3,8 @@ package evochecker.evolvables;
 import java.util.ArrayList;
 import java.util.List;
 
+import evochecker.exception.EvoCheckerException;
+
 public class EvolvableModule extends EvolvableRange {
 	
 	List<EvolvableDistribution> evolvableDistributionList;
@@ -47,5 +49,16 @@ public class EvolvableModule extends EvolvableRange {
 	@Override
 	public String getConcreteCommand(Object variable) {
 		return "//Not Implemented Yet";//const double " + name +" = "+ (double)variables[0]  +";";
+	}
+
+	
+	@Override
+	public String getParametricCommand() {
+		try {
+			throw new EvoCheckerException ("Unsupported Function");
+		} catch (EvoCheckerException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

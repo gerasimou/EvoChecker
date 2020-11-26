@@ -17,7 +17,7 @@ package evochecker.evolvables;
  * @author sgerasimou
  *
  */
-public class EvolvableInteger extends EvolvableRange implements IStructuralEvolvable{
+public class EvolvableInteger extends EvolvableRange{
 	
 	/**
 	 * Class constructor

@@ -6,7 +6,7 @@ import java.util.List;
 
 import evochecker.exception.LanguageException;
 
-public abstract class EvolvableOption extends Evolvable implements IStructuralEvolvable{
+public abstract class EvolvableOption extends Evolvable{
 	
 	protected List<Number> optionsList;
 
