@@ -12,7 +12,6 @@
 package evochecker.language.parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -125,11 +124,15 @@ public class ModelParser implements IModelParser{
 		
 		// begin parsing at prog rule
 		ParseTree tree = parser.model();
+
+		//stop if there is an error in the model
+		if (errorListener.isInputFaulty())
+			throw new EvoCheckerException ("The input model is incorrect! Please fix the errors and try again. Exiting");
+
 		//Create the visitor
 		PrismVisitor visitor = new PrismVisitor();
 		// and visit the nodes
 		visitor.visit(tree);
-		
 		
 		//generate list with evolvable elements
 		List<Evolvable> evolvableList = visitor.getEvolvableList();
@@ -141,10 +144,6 @@ public class ModelParser implements IModelParser{
 		
 		//get model type
 		this.modelType = visitor.getModelType();
-		
-		
-		if (errorListener.isInputFaulty())
-			throw new EvoCheckerException ("The input model is incorrect! Please fix the errors and try again. Exiting");
 	}
 	
 	

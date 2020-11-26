@@ -28,7 +28,6 @@ import evochecker.evolvables.EvolvableModuleAlternative;
 import evochecker.evolvables.EvolvableOption;
 import evochecker.evolvables.EvolvableOptionDouble;
 import evochecker.evolvables.EvolvableOptionInteger;
-import evochecker.evolvables.VariableType;
 import evochecker.exception.EvoCheckerException;
 import evochecker.language.parser.grammar.PrismBaseVisitor;
 import evochecker.language.parser.grammar.PrismParser;
