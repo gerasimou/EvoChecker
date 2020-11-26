@@ -27,8 +27,6 @@ public interface IModelInvoker {
 
 	public List<String> invoke(String model, String propertyFile, PrintWriter out, BufferedReader in) throws IOException;
 
-	public List<String> invokeParam(String model, String propertyFile, PrintWriter out, BufferedReader in, List<AbstractGene> genes) throws IOException;
-
 	public List<String> invokeParam(String model, String propertyFile, PrintWriter out, BufferedReader in) throws IOException;
 
 }

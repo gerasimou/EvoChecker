@@ -38,7 +38,6 @@ public class ModelInvokerPrism implements IModelInvoker {
 	
 	// Q: evaluation of Prism return results for properties as they appear in properties file
 	// not necessary first ones
-	@Override
 	public List<String> invokeParam(String model, String propertyFile, PrintWriter out, BufferedReader in, List<AbstractGene> genes) throws IOException {
 		// TODO: need to modify to allow parametric model checking
 //		String names[] = new String[genes.size()];
