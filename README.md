@@ -4,6 +4,8 @@ EvoChecker is a Java-based tool that uses Maven for managing the project and its
 
 EvoChecker uses under-the-hood JMetal 4.5 for multiobjective optimisation, PRISM 4.5 for probabilistic model checking, and Antl4 for parsing the probabilistic model templates.
 
+### Runnning Within an IDE
+
 This branch shows how you can use EvoChecker as a Jar by specifying a configuration file (e.g., [config.properties](https://github.com/gerasimou/EvoChecker/blob/evoCheckerJar/config.properties)) and **less than five lines of code**. 
 
     //1) Create EvoChecker instance
@@ -17,6 +19,16 @@ This branch shows how you can use EvoChecker as a Jar by specifying a configurat
     ec.start();		
     
 The [EvoCheckerRunner class](https://github.com/gerasimou/EvoChecker/blob/evoCheckerJar/src/examples/EvoCheckerRunner.java) in the examples directory provides the complete source-code.
+
+
+### Runnning From Terminal
+
+1) Define your properties in the config.properties file
+
+2) Use the terminal to execute the launch script
+
+    ./launch.sh
+
 
 
 ###### Remember to set the Java library path (DYLD\_LIBRARY\_PATH on OSX; LD\_LIBRARY\_PATH on *NIX)
