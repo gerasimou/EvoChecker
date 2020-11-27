@@ -2,8 +2,6 @@
 
 #  launch.sh
 #
-#  Created by Simos Gerasimou on 04/09/2017.
-
 WD=`pwd`
 
 
@@ -16,7 +14,7 @@ fi
 
 
 #For launching an instance only
-PRISM_DIR=lib/prism-tacas17
+PRISM_DIR=libs/runtime
 
 export DYLD_LIBRARY_PATH="$PRISM_DIR":$DYLD_LIBRARY_PATH
 
@@ -25,12 +23,12 @@ unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)     machine=Linux
     				export LD_LIBRARY_PATH="$PRISM_DIR":$LD_LIBRARY_PATH
-    				;;
+    				;
     Darwin*)    machine=Mac
     				export DYLD_LIBRARY_PATH="$PRISM_DIR":$DYLD_LIBRARY_PATH
-    				;;
-    CYGWIN*)    machine=Cygwin;;
-    MINGW*)     machine=MinGw;;
+    				;
+    CYGWIN*)    machine=Cygwin;
+    MINGW*)     machine=MinGw;
     *)          machine="UNKNOWN:${unameOut}"
 esac
 
@@ -44,7 +42,7 @@ JAR=""
 #            break;;           
 #     esac
 #done
-JAR=EvoChecker-1.0.1.jar
+JAR=EvoChecker-1.1.0.jar
 
 vmArgs="-Xmx3g -XX:ParallelGCThreads=1"
 java $vmArgs -jar $JAR
