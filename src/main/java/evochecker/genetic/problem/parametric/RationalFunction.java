@@ -11,12 +11,16 @@ public class RationalFunction {
 	
 	
 	public RationalFunction(String functionAsString, String paramsNames) {
-		
-		String functionStr = formatRationalFunction(functionAsString); 
-		function = new Function("f(" + paramsNames + ") = " + functionStr);
-		boolean isFunctionOK = function.checkSyntax();
-		String s = function.getErrorMessage();
-//		System.out.println(s);
+		try {
+			String functionStr = formatRationalFunction(functionAsString); 
+			function = new Function("f(" + paramsNames + ") = " + functionStr);
+			boolean isFunctionOK = function.checkSyntax();
+			String s = function.getErrorMessage();
+	//		System.out.println(s);
+		}
+		catch(NullPointerException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

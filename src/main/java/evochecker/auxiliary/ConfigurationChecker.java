@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import evochecker.EvoCheckerType;
 import evochecker.exception.EvoCheckerException;
+import evochecker.modelInvoker.ModelInvokerEngine;
 
 public class ConfigurationChecker {
 	
@@ -109,16 +110,57 @@ public class ConfigurationChecker {
 			Utility.setProperty(Constants.EVOCHECKER_TYPE, EvoCheckerType.NORMAL+"");
 		}
 		
-		
-		//check model checking engine
-		File engine;
-		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN))
+
+		//check if the Evochecker Engine has been specified correctly
+		ModelInvokerEngine ecEngine = null;
+		try {
+			ecEngine = ModelInvokerEngine.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_ENGINE).toUpperCase());
+		}
+		catch (IllegalArgumentException e) {
+			errors.append(Constants.EVOCHECKER_ENGINE + " incorrectly specified. Allowed options: " + 
+						  Arrays.toString(ModelInvokerEngine.values()) +"\n");			
+		}
+		catch (NullPointerException e) {
+			System.err.println("EVOCHECKER_ENGINE not specified, using PRISM; Options: " + Arrays.toString(ModelInvokerEngine.values()));
+			Utility.setProperty(Constants.EVOCHECKER_ENGINE, ModelInvokerEngine.PRISM+"");
+		}
+
+		File engine = null;
+		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN)) {
 			if (ecType == EvoCheckerType.REGION)
 				engine = new File(Constants.MODEL_CHECKING_ENGINE_REGION);
-			else 
+			else if ((ecType == EvoCheckerType.NORMAL) && (ecEngine == ModelInvokerEngine.STORM)) {
 				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
+				System.err.println("EVOCHECKER_ENGINE specified to Storm. Note that Storm is slower than Prism for model checking concrete instances");
+			}
+			else if ((ecType == EvoCheckerType.NORMAL) && (ecEngine == ModelInvokerEngine.PRISM)) {
+				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
+			}
+			else if ((ecType == EvoCheckerType.PARAMETRIC) && (ecEngine == ModelInvokerEngine.STORM)) {
+				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
+			}
+			else if ((ecType == EvoCheckerType.PARAMETRIC) && (ecEngine == ModelInvokerEngine.PRISM)) {
+				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
+				System.err.println("EVOCHECKER_ENGINE specified to Prism. Note that Prism is slower than Storm for parametric model checking");
+			}
+		}
 		else 
-			engine = new File(Utility.getProperty(Constants.MODEL_CHECKING_ENGINE));
+			engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
+
+		
+//
+//		//check model checking engine
+//		File engine;
+//		if (ecEngine == ModelInvokerEngine.PRISM)
+//			if (ecType == EvoCheckerType.REGION)
+//				engine = new File(Constants.MODEL_CHECKING_ENGINE_REGION);
+//			else 
+//				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
+//		else if (ecEngine == ModelInvokerEngine.STORM)
+//			engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
+//		else 
+//			engine = null;
+	
 		
 		if (!engine.exists())
 			errors.append("Model Checking engine at " + engine.getAbsolutePath() + " does not exist!\n" + 

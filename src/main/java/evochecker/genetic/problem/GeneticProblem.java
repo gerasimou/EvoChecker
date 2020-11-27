@@ -60,6 +60,6 @@ public class GeneticProblem extends GeneticModelProblem {
 		String model 		= modelInstantiator.getConcreteModel(this.genes);
 		String propertyFile = modelInstantiator.getPropertyFileName();
 		
-		return modelInvoker.invoke(model, propertyFile, out, in);
+		return modelInvoker.invoke(model, propertyFile, objectivesList, constraintsList, out, in);
 	}
 }

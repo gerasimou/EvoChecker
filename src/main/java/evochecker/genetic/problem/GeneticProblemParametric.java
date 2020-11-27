@@ -143,7 +143,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 		String model 		= ((IModelInstantiatorParametric)modelInstantiator).getParametricModel(genes, findGenesUsingType(false));
 		String propertyFile = modelInstantiator.getPropertyFileName();
 //		return modelInvoker.invokeParam(model, propertyFile, out, in, findGenesUsingType(true));
-		return modelInvoker.invokeParam(model, propertyFile, out, in);
+		return modelInvoker.invokeParam(model, propertyFile, objectivesList, constraintsList, out, in);
 	}
 	
 	

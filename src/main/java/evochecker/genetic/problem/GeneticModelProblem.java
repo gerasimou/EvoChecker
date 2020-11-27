@@ -19,6 +19,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import evochecker.EvoCheckerType;
 import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
@@ -34,7 +35,9 @@ import evochecker.genetic.jmetal.encoding.ArrayRealIntSolutionType;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.language.parser.ModelInstantiator;
 import evochecker.modelInvoker.IModelInvoker;
+import evochecker.modelInvoker.ModelInvokerEngine;
 import evochecker.modelInvoker.ModelInvokerPrism;
+import evochecker.modelInvoker.ModelInvokerStorm;
 import evochecker.properties.Constraint;
 import evochecker.properties.Objective;
 import evochecker.properties.Property;
@@ -93,7 +96,11 @@ public abstract class GeneticModelProblem extends Problem {
 		this.problemName_			= problemName;
 		this.initializeLimits();	
 		
-		this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here
+		switch (ModelInvokerEngine.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_ENGINE).toUpperCase())) {
+			case PRISM		: modelInvoker = new ModelInvokerPrism(); break;
+			case STORM		: modelInvoker = new ModelInvokerStorm(); break;
+		}
+//		this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here		
 		
 		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, ConfigurationChecker.FALSE));
 	}

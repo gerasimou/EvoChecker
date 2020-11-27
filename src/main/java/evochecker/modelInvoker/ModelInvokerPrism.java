@@ -21,6 +21,7 @@ import java.util.List;
 
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.DistributionGene;
+import evochecker.properties.Property;
 
 public class ModelInvokerPrism implements IModelInvoker {
 
@@ -64,7 +65,7 @@ public class ModelInvokerPrism implements IModelInvoker {
 
 
 	@Override
-	public List<String> invoke(String model, String propertyFile, PrintWriter out, BufferedReader in) throws IOException {
+	public List<String> invoke(String model, String propertyFile, List<Property> objectives, List<Property> constraints, PrintWriter out, BufferedReader in) throws IOException {
 		out.print(model + "#" + propertyFile + "\nEND\n");
 		out.flush();
 
@@ -74,7 +75,7 @@ public class ModelInvokerPrism implements IModelInvoker {
 
 	
 	@Override
-	public List<String> invokeParam(String model, String propertyFile, PrintWriter out, BufferedReader in) throws IOException {
+	public List<String> invokeParam(String model, String propertyFile, List<Property> objectives, List<Property> constraints, PrintWriter out, BufferedReader in) throws IOException {
 		out.print(model + "#" + propertyFile + "#param\nEND\n");
 		out.flush();
 

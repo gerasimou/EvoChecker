@@ -257,9 +257,17 @@ public class Utility {
 			else
 				throw new EvoCheckerException("EvoChecker currently supports only OSX and Unix.");
 		
-		  String out = System.getenv(variable);
-		  if (out==null || !new File(out).isDirectory())
-				return variable;
+		  if (System.console() == null) {//within an IDE
+			  //System.out.println("IDE");
+			  String out = System.getenv(variable);
+			  if (out==null || !new File(out).isDirectory())
+					return variable;			  
+		  }
+		  else {//within a terminal
+			  //System.out.println("Terminal");
+			  //assume that the script has been specified correctly
+			  System.out.println("Running from terminal. Make sure you have set the environment variable " + variable +" in the launch script");
+		  }
 			
 		 return null;
 	  }
