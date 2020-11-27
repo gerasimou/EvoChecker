@@ -27,7 +27,7 @@ The [EvoCheckerRunner class](https://github.com/gerasimou/EvoChecker/blob/evoChe
 
 2) Use the terminal to execute the launch script
 
-    ./launch.sh
+     ./launch.sh
 
 
 
