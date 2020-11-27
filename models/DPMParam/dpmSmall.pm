@@ -2,9 +2,10 @@ ctmc
 
 
 evolve int QmaxL [1..3]; 
-evolve int QmaxH [1..3]; 
+evolve int QmaxH {1,5, 8}; 
 evolve param distribution evTrans1 [2][0.0 .. 0.8];
 evolve param distribution evTrans2 [2][0.2 .. 0.6];
+
 
 module PM
 	p: [0..2];

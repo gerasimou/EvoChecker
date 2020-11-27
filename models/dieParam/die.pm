@@ -1,8 +1,10 @@
 dtmc
 
-evolve param double p [0.4 .. 0.6];
+//evolve param double p [0.4 .. 0.6];
 
-evolve int z [1..5];
+const double p = 0.5;
+
+evolve int z {1, 10, 8};
 
 module die
 
