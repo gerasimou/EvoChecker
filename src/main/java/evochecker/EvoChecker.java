@@ -31,7 +31,6 @@ import evochecker.genetic.jmetal.metaheuristics.settings.MOCell_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
-import evochecker.genetic.problem.GeneticModelProblem;
 import evochecker.genetic.problem.GeneticProblem;
 import evochecker.genetic.problem.GeneticProblemParametric2;
 import evochecker.language.parser.IModelInstantiator;
@@ -212,6 +211,7 @@ public class EvoChecker {
 		//6) instantiate the problem
 		switch (ecType) {
 			case NORMAL		: problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName); break;
+//			case PARAMETRIC	: problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
 			case PARAMETRIC	: problem = new GeneticProblemParametric2 (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
 			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
 		}

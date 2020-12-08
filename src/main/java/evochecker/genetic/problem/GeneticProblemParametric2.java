@@ -79,6 +79,7 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 		archive = new Archive();
 	}
 	
+	
 	@Override
 	public  List<String> evaluate(BufferedReader in, PrintWriter out) throws Exception{
 		
@@ -110,34 +111,32 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 		}
 
 		List<RationalFunction> rfList = null;
-			if (structParamsValues.length()>0) {
+		if (structParamsValues.length()>0) {
+			
+			structParamsValues = structParamsValues.substring(0, structParamsValues.length()-1);
+			if (nonStructParamsNames.length()>0)
+				nonStructParamsNames = nonStructParamsNames.substring(0, nonStructParamsNames.length()-1);
+
+			rfList = archive.get(structParamsValues);
+			System.out.print(structParamsValues +"\t");
+			if (rfList == null) {//key does not exist in the archive
+				archive.miss();
+
+				if (parametricInProcess.get(structParamsValues)==null)
+					generateRationalFunctionsParallel(structParamsValues, nonStructParamsNames, out, in);
 				
-				structParamsValues = structParamsValues.substring(0, structParamsValues.length()-1);
-				if (nonStructParamsNames.length()>0)
-					nonStructParamsNames = nonStructParamsNames.substring(0, nonStructParamsNames.length()-1);
-
-				rfList = archive.get(structParamsValues);
-				System.out.print(structParamsValues +"\t");
-				if (rfList == null) {//key does not exist in the archive
-					archive.miss();
-
-					
-					if (parametricInProcess.get(structParamsValues)==null) {
-						generateRationalFunctionsParallel(structParamsValues, nonStructParamsNames, out, in);
-					}
-					
-					return evaluateByInvocation(out, in);
-				}
-				else if (rfList.isEmpty())//bad key retrieved -> normal evaluation
-					return evaluateByInvocation(out, in);
-				else {//rational functions retrieved -> evaluate the functions
-					archive.hit();
-					return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
-				}				
-			}
-			else {//no structural parameters in the model -> normal evaluation (no rational functions)
 				return evaluateByInvocation(out, in);
 			}
+			else if (rfList.isEmpty())//bad key retrieved -> normal evaluation
+				return evaluateByInvocation(out, in);
+			else {//rational functions retrieved -> evaluate the functions
+				archive.hit();
+				return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
+			}				
+		}
+		else {//no structural parameters in the model -> normal evaluation (no rational functions)
+			return evaluateByInvocation(out, in);
+		}
 	}
 
 	
@@ -149,12 +148,11 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 			Thread t = new Thread(paramEvaluator, "ParamEvaluator" + structParamsValues);
 			parametricInProcess.put(structParamsValues, t);
 			t.start();
-//			t.join();
 		}
 		catch (IllegalThreadStateException e) {
 			e.printStackTrace();
 		}
-	}	
+	}
 	
 	private List<String> evaluateAlgebraicExpressions(List<RationalFunction> rfList, List<Number> nonStructParamsValues){
 		List<String> results = new ArrayList<>();
@@ -165,7 +163,6 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 		for (RationalFunction rf : rfList) { 
 			results.add(rf.evaluate(arguments));
 		}
-		
 		return results;
 	}
 	
@@ -183,6 +180,17 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 		}
 		return genes;
 	}
+	
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public void closeDown() {
+		for (Thread t : parametricInProcess.values()) {
+			if(t.isAlive())
+				t.stop();
+		}
+	}
+
 	
 	
 	private class RunnableParametricEvaluator implements Runnable {
@@ -212,13 +220,13 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 				((ModelInvokerStorm)invoker).ERROR  += id;
 				((ModelInvokerStorm)invoker).OUTPUT += id++;
 				List<String> rationalFunctionStringsList = invoker.invokeParam(model, propertyFile, objectivesList, constraintsList, out, in);
-//				List<String> rationalFunctionStringsList = modelInvoker.invokeParam(model, propertyFile, objectivesList, constraintsList, out, in);
 				appendToArchive(structParamsValues, nonStructParamsNames, rationalFunctionStringsList);
 			} catch (IOException e) {
 				e.printStackTrace();
 				appendToArchive(structParamsValues, nonStructParamsNames, null);
 			}
 		}
+		
 		
 		private boolean appendToArchive(String structParamsValues, String nonStructParamsNames, List<String> rationalFunctionStringsList) {
 			List<RationalFunction> rfList = new ArrayList<>(); 
@@ -237,13 +245,5 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 			return true; //return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
 		}
 	}
-
-	
-	@Override
-	public void closeDown() {
-		for (Thread t : parametricInProcess.values()) {
-			if(t.isAlive())
-				t.stop();
-		}
-	}
+		
 }

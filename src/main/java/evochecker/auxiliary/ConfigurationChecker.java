@@ -114,6 +114,11 @@ public class ConfigurationChecker {
 		ModelInvokerEngine ecEngine = null;
 		try {
 			ecEngine = ModelInvokerEngine.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_ENGINE).toUpperCase());
+			if (ecEngine.name() == ModelInvokerEngine.STORM.name().toUpperCase()) {
+				String stormParsPath = Utility.bashInvoker("which storm-pars");
+				if (stormParsPath == null)
+					errors.append("Storm-pars not installed. Please check again");			
+			}
 		}
 		catch (IllegalArgumentException e) {
 			errors.append(Constants.EVOCHECKER_ENGINE + " incorrectly specified. Allowed options: " + 

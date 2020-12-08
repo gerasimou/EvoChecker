@@ -280,11 +280,12 @@ public class Utility {
 			
 	  public static String bashInvoker(String command) {
 		  try {
+			  command = "export PATH=/usr/local/bin:$PATH; " + command;
 			  ProcessBuilder pb = new ProcessBuilder();
-			  pb.command("/bin/bash", "-c", command);
+			  pb.command("bash", "-c", command);
 			  Process process = pb.start();
 			  BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			  return reader.readLine();
+			  return reader.readLine(); 
 		  } 
 		  catch (IOException e) {
 			e.printStackTrace();
@@ -292,5 +293,14 @@ public class Utility {
 		  return null;
 	}
 	
+	  
+	  
+	 public static void main (String args[]) {
+		 //System.out.println(Utility.bashInvoker("which java"));
+//		 System.out.println(Utility.bashInvoker("which python3"));
+//		 System.out.println(Utility.bashInvoker("which storm-pars"));
+		 System.out.println(Utility.bashInvoker("echo $PATH"));
+//		 System.out.println(Utility.bashInvoker("storm-pars"));
+	 }
 	  
 }

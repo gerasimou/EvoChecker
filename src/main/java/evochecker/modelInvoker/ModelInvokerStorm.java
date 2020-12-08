@@ -13,6 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import evochecker.auxiliary.FileUtil;
+import evochecker.auxiliary.Utility;
 import evochecker.properties.Objective;
 import evochecker.properties.Property;
 
@@ -21,6 +22,9 @@ public class ModelInvokerStorm implements IModelInvoker {
 	public File tempDir;
 	public String OUTPUT = "storm.out";
 	public String ERROR  = "storm.err";
+	
+	private String stormParsPath;
+	
 	List<String> resultsList;
 	List<Property> properties;
 	
@@ -31,6 +35,8 @@ public class ModelInvokerStorm implements IModelInvoker {
 		
 		resultsList = new  CopyOnWriteArrayList<>();
 		properties = new CopyOnWriteArrayList<>();
+		
+		stormParsPath = Utility.bashInvoker("which storm-pars");
 	}
 	
 	
@@ -49,7 +55,7 @@ public class ModelInvokerStorm implements IModelInvoker {
 
 	@Override
 	public List<String> invokeParam(String model, String propertyFile, List<Property> objectives, List<Property> constraints, PrintWriter out, BufferedReader in) throws IOException {
-		return prepareStorm(model, objectives, constraints, "/usr/local/bin/storm-pars");
+		return prepareStorm(model, objectives, constraints, stormParsPath);
 	}
 	
 	
@@ -113,8 +119,6 @@ public class ModelInvokerStorm implements IModelInvoker {
 		pb.redirectOutput(ProcessBuilder.Redirect.to(outputRun));
 		pb.redirectError(ProcessBuilder.Redirect.to(errorRun));
 		
-		
-		
 		// run and wait until it is up and running
 		boolean alive = false;
 		try { 
@@ -159,8 +163,6 @@ public class ModelInvokerStorm implements IModelInvoker {
 		
 		return result;
 	}
-	
-	
 	
 
 	
