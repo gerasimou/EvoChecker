@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import evochecker.auxiliary.FileUtil;
@@ -22,22 +23,25 @@ public class ModelInvokerStorm implements IModelInvoker {
 	public String ERROR  = "storm.err";
 	List<String> resultsList;
 	List<Property> properties;
-
-	
-	ModelInvokerPrism prism = new ModelInvokerPrism();
 	
 	public ModelInvokerStorm() {
 		tempDir = new File("temp");
 		tempDir.mkdirs();
 		tempDir.deleteOnExit();
 		
-		resultsList = new  ArrayList<>();
-		properties = new ArrayList<>();
+		resultsList = new  CopyOnWriteArrayList<>();
+		properties = new CopyOnWriteArrayList<>();
+	}
+	
+	
+	public IModelInvoker copy() {
+		return new ModelInvokerStorm(); 
 	}
 	
 	
 	@Override
 	public List<String> invoke(String model, String propertyFile, List<Property> objectives, List<Property> constraints, PrintWriter out, BufferedReader in) throws IOException {
+		ModelInvokerPrism prism = new ModelInvokerPrism();
 		return prism.invoke(model, propertyFile, objectives, constraints, out, in);
 //				prepareStorm(model, objectives, constraints, "/usr/local/bin/storm");		
 	}
@@ -121,7 +125,9 @@ public class ModelInvokerStorm implements IModelInvoker {
 				Thread.sleep(1000);
 			} while (!alive);
 
-			 return p.waitFor(10, TimeUnit.SECONDS);
+			 boolean OK = p.waitFor(300, TimeUnit.SECONDS);
+			 p.destroyForcibly();
+			 return OK;
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 			return false;
@@ -153,6 +159,8 @@ public class ModelInvokerStorm implements IModelInvoker {
 		
 		return result;
 	}
+	
+	
 	
 
 	

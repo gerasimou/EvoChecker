@@ -134,7 +134,8 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 		catch (EvoCheckerException e) {
 			e.printStackTrace();
 		}
-		return  model + "\n";
+		//return  model + "\n";
+		return "\n";
 	}
 	
 	

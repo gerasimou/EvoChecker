@@ -177,9 +177,14 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	 */
 	public void stopEvaluator() {
 		try {
-			for (Connection c: connections) {
+			//close connections
+			for (Connection c: connections) 
 				c.close();
-			}
+
+			//do any cleaning for problems
+			for (Problem p : problems)
+				((GeneticModelProblem)p).closeDown();
+			
 		} 
 		catch (IOException e) {
 			e.printStackTrace();

@@ -41,7 +41,8 @@ public class ModelInstantiatorParametric extends ModelInstantiator implements IM
 
 	@Override
 	public String getParametricModel(List<AbstractGene> genes, List<AbstractGene> structGenes) {
-		StringBuilder parametricModel = new StringBuilder(parser.getInternalModelRepresentation());
+		StringBuilder parametricModel = new StringBuilder(parser.getModelType().toString().toLowerCase() +"\n\n");
+		
 		for (AbstractGene gene : structGenes) {
 			if (gene instanceof IntegerGene) {
 				parametricModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
@@ -74,6 +75,9 @@ public class ModelInstantiatorParametric extends ModelInstantiator implements IM
 					throw new IllegalArgumentException("Incorrectly generated chromosome");				
 			}
 		}
+		
+		parametricModel.append("\n"+ parser.getInternalModelRepresentation());
+		
 		return parametricModel.toString();		
 	}
 }

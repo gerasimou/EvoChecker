@@ -41,7 +41,7 @@ import evochecker.genetic.genes.IntegerGene;
 public class GenotypeFactory{
 	
 	/** Map between a gene and an evolvable element*/
-	private static Map<AbstractGene,Evolvable> geneEvolvableMap = new HashMap<AbstractGene, Evolvable>();
+	private static Map<AbstractGene,Evolvable> geneEvolvableMap;
 	
 	private static List<String> evolvableNames = new ArrayList<String>();
 
@@ -49,6 +49,7 @@ public class GenotypeFactory{
 	 * Create a list chromosome (or individual) as a sequence of genes
 	 */
 	public static List<AbstractGene> createChromosome(List<Evolvable> evolvableList) throws EvoCheckerException{
+		geneEvolvableMap = new HashMap<AbstractGene, Evolvable>();
 		List<AbstractGene> genes = new ArrayList<AbstractGene> ();		
 		for (Evolvable evolvable : evolvableList){
 			AbstractGene gene = initialiseGene(evolvable);

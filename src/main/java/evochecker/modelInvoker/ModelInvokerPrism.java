@@ -111,7 +111,11 @@ public class ModelInvokerPrism implements IModelInvoker {
 			return null;
 		else
 			return Arrays.asList(resultString.split("#"));
-
+	}
+	
+	
+	public IModelInvoker copy() {
+		return new ModelInvokerPrism(); 
 	}
 	
 }

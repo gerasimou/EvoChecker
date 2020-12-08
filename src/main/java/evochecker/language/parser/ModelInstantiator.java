@@ -61,7 +61,8 @@ public class ModelInstantiator implements IModelInstantiator {
 	
 	@Override
 	public String getConcreteModel(List<AbstractGene> genes) {
-		StringBuilder concreteModel = new StringBuilder(parser.getInternalModelRepresentation());
+		StringBuilder concreteModel = new StringBuilder(parser.getModelType().toString().toLowerCase() +"\n\n");
+		
 		for (AbstractGene gene : genes) {
 			if (gene instanceof IntegerGene) {
 				concreteModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
@@ -78,6 +79,9 @@ public class ModelInstantiator implements IModelInstantiator {
 				concreteModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
 			}	
 		}
+		
+		concreteModel.append("\n" + parser.getInternalModelRepresentation());
+		
 		// System.err.println(concreteModel);
 		return concreteModel.toString();
 	}

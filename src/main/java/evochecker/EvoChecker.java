@@ -31,8 +31,9 @@ import evochecker.genetic.jmetal.metaheuristics.settings.MOCell_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
+import evochecker.genetic.problem.GeneticModelProblem;
 import evochecker.genetic.problem.GeneticProblem;
-import evochecker.genetic.problem.GeneticProblemParametric;
+import evochecker.genetic.problem.GeneticProblemParametric2;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.language.parser.ModelInstantiator;
 import evochecker.language.parser.ModelInstantiatorParametric;
@@ -90,8 +91,12 @@ public class EvoChecker {
 	private String paretoSetFile;
 
 	
+	/** */
 	private EvoCheckerType ecType;
 
+	/** */
+	private double executionTime;
+	
 	
 	public EvoChecker() {
 		
@@ -142,6 +147,7 @@ public class EvoChecker {
 			SolutionSet solutions = execute();
 
 			long end = System.currentTimeMillis();
+			executionTime = (end - start)/1000.0;
 
 			//5) save solutions
 			exportResults(outputDir, solutions);
@@ -149,7 +155,7 @@ public class EvoChecker {
 			//6) close down
 			closeDown();
 			
-			System.err.printf("Time:\t%s\n", (end - start)/1000.0);
+			System.err.printf("Time:\t%s\n", executionTime);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -206,7 +212,7 @@ public class EvoChecker {
 		//6) instantiate the problem
 		switch (ecType) {
 			case NORMAL		: problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName); break;
-			case PARAMETRIC	: problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
+			case PARAMETRIC	: problem = new GeneticProblemParametric2 (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
 			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
 		}
 	}	
@@ -282,6 +288,7 @@ public class EvoChecker {
 	 * Make finalisations of algorithm
 	 */
 	private void closeDown(){
+		
 	}
 	
 	
@@ -392,5 +399,19 @@ public class EvoChecker {
 		  
 		  // Add the indicator object to the algorithm
 		    algorithm.setInputParameter("indicators", indicators) ;  
+	}
+	
+	
+	public double getExecutionTime() {
+		return executionTime;
+	}
+	
+	
+	public void setProperty(String key, String value) {
+		try {
+			Utility.setProperty(key, value);
+		} catch (EvoCheckerException e) {
+			e.printStackTrace();
+		}
 	}
 }

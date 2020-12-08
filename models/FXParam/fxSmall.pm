@@ -470,3 +470,4 @@ rewards "cost"
 	operation6 = 1 | operation6 = 2: 11;
 
 endrewards
+

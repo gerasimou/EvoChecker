@@ -29,4 +29,6 @@ public interface IModelInvoker {
 
 	public List<String> invokeParam(String model, String propertyFile, List<Property> objectives, List<Property> constraints, PrintWriter out, BufferedReader in) throws IOException;
 
+	
+	public IModelInvoker copy();
 }

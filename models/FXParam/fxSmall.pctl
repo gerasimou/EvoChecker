@@ -4,18 +4,18 @@ label "done" = state=5 |state=15;
 
 
 //objective, max
-P=? [ F "success" ]
+P=? [ F state=15 ]
 
 
 //objective, min
-R{"cost"}=? [ F "done"]
+R{"cost"}=? [ F state=5 |state=15]
 
 
 ////constraint, max, 0.9
-//P=? [ F "success" ]
+//P=? [ F state=15 ]
 
 //objective, min
-R{"time"}=? [ F "done" ]
+R{"time"}=? [ F state=5 |state=15 ]
 
 
 

@@ -16,10 +16,9 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import evochecker.EvoCheckerType;
 import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
@@ -376,6 +375,11 @@ public abstract class GeneticModelProblem extends Problem {
 		solution.setOverallConstraintViolation(totalViolation);
 		solution.setNumberOfViolatedConstraint(violatedConstraints);			
 	}
+	
+	
+	public void closeDown() {
+		
+	}
 
 	
 	/**
@@ -400,11 +404,11 @@ public abstract class GeneticModelProblem extends Problem {
 //		for (Property prop : aProblem.properties){
 //			this.properties.add(new Property(prop));
 //		}
-		this.objectivesList		=  new ArrayList<Property>();
+		this.objectivesList		=  new CopyOnWriteArrayList<Property>();
 		for (Property objective : aProblem.objectivesList){
 			this.objectivesList.add(new Objective((Objective)objective));
 		}
-		this.constraintsList		=  new ArrayList<Property>();
+		this.constraintsList		=  new CopyOnWriteArrayList<Property>();
 		for (Property constraint : aProblem.constraintsList){
 			this.constraintsList.add(new Constraint((Constraint)constraint));
 		}
