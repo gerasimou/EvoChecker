@@ -14,9 +14,9 @@ public class RationalFunction {
 		try {
 			String functionStr = formatRationalFunction(functionAsString); 
 			function = new Function("f(" + paramsNames + ") = " + functionStr);
-			boolean isFunctionOK = function.checkSyntax();
-			String s = function.getErrorMessage();
-	//		System.out.println(s);
+//			boolean isFunctionOK = function.checkSyntax();
+//			String s = function.getErrorMessage();
+//	//		System.out.println(s);
 		}
 		catch(NullPointerException e) {
 			e.printStackTrace();

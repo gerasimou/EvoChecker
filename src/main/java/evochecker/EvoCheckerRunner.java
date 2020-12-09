@@ -23,6 +23,7 @@ public class EvoCheckerRunner {
 			ec.setConfigurationFile(configFile);
 
 			ec.setProperty("PLOT_PARETO_FRONT", "false");
+			ec.setProperty("VERBOSE", "false");
 			ec.setProperty("MAX_EVALUATIONS", evaluations[i]);
 			
 			//3) Start EvoChecker
