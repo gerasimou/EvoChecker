@@ -135,7 +135,7 @@ public class ConfigurationChecker {
 				engine = new File(Constants.MODEL_CHECKING_ENGINE_REGION);
 			else if ((ecType == EvoCheckerType.NORMAL) && (ecEngine == ModelInvokerEngine.STORM)) {
 				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
-				System.err.println("EVOCHECKER_ENGINE specified to Storm. Note that Storm is slower than Prism for model checking concrete instances");
+				System.err.println("EVOCHECKER_ENGINE specified to Storm. Note that Storm is slower than Prism for model checking concrete instances.");
 			}
 			else if ((ecType == EvoCheckerType.NORMAL) && (ecEngine == ModelInvokerEngine.PRISM)) {
 				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
@@ -145,32 +145,19 @@ public class ConfigurationChecker {
 			}
 			else if ((ecType == EvoCheckerType.PARAMETRIC) && (ecEngine == ModelInvokerEngine.PRISM)) {
 				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
-				System.err.println("EVOCHECKER_ENGINE specified to Prism. Note that Prism is slower than Storm for parametric model checking");
+				System.err.println("EVOCHECKER_ENGINE specified to Prism. Note that Prism is slower than Storm for parametric model checking.");
 			}
 		}
 		else 
 			engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
 
 		
-//
-//		//check model checking engine
-//		File engine;
-//		if (ecEngine == ModelInvokerEngine.PRISM)
-//			if (ecType == EvoCheckerType.REGION)
-//				engine = new File(Constants.MODEL_CHECKING_ENGINE_REGION);
-//			else 
-//				engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
-//		else if (ecEngine == ModelInvokerEngine.STORM)
-//			engine = new File(Constants.MODEL_CHECKING_ENGINE_DEFAULT);
-//		else 
-//			engine = null;
-	
-		
-		if (!engine.exists())
-			errors.append("Model Checking engine at " + engine.getAbsolutePath() + " does not exist!\n" + 
-						  "You can specify the engine in the configuration script using " + Constants.MODEL_CHECKING_ENGINE_LIBS_DIR +"\n");
-		else
-			Utility.setProperty(Constants.MODEL_CHECKING_ENGINE, engine.getAbsolutePath());
+		if (engine != null)
+			if (!engine.exists())
+				errors.append("Model Checking engine at " + engine.getAbsolutePath() + " does not exist!\n" + 
+							  "You can specify the engine in the configuration script using " + Constants.MODEL_CHECKING_ENGINE_LIBS_DIR +"\n");
+			else
+				Utility.setProperty(Constants.MODEL_CHECKING_ENGINE, engine.getAbsolutePath());
 		
 		
 		if (errors.length()!=0)

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import evochecker.auxiliary.Utility;
 import evochecker.evolvables.Evolvable;
 import evochecker.evolvables.EvolvableDistribution;
 import evochecker.exception.EvoCheckerException;
@@ -31,19 +32,18 @@ import evochecker.genetic.problem.parametric.RationalFunction;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.language.parser.IModelInstantiatorParametric;
 import evochecker.modelInvoker.IModelInvoker;
-import evochecker.modelInvoker.ModelInvokerStorm;
 import evochecker.properties.Property;
 
-public class GeneticProblemParametric2 extends GeneticProblem{
+public class GeneticProblemParametricParallel extends GeneticProblemParametric{
 
-	private static final long serialVersionUID = -2679872853510614319L;
+	private static final long serialVersionUID = 1L;
 
-	private Archive archive;
-	
+	/** Keeps which threads are in process based on the structural parameter combinations**/
 	private ConcurrentHashMap<String, Thread> parametricInProcess;
 	
-	
+	/** Keep the files' indices for outputs from parametric Storm**/
 	private int id=0;
+	
 	
 	/**
 	 * Class constructor: create a new Genetic Problem instance
@@ -53,16 +53,13 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 	 * @param numOfConstraints
 	 * @throws EvoCheckerException 
 	 */
-	public GeneticProblemParametric2(List<AbstractGene> genes, IModelInstantiator instantiator,
+	public GeneticProblemParametricParallel(List<AbstractGene> genes, IModelInstantiator instantiator,
 						  List<Property> objectivesList, List<Property> constraintsList, String problemName) throws EvoCheckerException{
 		super(genes, instantiator, objectivesList, constraintsList, problemName);
 
 		if (! (instantiator instanceof IModelInstantiatorParametric))
 			throw new EvoCheckerException(instantiator + " not instance of IModelInstantiatorParametric");
-		
-		// construct a dictionary for archiving
-		archive = new Archive();
-		
+				
 		parametricInProcess = new ConcurrentHashMap<String, Thread>();
 	}
 	
@@ -72,11 +69,8 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 	 * @param aProblem
 	 * @throws EvoCheckerException
 	 */
-	public GeneticProblemParametric2 (GeneticProblemParametric2 aProblem) throws EvoCheckerException{		
-		super((GeneticProblem)aProblem);
-
-		// construct a dictionary for archiving
-		archive = new Archive();
+	public GeneticProblemParametricParallel (GeneticProblemParametricParallel aProblem) throws EvoCheckerException{		
+		super(aProblem);
 	}
 	
 	
@@ -118,13 +112,17 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 				nonStructParamsNames = nonStructParamsNames.substring(0, nonStructParamsNames.length()-1);
 
 			rfList = archive.get(structParamsValues);
-			System.out.print(structParamsValues +"\t");
+			if (verbose)
+				System.out.print(structParamsValues +"\t");
 			if (rfList == null) {//key does not exist in the archive
 				archive.miss();
 
-				if (parametricInProcess.get(structParamsValues)==null)
-					generateRationalFunctionsParallel(structParamsValues, nonStructParamsNames, out, in);
 				
+				if (!parametricInProcess.containsKey(structParamsValues))
+					generateRationalFunctionsParallel(structParamsValues, nonStructParamsNames, out, in);
+				else
+					archive.missParallel();
+
 				return evaluateByInvocation(out, in);
 			}
 			else if (rfList.isEmpty())//bad key retrieved -> normal evaluation
@@ -154,37 +152,11 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 		}
 	}
 	
-	private List<String> evaluateAlgebraicExpressions(List<RationalFunction> rfList, List<Number> nonStructParamsValues){
-		List<String> results = new ArrayList<>();
-		double[] arguments = new double[nonStructParamsValues.size()];
-		for (int i=0; i<arguments.length; i++) {
-			arguments[i] = nonStructParamsValues.get(i).doubleValue();		
-		}
-		for (RationalFunction rf : rfList) { 
-			results.add(rf.evaluate(arguments));
-		}
-		return results;
-	}
-	
-
-	private List<AbstractGene> findGenesUsingType (boolean param) {
-		List<AbstractGene> 		genes 	= new ArrayList<AbstractGene>();
-
-		for (Entry<AbstractGene, Evolvable> e : GenotypeFactory.getGeneEvolvableMap().entrySet()) {
-			if (param && e.getValue().isParam()) {
-				genes.add(e.getKey());
-			}
-			else if (!param && !e.getValue().isParam()) {
-				genes.add(e.getKey());				
-			}
-		}
-		return genes;
-	}
-	
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void closeDown() {
+		Utility.bashInvoker(" pkill -f storm-pars");
 		for (Thread t : parametricInProcess.values()) {
 			if(t.isAlive())
 				t.stop();
@@ -216,9 +188,7 @@ public class GeneticProblemParametric2 extends GeneticProblem{
 		@Override
 		public void run() {
 			try {
-				IModelInvoker invoker = modelInvoker.copy();
-				((ModelInvokerStorm)invoker).ERROR  += id;
-				((ModelInvokerStorm)invoker).OUTPUT += id++;
+				IModelInvoker invoker = modelInvoker.copy(id++);
 				List<String> rationalFunctionStringsList = invoker.invokeParam(model, propertyFile, objectivesList, constraintsList, out, in);
 				appendToArchive(structParamsValues, nonStructParamsNames, rationalFunctionStringsList);
 			} catch (IOException e) {

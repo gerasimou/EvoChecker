@@ -6,11 +6,13 @@ public class EvoCheckerRunner {
 
 	public static void main(String[] args) {
 		String evaluations[];
-		if (args.length > 0)
-			evaluations = args;
-		else
-			evaluations = new String[] {"2000", "5000", "10000"};
-		double[] time = new double[evaluations.length];
+//		if (args.length > 0)
+//			evaluations = args;
+//		else
+			evaluations = new String[] {"1000", "2000", "5000", "10000"};
+		
+		double[] time  = new double[evaluations.length];
+		String[] stats = new String[evaluations.length];
 		
 		for (int i=0; i<evaluations.length; i++) {
 			//1) Create EvoChecker instance
@@ -20,12 +22,14 @@ public class EvoCheckerRunner {
 			String configFile ="config.properties"; 
 			ec.setConfigurationFile(configFile);
 
+			ec.setProperty("PLOT_PARETO_FRONT", "false");
 			ec.setProperty("MAX_EVALUATIONS", evaluations[i]);
 			
 			//3) Start EvoChecker
 			ec.start();
 			
-			time[i] = ec.getExecutionTime();
+			time[i]  = ec.getExecutionTime();
+			stats[i] = ec.getStatistics();
 			System.out.println(time[i]);
 			
 			try {
@@ -35,7 +39,8 @@ public class EvoCheckerRunner {
 			}
 		}
 	
-		System.out.println(Arrays.toString(time));	
+		System.out.println("Time:\t"  + Arrays.toString(time));	
+		System.out.println("Stats:\t" + Arrays.toString(stats));	
 	}
 
 }

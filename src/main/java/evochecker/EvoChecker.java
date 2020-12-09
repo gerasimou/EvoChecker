@@ -31,8 +31,10 @@ import evochecker.genetic.jmetal.metaheuristics.settings.MOCell_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
+import evochecker.genetic.problem.GeneticModelProblem;
 import evochecker.genetic.problem.GeneticProblem;
-import evochecker.genetic.problem.GeneticProblemParametric2;
+import evochecker.genetic.problem.GeneticProblemParametric;
+import evochecker.genetic.problem.GeneticProblemParametricParallel;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.language.parser.ModelInstantiator;
 import evochecker.language.parser.ModelInstantiatorParametric;
@@ -155,6 +157,9 @@ public class EvoChecker {
 			closeDown();
 			
 			System.err.printf("Time:\t%s\n", executionTime);
+			
+			//7 print statistics
+			printStatistics();
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -212,7 +217,7 @@ public class EvoChecker {
 		switch (ecType) {
 			case NORMAL		: problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName); break;
 //			case PARAMETRIC	: problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
-			case PARAMETRIC	: problem = new GeneticProblemParametric2 (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
+			case PARAMETRIC	: problem = new GeneticProblemParametricParallel (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
 			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
 		}
 	}	
@@ -290,7 +295,7 @@ public class EvoChecker {
 	private void closeDown(){
 		
 	}
-	
+		
 	
 	/**
 	 * Export solutions into files
@@ -406,6 +411,22 @@ public class EvoChecker {
 		return executionTime;
 	}
 	
+	
+	/**
+	 * Get statistics
+	 */
+	protected String getStatistics(){
+		return ((GeneticModelProblem)problem).getStatistics();
+	}
+	
+	
+	/**
+	 * Print statistics
+	 */
+	private void printStatistics(){
+		System.out.println(getStatistics());
+	}
+
 	
 	public void setProperty(String key, String value) {
 		try {

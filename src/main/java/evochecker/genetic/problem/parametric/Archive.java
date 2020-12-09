@@ -12,24 +12,31 @@ public class Archive extends ConcurrentHashMap<String, List<RationalFunction>>{
 	private int hit;
 	private int miss;
 	private int badKey;
+	private int missedParallel;
+	private boolean verbose;
 	
-	public Archive() {
+	public Archive(boolean verbose) {
 		super();
+		this.verbose = verbose;
 	}
 	
 	public void hit() {
 		hit++;
-		System.out.print(toString());
+		print();
 	}
 
 	public void miss() {
 		miss++;
-		System.out.print(toString());
+		print();
+	}
+	
+	public void missParallel() {
+		missedParallel++;
 	}
 
 	public void badKey() {
 		badKey++;
-		System.out.print(toString());
+		print();
 	}
 	
 	
@@ -46,7 +53,16 @@ public class Archive extends ConcurrentHashMap<String, List<RationalFunction>>{
 	}
 	
 	
+	private void print() {
+		if (verbose)
+			System.out.print(toString());
+	}
+	
 	public String toString() {
 		return hit+"H/"+miss+"M/"+badKey+"B\t";
+	}
+	
+	public String getStatistics() {
+		return hit+"H/"+miss+"M/"+badKey+"B/"+missedParallel+"C";
 	}
 }

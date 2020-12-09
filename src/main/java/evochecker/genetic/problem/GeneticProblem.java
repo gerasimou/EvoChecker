@@ -62,4 +62,17 @@ public class GeneticProblem extends GeneticModelProblem {
 		
 		return modelInvoker.invoke(model, propertyFile, objectivesList, constraintsList, out, in);
 	}
+
+
+	@Override
+	/** Does nothing **/
+	public void closeDown() {
+	}
+
+
+	@Override
+	/** Does nothing **/
+	public String getStatistics() {
+		return "";
+	}
 }

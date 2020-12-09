@@ -377,9 +377,13 @@ public abstract class GeneticModelProblem extends Problem {
 	}
 	
 	
-	public void closeDown() {
-		
-	}
+	/** Do any final work before executing
+	 * e.g., stop executing threads in @see GeneticProblemParametricParallel*/
+	public abstract void closeDown();
+	
+	
+	/** Print any final statistics about this problem*/
+	public abstract String getStatistics();
 
 	
 	/**

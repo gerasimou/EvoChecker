@@ -34,7 +34,8 @@ public class GeneticProblemParametric extends GeneticProblem{
 
 	private static final long serialVersionUID = -2679872853510614319L;
 
-	private Archive archive;
+	/** archive keeping the rational functions for structural parameter combinations**/
+	protected Archive archive;
 	
 	/**
 	 * Class constructor: create a new Genetic Problem instance
@@ -52,7 +53,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 			throw new EvoCheckerException(instantiator + " not instance of IModelInstantiatorParametric");
 		
 		// construct a dictionary for archiving
-		archive = new Archive();
+		archive = new Archive(verbose);
 	}
 	
 	
@@ -65,7 +66,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 		super((GeneticProblem)aProblem);
 
 		// construct a dictionary for archiving
-		archive = new Archive();
+		archive = new Archive(verbose);
 	}
 	
 	@Override
@@ -106,25 +107,32 @@ public class GeneticProblemParametric extends GeneticProblem{
 					nonStructParamsNames = nonStructParamsNames.substring(0, nonStructParamsNames.length()-1);
 
 				rfList = archive.get(structParamsValues);
-				System.out.print(structParamsValues +"\t");
+				if (verbose)
+					System.out.print(structParamsValues +"\t");
 				if (rfList == null) {//key does not exist in the archive
 					archive.miss();
 					rfList = new ArrayList<>();
 					List<String> rationalFunctionStringsList = generateRationalFunctions(out, in);
 					
-					if (rationalFunctionStringsList == null) {//model checker did not generate a solution
-						archive.badKey();
-						archive.put(structParamsValues, rfList);//bad key -> empty list
+					rfList = appendToArchive(structParamsValues, nonStructParamsNames, rationalFunctionStringsList);
+					if (rfList.isEmpty())//-> bad key
 						return evaluateByInvocation(out, in);
-					}
-					else {
-						for (String functionAsString : rationalFunctionStringsList) {
-							RationalFunction rf = new RationalFunction(functionAsString, nonStructParamsNames);
-							rfList.add(rf);
-						}
-						archive.put(structParamsValues, rfList);
-					}
-					return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
+					else//algebraic expression generated
+						return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
+					
+//					if (rationalFunctionStringsList == null) {//model checker did not generate a solution
+//						archive.badKey();
+//						archive.put(structParamsValues, rfList);//bad key -> empty list
+//						return evaluateByInvocation(out, in);
+//					}
+//					else {
+//						for (String functionAsString : rationalFunctionStringsList) {
+//							RationalFunction rf = new RationalFunction(functionAsString, nonStructParamsNames);
+//							rfList.add(rf);
+//						}
+//						archive.put(structParamsValues, rfList);
+//					}
+//					return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
 				}
 				else if (rfList.isEmpty())//bad key retrieved -> normal evaluation
 					return evaluateByInvocation(out, in);
@@ -147,7 +155,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 	}
 	
 	
-	private List<String> evaluateAlgebraicExpressions(List<RationalFunction> rfList, List<Number> nonStructParamsValues){
+	protected List<String> evaluateAlgebraicExpressions(List<RationalFunction> rfList, List<Number> nonStructParamsValues){
 		List<String> results = new ArrayList<>();
 		double[] arguments = new double[nonStructParamsValues.size()];
 		for (int i=0; i<arguments.length; i++) {
@@ -161,7 +169,7 @@ public class GeneticProblemParametric extends GeneticProblem{
 	}
 	
 
-	private List<AbstractGene> findGenesUsingType (boolean param) {
+	protected List<AbstractGene> findGenesUsingType (boolean param) {
 		List<AbstractGene> 		genes 	= new ArrayList<AbstractGene>();
 
 		for (Entry<AbstractGene, Evolvable> e : GenotypeFactory.getGeneEvolvableMap().entrySet()) {
@@ -173,5 +181,30 @@ public class GeneticProblemParametric extends GeneticProblem{
 			}
 		}
 		return genes;
+	}
+	
+	
+	private List<RationalFunction> appendToArchive(String structParamsValues, String nonStructParamsNames, List<String> rationalFunctionStringsList) {
+		List<RationalFunction> rfList = new ArrayList<>(); 
+		if ((rationalFunctionStringsList == null) || rationalFunctionStringsList.contains(null)) {//model checker did not generate a solution
+			archive.badKey();
+			archive.put(structParamsValues, rfList);//bad key -> empty list
+			//return false;//return evaluateByInvocation(out, in);
+		}
+		else {
+			for (String functionAsString : rationalFunctionStringsList) {
+				RationalFunction rf = new RationalFunction(functionAsString, nonStructParamsNames);
+				rfList.add(rf);
+			}
+			archive.put(structParamsValues, rfList);
+		}
+//		return true; //return evaluateAlgebraicExpressions(rfList, nonStructParamsValues);
+		return rfList;
+	}
+	
+	
+	@Override
+	public String getStatistics() {
+		return archive.getStatistics();
 	}
 }

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.DistributionGene;
 import evochecker.properties.Property;
@@ -114,8 +115,8 @@ public class ModelInvokerPrism implements IModelInvoker {
 	}
 	
 	
-	public IModelInvoker copy() {
+	@Override
+	public IModelInvoker copy(int id) {
 		return new ModelInvokerPrism(); 
 	}
-	
 }
