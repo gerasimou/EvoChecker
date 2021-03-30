@@ -82,6 +82,12 @@ public class FileUtil {
 	}
 	
 	
+	/**
+	 * 
+	 * @param fileName
+	 * @param output
+	 * @param append
+	 */
 	public static void saveToFile(String fileName, String output, boolean append){
 		try {
 			FileWriter writer = new FileWriter(fileName, append);
@@ -95,6 +101,12 @@ public class FileUtil {
 	}
 
 	
+	/**
+	 * 
+	 * @param inputFileName
+	 * @param outputFileName
+	 * @param outputStr
+	 */
 	public static void createFileAndExport(String inputFileName, String outputFileName, String outputStr){
 		FileChannel inputChannel 	= null;
 		FileChannel outputChannel	= null;

@@ -12,7 +12,9 @@
 //==============================================================================
 package evochecker.language.parser;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import evochecker.evolvables.Evolvable;
 import evochecker.genetic.genes.AbstractGene;
@@ -31,7 +33,7 @@ public interface IModelInstantiator {
 	 * @param genes
 	 * @return
 	 */
-	public String getConcreteModel(List<AbstractGene> genes);
+	public String getConcreteModel(Collection<AbstractGene> genes);
 	
 	
 	/**
@@ -46,4 +48,7 @@ public interface IModelInstantiator {
 	public List<Evolvable> getEvolvableList ();
 
 	public List<AbstractGene> getGeneList();
+	
+	
+	public Map<String, Object> getChromosome (List<AbstractGene> genes);
 }

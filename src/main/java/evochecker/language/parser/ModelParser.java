@@ -190,6 +190,10 @@ public class ModelParser implements IModelParser{
 	public List<Evolvable> getEvolvableList() {
 		return this.evolvableList;
 	}
+	
+	public void setEvolvableList(List<Evolvable> evolvableList) {
+		this.evolvableList = evolvableList;
+	}
 
 
 	@Override

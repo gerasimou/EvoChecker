@@ -91,6 +91,8 @@ public class EvoChecker {
 	/** Pareto set filename*/
 	private String paretoSetFile;
 
+	/** Solution set*/
+	private SolutionSet solutions;
 	
 	/** */
 	private EvoCheckerType ecType;
@@ -145,13 +147,13 @@ public class EvoChecker {
 			String outputDir = initialiseOutputData();
 
 			//4) execute and save results
-			SolutionSet solutions = execute();
+			solutions = execute();
 
 			long end = System.currentTimeMillis();
 			executionTime = (end - start)/1000.0;
 
 			//5) save solutions
-			exportResults(outputDir, solutions);
+			exportResults(outputDir);
 			
 			//6) close down
 			closeDown();
@@ -195,7 +197,7 @@ public class EvoChecker {
 		}
 
 		//3) create chromosome
-		genes				= GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList());
+		genes				= GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList(), false);
 
 		//4) create (gene,evolvable element) pairs
 		modelInstantiator.createMapping();
@@ -302,7 +304,7 @@ public class EvoChecker {
 	 * @param population
 	 * @throws JMException
 	 */
-	private void exportResults(String outputDir, SolutionSet solutions) throws JMException {
+	private void exportResults(String outputDir) throws JMException {
 		//Print results to console
 		System.out.println("-------------------------------------------------");
 		System.out.println("SOLUTIONS: \t" + solutions.size());
@@ -315,7 +317,7 @@ public class EvoChecker {
 //		StringBuilder setHeader = new StringBuilder();
 //		for (AbstractGene gene : genes)
 //			setHeader.append(gene.getName() +" ");
-		String setHeader = String.join(" ", GenotypeFactory.getEvolvableNames());
+		String setHeader = String.join("\t", GenotypeFactory.getEvolvableNames());
 		FileUtil.saveToFile(setFile, setHeader +"\n", true);
 		StringBuilder frontHeader = new StringBuilder();
 		Iterator<Property> it = objectivesList.iterator();
@@ -348,7 +350,7 @@ public class EvoChecker {
 		//show Pareto front plot if specified in configuration file
 		boolean plotParetoFront = Boolean.parseBoolean(Utility.getProperty(Constants.PLOT_PARETO_FRONT));
 		if (plotParetoFront)
-			PlotFactory.plotParetoFront(frontFile, identifier, objectivesList.size());
+			PlotFactory.plotParetoFront(frontFile, objectivesList.size());
 	}
 
 	
@@ -415,7 +417,7 @@ public class EvoChecker {
 	/**
 	 * Get statistics
 	 */
-	protected String getStatistics(){
+	public String getStatistics(){
 		return ((GeneticModelProblem)problem).getStatistics();
 	}
 	
@@ -434,5 +436,25 @@ public class EvoChecker {
 		} catch (EvoCheckerException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public String getProperty(String propName) {
+		return Utility.getProperty(propName);
+	}
+
+	public String getParetoFrontFile() {
+		return this.paretoFrontFile;
+	}
+	
+	public String getParetoSetFile() {
+		return this.paretoSetFile;
+	}
+	
+	public int getObjectivesNum() {
+		return this.objectivesList.size();
+	}
+	
+	public int getConstraintsNum() {
+		return this.constraintsList.size();
 	}
 }

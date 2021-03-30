@@ -48,7 +48,7 @@ public class GenotypeFactory{
 	/**
 	 * Create a list chromosome (or individual) as a sequence of genes
 	 */
-	public static List<AbstractGene> createChromosome(List<Evolvable> evolvableList) throws EvoCheckerException{
+	public static List<AbstractGene> createChromosome(List<Evolvable> evolvableList, boolean allowNoEvolvables) throws EvoCheckerException{
 		geneEvolvableMap = new HashMap<AbstractGene, Evolvable>();
 		List<AbstractGene> genes = new ArrayList<AbstractGene> ();		
 		for (Evolvable evolvable : evolvableList){
@@ -56,9 +56,10 @@ public class GenotypeFactory{
 			genes.add(gene);
 			geneEvolvableMap.put(gene, evolvable);
 		}
-		if (genes.size()==0)
+		if (!allowNoEvolvables && genes.size()==0)
 			throw new EvoCheckerException("The moodel contains no evovlables. EvoChecker stops");
-
+		
+		evolvableNames.clear();
 		setupEvolvableNamesList(evolvableList);
 		return genes;		
 	}

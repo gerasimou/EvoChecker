@@ -114,6 +114,9 @@ public class Constants {
   /** Keyword indicating the EvoChecker engine to be used: PRISM or STORM*/
   public static final String EVOCHECKER_ENGINE = "EVOCHECKER_ENGINE";
 
+  /** Keyword indicating the EvoChecker engine to be used: PRISM or STORM*/
+  public static final String DOUBLE_PRECISION = "DOUBLE_PRECISION";
+
   
   /** Integer REGEX*/
   public static  final String INTEGER_REGEX = "^\\d+$";

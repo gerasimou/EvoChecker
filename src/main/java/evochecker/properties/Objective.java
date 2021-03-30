@@ -15,11 +15,16 @@ package evochecker.properties;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.Utility;
+
 public class Objective extends Property {
 
+	private int precision;
 	
 	public Objective(boolean maximization, String expression, int index) {
 		super(maximization, expression, index );
+		precision = Integer.parseInt(Utility.getProperty(Constants.DOUBLE_PRECISION, "4"));
 	}
 	
 	
@@ -32,10 +37,10 @@ public class Objective extends Property {
 	public double evaluate(double result) {
 		try {
 			if (isMaximization()) {
-				return new BigDecimal(-result).setScale(3, RoundingMode.HALF_DOWN).doubleValue();
+				return new BigDecimal(-result).setScale(precision, RoundingMode.HALF_DOWN).doubleValue();
 			}
 			else{
-				return new BigDecimal(result).setScale(3, RoundingMode.HALF_UP).doubleValue();
+				return new BigDecimal(result).setScale(precision, RoundingMode.HALF_UP).doubleValue();
 			}
 		}
 		catch (NumberFormatException e) {

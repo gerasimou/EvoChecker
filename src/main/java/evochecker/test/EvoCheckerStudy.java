@@ -206,7 +206,7 @@ public class EvoCheckerStudy extends Experiment{
 		propertiesFilename	= Utility.getProperty("PROPERTIES_FILE", "models/DPM/dpm.pctl");
 	
 		parserEngine 		= new ModelInstantiator(modelFilename, propertiesFilename);
-		genes				= GenotypeFactory.createChromosome(parserEngine.getEvolvableList());
+		genes				= GenotypeFactory.createChromosome(parserEngine.getEvolvableList(), false);
 		parserEngine.createMapping();
 		
 		String str = parserEngine.getConcreteModel(genes);

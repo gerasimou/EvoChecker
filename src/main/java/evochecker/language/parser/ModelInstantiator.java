@@ -13,6 +13,7 @@
 package evochecker.language.parser;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +35,14 @@ public class ModelInstantiator implements IModelInstantiator {
 	ModelParser parser;
 	
 	
+	 Map<String, Object> concreteChromosome;
+	
 	public ModelInstantiator(String modelFilename, String propertiesFilename) {
 		parser = new ModelParser(modelFilename, propertiesFilename);
 		
 		elementsMap = new HashMap<AbstractGene, Evolvable>();
+		
+		concreteChromosome = new HashMap<String, Object>();
 	}
 	
 	
@@ -60,7 +65,7 @@ public class ModelInstantiator implements IModelInstantiator {
 
 	
 	@Override
-	public String getConcreteModel(List<AbstractGene> genes) {
+	public String getConcreteModel(Collection<AbstractGene> genes) {
 		StringBuilder concreteModel = new StringBuilder(parser.getModelType().toString().toLowerCase() +"\n\n");
 		
 		for (AbstractGene gene : genes) {
@@ -104,5 +109,20 @@ public class ModelInstantiator implements IModelInstantiator {
 	
 	public List<AbstractGene> getGeneList(){
 		return (List<AbstractGene>)Arrays.asList(this.elementsMap.keySet().toArray(new AbstractGene[0]));				
+	}
+	
+	
+	public Map<String, Object> getChromosome (List<AbstractGene> genes) {
+		concreteChromosome.clear();
+		
+		for (AbstractGene gene : genes) {
+			concreteChromosome.put(elementsMap.get(gene).getName(), gene.getAllele());
+		}
+		return concreteChromosome;
+	}
+	
+	
+	protected String getInternalModelRepresentation() {
+		return parser.getInternalModelRepresentation();
 	}
 }

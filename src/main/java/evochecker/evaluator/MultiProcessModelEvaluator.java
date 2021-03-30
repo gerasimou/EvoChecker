@@ -83,6 +83,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		threads 		= new Thread[numberOfProcesses];
 		runnables 		= new RunnableExecutor[numberOfProcesses];
 		solutionsList 	= new ArrayList<Solution>();
+		
 	}
 
 	
@@ -134,10 +135,15 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	* Assign solutions to parallel processes
 	*/
 	private void assignSolutions() {
-		for (int i = 0; i < this.solutionsList.size(); i++) {
-//			System.out.println("Assigning tasks");
-			this.runnables[i % this.runnables.length].addSolutionForEvaluation(this.solutionsList
-					.get(i));
+		if (numberOfProcesses > 1) {
+			for (int i = 0; i < solutionsList.size(); i++) {
+	//			System.out.println("Assigning tasks");
+				runnables[i % runnables.length].addSolutionForEvaluation(solutionsList
+						.get(i));
+			}
+		}
+		else {
+			runnables[0].solutionsList = solutionsList;
 		}
 	}
 	
@@ -146,11 +152,16 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	 * When done, reset the evaluators
 	 */
 	private void reset() {	
-		for (int i = 0; i < numberOfProcesses; i++) {
-			runnables[i] = new RunnableExecutor(connections[i], problems[i]); 
-//					new RunnableExecutor(connections[i].getOutChannel(), connections[i].getInChannel(), problems[i]);
-			threads[i] 	 = new Thread(runnables[i]);
-		}
+//		if (numberOfProcesses > 1) {
+			for (int i = 0; i < numberOfProcesses; i++) {
+				runnables[i] = new RunnableExecutor(connections[i], problems[i]); 
+	//					new RunnableExecutor(connections[i].getOutChannel(), connections[i].getInChannel(), problems[i]);
+				threads[i] 	 = new Thread(runnables[i]);
+			}
+//		}
+//		else {
+//			threads[0] 	 = new Thread(runnables[0]);
+//		}
 	}
 
 

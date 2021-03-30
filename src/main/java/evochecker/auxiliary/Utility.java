@@ -85,7 +85,7 @@ public class Utility {
 	
 	public static String getTimeStamp() {
 		Date date = Calendar.getInstance().getTime();
-	    SimpleDateFormat sdf = new SimpleDateFormat("HHmmss_ddMMyy");
+	    SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy_HHmmss");
 	    return sdf.format(date);	
     }
 	

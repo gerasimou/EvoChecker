@@ -15,8 +15,12 @@ import evochecker.exception.EvoCheckerException;
 
 public class PlotFactory {
 
+	private static final String script2DFile = "scripts/plotFront2D.py";
+	private static final String script3DFile = "scripts/plotFront3D.py";
+	private static String scriptFile   = null;
+
 	
-	public static void plotParetoFront(String frontFile, String identifier, int objectivesNum) {
+	public static void plotParetoFront(String frontFile, int objectivesNum) {
 		try {
 			System.out.println("\nGenerating Pareto Front plot");
 			if (objectivesNum == 2)
@@ -32,15 +36,14 @@ public class PlotFactory {
 			
 	}
 	
-	public static void plotParetoFront(String frontFile, boolean twoD) throws Exception {
+	private static void plotParetoFront(String frontFile, boolean twoD) throws Exception {
 		String paretoFrontPath = new File(frontFile).getAbsolutePath();
 		
-		String scriptFile = null;
-		if (twoD)
-			scriptFile = "scripts/plotFront2D.py";
-		else
-			scriptFile = "scripts/plotFront3D.py";
-		
+		//use default scripts if script file is null
+		if (twoD && scriptFile == null)			
+			scriptFile = script2DFile;
+		else if (!twoD && scriptFile == null)
+			scriptFile = script3DFile;
 		
 		String python3Dir = Utility.getProperty(Constants.PYTHON3_DIRECTORY, ConfigurationChecker.NAN);
 		if (python3Dir.equals(ConfigurationChecker.NAN))
@@ -59,5 +62,9 @@ public class PlotFactory {
 		 
 		    int exitCode = process.waitFor();
 		}
+	}
+	
+	public static void setParetoFrontScriptFile (String scriptFilename) {
+		scriptFile = scriptFilename;
 	}
 }
