@@ -24,6 +24,8 @@ package evochecker.genetic.jmetal.metaheuristics.settings;
 import java.util.HashMap;
 import java.util.Properties;
 
+import evochecker.auxiliary.ConfigurationChecker;
+import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.evaluator.MultiProcessModelEvaluator;
 import evochecker.genetic.jmetal.metaheuristics.pNSGAII;
@@ -58,24 +60,36 @@ public class NSGAII_Settings extends Settings {
 		super(problemName);
 		problem_ 					= problem;
 		// Default experiments.settings
-		populationSize_ 			= Integer.parseInt(Utility.getProperty("POPULATION_SIZE", "100"));
-		maxEvaluations_ 			= Integer.parseInt(Utility.getProperty("MAX_EVALUATIONS", "100"));
+		populationSize_ 			= Integer.parseInt(Utility.getProperty(Constants.POPULATION_SIZE_KEYWORD, "100"));
+		maxEvaluations_ 			= Integer.parseInt(Utility.getProperty(Constants.MAX_EVALUATIONS_KEYWORD, "100"));
 
 		realCrossoverProbability_ 	= 0.9;
 		intCrossoverProbability_ 	= 0.9;//0.5;
 		
-		int realVars = ((GeneticProblem)problem_).getNumOfRealVariables();
-		if (realVars > 0)
-			realMutationProbability_ 	= 1.0 / realVars;
-		else 
-			realMutationProbability_ 	=0;
+		
+		String realMutationProbability = Utility.getProperty(Constants.REAL_MUTATION_PROBABILITY, ConfigurationChecker.NAN);
+		if (realMutationProbability.equals(ConfigurationChecker.NAN)) { 		
+			int realVars = ((GeneticProblem)problem_).getNumOfRealVariables();
+			if (realVars > 0)
+				realMutationProbability_ 	= 1.0 / realVars;
+			else 
+				realMutationProbability_ 	=0;
+		}
+		else
+			realMutationProbability_ = Double.parseDouble(realMutationProbability);
 		
 		
-		int intVars = ((GeneticProblem)problem_).getNumOfIntVariables();
-		if (intVars > 0)
-			intMutationProbability_ 	= 1.0 / intVars;
-		else 
-			intMutationProbability_	= 0;
+		String intMutationProbability = Utility.getProperty(Constants.INTEGER_MUTATION_PROBABILITY, ConfigurationChecker.NAN);
+		if (intMutationProbability.equals(ConfigurationChecker.NAN)) { 		
+			int intVars = ((GeneticProblem)problem_).getNumOfIntVariables();
+			if (intVars > 0)
+				intMutationProbability_ 	= 1.0 / intVars;
+			else 
+				intMutationProbability_	= 0;
+		}
+		else
+			intMutationProbability_ = Double.parseDouble(intMutationProbability);
+		
 		distributionIndex_ 			= 20;
 	} // NSGAII_Settings
 

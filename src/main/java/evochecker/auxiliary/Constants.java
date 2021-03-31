@@ -116,6 +116,11 @@ public class Constants {
 
   /** Keyword indicating the EvoChecker engine to be used: PRISM or STORM*/
   public static final String DOUBLE_PRECISION = "DOUBLE_PRECISION";
+  
+  /** Keyword indicating the MUTATION probability */
+  public static final String INTEGER_MUTATION_PROBABILITY	= "INTEGER_MUTATION_PROBABILITY";
+  public static final String REAL_MUTATION_PROBABILITY		= "REAL_MUTATION_PROBABILITY";
+  
 
   
   /** Integer REGEX*/
