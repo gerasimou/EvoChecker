@@ -53,6 +53,9 @@ public class NSGAII_Settings extends Settings {
 	public double intMutationProbability_;
 	public double distributionIndex_;
 
+	//default mutation operator;
+	String mutationOperator = "PolynomialUniformMutation";
+	
 	/**
 	 * Constructor
 	 */
@@ -89,6 +92,13 @@ public class NSGAII_Settings extends Settings {
 		}
 		else
 			intMutationProbability_ = Double.parseDouble(intMutationProbability);
+		
+		
+		//specify mutation operator
+		String mutOperator =  Utility.getProperty("MUTATION_OPERATOR", ConfigurationChecker.NAN);
+		if (!mutOperator.equals(ConfigurationChecker.NAN)) 
+				mutationOperator = mutOperator;
+		
 		
 		distributionIndex_ 			= 20;
 	} // NSGAII_Settings
@@ -129,7 +139,7 @@ public class NSGAII_Settings extends Settings {
 		parameters.put("realMutationProbability", this.realMutationProbability_);
 		parameters.put("intMutationProbability", this.intMutationProbability_);
 		parameters.put("distributionIndex", this.distributionIndex_);
-		mutation = MutationFactory.getMutationOperator("PolynomialUniformMutation", parameters);		
+		mutation = MutationFactory.getMutationOperator(mutationOperator, parameters);		
 		
 		// Add the operators to the algorithm
 		algorithm.addOperator("crossover", crossover);

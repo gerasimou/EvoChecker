@@ -50,6 +50,8 @@ public class MutationFactory {
       return new BitFlipMutation(parameters);
     else if (name.equalsIgnoreCase("PolynomialUniformMutation"))
         return new PolynomialUniformMutation(parameters);
+    else if (name.equalsIgnoreCase("PolynomialUniformAll"))
+        return new PolynomialUniformMutationAll(parameters);
     else if (name.equalsIgnoreCase("NonUniformMutation"))
       return new NonUniformMutation(parameters);
     else if (name.equalsIgnoreCase("SwapMutation"))
