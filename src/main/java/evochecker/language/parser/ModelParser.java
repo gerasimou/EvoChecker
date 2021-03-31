@@ -40,13 +40,13 @@ public class ModelParser implements IModelParser{
 	protected String modelFilename;
 
 	/** String that keeps the model template */
-	private String internalModelRepresentation;
+	protected String internalModelRepresentation;
 
 	/** list of evolvable elements*/
-	private List<Evolvable> evolvableList;	
+	protected List<Evolvable> evolvableList;	
 	
 	/** model type **/
-	MODEL_TYPE modelType;
+	protected MODEL_TYPE modelType;
 
 	
 	/**
@@ -90,7 +90,7 @@ public class ModelParser implements IModelParser{
 	/** 
 	 * Parse input
 	 */
-	private void parse() {
+	protected void parse() {
 		try {
 			String modelString = FileUtil.readFile(modelFilename);
 			runVisitor(modelString);

@@ -33,7 +33,8 @@ public class ModelInvokerStorm implements IModelInvoker {
 	List<Property> properties;
 	
 	private Thread[] threads;
-	
+
+	private int id;
 	
 	
 	public ModelInvokerStorm() {
@@ -56,6 +57,7 @@ public class ModelInvokerStorm implements IModelInvoker {
 
 		ERROR  += id;
 		OUTPUT += id;
+		this.id = id;
 	}
 	
 	
@@ -81,7 +83,7 @@ public class ModelInvokerStorm implements IModelInvoker {
 	
 	
 	private List<String> prepareStorm(String model, List<Property> objectives, List<Property> constraints, String stormCommand) throws IOException{
-		File m = new File(tempDir + File.separator + "model.pm");
+		File m = new File(tempDir + File.separator + "model"+id+".pm");
 		m.createNewFile();
 		try{
 			//Write concrete model needed by storm
@@ -188,7 +190,7 @@ public class ModelInvokerStorm implements IModelInvoker {
 	
 	
 	private List<String> prepareStorm2(String model, List<Property> objectives, List<Property> constraints, String stormCommand) throws IOException{
-		File m = new File(tempDir + File.separator + "model.pm");
+		File m = new File(tempDir + File.separator + "model"+id+".pm");
 		m.createNewFile();
 		try{
 			//Write concrete model needed by storm
@@ -312,7 +314,7 @@ public class ModelInvokerStorm implements IModelInvoker {
 					Thread.sleep(1000);
 				} while (!alive);
 
-				 boolean OK = p.waitFor(300, TimeUnit.SECONDS);
+				 boolean OK = p.waitFor(600, TimeUnit.SECONDS);
 				 p.destroyForcibly();
 				 return OK;
 			} catch (IOException | InterruptedException e) {

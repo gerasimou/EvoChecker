@@ -32,10 +32,10 @@ public class ModelInstantiator implements IModelInstantiator {
 	/** map that keeps pairs of genes and evolvable elements*/
 	protected Map<AbstractGene, Evolvable> elementsMap;
 
-	ModelParser parser;
+	protected ModelParser parser;
 	
 	
-	 Map<String, Object> concreteChromosome;
+	protected Map<String, Object> concreteChromosome;
 	
 	public ModelInstantiator(String modelFilename, String propertiesFilename) {
 		parser = new ModelParser(modelFilename, propertiesFilename);
@@ -45,6 +45,14 @@ public class ModelInstantiator implements IModelInstantiator {
 		concreteChromosome = new HashMap<String, Object>();
 	}
 	
+	
+	public ModelInstantiator(String modelFilename, String propertiesFilename, ModelParser modelParser) {
+		parser = modelParser;
+		
+		elementsMap = new HashMap<AbstractGene, Evolvable>();
+		
+		concreteChromosome = new HashMap<String, Object>();
+	}
 	
 	/**
 	 * Copy constructor

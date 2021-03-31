@@ -19,13 +19,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.DistributionGene;
 import evochecker.properties.Property;
 
 public class ModelInvokerPrism implements IModelInvoker {
-
+		
 	/**
 	 * Default class constructor
 	 */
