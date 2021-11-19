@@ -133,4 +133,12 @@ public class ModelInstantiator implements IModelInstantiator {
 	protected String getInternalModelRepresentation() {
 		return parser.getInternalModelRepresentation();
 	}
+
+
+	@Override
+	public MODEL_TYPE getModelType() {
+		return parser.getModelType();
+	}
+	
+	
 }

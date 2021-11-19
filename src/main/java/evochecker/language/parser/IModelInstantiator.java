@@ -51,4 +51,6 @@ public interface IModelInstantiator {
 	
 	
 	public Map<String, Object> getChromosome (List<AbstractGene> genes);
+	
+	public MODEL_TYPE getModelType();
 }

@@ -32,6 +32,7 @@ import evochecker.genetic.jmetal.encoding.ArrayInt;
 import evochecker.genetic.jmetal.encoding.ArrayReal;
 import evochecker.genetic.jmetal.encoding.ArrayRealIntSolutionType;
 import evochecker.language.parser.IModelInstantiator;
+import evochecker.language.parser.MODEL_TYPE;
 import evochecker.language.parser.ModelInstantiator;
 import evochecker.modelInvoker.IModelInvoker;
 import evochecker.modelInvoker.ModelInvokerEngine;
@@ -77,6 +78,9 @@ public abstract class GeneticModelProblem extends Problem {
 	/** Indicating whether output should be procuded in the console/terminal or not **/
 	protected boolean verbose;
 	
+	
+	protected MODEL_TYPE modelType;
+	
 	/**
 	 * Class constructor: create a new Genetic Problem instance
 	 * @param genes
@@ -102,6 +106,7 @@ public abstract class GeneticModelProblem extends Problem {
 //		this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here		
 		
 		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, ConfigurationChecker.FALSE));
+		modelType = instantiator.getModelType();
 	}
 		
 	
@@ -218,13 +223,15 @@ public abstract class GeneticModelProblem extends Problem {
 					outcomesValues[index] = realPart.getValue(j);
 					index++;
 				}
-				currentIndex = currentIndex + outcomes;
 				
 				//TODO real values normalised here: is this good for a CTMC?
-				for (int j = 0; j < outcomes; j++) {
-					outcomesValues[j] = outcomesValues[j] / cumulative;
-				}
+				if (modelType == MODEL_TYPE.DTMC)
+					for (int j = 0; j < outcomes; j++) { 
+						outcomesValues[j] = outcomesValues[j] / cumulative;
+						realPart.setValue(j+currentIndex, outcomesValues[j]);
+					}
 				g.setAllele(outcomesValues);
+				currentIndex = currentIndex + outcomes;
 			}
 
 			if (g instanceof DoubleGene) {
