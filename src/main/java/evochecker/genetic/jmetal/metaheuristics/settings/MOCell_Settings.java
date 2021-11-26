@@ -24,6 +24,8 @@ package evochecker.genetic.jmetal.metaheuristics.settings;
 import java.util.HashMap;
 import java.util.Properties;
 
+import evochecker.auxiliary.ConfigurationChecker;
+import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.evaluator.MultiProcessModelEvaluator;
 import evochecker.genetic.jmetal.metaheuristics.pMoCell;
@@ -55,6 +57,10 @@ public class MOCell_Settings extends Settings{
   public double crossoverDistributionIndex_ ;
   public double mutationDistributionIndex_  ;
 
+  
+	//default mutation operator;
+	String mutationOperator = "PolynomialUniformMutation";
+
   /**
    * Constructor
    */
@@ -65,15 +71,45 @@ public class MOCell_Settings extends Settings{
 
     
 	// Default experiments.settings
-	populationSize_ 			= Integer.parseInt(Utility.getProperty("POPULATION_SIZE", "100"));
-	archiveSize_				= Integer.parseInt(Utility.getProperty("POPULATION_SIZE", "100"));
-	maxEvaluations_ 			= Integer.parseInt(Utility.getProperty("MAX_EVALUATIONS", "100"));
+	populationSize_ 			= Integer.parseInt(Utility.getProperty(Constants.POPULATION_SIZE_KEYWORD, "100"));
+	archiveSize_				= populationSize_;
+	maxEvaluations_ 			= Integer.parseInt(Utility.getProperty(Constants.MAX_EVALUATIONS_KEYWORD, "100"));	
     feedback_                   = 20    ;
 
 	realCrossoverProbability_	= 0.9;
 	intCrossoverProbability_	= 0.9;
-	realMutationProbability_ 	= 1.0 / ((GeneticProblem)problem_).getNumOfRealVariables();//  0.4;
-	intMutationProbability_ 	= 1.0 / ((GeneticProblem)problem_).getNumOfIntVariables();//0.4;
+	
+	String realMutationProbability = Utility.getProperty(Constants.REAL_MUTATION_PROBABILITY, ConfigurationChecker.NAN);
+	if (realMutationProbability.equals(ConfigurationChecker.NAN)) { 		
+		int realVars = ((GeneticProblem)problem_).getNumOfRealVariables();
+		if (realVars > 0)
+			realMutationProbability_ 	= 1.0 / realVars;
+		else 
+			realMutationProbability_ 	=0;
+	}
+	else
+		realMutationProbability_ = Double.parseDouble(realMutationProbability);
+	
+	
+	String intMutationProbability = Utility.getProperty(Constants.INTEGER_MUTATION_PROBABILITY, ConfigurationChecker.NAN);
+	if (intMutationProbability.equals(ConfigurationChecker.NAN)) { 		
+		int intVars = ((GeneticProblem)problem_).getNumOfIntVariables();
+		if (intVars > 0)
+			intMutationProbability_ 	= 1.0 / intVars;
+		else 
+			intMutationProbability_	= 0;
+	}
+	else
+		intMutationProbability_ = Double.parseDouble(intMutationProbability);
+	
+	
+	//specify mutation operator
+	String mutOperator =  Utility.getProperty("MUTATION_OPERATOR", ConfigurationChecker.NAN);
+	if (!mutOperator.equals(ConfigurationChecker.NAN)) 
+		mutationOperator = mutOperator;
+	
+//	realMutationProbability_ 	= 1.0 / ((GeneticProblem)problem_).getNumOfRealVariables();//  0.4;
+//	intMutationProbability_ 	= 1.0 / ((GeneticProblem)problem_).getNumOfIntVariables();//0.4;
     crossoverDistributionIndex_ = 20.0  ;
     mutationDistributionIndex_  = 20.0  ;
   }// MOCell_Settings
@@ -117,7 +153,7 @@ public class MOCell_Settings extends Settings{
 	parameters.put("realMutationProbability", this.realMutationProbability_);
 	parameters.put("intMutationProbability", this.intMutationProbability_);
 	parameters.put("distributionIndex", this.mutationDistributionIndex_);
-	mutation = MutationFactory.getMutationOperator("PolynomialUniformMutation", parameters);		
+	mutation = MutationFactory.getMutationOperator(mutationOperator, parameters);		
 
     // Selection operator 
     parameters = null ;

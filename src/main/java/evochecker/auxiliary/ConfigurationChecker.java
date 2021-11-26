@@ -23,9 +23,9 @@ public class ConfigurationChecker {
 		StringBuilder errors = new StringBuilder();
 		
 		String runtimeLibDir = Utility.runtimeLibsDirSpecified();
-		if (runtimeLibDir != null)
-			errors.append(runtimeLibDir  + " has not been specified.\n On Eclipse: Run > Run Configurations > Environment > New > Variable: " 
-					+ runtimeLibDir +"; Value:" + Constants.MODEL_CHECKING_ENGINE_LIBS_DIR_DEFAULT);
+//		if (runtimeLibDir != null)
+//			errors.append(runtimeLibDir  + " has not been specified.\n On Eclipse: Run > Run Configurations > Environment > New > Variable: " 
+//					+ runtimeLibDir +"; Value:" + Constants.MODEL_CHECKING_ENGINE_LIBS_DIR_DEFAULT);
 		
 		//check algorithm
 		if (Utility.getProperty(Constants.ALGORITHM_KEYWORD, NAN).equals(NAN)) 
