@@ -100,6 +100,9 @@ public class EvoChecker {
 	/** */
 	private double executionTime;
 	
+	/** */
+	private String outputDir;
+	
 	
 	public EvoChecker() {
 		
@@ -130,21 +133,28 @@ public class EvoChecker {
 	}
 
 	
+	public void makeInitialisations() throws Exception {
+		//0) check configuration script
+		ConfigurationChecker.checkConfiguration();
+
+		//1) initialise problem
+		initialiseUsingSettingsProvided();
+		initializeProblem();
+		
+		//2) initialise data structures and variables for saving data
+		outputDir = initialiseOutputData();
+	}
+	
+	
 	public void start() {
 		long start = System.currentTimeMillis();
 		
 		try {
-			//0) check configuration script
-			ConfigurationChecker.checkConfiguration();
-
-			//1) initialise problem
-			initializeProblem();
+			//make initialisations
+			makeInitialisations();
 			
-			//2) initialise algorithm
+			//3) initialise algorithm
 			initialiseAlgorithm();
-			
-			//3) initialise data structures and variables for saving data
-			String outputDir = initialiseOutputData();
 
 			//4) execute and save results
 			solutions = execute();
@@ -175,7 +185,34 @@ public class EvoChecker {
 	 * the initialisation should be done by reading the properties file
 	 * @throws Exception
 	 */
-	private void initializeProblem() throws Exception {
+	protected void initializeProblem() throws Exception {
+		//1) parse model template
+		switch (ecType) {
+			case NORMAL		: modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename); break;
+			case PARAMETRIC	: modelInstantiator = new ModelInstantiatorParametric(modelFilename, propertiesFilename);break;
+			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
+		}
+
+		//2) create chromosome
+		genes				= GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList(), false);
+
+		//3) create (gene,evolvable element) pairs
+		modelInstantiator.createMapping();
+		
+		//4) create properties list
+		initialiseProperties();
+		
+		//5) instantiate the problem
+		switch (ecType) {
+			case NORMAL		: problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName); break;
+//			case PARAMETRIC	: problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
+			case PARAMETRIC	: problem = new GeneticProblemParametricParallel (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
+			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
+		}
+	}	
+	
+	
+	private void initialiseUsingSettingsProvided() throws EvoCheckerException {
 		//1 Get model and properties filenames
 		modelFilename 		= new File(Utility.getProperty(Constants.MODEL_FILE_KEYWORD)).getAbsolutePath();
 		propertiesFilename	= new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD)).getAbsolutePath();
@@ -188,21 +225,10 @@ public class EvoChecker {
 			case REGION		: ecType = EvoCheckerType.REGION; 
 							  throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
 		}
-
-		//2) parse model template
-		switch (ecType) {
-			case NORMAL		: modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename); break;
-			case PARAMETRIC	: modelInstantiator = new ModelInstantiatorParametric(modelFilename, propertiesFilename);break;
-			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
-		}
-
-		//3) create chromosome
-		genes				= GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList(), false);
-
-		//4) create (gene,evolvable element) pairs
-		modelInstantiator.createMapping();
-		
-		//5) create properties list
+	}
+	
+	
+	protected void initialiseProperties() {
 		String str = modelInstantiator.getConcreteModel(genes);
 		List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
 		objectivesList  = list.get(0);
@@ -214,22 +240,14 @@ public class EvoChecker {
 		for (Property p : constraintsList)
 			System.out.print("C: "+p.toString());
 		System.out.println();
-		
-		//6) instantiate the problem
-		switch (ecType) {
-			case NORMAL		: problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName); break;
-//			case PARAMETRIC	: problem = new GeneticProblemParametric (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
-			case PARAMETRIC	: problem = new GeneticProblemParametricParallel (genes, modelInstantiator, objectivesList, constraintsList, problemName);break;
-			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
-		}
-	}	
+	}
 	
 	
 	/**
 	 * initialise algorithm
 	 * @throws Exception
 	 */
-	private void initialiseAlgorithm() throws Exception{
+	protected void initialiseAlgorithm() throws Exception{
 		
 		if (algorithmName != null){
 			if (algorithmName.equals(Constants.ALGORITHM.NSGAII.toString())){
@@ -263,7 +281,7 @@ public class EvoChecker {
 	/**
 	 * Initialise data structure and variables for saving execution results
 	 */
-	private String initialiseOutputData() {
+	protected String initialiseOutputData() {
 		//create output dir
 		String outputDir = "data" + File.separator 
 							+ Utility.getProperty(Constants.PROBLEM_KEYWORD)   + File.separator 
@@ -282,7 +300,7 @@ public class EvoChecker {
 	 * Execute
 	 * @throws Exception
 	 */
-	private SolutionSet execute() throws Exception{
+	protected SolutionSet execute() throws Exception{
 		//Execute the Algorithm
 		System.out.println("Starting  evolution");
 		SolutionSet solutions = algorithm.execute();
@@ -312,6 +330,16 @@ public class EvoChecker {
 		String identifier	= problemName +"_"+ algorithmName +"_"+ Utility.getTimeStamp();
 		String frontFile	= outputDir + identifier + "_Front";
 		String setFile		= outputDir  + identifier + "_Set";
+		 try {
+			File pf = File.createTempFile(identifier, "_Front", new File(outputDir));
+			File ps = File.createTempFile(identifier, "_Set", new File(outputDir));
+			
+			frontFile 	= pf.getAbsolutePath();
+			setFile		= ps.getAbsolutePath();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		
 		//generate and save headers
 //		StringBuilder setHeader = new StringBuilder();
@@ -352,25 +380,6 @@ public class EvoChecker {
 		if (plotParetoFront)
 			PlotFactory.plotParetoFront(frontFile, objectivesList.size());
 	}
-
-	
-	/**
-	 * Return Pareto front file name
-	 * @return
-	 */
-	public String getParetoFrontFileName() {
-		return paretoFrontFile;
-	}
-	
-
-	/**
-	 * Return Pareto set file name
-	 * @return
-	 */
-	public String getParetoSetFileName() {
-		return paretoSetFile;
-	}
-	
 	
 	
 	public void executeRandomSearch() throws FileNotFoundException, IOException {
@@ -407,27 +416,6 @@ public class EvoChecker {
 		  // Add the indicator object to the algorithm
 		    algorithm.setInputParameter("indicators", indicators) ;  
 	}
-	
-	
-	public double getExecutionTime() {
-		return executionTime;
-	}
-	
-	
-	/**
-	 * Get statistics
-	 */
-	public String getStatistics(){
-		return ((GeneticModelProblem)problem).getStatistics();
-	}
-	
-	
-	/**
-	 * Print statistics
-	 */
-	private void printStatistics(){
-		System.out.println(getStatistics());
-	}
 
 	
 	public void setProperty(String key, String value) {
@@ -457,4 +445,123 @@ public class EvoChecker {
 	public int getConstraintsNum() {
 		return this.constraintsList.size();
 	}
+	
+	public double getExecutionTime() {
+		return executionTime;
+	}
+	
+	/**
+	 * Get statistics
+	 */
+	public String getStatistics(){
+		return ((GeneticModelProblem)problem).getStatistics();
+	}
+	
+	/**
+	 * Print statistics
+	 */
+	private void printStatistics(){
+		System.out.println(getStatistics());
+	}
+	
+	/**
+	 * Return Pareto front file name
+	 * @return
+	 */
+	public String getParetoFrontFileName() {
+		return paretoFrontFile;
+	}
+
+	/**
+	 * Return Pareto set file name
+	 * @return
+	 */
+	public String getParetoSetFileName() {
+		return paretoSetFile;
+	}
+	
+	protected Algorithm getAlgorithm() {
+		return algorithm;
+	}
+	
+	protected String getAlgorithmName() {
+		return algorithmName;
+	}
+
+	protected String getProblemName() {
+		return problemName;
+	}
+	
+	public Problem getProblem() {
+		return problem;
+	}
+	
+	protected String getModelFileName() {
+		return modelFilename;
+	}
+
+	protected String getPropertiesFileName() {
+		return propertiesFilename;
+	}
+	
+	protected EvoCheckerType getEvoCheckerType() {
+		return ecType;
+	}
+	
+	protected List<AbstractGene> getGenes() {
+		return genes;
+	}
+	
+	protected List<Property> getConstraints() {
+		return constraintsList;
+	}
+	
+	public List<Property> getObjectives() {
+		return objectivesList;
+	}
+	
+	protected IModelInstantiator getModelInstantiator() {
+		return modelInstantiator;
+	}
+	
+	protected void setAlgorithmName(String algorithmName) {
+		this.algorithmName = algorithmName;
+	}
+
+	protected void setProblemName(String problemName) {
+		this.problemName = problemName;
+	}
+	
+	protected void setProblem(Problem problem) {
+		this.problem = problem;
+	}
+	
+	protected void setModelFileName(String modelFileName) {
+		this.modelFilename = modelFileName;
+	}
+
+	protected void setPropertiesFileName(String propertiesFileName) {
+		this.propertiesFilename = propertiesFileName;
+	}
+	
+	protected void setEvoCheckerType(EvoCheckerType  type) {
+		this.ecType = type;
+	}
+	
+	protected void setGenes(List<AbstractGene> genes) {
+		this.genes = genes;
+	}
+		
+	protected void setModelInstantiator(IModelInstantiator  modelInstantiator) {
+		this.modelInstantiator = modelInstantiator;
+	}
+	
+	protected void setObjectives(List<Property> objectives) {
+		this.objectivesList = objectives;
+	}
+	
+	protected void setConstraints(List<Property> constraints) {
+		this.constraintsList = constraints;
+	}
+	
 }
