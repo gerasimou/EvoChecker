@@ -88,7 +88,8 @@ public class EvoChecker {
 	/** Pareto set filename*/
 	private String paretoSetFile;
 
-
+	/** Old solutions to load*/
+	private String initialSolutions;
 	
 	public EvoChecker() {
 		
@@ -122,31 +123,65 @@ public class EvoChecker {
 	public void start() {
 		long start = System.currentTimeMillis();
 		
+		int max_eval=Integer.parseInt(Utility.getProperty(Constants.MAX_EVALUATIONS_KEYWORD));
+		int interval=Integer.parseInt(Utility.getProperty(Constants.EVALUATION_INTERVAL_KEYWORD));
+
+		if (interval<max_eval)
+		{
+			try
+			{
+				Utility.setProperty(Constants.MAX_EVALUATIONS_KEYWORD, Utility.getProperty(Constants.EVALUATION_INTERVAL_KEYWORD));
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else interval=max_eval;
+
+
 		try {
-			//0) check configuration script
-			ConfigurationChecker.checkConfiguration();
+			for (int i=0; i<max_eval; i+=interval)
+			{
+				if (i+interval>max_eval)
+				{
+					Utility.setProperty(Constants.MAX_EVALUATIONS_KEYWORD, Integer.toString(max_eval-i));
+				}
 
-			//1) initialise problem
-			initializeProblem();
-			
-			//2) initialise algorithm
-			initialiseAlgorithm();
-			
-			//3) initialise data structures and variables for saving data
-			String outputDir = initialiseOutputData();
+				if (i>0)
+				{
+					try
+					{
+						Utility.setProperty(Constants.RELOAD_KEYWORD, "true");
+					} catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
 
-			//4) execute and save results
-			SolutionSet solutions = execute();
+				//0) check configuration script
+				ConfigurationChecker.checkConfiguration();
 
-			long end = System.currentTimeMillis();
+				//1) initialise problem
+				initializeProblem();
+				
+				//2) initialise algorithm
+				initialiseAlgorithm();
+				
+				//3) initialise data structures and variables for saving data
+				String outputDir = initialiseOutputData();
+				//4) execute and save results
+				SolutionSet solutions = execute();
 
-			//5) save solutions
-			exportResults(outputDir, solutions);
-			
-			//6) close down
-			closeDown();
-			
-			System.err.printf("Time:\t%s\n", (end - start)/1000.0);
+
+				//5) save solutions
+				exportResults(outputDir, solutions);
+				long end = System.currentTimeMillis();
+				
+				//6) close down
+				closeDown();
+				
+				System.err.printf("Time:\t%s\n", (end - start)/1000.0);
+			}
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
