@@ -173,7 +173,7 @@ public class pNSGAII extends Algorithm {
           // System.out.println("Before");
           // System.out.println(newSolution.getDecisionVariables()[0]);
           // System.out.println(newSolution.getDecisionVariables()[1]);
-          String result = lines.get(i+2).replaceAll("\\s",",");
+          String result = lines.get(i+2).trim().replaceAll("\\s",",");
 
           // Get arrays
           ArrayReal real_arr=(ArrayReal) newSolution.getDecisionVariables()[0];
