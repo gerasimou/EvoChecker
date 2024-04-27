@@ -1,0 +1,5 @@
+//objective, max
+P=? [ F x=9 & y=9 ]
+
+//objective, min
+R{"cost"}=? [ C<=100 ]

@@ -68,7 +68,7 @@ public class Utility {
 	public static String getProperty (String key, String defaultValue){
 		loadPropertiesInstance();
 		String output = properties.getProperty(key);
-		return (output != null ? output : defaultValue);
+		return (output != null ? output.trim() : defaultValue.trim());
 	}
 	
 	

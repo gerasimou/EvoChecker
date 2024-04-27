@@ -1,0 +1,156 @@
+// This model is automatically generated from the PRISM model 
+
+// All changes made will be lost after regeneration. 
+ 
+// PRISM Output
+
+ctmc
+
+// p_c_a=0.989 -const p_d_12=0.5 -const p_d_1=0.96 -const p_d_2=0.96 -const p_c_c=0.995 -const p_c_b=0.989.
+const double p_c_a = 0.989;//[0..1];
+const double p_d_1 = 0.96; //[0..1];
+const double p_d_2 = 0.96; //[0..1];
+const double p_c_c = 0.995; //[0..1];
+const double p_c_b = 0.989;//[0..1];
+
+const double p_d_12 = 0.5;// [0..1];
+
+
+const int INACTIVE = (100);
+const double mean_duration = (0.001);
+const int PAL_I0_E1_I0 = (0);
+const int PAL_I0_E1_Prepare = (1);
+const int PAL_I0_E1_F1 = (2);
+const int PAL_I0_E1_R1ToCorA = (3);
+const int PAL_I0_E1_R1ToDoorAB = (4);
+const int PAL_I0_E1_D1 = (5);
+const int PAL_I0_E1_M1 = (6);
+const int PAL_I0_E1_M3 = (7);
+const int PAL_I0_E1_D2 = (8);
+const int PAL_I0_E1_R1ToCorBThrDoor1 = (9);
+const int PAL_I0_E1_R1ToCorBThrDoor2 = (10);
+const int PAL_I0_E1_D3 = (11);
+const int PAL_I0_E1_D4 = (12);
+const int PAL_I0_E1_M2 = (13);
+const int PAL_I0_E1_R1ToRoomD = (14);
+const int PAL_I0_E1_D5 = (15);
+const int PAL_I0_E1_R1DeliveredRoomD = (16);
+const int PAL_I0_E1_M4 = (17);
+const int PAL_I0_E1_R1Stuck = (18);
+const int PAL_I0_E1_J1 = (19);
+const int PAL_F1_E25_R2ToCorC = (0);
+const int PAL_F1_E25_R2ToDoorCD = (1);
+const int PAL_F1_E25_D6 = (2);
+const int PAL_F1_E25_R2DeliveredRoomD = (3);
+const int PAL_F1_E25_R2Stuck = (4);
+const int PAL_F1_E25_M5 = (5);
+const int PAL_F1_E25_J1 = (6);
+const int PAL_F1_E25_AF = (7);
+const double r_prep = (0.9998);
+const double r1 = (1.0);
+const double d_prep = (0.5);
+const double d_cor_a = (0.2);
+const double d_cor_c = (0.2);
+const double d_door_ab = (0.5);
+const double d_door_cd = (2.5);
+const double d_cor_b_d1 = (0.5);
+const double d_cor_b_d2 = (0.5);
+const double d_r1_rd = (1.0);
+const double d_r1_stuck = (1.0);
+const double d_r2_stuck = (1.0);
+const double d_r1_delivered = (0.5);
+const double d_r2_delivered = (0.5);
+const double t = (10.0);
+
+
+
+formula PAL_to_be_terminated = (PAL_I0_E1_to_be_terminated)|(PAL_F1_E25_to_be_terminated);		
+formula PAL_to_be_failed = PAL_I0_E1_to_be_failed;		
+formula default_rate = ((1.0)/mean_duration);		
+		
+
+
+
+rewards "reward_door12_attempt"
+	[PAL_I0_E1_R1ToCorBThrDoor1] ((PAL_I0_E1_pc=PAL_I0_E1_R1ToCorBThrDoor1)) : r1;	
+	[PAL_I0_E1_R1ToCorBThrDoor2] ((PAL_I0_E1_pc=PAL_I0_E1_R1ToCorBThrDoor2)) : r1;	
+endrewards
+
+
+
+
+module PAL_I0_E1
+    PAL_I0_E1_pc : [0..INACTIVE] init 0;
+    PAL_I0_E1_to_be_terminated : bool init false;
+    PAL_I0_E1_to_be_failed : bool init false;
+    PAL_terminated : bool init false;
+
+    [PAL_I0_E1_I0] ((PAL_I0_E1_pc=PAL_I0_E1_I0))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_I0_E1_pc'=PAL_I0_E1_Prepare);
+
+    [PAL_I0_E1_Prepare] ((PAL_I0_E1_pc=PAL_I0_E1_Prepare))&(! (PAL_to_be_terminated)) -> (((1.0)/d_prep)*((1.0)-r_prep)):(PAL_I0_E1_pc'=INACTIVE)&(PAL_I0_E1_to_be_failed'=true)&(PAL_I0_E1_to_be_terminated'=true) + (((1.0)/d_prep)*r_prep):(PAL_I0_E1_pc'=PAL_I0_E1_F1);
+
+    [PAL_F1] ((PAL_I0_E1_pc=PAL_I0_E1_F1))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_I0_E1_pc'=PAL_I0_E1_R1ToCorA);
+
+    [PAL_I0_E1_R1ToCorA] ((PAL_I0_E1_pc=PAL_I0_E1_R1ToCorA))&(! (PAL_to_be_terminated)) -> ((1.0)/d_cor_a):(PAL_I0_E1_pc'=PAL_I0_E1_R1ToDoorAB);
+
+    [PAL_I0_E1_R1ToDoorAB] ((PAL_I0_E1_pc=PAL_I0_E1_R1ToDoorAB))&(! (PAL_to_be_terminated)) -> ((1.0)/d_door_ab):(PAL_I0_E1_pc'=PAL_I0_E1_D1);
+
+    [PAL_I0_E1_D1] ((PAL_I0_E1_pc=PAL_I0_E1_D1))&(! (PAL_to_be_terminated)) -> (default_rate*p_c_a):(PAL_I0_E1_pc'=PAL_I0_E1_M1) + (default_rate*((1.0)-p_c_a)):(PAL_I0_E1_pc'=PAL_I0_E1_M3);
+
+    [PAL_I0_E1_M1] ((PAL_I0_E1_pc=PAL_I0_E1_M1))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_I0_E1_pc'=PAL_I0_E1_D2);
+
+    [PAL_I0_E1_M3] ((PAL_I0_E1_pc=PAL_I0_E1_M3))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_I0_E1_pc'=PAL_I0_E1_R1Stuck);
+
+    [PAL_I0_E1_D2] ((PAL_I0_E1_pc=PAL_I0_E1_D2))&(! (PAL_to_be_terminated)) -> (default_rate*p_d_12):(PAL_I0_E1_pc'=PAL_I0_E1_R1ToCorBThrDoor1) + (default_rate*((1.0)-p_d_12)):(PAL_I0_E1_pc'=PAL_I0_E1_R1ToCorBThrDoor2);
+
+    [PAL_I0_E1_R1ToCorBThrDoor1] ((PAL_I0_E1_pc=PAL_I0_E1_R1ToCorBThrDoor1))&(! (PAL_to_be_terminated)) -> ((1.0)/d_cor_b_d1):(PAL_I0_E1_pc'=PAL_I0_E1_D3);
+
+    [PAL_I0_E1_R1ToCorBThrDoor2] ((PAL_I0_E1_pc=PAL_I0_E1_R1ToCorBThrDoor2))&(! (PAL_to_be_terminated)) -> ((1.0)/d_cor_b_d2):(PAL_I0_E1_pc'=PAL_I0_E1_D4);
+
+    [PAL_I0_E1_D3] ((PAL_I0_E1_pc=PAL_I0_E1_D3))&(! (PAL_to_be_terminated)) -> (default_rate*p_d_1):(PAL_I0_E1_pc'=PAL_I0_E1_M2) + (default_rate*((1.0)-p_d_1)):(PAL_I0_E1_pc'=PAL_I0_E1_M1);
+
+    [PAL_I0_E1_D4] ((PAL_I0_E1_pc=PAL_I0_E1_D4))&(! (PAL_to_be_terminated)) -> (default_rate*p_d_2):(PAL_I0_E1_pc'=PAL_I0_E1_M2) + (default_rate*((1.0)-p_d_2)):(PAL_I0_E1_pc'=PAL_I0_E1_M1);
+
+    [PAL_I0_E1_M2] ((PAL_I0_E1_pc=PAL_I0_E1_M2))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_I0_E1_pc'=PAL_I0_E1_R1ToRoomD);
+
+    [PAL_I0_E1_R1ToRoomD] ((PAL_I0_E1_pc=PAL_I0_E1_R1ToRoomD))&(! (PAL_to_be_terminated)) -> ((1.0)/d_r1_rd):(PAL_I0_E1_pc'=PAL_I0_E1_D5);
+
+    [PAL_I0_E1_D5] ((PAL_I0_E1_pc=PAL_I0_E1_D5))&(! (PAL_to_be_terminated)) -> (default_rate*p_c_b):(PAL_I0_E1_pc'=PAL_I0_E1_R1DeliveredRoomD) + (default_rate*((1.0)-p_c_b)):(PAL_I0_E1_pc'=PAL_I0_E1_M3);
+
+    [PAL_I0_E1_R1DeliveredRoomD] ((PAL_I0_E1_pc=PAL_I0_E1_R1DeliveredRoomD))&(! (PAL_to_be_terminated)) -> ((1.0)/d_r1_delivered):(PAL_I0_E1_pc'=PAL_I0_E1_M4);
+
+    [PAL_I0_E1_M4] ((PAL_I0_E1_pc=PAL_I0_E1_M4))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_I0_E1_pc'=PAL_I0_E1_J1);
+
+    [PAL_I0_E1_R1Stuck] ((PAL_I0_E1_pc=PAL_I0_E1_R1Stuck))&(! (PAL_to_be_terminated)) -> ((1.0)/d_r1_stuck):(PAL_I0_E1_pc'=PAL_I0_E1_M4);
+
+    [PAL_J1] ((PAL_I0_E1_pc=PAL_I0_E1_J1))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_I0_E1_pc'=INACTIVE);
+
+    [PAL_terminate] (PAL_to_be_terminated)&(! (PAL_terminated)) -> default_rate:(PAL_I0_E1_pc'=INACTIVE)&(PAL_terminated'=true);
+
+    [] ((PAL_I0_E1_pc=INACTIVE))&((PAL_terminated)&(! (PAL_to_be_terminated))) -> default_rate:true;
+
+endmodule
+
+module PAL_F1_E25
+    PAL_F1_E25_pc : [0..INACTIVE] init INACTIVE;
+    PAL_F1_E25_to_be_terminated : bool init false;
+
+    [PAL_F1] ((PAL_F1_E25_pc=INACTIVE))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_F1_E25_pc'=PAL_F1_E25_R2ToCorC);
+
+    [PAL_F1_E25_R2ToCorC] ((PAL_F1_E25_pc=PAL_F1_E25_R2ToCorC))&(! (PAL_to_be_terminated)) -> ((1.0)/d_cor_c):(PAL_F1_E25_pc'=PAL_F1_E25_R2ToDoorCD);
+
+    [PAL_F1_E25_R2ToDoorCD] ((PAL_F1_E25_pc=PAL_F1_E25_R2ToDoorCD))&(! (PAL_to_be_terminated)) -> ((1.0)/d_door_cd):(PAL_F1_E25_pc'=PAL_F1_E25_D6);
+
+    [PAL_F1_E25_D6] ((PAL_F1_E25_pc=PAL_F1_E25_D6))&(! (PAL_to_be_terminated)) -> (default_rate*p_c_c):(PAL_F1_E25_pc'=PAL_F1_E25_R2DeliveredRoomD) + (default_rate*((1.0)-p_c_c)):(PAL_F1_E25_pc'=PAL_F1_E25_R2Stuck);
+
+    [PAL_F1_E25_R2DeliveredRoomD] ((PAL_F1_E25_pc=PAL_F1_E25_R2DeliveredRoomD))&(! (PAL_to_be_terminated)) -> ((1.0)/d_r2_delivered):(PAL_F1_E25_pc'=PAL_F1_E25_M5);
+
+    [PAL_F1_E25_R2Stuck] ((PAL_F1_E25_pc=PAL_F1_E25_R2Stuck))&(! (PAL_to_be_terminated)) -> ((1.0)/d_r2_stuck):(PAL_F1_E25_pc'=PAL_F1_E25_M5);
+
+    [PAL_F1_E25_M5] ((PAL_F1_E25_pc=PAL_F1_E25_M5))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_F1_E25_pc'=PAL_F1_E25_J1);
+
+    [PAL_J1] ((PAL_F1_E25_pc=PAL_F1_E25_J1))&(! (PAL_to_be_terminated)) -> default_rate:(PAL_F1_E25_pc'=PAL_F1_E25_AF)&(PAL_F1_E25_to_be_terminated'=true);
+
+    [PAL_terminate] PAL_to_be_terminated -> default_rate:(PAL_F1_E25_pc'=INACTIVE)&(PAL_F1_E25_to_be_terminated'=false);
+
+endmodule

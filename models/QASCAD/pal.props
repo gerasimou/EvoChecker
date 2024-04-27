@@ -1,0 +1,4 @@
+"either_success": P=? [ F  (PAL_I0_E1_pc = PAL_I0_E1_R1DeliveredRoomD) | (PAL_F1_E25_pc = PAL_F1_E25_R2DeliveredRoomD)]
+"both_success": P=? [ F<=t  (PAL_I0_E1_pc = PAL_I0_E1_R1DeliveredRoomD) & (PAL_F1_E25_pc = PAL_F1_E25_R2DeliveredRoomD)]
+"terminate": P=? [ F PAL_F1_E25_pc = PAL_F1_E25_AF ]
+"both_stuck": P=? [ F (PAL_I0_E1_pc=PAL_I0_E1_R1Stuck)&(PAL_F1_E25_pc=PAL_F1_E25_R2Stuck) ]

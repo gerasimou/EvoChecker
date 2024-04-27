@@ -204,8 +204,8 @@ public class ModelParser implements IModelParser{
 	
 	
 	public static void main (String args[]){	
-		String 		modelFilename		= "models//DPMParam/dpmSmall.pm";
-		String 		propertiesFilename 	= "models//DPMParam/dpmSmall.csl";
+		String 		modelFilename		= "models/SESAME-EDDI/palEvoChecker.prism";
+		String 		propertiesFilename 	= "models/SESAME-EDDI/pal.csl";
 		
 		if (args.length == 2){
 			modelFilename		= args[0];

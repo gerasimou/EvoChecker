@@ -67,4 +67,13 @@ public class PlotFactory {
 	public static void setParetoFrontScriptFile (String scriptFilename) {
 		scriptFile = scriptFilename;
 	}
+	
+	
+	public static void main(String[] args) throws EvoCheckerException {
+		String configFile = "config.properties";
+		Utility.setPropertiesFile(configFile);
+
+		String script2DFile = "/Users/simos/Git/EvoChecker/data/PAL/NSGAII/PAL_NSGAII_260124_1836254979711536701415111_Front";
+		PlotFactory.plotParetoFront(script2DFile, 2);		
+	}
 }
