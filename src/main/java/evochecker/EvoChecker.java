@@ -168,7 +168,7 @@ public class EvoChecker {
 			//6) close down
 			closeDown();
 			
-			System.err.printf("Time:\t%s\n", executionTime);
+			System.out.printf("Time:\t%s\n", executionTime);
 			
 			//7 print statistics
 			printStatistics();
