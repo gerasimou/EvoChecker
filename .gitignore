@@ -12,3 +12,6 @@ output_Prism.txt
 hs_err_pid*
 /target/
 /bin/
+
+#Ignore logs from Server response (model checker)
+Server*
