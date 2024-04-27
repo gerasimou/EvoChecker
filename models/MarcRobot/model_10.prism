@@ -1,0 +1,1174 @@
+dtmc
+const int N=9;
+const int startX = 0;
+const int startY = 0;
+const int targetX = 9;
+const int targetY = 9;
+const double p_update_0 = 0;
+const double p = 0.01;
+ 
+module Agent 
+  step : [0..1] init 0;
+  ax : [0..N] init startX;
+  ay : [0..N] init startY;
+  [update0] t=0 & step=0 & mustUpdate0=1 -> 
+  1-(4*p_update_0): (ax'=x)&(ay'=y)&(step'=1) + 
+  p_update_0: (ax'=max(x-1, 0)) & (ay'=y) & (step'=1) + 
+  p_update_0: (ax'=min(x+1, N)) & (ay'=y) & (step'=1) + 
+  p_update_0: (ay'=max(y-1, 0)) & (ax'=x) & (step'=1) + 
+  p_update_0: (ay'=min(y+1, N)) & (ax'=x) & (step'=1);
+  [skipUpdate] t=0 & step=0 & mustUpdate0=0 -> (step'=1);
+  [west] t=0 & step=1 & ax=0 & ay=0 & movement_0_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=0 & ay=1 & movement_0_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=0 & ay=2 & movement_0_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=0 & ay=3 & movement_0_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=0 & ay=4 & movement_0_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=0 & ay=5 & movement_0_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=0 & ay=6 & movement_0_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=0 & ay=7 & movement_0_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=0 & ay=8 & movement_0_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=0 & ay=9 & movement_0_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=0 & movement_1_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=1 & movement_1_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=2 & movement_1_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=3 & movement_1_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=4 & movement_1_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=5 & movement_1_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=6 & movement_1_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=7 & movement_1_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=8 & movement_1_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=1 & ay=9 & movement_1_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=0 & movement_2_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=1 & movement_2_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=2 & movement_2_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=3 & movement_2_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=4 & movement_2_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=5 & movement_2_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=6 & movement_2_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=7 & movement_2_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=8 & movement_2_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=2 & ay=9 & movement_2_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=0 & movement_3_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=1 & movement_3_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=2 & movement_3_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=3 & movement_3_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=4 & movement_3_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=5 & movement_3_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=6 & movement_3_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=7 & movement_3_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=8 & movement_3_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=3 & ay=9 & movement_3_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=0 & movement_4_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=1 & movement_4_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=2 & movement_4_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=3 & movement_4_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=4 & movement_4_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=5 & movement_4_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=6 & movement_4_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=7 & movement_4_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=8 & movement_4_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=4 & ay=9 & movement_4_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=0 & movement_5_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=1 & movement_5_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=2 & movement_5_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=3 & movement_5_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=4 & movement_5_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=5 & movement_5_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=6 & movement_5_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=7 & movement_5_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=8 & movement_5_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=5 & ay=9 & movement_5_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=0 & movement_6_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=1 & movement_6_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=2 & movement_6_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=3 & movement_6_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=4 & movement_6_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=5 & movement_6_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=6 & movement_6_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=7 & movement_6_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=8 & movement_6_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=6 & ay=9 & movement_6_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=0 & movement_7_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=1 & movement_7_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=2 & movement_7_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=3 & movement_7_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=4 & movement_7_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=5 & movement_7_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=6 & movement_7_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=7 & movement_7_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=8 & movement_7_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=7 & ay=9 & movement_7_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=0 & movement_8_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=1 & movement_8_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=2 & movement_8_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=3 & movement_8_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=4 & movement_8_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=5 & movement_8_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=6 & movement_8_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=7 & movement_8_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=8 & movement_8_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=8 & ay=9 & movement_8_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=0 & movement_9_0=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=1 & movement_9_1=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=2 & movement_9_2=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=3 & movement_9_3=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=4 & movement_9_4=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=5 & movement_9_5=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=6 & movement_9_6=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=7 & movement_9_7=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=8 & movement_9_8=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+  [west] t=0 & step=1 & ax=9 & ay=9 & movement_9_9=0 ->
+    (ax'=max(ax-1, 0)) & (step'=0);
+
+  [east] t=0 & step=1 & ax=0 & ay=0 & movement_0_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=0 & ay=1 & movement_0_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=0 & ay=2 & movement_0_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=0 & ay=3 & movement_0_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=0 & ay=4 & movement_0_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=0 & ay=5 & movement_0_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=0 & ay=6 & movement_0_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=0 & ay=7 & movement_0_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=0 & ay=8 & movement_0_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=0 & ay=9 & movement_0_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=0 & movement_1_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=1 & movement_1_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=2 & movement_1_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=3 & movement_1_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=4 & movement_1_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=5 & movement_1_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=6 & movement_1_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=7 & movement_1_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=8 & movement_1_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=1 & ay=9 & movement_1_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=0 & movement_2_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=1 & movement_2_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=2 & movement_2_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=3 & movement_2_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=4 & movement_2_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=5 & movement_2_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=6 & movement_2_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=7 & movement_2_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=8 & movement_2_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=2 & ay=9 & movement_2_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=0 & movement_3_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=1 & movement_3_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=2 & movement_3_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=3 & movement_3_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=4 & movement_3_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=5 & movement_3_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=6 & movement_3_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=7 & movement_3_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=8 & movement_3_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=3 & ay=9 & movement_3_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=0 & movement_4_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=1 & movement_4_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=2 & movement_4_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=3 & movement_4_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=4 & movement_4_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=5 & movement_4_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=6 & movement_4_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=7 & movement_4_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=8 & movement_4_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=4 & ay=9 & movement_4_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=0 & movement_5_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=1 & movement_5_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=2 & movement_5_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=3 & movement_5_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=4 & movement_5_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=5 & movement_5_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=6 & movement_5_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=7 & movement_5_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=8 & movement_5_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=5 & ay=9 & movement_5_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=0 & movement_6_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=1 & movement_6_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=2 & movement_6_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=3 & movement_6_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=4 & movement_6_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=5 & movement_6_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=6 & movement_6_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=7 & movement_6_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=8 & movement_6_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=6 & ay=9 & movement_6_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=0 & movement_7_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=1 & movement_7_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=2 & movement_7_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=3 & movement_7_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=4 & movement_7_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=5 & movement_7_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=6 & movement_7_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=7 & movement_7_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=8 & movement_7_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=7 & ay=9 & movement_7_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=0 & movement_8_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=1 & movement_8_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=2 & movement_8_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=3 & movement_8_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=4 & movement_8_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=5 & movement_8_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=6 & movement_8_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=7 & movement_8_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=8 & movement_8_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=8 & ay=9 & movement_8_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=0 & movement_9_0=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=1 & movement_9_1=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=2 & movement_9_2=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=3 & movement_9_3=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=4 & movement_9_4=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=5 & movement_9_5=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=6 & movement_9_6=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=7 & movement_9_7=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=8 & movement_9_8=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+  [east] t=0 & step=1 & ax=9 & ay=9 & movement_9_9=1 ->
+    (ax'=min(ax+1, N)) & (step'=0);
+
+  [south] t=0 & step=1 & ax=0 & ay=0 & movement_0_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=0 & ay=1 & movement_0_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=0 & ay=2 & movement_0_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=0 & ay=3 & movement_0_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=0 & ay=4 & movement_0_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=0 & ay=5 & movement_0_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=0 & ay=6 & movement_0_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=0 & ay=7 & movement_0_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=0 & ay=8 & movement_0_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=0 & ay=9 & movement_0_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=0 & movement_1_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=1 & movement_1_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=2 & movement_1_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=3 & movement_1_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=4 & movement_1_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=5 & movement_1_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=6 & movement_1_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=7 & movement_1_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=8 & movement_1_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=1 & ay=9 & movement_1_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=0 & movement_2_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=1 & movement_2_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=2 & movement_2_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=3 & movement_2_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=4 & movement_2_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=5 & movement_2_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=6 & movement_2_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=7 & movement_2_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=8 & movement_2_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=2 & ay=9 & movement_2_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=0 & movement_3_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=1 & movement_3_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=2 & movement_3_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=3 & movement_3_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=4 & movement_3_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=5 & movement_3_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=6 & movement_3_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=7 & movement_3_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=8 & movement_3_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=3 & ay=9 & movement_3_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=0 & movement_4_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=1 & movement_4_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=2 & movement_4_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=3 & movement_4_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=4 & movement_4_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=5 & movement_4_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=6 & movement_4_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=7 & movement_4_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=8 & movement_4_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=4 & ay=9 & movement_4_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=0 & movement_5_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=1 & movement_5_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=2 & movement_5_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=3 & movement_5_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=4 & movement_5_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=5 & movement_5_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=6 & movement_5_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=7 & movement_5_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=8 & movement_5_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=5 & ay=9 & movement_5_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=0 & movement_6_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=1 & movement_6_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=2 & movement_6_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=3 & movement_6_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=4 & movement_6_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=5 & movement_6_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=6 & movement_6_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=7 & movement_6_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=8 & movement_6_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=6 & ay=9 & movement_6_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=0 & movement_7_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=1 & movement_7_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=2 & movement_7_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=3 & movement_7_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=4 & movement_7_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=5 & movement_7_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=6 & movement_7_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=7 & movement_7_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=8 & movement_7_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=7 & ay=9 & movement_7_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=0 & movement_8_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=1 & movement_8_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=2 & movement_8_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=3 & movement_8_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=4 & movement_8_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=5 & movement_8_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=6 & movement_8_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=7 & movement_8_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=8 & movement_8_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=8 & ay=9 & movement_8_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=0 & movement_9_0=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=1 & movement_9_1=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=2 & movement_9_2=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=3 & movement_9_3=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=4 & movement_9_4=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=5 & movement_9_5=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=6 & movement_9_6=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=7 & movement_9_7=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=8 & movement_9_8=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+  [south] t=0 & step=1 & ax=9 & ay=9 & movement_9_9=2 ->
+    (ay'=max(ay-1, 0)) & (step'=0);
+
+  [north] t=0 & step=1 & ax=0 & ay=0 & movement_0_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=0 & ay=1 & movement_0_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=0 & ay=2 & movement_0_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=0 & ay=3 & movement_0_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=0 & ay=4 & movement_0_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=0 & ay=5 & movement_0_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=0 & ay=6 & movement_0_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=0 & ay=7 & movement_0_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=0 & ay=8 & movement_0_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=0 & ay=9 & movement_0_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=0 & movement_1_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=1 & movement_1_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=2 & movement_1_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=3 & movement_1_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=4 & movement_1_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=5 & movement_1_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=6 & movement_1_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=7 & movement_1_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=8 & movement_1_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=1 & ay=9 & movement_1_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=0 & movement_2_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=1 & movement_2_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=2 & movement_2_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=3 & movement_2_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=4 & movement_2_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=5 & movement_2_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=6 & movement_2_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=7 & movement_2_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=8 & movement_2_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=2 & ay=9 & movement_2_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=0 & movement_3_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=1 & movement_3_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=2 & movement_3_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=3 & movement_3_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=4 & movement_3_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=5 & movement_3_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=6 & movement_3_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=7 & movement_3_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=8 & movement_3_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=3 & ay=9 & movement_3_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=0 & movement_4_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=1 & movement_4_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=2 & movement_4_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=3 & movement_4_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=4 & movement_4_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=5 & movement_4_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=6 & movement_4_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=7 & movement_4_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=8 & movement_4_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=4 & ay=9 & movement_4_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=0 & movement_5_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=1 & movement_5_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=2 & movement_5_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=3 & movement_5_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=4 & movement_5_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=5 & movement_5_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=6 & movement_5_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=7 & movement_5_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=8 & movement_5_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=5 & ay=9 & movement_5_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=0 & movement_6_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=1 & movement_6_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=2 & movement_6_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=3 & movement_6_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=4 & movement_6_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=5 & movement_6_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=6 & movement_6_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=7 & movement_6_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=8 & movement_6_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=6 & ay=9 & movement_6_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=0 & movement_7_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=1 & movement_7_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=2 & movement_7_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=3 & movement_7_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=4 & movement_7_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=5 & movement_7_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=6 & movement_7_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=7 & movement_7_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=8 & movement_7_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=7 & ay=9 & movement_7_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=0 & movement_8_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=1 & movement_8_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=2 & movement_8_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=3 & movement_8_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=4 & movement_8_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=5 & movement_8_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=6 & movement_8_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=7 & movement_8_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=8 & movement_8_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=8 & ay=9 & movement_8_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=0 & movement_9_0=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=1 & movement_9_1=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=2 & movement_9_2=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=3 & movement_9_3=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=4 & movement_9_4=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=5 & movement_9_5=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=6 & movement_9_6=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=7 & movement_9_7=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=8 & movement_9_8=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+  [north] t=0 & step=1 & ax=9 & ay=9 & movement_9_9=3 ->
+    (ay'=min(ay+1, N)) & (step'=0);
+
+endmodule 
+const int movement_0_0=1; 
+const int movement_0_1=5; 
+const int movement_0_2=5; 
+const int movement_0_3=5; 
+const int movement_0_4=5; 
+const int movement_0_5=5; 
+const int movement_0_6=1; 
+const int movement_0_7=5; 
+const int movement_0_8=5; 
+const int movement_0_9=5; 
+const int movement_1_0=1; 
+const int movement_1_1=2; 
+const int movement_1_2=5; 
+const int movement_1_3=1; 
+const int movement_1_4=5; 
+const int movement_1_5=1; 
+const int movement_1_6=1; 
+const int movement_1_7=5; 
+const int movement_1_8=5; 
+const int movement_1_9=5; 
+const int movement_2_0=1; 
+const int movement_2_1=1; 
+const int movement_2_2=5; 
+const int movement_2_3=3; 
+const int movement_2_4=3; 
+const int movement_2_5=1; 
+const int movement_2_6=2; 
+const int movement_2_7=2; 
+const int movement_2_8=5; 
+const int movement_2_9=5; 
+const int movement_3_0=3; 
+const int movement_3_1=1; 
+const int movement_3_2=1; 
+const int movement_3_3=5; 
+const int movement_3_4=3; 
+const int movement_3_5=1; 
+const int movement_3_6=1; 
+const int movement_3_7=5; 
+const int movement_3_8=1; 
+const int movement_3_9=5; 
+const int movement_4_0=3; 
+const int movement_4_1=3; 
+const int movement_4_2=3; 
+const int movement_4_3=3; 
+const int movement_4_4=3; 
+const int movement_4_5=3; 
+const int movement_4_6=3; 
+const int movement_4_7=3; 
+const int movement_4_8=3; 
+const int movement_4_9=1; 
+const int movement_5_0=0; 
+const int movement_5_1=0; 
+const int movement_5_2=0; 
+const int movement_5_3=0; 
+const int movement_5_4=5; 
+const int movement_5_5=0; 
+const int movement_5_6=0; 
+const int movement_5_7=1; 
+const int movement_5_8=5; 
+const int movement_5_9=1; 
+const int movement_6_0=0; 
+const int movement_6_1=0; 
+const int movement_6_2=5; 
+const int movement_6_3=3; 
+const int movement_6_4=3; 
+const int movement_6_5=3; 
+const int movement_6_6=3; 
+const int movement_6_7=1; 
+const int movement_6_8=5; 
+const int movement_6_9=1; 
+const int movement_7_0=0; 
+const int movement_7_1=2; 
+const int movement_7_2=2; 
+const int movement_7_3=5; 
+const int movement_7_4=1; 
+const int movement_7_5=5; 
+const int movement_7_6=5; 
+const int movement_7_7=3; 
+const int movement_7_8=3; 
+const int movement_7_9=1; 
+const int movement_8_0=0; 
+const int movement_8_1=0; 
+const int movement_8_2=2; 
+const int movement_8_3=3; 
+const int movement_8_4=3; 
+const int movement_8_5=3; 
+const int movement_8_6=3; 
+const int movement_8_7=1; 
+const int movement_8_8=5; 
+const int movement_8_9=1; 
+const int movement_9_0=0; 
+const int movement_9_1=0; 
+const int movement_9_2=0; 
+const int movement_9_3=5; 
+const int movement_9_4=0; 
+const int movement_9_5=0; 
+const int movement_9_6=5; 
+const int movement_9_7=3; 
+const int movement_9_8=3; 
+const int movement_9_9=5; 
+module truePosition 
+  x : [0..N] init startX;
+  y : [0..N] init startY;
+  [east] t=0 & step=1 -> 
+    (1-3*p): (x'=min(x+1, N)) + 
+    p: (y'=min(y+1, N)) + 
+    p: (y'=max(y-1, 0)) + 
+    p: (x'=max(x-1, 0)); 
+  [west] t=0 & step=1 -> 
+    p: (x'=min(x+1, N)) + 
+    p: (y'=min(y+1, N)) + 
+    p: (y'=max(y-1, 0)) + 
+    (1-3*p): (x'=max(x-1, 0)); 
+  [north] t=0 & step=1 -> 
+     p: (x'=min(x+1, N)) + 
+    (1-3*p): (y'=min(y+1, N)) + 
+    p: (y'=max(y-1, 0)) + 
+    p: (x'=max(x-1, 0)); 
+  [south] t=0 & step=1 -> 
+    p: (x'=min(x+1, N)) + 
+    p: (y'=min(y+1, N)) + 
+    (1-3*p): (y'=max(y-1, 0)) + 
+    p: (x'=max(x-1, 0)); 
+endmodule 
+
+evolve int decision_0_0 [0..1];
+evolve int decision_0_1 [0..1];
+evolve int decision_0_2 [0..1];
+evolve int decision_0_3 [0..1];
+evolve int decision_0_4 [0..1];
+evolve int decision_0_5 [0..1];
+evolve int decision_0_6 [0..1];
+evolve int decision_0_7 [0..1];
+evolve int decision_0_8 [0..1];
+evolve int decision_0_9 [0..1];
+evolve int decision_1_0 [0..1];
+evolve int decision_1_1 [0..1];
+evolve int decision_1_2 [0..1];
+evolve int decision_1_3 [0..1];
+evolve int decision_1_4 [0..1];
+evolve int decision_1_5 [0..1];
+evolve int decision_1_6 [0..1];
+evolve int decision_1_7 [0..1];
+evolve int decision_1_8 [0..1];
+evolve int decision_1_9 [0..1];
+evolve int decision_2_0 [0..1];
+evolve int decision_2_1 [0..1];
+evolve int decision_2_2 [0..1];
+evolve int decision_2_3 [0..1];
+evolve int decision_2_4 [0..1];
+evolve int decision_2_5 [0..1];
+evolve int decision_2_6 [0..1];
+evolve int decision_2_7 [0..1];
+evolve int decision_2_8 [0..1];
+evolve int decision_2_9 [0..1];
+evolve int decision_3_0 [0..1];
+evolve int decision_3_1 [0..1];
+evolve int decision_3_2 [0..1];
+evolve int decision_3_3 [0..1];
+evolve int decision_3_4 [0..1];
+evolve int decision_3_5 [0..1];
+evolve int decision_3_6 [0..1];
+evolve int decision_3_7 [0..1];
+evolve int decision_3_8 [0..1];
+evolve int decision_3_9 [0..1];
+evolve int decision_4_0 [0..1];
+evolve int decision_4_1 [0..1];
+evolve int decision_4_2 [0..1];
+evolve int decision_4_3 [0..1];
+evolve int decision_4_4 [0..1];
+evolve int decision_4_5 [0..1];
+evolve int decision_4_6 [0..1];
+evolve int decision_4_7 [0..1];
+evolve int decision_4_8 [0..1];
+evolve int decision_4_9 [0..1];
+evolve int decision_5_0 [0..1];
+evolve int decision_5_1 [0..1];
+evolve int decision_5_2 [0..1];
+evolve int decision_5_3 [0..1];
+evolve int decision_5_4 [0..1];
+evolve int decision_5_5 [0..1];
+evolve int decision_5_6 [0..1];
+evolve int decision_5_7 [0..1];
+evolve int decision_5_8 [0..1];
+evolve int decision_5_9 [0..1];
+evolve int decision_6_0 [0..1];
+evolve int decision_6_1 [0..1];
+evolve int decision_6_2 [0..1];
+evolve int decision_6_3 [0..1];
+evolve int decision_6_4 [0..1];
+evolve int decision_6_5 [0..1];
+evolve int decision_6_6 [0..1];
+evolve int decision_6_7 [0..1];
+evolve int decision_6_8 [0..1];
+evolve int decision_6_9 [0..1];
+evolve int decision_7_0 [0..1];
+evolve int decision_7_1 [0..1];
+evolve int decision_7_2 [0..1];
+evolve int decision_7_3 [0..1];
+evolve int decision_7_4 [0..1];
+evolve int decision_7_5 [0..1];
+evolve int decision_7_6 [0..1];
+evolve int decision_7_7 [0..1];
+evolve int decision_7_8 [0..1];
+evolve int decision_7_9 [0..1];
+evolve int decision_8_0 [0..1];
+evolve int decision_8_1 [0..1];
+evolve int decision_8_2 [0..1];
+evolve int decision_8_3 [0..1];
+evolve int decision_8_4 [0..1];
+evolve int decision_8_5 [0..1];
+evolve int decision_8_6 [0..1];
+evolve int decision_8_7 [0..1];
+evolve int decision_8_8 [0..1];
+evolve int decision_8_9 [0..1];
+evolve int decision_9_0 [0..1];
+evolve int decision_9_1 [0..1];
+evolve int decision_9_2 [0..1];
+evolve int decision_9_3 [0..1];
+evolve int decision_9_4 [0..1];
+evolve int decision_9_5 [0..1];
+evolve int decision_9_6 [0..1];
+evolve int decision_9_7 [0..1];
+evolve int decision_9_8 [0..1];
+evolve int decision_9_9 [0..1];
+module controller 
+  mustUpdate0 : [0..1] init 0;
+  [decide] step=0 & t=1 & ax=0 & ay=0 -> (mustUpdate0'= (decision_0_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=0 & ay=1 -> (mustUpdate0'= (decision_0_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=0 & ay=2 -> (mustUpdate0'= (decision_0_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=0 & ay=3 -> (mustUpdate0'= (decision_0_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=0 & ay=4 -> (mustUpdate0'= (decision_0_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=0 & ay=5 -> (mustUpdate0'= (decision_0_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=0 & ay=6 -> (mustUpdate0'= (decision_0_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=0 & ay=7 -> (mustUpdate0'= (decision_0_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=0 & ay=8 -> (mustUpdate0'= (decision_0_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=0 & ay=9 -> (mustUpdate0'= (decision_0_9=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=0 -> (mustUpdate0'= (decision_1_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=1 -> (mustUpdate0'= (decision_1_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=2 -> (mustUpdate0'= (decision_1_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=3 -> (mustUpdate0'= (decision_1_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=4 -> (mustUpdate0'= (decision_1_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=5 -> (mustUpdate0'= (decision_1_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=6 -> (mustUpdate0'= (decision_1_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=7 -> (mustUpdate0'= (decision_1_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=8 -> (mustUpdate0'= (decision_1_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=1 & ay=9 -> (mustUpdate0'= (decision_1_9=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=0 -> (mustUpdate0'= (decision_2_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=1 -> (mustUpdate0'= (decision_2_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=2 -> (mustUpdate0'= (decision_2_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=3 -> (mustUpdate0'= (decision_2_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=4 -> (mustUpdate0'= (decision_2_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=5 -> (mustUpdate0'= (decision_2_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=6 -> (mustUpdate0'= (decision_2_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=7 -> (mustUpdate0'= (decision_2_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=8 -> (mustUpdate0'= (decision_2_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=2 & ay=9 -> (mustUpdate0'= (decision_2_9=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=0 -> (mustUpdate0'= (decision_3_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=1 -> (mustUpdate0'= (decision_3_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=2 -> (mustUpdate0'= (decision_3_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=3 -> (mustUpdate0'= (decision_3_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=4 -> (mustUpdate0'= (decision_3_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=5 -> (mustUpdate0'= (decision_3_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=6 -> (mustUpdate0'= (decision_3_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=7 -> (mustUpdate0'= (decision_3_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=8 -> (mustUpdate0'= (decision_3_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=3 & ay=9 -> (mustUpdate0'= (decision_3_9=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=0 -> (mustUpdate0'= (decision_4_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=1 -> (mustUpdate0'= (decision_4_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=2 -> (mustUpdate0'= (decision_4_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=3 -> (mustUpdate0'= (decision_4_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=4 -> (mustUpdate0'= (decision_4_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=5 -> (mustUpdate0'= (decision_4_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=6 -> (mustUpdate0'= (decision_4_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=7 -> (mustUpdate0'= (decision_4_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=8 -> (mustUpdate0'= (decision_4_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=4 & ay=9 -> (mustUpdate0'= (decision_4_9=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=0 -> (mustUpdate0'= (decision_5_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=1 -> (mustUpdate0'= (decision_5_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=2 -> (mustUpdate0'= (decision_5_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=3 -> (mustUpdate0'= (decision_5_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=4 -> (mustUpdate0'= (decision_5_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=5 -> (mustUpdate0'= (decision_5_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=6 -> (mustUpdate0'= (decision_5_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=7 -> (mustUpdate0'= (decision_5_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=8 -> (mustUpdate0'= (decision_5_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=5 & ay=9 -> (mustUpdate0'= (decision_5_9=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=0 -> (mustUpdate0'= (decision_6_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=1 -> (mustUpdate0'= (decision_6_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=2 -> (mustUpdate0'= (decision_6_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=3 -> (mustUpdate0'= (decision_6_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=4 -> (mustUpdate0'= (decision_6_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=5 -> (mustUpdate0'= (decision_6_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=6 -> (mustUpdate0'= (decision_6_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=7 -> (mustUpdate0'= (decision_6_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=8 -> (mustUpdate0'= (decision_6_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=6 & ay=9 -> (mustUpdate0'= (decision_6_9=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=0 -> (mustUpdate0'= (decision_7_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=1 -> (mustUpdate0'= (decision_7_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=2 -> (mustUpdate0'= (decision_7_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=3 -> (mustUpdate0'= (decision_7_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=4 -> (mustUpdate0'= (decision_7_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=5 -> (mustUpdate0'= (decision_7_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=6 -> (mustUpdate0'= (decision_7_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=7 -> (mustUpdate0'= (decision_7_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=8 -> (mustUpdate0'= (decision_7_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=7 & ay=9 -> (mustUpdate0'= (decision_7_9=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=0 -> (mustUpdate0'= (decision_8_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=1 -> (mustUpdate0'= (decision_8_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=2 -> (mustUpdate0'= (decision_8_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=3 -> (mustUpdate0'= (decision_8_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=4 -> (mustUpdate0'= (decision_8_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=5 -> (mustUpdate0'= (decision_8_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=6 -> (mustUpdate0'= (decision_8_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=7 -> (mustUpdate0'= (decision_8_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=8 -> (mustUpdate0'= (decision_8_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=8 & ay=9 -> (mustUpdate0'= (decision_8_9=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=0 -> (mustUpdate0'= (decision_9_0=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=1 -> (mustUpdate0'= (decision_9_1=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=2 -> (mustUpdate0'= (decision_9_2=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=3 -> (mustUpdate0'= (decision_9_3=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=4 -> (mustUpdate0'= (decision_9_4=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=5 -> (mustUpdate0'= (decision_9_5=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=6 -> (mustUpdate0'= (decision_9_6=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=7 -> (mustUpdate0'= (decision_9_7=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=8 -> (mustUpdate0'= (decision_9_8=1) ? 1 : 0);
+  [decide] step=0 & t=1 & ax=9 & ay=9 -> (mustUpdate0'= (decision_9_9=1) ? 1 : 0);
+endmodule 
+module Turn 
+  t : [0..1] init 0;
+  energy : [0..100] init 100;
+  crashed : [0..1] init 0; 
+  [west] energy>0 -> (t'=1) & (energy'=energy-1);
+  [east] energy>0 -> (t'=1) & (energy'=energy-1);
+  [south] energy>0 -> (t'=1) & (energy'=energy-1);
+  [north] energy>0 -> (t'=1) & (energy'=energy-1);
+  [decide] (x!=0 | y!= 1) & (x!=0 | y!= 3) & (x!=0 | y!= 4) & (x!=0 | y!= 5) & (x!=0 | y!= 7) & (x!=1 | y!= 2) & (x!=1 | y!= 4) & (x!=1 | y!= 7) & (x!=2 | y!= 2) & (x!=2 | y!= 8) & (x!=3 | y!= 3) & (x!=3 | y!= 7) & (x!=3 | y!= 9) & (x!=5 | y!= 4) & (x!=5 | y!= 8) & (x!=6 | y!= 2) & (x!=6 | y!= 8) & (x!=7 | y!= 3) & (x!=7 | y!= 5) & (x!=7 | y!= 6) & (x!=8 | y!= 8) & (x!=9 | y!= 3) & (x!=9 | y!= 6) & true -> (t'=0);
+  [crash] (x=0 & y=1) | (x=0 & y=3) | (x=0 & y=4) | (x=0 & y=5) | (x=0 & y=7) | (x=1 & y=2) | (x=1 & y=4) | (x=1 & y=7) | (x=2 & y=2) | (x=2 & y=8) | (x=3 & y=3) | (x=3 & y=7) | (x=3 & y=9) | (x=5 & y=4) | (x=5 & y=8) | (x=6 & y=2) | (x=6 & y=8) | (x=7 & y=3) | (x=7 & y=5) | (x=7 & y=6) | (x=8 & y=8) | (x=9 & y=3) | (x=9 & y=6) -> (energy'=0) & (crashed'=1); 
+endmodule 
+rewards "cost" 
+  [east] true : 1; 
+  [west] true : 1; 
+  [north] true : 1; 
+  [south] true : 1; 
+  [update0] true : 5;
+endrewards 
+rewards "crashing" 
+  [crash] true : 1000;
+endrewards 
