@@ -21,6 +21,10 @@
 package evochecker.genetic.jmetal.metaheuristics;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 import evochecker.evaluator.IParallelEvaluator;
 import jmetal.core.Algorithm;
@@ -33,6 +37,14 @@ import jmetal.util.Distance;
 import jmetal.util.JMException;
 import jmetal.util.Ranking;
 import jmetal.util.comparators.CrowdingComparator;
+import jmetal.core.Variable;
+
+import evochecker.genetic.jmetal.encoding.ArrayReal;
+import evochecker.genetic.jmetal.encoding.ArrayInt;
+import java.io.File;
+import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.FileUtil;
+import evochecker.auxiliary.Utility;
 
 /** 
  *  Implementation of NSGA-II.
@@ -103,10 +115,106 @@ public class pNSGAII extends Algorithm {
     crossoverOperator = operators_.get("crossover");
     selectionOperator = operators_.get("selection");
 
-    // Create the initial solutionSet
+    //Create the initial solutionSet
+    
+    // a) check if reloading from previous population
+    int reload_porcentage = Integer.parseInt(Utility.getProperty(Constants.RELOAD_KEYWORD));
+    String set=""; //file with previous Pareto set
+    List<String> lines = new ArrayList<String>(); // file content
+    
+    if (reload_porcentage>0) {
+    	// a) Find most recent Pareto Set
+    	String problem_string=Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
+    	
+    	// get list of files in NSGAII folder
+        String path="./data/"+problem_string+"/NSGAII/";
+        File source = new File(path); 
+        String[] filelist=source.list(); 
+        // get most recent saved file
+        long modified=0;
+        for(String str: filelist)
+        {
+          if (str.split("_")[4].equals("Set"))
+          {
+            File file= new File(path+str);
+            long time=file.lastModified();
+            if (time>modified) {set=str; modified=time;}
+          }
+        }
+        // read file        
+        if (!(set.equals(""))) 
+        {
+          System.out.println("Loading previous Pareto Set: "+set);
+          try 
+          {
+            BufferedReader set_reader = new BufferedReader(new FileReader(path+set));
+            String line;
+            while((line=set_reader.readLine())!=null)
+            {
+            	lines.add(line); //System.out.println(line);
+            }
+            set_reader.close();    
+          } catch (IOException e) {e.printStackTrace();}
+        }
+    }
+    // load initial solution set
     Solution newSolution;
     for (int i = 0; i < populationSize; i++) {
       newSolution = new Solution(problem_);
+      
+      // Change initial population to previous found (if exists)
+      if (!(set.equals("")) && i<lines.size() - 2) {
+    	  
+    	  // get line
+    	  String line = lines.get(i+2);
+    	  // parse line
+    	  String[] results = line.trim().split("\\s");    		  
+		  // get random generated solution (some are reals, others integers)
+    	  ArrayReal real_arr=(ArrayReal) newSolution.getDecisionVariables()[0];
+          ArrayInt  int_arr=(ArrayInt) newSolution.getDecisionVariables()[1];
+          
+    	  
+          //--Sanity check
+    	  System.out.println("[] Solution before ('randomly' generated):");
+          System.out.println(newSolution.getDecisionVariables()[0]);
+          System.out.println(newSolution.getDecisionVariables()[1]);
+
+          System.out.println("[] Solution from file:");
+          System.out.println(line);
+          //--
+          
+          
+    	  //if solution contains a NaN -- do not add solution, leave random. Else:
+    	  if (!line.contains("NaN")){
+    		  
+    		  int count_int=0;
+    		  int count_real=0;
+    		  for(String res: results) {
+				  //if real
+				  if(res.contains(".")) {
+					  double val=Double.parseDouble(res);
+					  real_arr.setValue(count_real, val);
+					  count_real+=1;
+				  }
+				  //if integer
+				  else {
+					  int val=Integer.parseInt(res);
+					  int_arr.setValue(count_int, val);
+					  count_int+=1;
+				  }
+			  }
+    	  }
+    	  
+    	  
+          // --Sanity check on update happening 
+    	  System.out.println("[] Solution after (replaced if no NaN exist):");
+          System.out.println(newSolution.getDecisionVariables()[0]);
+          System.out.println(newSolution.getDecisionVariables()[1]);
+          //--
+      }
+
+      
+      
       parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
     }
 

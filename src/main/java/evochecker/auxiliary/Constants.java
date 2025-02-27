@@ -129,6 +129,8 @@ public class Constants {
   /** Double REGEX*/
   public static final String DOUBLE_REGEX  = "[0-9]+(.[0-9]+)?";
 
+public static final String RELOAD_KEYWORD = "RELOAD";
+
   
   
   /** Algorithms currently supported by our implementation*/
