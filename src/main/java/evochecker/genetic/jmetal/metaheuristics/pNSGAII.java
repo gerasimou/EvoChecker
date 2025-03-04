@@ -128,6 +128,17 @@ public class pNSGAII extends Algorithm {
 
        return solutionLines;
    }
+   
+   /**
+	* This method returns the first N solutions from the list of solutions.
+	* If the list is smaller than N, the whole list is returned.
+	* @param solutionLines list of solutions
+	* @param populationSize2seed number of solutions to return
+	* @return list of solutions
+	*/
+   private List<String> getFirstNSolutions(List<String> solutionLines, int populationSize2seed) {
+		return solutionLines.subList(0, Math.min(solutionLines.size(), populationSize2seed));
+	}
 
   
   
@@ -187,8 +198,9 @@ public class pNSGAII extends Algorithm {
 	if (populationSize2seed>0) {
     	// get previous Pareto set solutions
     	solutionLines = getPreviousSavedPopulation();
-        // leave only populationSize2seed num of solutions
-    	solutionLines = solutionLines.subList(0, Math.min(solutionLines.size(), populationSize2seed));
+    	
+        // leave only the first populationSize2seed num of solutions (other possible functions: random, best, worst, etc. Not currently implemented)
+    	solutionLines = getFirstNSolutions(solutionLines, populationSize2seed);
     	
     	System.out.println("[Seeding] Seeding porcentage define at "+ String.valueOf(Utility.getProperty(Constants.RELOAD_PERCENTAGE))+ "%. "
     			+ (solutionLines.isEmpty() ? "No seedable solutions found." : "Seeding "+String.valueOf(solutionLines.size())+" feasible solutions found out of "
@@ -362,4 +374,8 @@ public class pNSGAII extends Algorithm {
     Ranking ranking = new Ranking(population);
     return ranking.getSubfront(0);
   } // execute
+
+
+
+
 } // pNSGAII
