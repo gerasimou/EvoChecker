@@ -70,7 +70,67 @@ public class pNSGAII extends Algorithm {
 
     parallelEvaluator_ = evaluator ;
   } // pNSGAII
+  
+  
+  
+  /**
+   * This reads a previous Pareto set solutions. It returns up to populationSize2seed solutions.
+   * Solutions are read from the NSGAII folder. The most recent file is read.
+   * If solutions contain NaN, they are removed.
+ * @return list of strings representing solutions read from previous Pareto set file
+   * 
+   */
+   public List<String> getPreviousSavedPopulation() {
+       // Construct the path to the Pareto set directory
+       String baseDirectory = "./data/" + Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase() + "/NSGAII/";
+       File paretoSetDirectory = new File(baseDirectory);
+       String[] existingFiles = paretoSetDirectory.list();
 
+       // Find the most recently modified Pareto set file
+       long latestModifiedTime = 0;
+       String latestParetoSetFile = "";
+       List<String> solutionLines = new ArrayList<>();  // Holds the lines of the Pareto set file
+
+       for (String fileName : existingFiles) {
+           // Check for files that match the "Set" pattern
+           if (fileName.split("_")[4].equals("Set")) {
+               File file = new File(baseDirectory + fileName);
+               long lastModified = file.lastModified();
+               if (lastModified > latestModifiedTime) {
+                   latestParetoSetFile = fileName;
+                   latestModifiedTime = lastModified;
+               }
+           }
+       }
+
+       // If a Pareto set file is found, read its contents
+       if (!latestParetoSetFile.isEmpty()) {
+           try (BufferedReader reader = new BufferedReader(new FileReader(baseDirectory + latestParetoSetFile))) {
+               String line;
+               while ((line = reader.readLine()) != null) {
+                   solutionLines.add(line);
+               }
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+
+           // Remove the first two lines (header and empty line)
+           if (solutionLines.size() > 2) {
+               solutionLines.remove(0); // Remove header
+               solutionLines.remove(0); // Remove empty line
+           }
+
+           // Remove lines containing "NaN"
+           solutionLines.removeIf(line -> line.contains("NaN"));
+           
+           System.out.println("[Seeding] Reading previous Pareto Set: " + latestParetoSetFile);
+       }
+
+       return solutionLines;
+   }
+
+  
+  
   /**   
    * Runs the NSGA-II algorithm.
    * @return a <code>SolutionSet</code> that is a set of non dominated solutions
@@ -82,7 +142,7 @@ public class pNSGAII extends Algorithm {
     int maxEvaluations;
     int evaluations;
     int numberOfThreads ;
-
+    
     QualityIndicator indicators; // QualityIndicator object
     int requiredEvaluations; // Use in the example of use of the
     // indicators object (see below)
@@ -107,7 +167,6 @@ public class pNSGAII extends Algorithm {
     //Initialize the variables
     population = new SolutionSet(populationSize);
     evaluations = 0;
-
     requiredEvaluations = 0;
 
     //Read the operators
@@ -116,108 +175,80 @@ public class pNSGAII extends Algorithm {
     selectionOperator = operators_.get("selection");
 
     //Create the initial solutionSet
+    Solution newSolution;
     
     // a) check if reloading from previous population
-    int reload_porcentage = Integer.parseInt(Utility.getProperty(Constants.RELOAD_KEYWORD));
-    String set=""; //file with previous Pareto set
-    List<String> lines = new ArrayList<String>(); // file content
+    int populationSize2seed = 0;
+    try { populationSize2seed = Math.round( Integer.parseInt(Utility.getProperty(Constants.RELOAD_PERCENTAGE)) * populationSize / 100.0f);
+    }catch (Exception e) {System.out.println("[Seeding] No RELOAD_KEYWORD found. Skipping seeding.");}
     
-    if (reload_porcentage>0) {
-    	// a) Find most recent Pareto Set
-    	String problem_string=Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
+    List<String> solutionLines = new ArrayList<String>(); //Pareto set file content
+    
+	if (populationSize2seed>0) {
+    	// get previous Pareto set solutions
+    	solutionLines = getPreviousSavedPopulation();
+        // leave only populationSize2seed num of solutions
+    	solutionLines = solutionLines.subList(0, Math.min(solutionLines.size(), populationSize2seed));
     	
-    	// get list of files in NSGAII folder
-        String path="./data/"+problem_string+"/NSGAII/";
-        File source = new File(path); 
-        String[] filelist=source.list(); 
-        // get most recent saved file
-        long modified=0;
-        for(String str: filelist)
-        {
-          if (str.split("_")[4].equals("Set"))
-          {
-            File file= new File(path+str);
-            long time=file.lastModified();
-            if (time>modified) {set=str; modified=time;}
-          }
-        }
-        // read file        
-        if (!(set.equals(""))) 
-        {
-          System.out.println("Loading previous Pareto Set: "+set);
-          try 
-          {
-            BufferedReader set_reader = new BufferedReader(new FileReader(path+set));
-            String line;
-            while((line=set_reader.readLine())!=null)
-            {
-            	lines.add(line); //System.out.println(line);
-            }
-            set_reader.close();    
-          } catch (IOException e) {e.printStackTrace();}
-        }
-    }
-    // load initial solution set
-    Solution newSolution;
+    	System.out.println("[Seeding] Seeding porcentage define at "+ String.valueOf(Utility.getProperty(Constants.RELOAD_PERCENTAGE))+ "%. "
+    			+ (solutionLines.isEmpty() ? "No seedable solutions found." : "Seeding "+String.valueOf(solutionLines.size())+" feasible solutions found out of "
+    					+String.valueOf(populationSize)+" total population size.") );
+	}
+	else System.out.println("[Seeding] Population to seed is 0. Skipping seeding.");
+	
+	
+	// generate solution set
     for (int i = 0; i < populationSize; i++) {
+      // create new solution
       newSolution = new Solution(problem_);
       
-      // Change initial population to previous found (if exists)
-      if (!(set.equals("")) && i<lines.size() - 2) {
-    	  
-    	  // get line
-    	  String line = lines.get(i+2);
+      // replace from previous population
+      if (!solutionLines.isEmpty()) {
+    	  String line = solutionLines.remove(0);
     	  // parse line
-    	  String[] results = line.trim().split("\\s");    		  
-		  // get random generated solution (some are reals, others integers)
+	      String[] sol_str_list = line.trim().split("\\s"); 
+	      // get random generated solution (some are reals, others integers)
     	  ArrayReal real_arr=(ArrayReal) newSolution.getDecisionVariables()[0];
           ArrayInt  int_arr=(ArrayInt) newSolution.getDecisionVariables()[1];
           
-    	  
           //--Sanity check
-    	  System.out.println("[] Solution before ('randomly' generated):");
-          System.out.println(newSolution.getDecisionVariables()[0]);
-          System.out.println(newSolution.getDecisionVariables()[1]);
-
-          System.out.println("[] Solution from file:");
-          System.out.println(line);
+          //System.out.println("[] Solution before ('randomly' generated):");
+          //System.out.println(newSolution.getDecisionVariables()[0]);
+          //System.out.println(newSolution.getDecisionVariables()[1]);
+//          System.out.println("[] Solution from file:");
+//          System.out.println(line);
           //--
           
-          
-    	  //if solution contains a NaN -- do not add solution, leave random. Else:
-    	  if (!line.contains("NaN")){
-    		  
-    		  int count_int=0;
-    		  int count_real=0;
-    		  for(String res: results) {
-				  //if real
-				  if(res.contains(".")) {
-					  double val=Double.parseDouble(res);
-					  real_arr.setValue(count_real, val);
-					  count_real+=1;
-				  }
-				  //if integer
-				  else {
-					  int val=Integer.parseInt(res);
-					  int_arr.setValue(count_int, val);
-					  count_int+=1;
-				  }
-			  }
-    	  }
-    	  
-    	  
-          // --Sanity check on update happening 
-    	  System.out.println("[] Solution after (replaced if no NaN exist):");
-          System.out.println(newSolution.getDecisionVariables()[0]);
-          System.out.println(newSolution.getDecisionVariables()[1]);
-          //--
-      }
-
+          // replace decision variables one by one (real or int)
+          int count_int=0;
+		  int count_real=0;
+		  for(String sol: sol_str_list) {
+			  try {
+		            Integer.parseInt(sol);
+		            int val=Integer.parseInt(sol);
+		            int_arr.setValue(count_int, val);
+		            count_int+=1;
+				  
+		        } catch (NumberFormatException e) {
+		        	double val=Double.parseDouble(sol);
+  					real_arr.setValue(count_real, val);
+  					count_real+=1;
+		        }
+		  }//for
+        }//if
       
+      // --Sanity check on update happening
+//      System.out.println("[] Solution after (replaced if no NaN exist):");
+//      System.out.println(newSolution.getDecisionVariables()[0]);
+//      System.out.println(newSolution.getDecisionVariables()[1]);
+      //--
       
+      // add solution to parallel evaluation
       parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
-    }
-
+      
+    }//for
+    
+    
     List<Solution> solutionList = parallelEvaluator_.parallelEvaluation() ;
     for (Solution solution : solutionList) {
       population.add(solution) ;
