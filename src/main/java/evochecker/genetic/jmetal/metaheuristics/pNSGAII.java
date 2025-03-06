@@ -90,7 +90,11 @@ public class pNSGAII extends Algorithm {
        long latestModifiedTime = 0;
        String latestParetoSetFile = "";
        List<String> solutionLines = new ArrayList<>();  // Holds the lines of the Pareto set file
-
+       
+       if (existingFiles == null) {
+		   return solutionLines;
+	   }
+       
        for (String fileName : existingFiles) {
            // Check for files that match the "Set" pattern
            if (fileName.split("_")[4].equals("Set")) {
