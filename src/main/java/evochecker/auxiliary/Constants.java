@@ -129,8 +129,7 @@ public class Constants {
   /** Double REGEX*/
   public static final String DOUBLE_REGEX  = "[0-9]+(.[0-9]+)?";
 
-public static final String RELOAD_PERCENTAGE = "RELOAD_PERCENTAGE";
-
+  public static final String RELOAD_PERCENTAGE = "RELOAD_PERCENTAGE";
   
   
   /** Algorithms currently supported by our implementation*/

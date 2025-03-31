@@ -21,12 +21,11 @@
 package evochecker.genetic.jmetal.metaheuristics;
 
 import java.util.List;
-import java.util.ArrayList;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
+import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.Utility;
 import evochecker.evaluator.IParallelEvaluator;
+import evochecker.seeding.RandomSeed;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
@@ -37,14 +36,6 @@ import jmetal.util.Distance;
 import jmetal.util.JMException;
 import jmetal.util.Ranking;
 import jmetal.util.comparators.CrowdingComparator;
-import jmetal.core.Variable;
-
-import evochecker.genetic.jmetal.encoding.ArrayReal;
-import evochecker.genetic.jmetal.encoding.ArrayInt;
-import java.io.File;
-import evochecker.auxiliary.Constants;
-import evochecker.auxiliary.FileUtil;
-import evochecker.auxiliary.Utility;
 
 /** 
  *  Implementation of NSGA-II.
@@ -70,81 +61,6 @@ public class pNSGAII extends Algorithm {
 
     parallelEvaluator_ = evaluator ;
   } // pNSGAII
-  
-  
-  
-  /**
-   * This reads a previous Pareto set solutions. It returns up to populationSize2seed solutions.
-   * Solutions are read from the NSGAII folder. The most recent file is read.
-   * If solutions contain NaN, they are removed.
- * @return list of strings representing solutions read from previous Pareto set file
-   * 
-   */
-   public List<String> getPreviousSavedPopulation() {
-       // Construct the path to the Pareto set directory
-       String baseDirectory = "./data/" + Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase() + "/NSGAII/";
-       File paretoSetDirectory = new File(baseDirectory);
-       String[] existingFiles = paretoSetDirectory.list();
-
-       // Find the most recently modified Pareto set file
-       long latestModifiedTime = 0;
-       String latestParetoSetFile = "";
-       List<String> solutionLines = new ArrayList<>();  // Holds the lines of the Pareto set file
-       
-       if (existingFiles == null) {
-		   return solutionLines;
-	   }
-       
-       for (String fileName : existingFiles) {
-           // Check for files that match the "Set" pattern
-           if (fileName.split("_")[4].equals("Set")) {
-               File file = new File(baseDirectory + fileName);
-               long lastModified = file.lastModified();
-               if (lastModified > latestModifiedTime) {
-                   latestParetoSetFile = fileName;
-                   latestModifiedTime = lastModified;
-               }
-           }
-       }
-
-       // If a Pareto set file is found, read its contents
-       if (!latestParetoSetFile.isEmpty()) {
-           try (BufferedReader reader = new BufferedReader(new FileReader(baseDirectory + latestParetoSetFile))) {
-               String line;
-               while ((line = reader.readLine()) != null) {
-                   solutionLines.add(line);
-               }
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-
-           // Remove the first two lines (header and empty line)
-           if (solutionLines.size() > 2) {
-               solutionLines.remove(0); // Remove header
-               solutionLines.remove(0); // Remove empty line
-           }
-
-           // Remove lines containing "NaN"
-           solutionLines.removeIf(line -> line.contains("NaN"));
-           
-           System.out.println("[Seeding] Reading previous Pareto Set: " + latestParetoSetFile);
-       }
-
-       return solutionLines;
-   }
-   
-   /**
-	* This method returns the first N solutions from the list of solutions.
-	* If the list is smaller than N, the whole list is returned.
-	* @param solutionLines list of solutions
-	* @param populationSize2seed number of solutions to return
-	* @return list of solutions
-	*/
-   private List<String> getFirstNSolutions(List<String> solutionLines, int populationSize2seed) {
-		return solutionLines.subList(0, Math.min(solutionLines.size(), populationSize2seed));
-	}
-
-  
   
   /**   
    * Runs the NSGA-II algorithm.
@@ -182,96 +98,40 @@ public class pNSGAII extends Algorithm {
     //Initialize the variables
     population = new SolutionSet(populationSize);
     evaluations = 0;
+    
     requiredEvaluations = 0;
 
     //Read the operators
     mutationOperator = operators_.get("mutation");
     crossoverOperator = operators_.get("crossover");
     selectionOperator = operators_.get("selection");
-
-    //Create the initial solutionSet
+    
+    // Create the initial solutionSet
     Solution newSolution;
     
-    // a) check if reloading from previous population
-    int populationSize2seed = 0;
-    try { populationSize2seed = Math.round( Integer.parseInt(Utility.getProperty(Constants.RELOAD_PERCENTAGE)) * populationSize / 100.0f);
-    }catch (Exception e) {System.out.println("[Seeding] No RELOAD_KEYWORD found. Skipping seeding.");}
+    // Check if seeding
+    String reloadPercentage = Utility.getProperty(Constants.RELOAD_PERCENTAGE);
+    Integer seedingNumSolutions = reloadPercentage.isEmpty() ? 0 : Math.round( Integer.parseInt(Utility.getProperty(Constants.RELOAD_PERCENTAGE)) * populationSize / 100.0f);
+    List<Solution> solutions2Seed = RandomSeed.seedRandomSolutions(seedingNumSolutions, problem_, population, populationSize, reloadPercentage);
     
-    List<String> solutionLines = new ArrayList<String>(); //Pareto set file content
-    
-	if (populationSize2seed>0) {
-    	// get previous Pareto set solutions
-    	solutionLines = getPreviousSavedPopulation();
-    	
-        // leave only the first populationSize2seed num of solutions (other possible functions: random, best, worst, etc. Not currently implemented)
-    	solutionLines = getFirstNSolutions(solutionLines, populationSize2seed);
-    	
-    	System.out.println("[Seeding] Seeding porcentage define at "+ String.valueOf(Utility.getProperty(Constants.RELOAD_PERCENTAGE))+ "%. "
-    			+ (solutionLines.isEmpty() ? "No seedable solutions found." : "Seeding "+String.valueOf(solutionLines.size())+" feasible solutions found out of "
-    					+String.valueOf(populationSize)+" total population size.") );
-	}
-	else System.out.println("[Seeding] Population to seed is 0. Skipping seeding.");
-	
-	
-	// generate solution set
+    // add solutions to population	
     for (int i = 0; i < populationSize; i++) {
-      // create new solution
-      newSolution = new Solution(problem_);
-      
-      // replace from previous population
-      if (!solutionLines.isEmpty()) {
-    	  String line = solutionLines.remove(0);
-    	  // parse line
-	      String[] sol_str_list = line.trim().split("\\s"); 
-	      // get random generated solution (some are reals, others integers)
-    	  ArrayReal real_arr=(ArrayReal) newSolution.getDecisionVariables()[0];
-          ArrayInt  int_arr=(ArrayInt) newSolution.getDecisionVariables()[1];
-          
-          //--Sanity check
-          //System.out.println("[] Solution before ('randomly' generated):");
-          //System.out.println(newSolution.getDecisionVariables()[0]);
-          //System.out.println(newSolution.getDecisionVariables()[1]);
-//          System.out.println("[] Solution from file:");
-//          System.out.println(line);
-          //--
-          
-          // replace decision variables one by one (real or int)
-          int count_int=0;
-		  int count_real=0;
-		  for(String sol: sol_str_list) {
-			  try {
-		            Integer.parseInt(sol);
-		            int val=Integer.parseInt(sol);
-		            int_arr.setValue(count_int, val);
-		            count_int+=1;
-				  
-		        } catch (NumberFormatException e) {
-		        	double val=Double.parseDouble(sol);
-  					real_arr.setValue(count_real, val);
-  					count_real+=1;
-		        }
-		  }//for
-        }//if
-      
-      // --Sanity check on update happening
-//      System.out.println("[] Solution after (replaced if no NaN exist):");
-//      System.out.println(newSolution.getDecisionVariables()[0]);
-//      System.out.println(newSolution.getDecisionVariables()[1]);
-      //--
-      
-      // add solution to parallel evaluation
-      parallelEvaluator_.addSolutionForEvaluation(newSolution) ;
-      
-    }//for
+    	if (solutions2Seed.size() > 0) { //seeded solution
+    		newSolution = solutions2Seed.remove(0);
+		} else { //random solution
+			newSolution = new Solution(problem_);
+		}
+    	// add sol to evaluate in parallel
+		parallelEvaluator_.addSolutionForEvaluation(newSolution);
+	} // for
     
-    
+    // Evaluate initial population using parallel evaluation
     List<Solution> solutionList = parallelEvaluator_.parallelEvaluation() ;
     for (Solution solution : solutionList) {
-      population.add(solution) ;
-      evaluations ++ ;
-    }
+		population.add(solution);
+		evaluations++;
+	}
     
-    int times = 1;
     
     // Generations 
     while (evaluations < maxEvaluations) {
@@ -288,11 +148,12 @@ public class pNSGAII extends Algorithm {
           Solution[] offSpring = (Solution[]) crossoverOperator.execute(parents);
           mutationOperator.execute(offSpring[0]);
           mutationOperator.execute(offSpring[1]);
+          // parallel execution
           parallelEvaluator_.addSolutionForEvaluation(offSpring[0]) ;
           parallelEvaluator_.addSolutionForEvaluation(offSpring[1]) ;
         } // if                            
       } // for
-
+      
       List<Solution> solutions = parallelEvaluator_.parallelEvaluation() ;
 
       for(Solution solution : solutions) {
@@ -376,6 +237,9 @@ public class pNSGAII extends Algorithm {
 
     // Return the first non-dominated front
     Ranking ranking = new Ranking(population);
+    //ranking.getSubfront(0).printObjectivesToFile("data/FUN_NSGAII");
+    //ranking.getSubfront(0).printVariablesToFile("data/VAR_NSGAII");
+    //ranking.getSubfront(0).printFeasibleFUN("FUN_NSGAII");
     return ranking.getSubfront(0);
   } // execute
 
