@@ -20,12 +20,17 @@
 
 package evochecker.genetic.jmetal.metaheuristics;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.evaluator.IParallelEvaluator;
-import evochecker.seeding.RandomSeed;
+import evochecker.genetic.jmetal.metaheuristics.settings.MOCell_Settings;
+import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
+import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
+import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
+import evochecker.seeding.Seeding;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
@@ -109,10 +114,8 @@ public class pNSGAII extends Algorithm {
     // Create the initial solutionSet
     Solution newSolution;
     
-    // Check if seeding
-    String reloadPercentage = Utility.getProperty(Constants.RELOAD_PERCENTAGE);
-    Integer seedingNumSolutions = reloadPercentage.isEmpty() ? 0 : Math.round( Integer.parseInt(Utility.getProperty(Constants.RELOAD_PERCENTAGE)) * populationSize / 100.0f);
-    List<Solution> solutions2Seed = RandomSeed.seedRandomSolutions(seedingNumSolutions, problem_, population, populationSize, reloadPercentage);
+    // Check if seeding - get solutions to seed
+    List<Solution> solutions2Seed = Seeding.getSeededSolutions(problem_, populationSize);
     
     // add solutions to population	
     for (int i = 0; i < populationSize; i++) {

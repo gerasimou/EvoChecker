@@ -129,7 +129,16 @@ public class Constants {
   /** Double REGEX*/
   public static final String DOUBLE_REGEX  = "[0-9]+(.[0-9]+)?";
 
-  public static final String RELOAD_PERCENTAGE = "RELOAD_PERCENTAGE";
+  public static final String SEED_PERCENTAGE = "SEED_PERCENTAGE";
+  
+  public static final String SEED_TYPE = "SEED_TYPE";
+  
+  public static enum SEED{
+	    RANDOM,
+	    KMEANS,
+	    PSC, //Pareto Simplicial Complex (PSC)
+	    ;
+	}
   
   
   /** Algorithms currently supported by our implementation*/
