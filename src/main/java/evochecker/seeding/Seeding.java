@@ -14,50 +14,24 @@ package evochecker.seeding;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
-import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
-import evochecker.auxiliary.FileUtil;
 import evochecker.auxiliary.Utility;
-import evochecker.evaluator.IParallelEvaluator;
-import evochecker.exception.EvoCheckerException;
-import evochecker.genetic.GenotypeFactory;
-import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.jmetal.encoding.ArrayInt;
 import evochecker.genetic.jmetal.encoding.ArrayReal;
-import evochecker.genetic.jmetal.metaheuristics.settings.MOCell_Settings;
-import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
-import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
-import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
-import evochecker.genetic.problem.GeneticModelProblem;
-import evochecker.genetic.problem.GeneticProblem;
-import evochecker.genetic.problem.GeneticProblemParametric;
-import evochecker.genetic.problem.GeneticProblemParametricParallel;
-import evochecker.language.parser.IModelInstantiator;
-import evochecker.language.parser.ModelInstantiator;
-import evochecker.language.parser.ModelInstantiatorParametric;
-import evochecker.plotting.PlotFactory;
-import evochecker.properties.Property;
-import evochecker.properties.PropertyFactory;
-import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
-import jmetal.core.SolutionSet;
-import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
 
 
 /**
- * Main EvoChecker class
+ * EvoChecker class
  * @author gricelvazquez
- *
+ * April 2025
  */
 public class Seeding {
 	
@@ -79,14 +53,6 @@ public class Seeding {
 	    	return new ArrayList<Solution>();
 	    }
 	    
-    	// Check if the seed type is valid
-//	    String seedType = ;
-//	    if (!seedType.equals(Constants.SEED.RANDOM.toString()) && 
-//	    	!seedType.equals(Constants.SEED.KMEANS.toString()) && 
-//	    	!seedType.equals(Constants.SEED.PSC.toString())) {
-//    		System.err.println("[Seeding] Invalid SEED_TYPE: " + seedType);
-//    		System.exit(0);
-//    	}
     	
     	//--- Get previous solutions from file
 	    List<Solution> prevSolutions =  getPreviousSolutionSet(problem_);
@@ -101,13 +67,12 @@ public class Seeding {
 	    // - random seeding
 	    if (seedType.equals(Constants.SEED.RANDOM.toString())) {
 	    	System.out.println("[Seeding] SEED_TYPE: RANDOM");
-//	    	solutionLines = getFirstNSolutions(solutionLines, seedingNumSolutions);
-			solutions2Seed = Seeding.getRandomNSolutions(prevSolutions, seedingNumSolutions);
+			solutions2Seed = Random.getNSolutions(prevSolutions, seedingNumSolutions);
     	}
 	    // - kmeans seeding
 	    else if (seedType.equals(Constants.SEED.KMEANS.toString())) {
 	    	System.out.println("[Seeding] SEED_TYPE: KMEANS");
-			solutions2Seed = Seeding.getKmeansNSolutions(prevSolutions, seedingNumSolutions);
+			solutions2Seed = KMeans.getNSolutions(prevSolutions, seedingNumSolutions);
     	}
 	    // - PSC seeding
     	else if (seedType.equals(Constants.SEED.PSC.toString())) { //Pareto Simplicial Complex (PSC)
@@ -122,26 +87,11 @@ public class Seeding {
 		return solutions2Seed;
 	}
 	
-	/**
-	 * This method returns the first N solutions randomly from previous solutions.
-	 * @param prevSolutions
-	 * @param seedingNumSolutions
-	 * @return
-	 */
-	private static List<Solution> getRandomNSolutions(List<Solution> prevSolutions, Integer seedingNumSolutions) {
-		return prevSolutions.subList(0, Math.min(prevSolutions.size(), seedingNumSolutions));
-	}
 	
-	/**
-	 * This method returns the first N solutions from previous solutions using Kmeans clustering.
-	 * @param prevSolutions
-	 * @param seedingNumSolutions
-	 * @return
-	 */
-	private static List<Solution> getKmeansNSolutions(List<Solution> prevSolutions, Integer seedingNumSolutions) {
-		// TODO: implement Kmeans clustering
-		return new ArrayList<Solution>();
-	}
+	
+	
+
+	
 	
 	/**
 	 * This method returns the first N solutions from previous solutions using PSC.
@@ -236,7 +186,6 @@ public class Seeding {
 		   int count_real=0;
 		   for(String sol: sol_str_list) {
 			   try {
-		             Integer.parseInt(sol);
 		             int val=Integer.parseInt(sol);
 		             int_arr.setValue(count_int, val);
 		             count_int+=1;
