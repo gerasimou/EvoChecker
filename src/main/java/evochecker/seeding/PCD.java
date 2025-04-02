@@ -5,9 +5,8 @@ import java.util.List;
 
 import jmetal.core.Solution;
 
-//The PSC algorithm works by forming a Pareto front and extracting representative solutions that are spread across this front.
-public class PSC {
-	
+public class PCD {
+	// Pareto Crowding Distance (PCD) Seeding
 	// Steps:
 	//    Pareto Front Calculation:
 	//        calculateParetoFront computes the Pareto front, which is a set of non-dominated solutions. A solution solution1 dominates another solution solution2 if it is no worse in all objectives and better in at least one.
@@ -23,12 +22,12 @@ public class PSC {
 	//    Efficiency Considerations: Depending on the size of prevSolutions, the dominance and crowding distance calculations might be inefficient. You could look into optimising these operations if you're dealing with a very large population.
     
 	/**
-	 * This method returns the first N solutions from previous solutions using PSC.
+	 * This method returns the first N solutions from previous solutions using PCD.
 	 * @param prevSolutions
 	 * @param seedingNumSolutions
 	 * @return
 	 */
-	private static List<Solution> getPSCNSolutions(List<Solution> prevSolutions, Integer seedingNumSolutions) {
+	static List<Solution> getNSolutions(List<Solution> prevSolutions, Integer seedingNumSolutions) {
 	    // Step 1: Calculate the Pareto front (although assumed to be Pareto optimal already)
 	    List<Solution> paretoFront = calculateParetoFront(prevSolutions);
 

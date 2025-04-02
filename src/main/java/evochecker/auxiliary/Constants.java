@@ -136,7 +136,7 @@ public class Constants {
   public static enum SEED{
 	    RANDOM,
 	    KMEANS,
-	    PSC, //Pareto Simplicial Complex (PSC)
+	    PCD, //Pareto Crowding Distance 
 	    ;
 	}
   

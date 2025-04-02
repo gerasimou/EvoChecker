@@ -74,11 +74,15 @@ public class Seeding {
 	    	System.out.println("[Seeding] SEED_TYPE: KMEANS");
 			solutions2Seed = KMeans.getNSolutions(prevSolutions, seedingNumSolutions);
     	}
-	    // - PSC seeding
-    	else if (seedType.equals(Constants.SEED.PSC.toString())) { //Pareto Simplicial Complex (PSC)
-    		System.out.println("[Seeding] SEED_TYPE: PSC");
-    		solutions2Seed = Seeding.getPSCNSolutions(prevSolutions, seedingNumSolutions);
+	    // - PCD seeding
+    	else if (seedType.equals(Constants.SEED.PCD.toString())) { 
+    		System.out.println("[Seeding] SEED_TYPE: PCD");
+    		solutions2Seed = PCD.getNSolutions(prevSolutions, seedingNumSolutions);
     	}
+	    // TODO
+	    // - Agglomerative clustering
+	    // - DBSCAN clustering
+	    // - Hierarchical clustering (also called hierarchical cluster analysis or HCA) 
     	else { // error
     		System.err.println("[Seeding] Invalid SEED_TYPE: " + seedType);
     		System.exit(0);
@@ -91,18 +95,6 @@ public class Seeding {
 	
 	
 
-	
-	
-	/**
-	 * This method returns the first N solutions from previous solutions using PSC.
-	 * @param prevSolutions
-	 * @param seedingNumSolutions
-	 * @return
-	 */
-	 private static List<Solution> getPSCNSolutions(List<Solution> prevSolutions, Integer seedingNumSolutions) {
-		 // TODO: implement PSC
-	 	 return new ArrayList<Solution>();
-	 }
 	
 	
    

@@ -40,7 +40,7 @@ public class KMeans {
 	        // Assuming decision variables are stored as a list of Doubles
 	        for (int i = 0; i < solution.numberOfVariables(); i++) {
 	            try {
-	            	System.out.println("Hu" + solution.getDecisionVariables()[i]);
+//	            	System.out.println(solution.getDecisionVariables()[i]);
 					point.add(solution.getDecisionVariables()[i].getValue());
 				} catch (JMException e) {
 					e.printStackTrace();
@@ -51,7 +51,7 @@ public class KMeans {
 	        System.out.println("point: " + point);
 	        points.add(point);
 	    }
-//	    System.out.println("Hi");
+	    
 
 	    // Step 2: Perform K-Means clustering on the list of points.
 	    List<List<Double>> centroids = kMeansClustering(points, seedingNumSolutions);
