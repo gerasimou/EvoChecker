@@ -2,6 +2,7 @@ package evochecker.seeding;
 
 import java.util.List;
 
+import evochecker.seeding.auxiliary.ParetoPoint;
 import jmetal.core.Solution;
 
 
@@ -18,7 +19,7 @@ public class Random {
 	 * @param seedingNumSolutions
 	 * @return
 	 */
-	static List<Solution> getNSolutions(List<Solution> prevSolutions, Integer seedingNumSolutions) {
+	static List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions) {
 		return prevSolutions.subList(0, Math.min(prevSolutions.size(), seedingNumSolutions));
 	}
 

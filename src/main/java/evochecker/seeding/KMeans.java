@@ -1,29 +1,45 @@
 package evochecker.seeding;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
-import jmetal.core.Solution;
-import jmetal.util.JMException;
+import org.apache.commons.math3.ml.clustering.CentroidCluster;
+import org.apache.commons.math3.ml.clustering.Clusterable;
+import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
+import org.apache.commons.math3.ml.distance.DistanceMeasure;
+import org.apache.commons.math3.ml.distance.EuclideanDistance;
+
+import evochecker.seeding.auxiliary.ParetoPoint;
 
 
-//Explanation:
-//    Extract decision variables: In the first step, we extract the decision variables from the Solution objects and store them as points in a list.
-//    K-Means clustering: The kMeansClustering function implements the K-Means algorithm. It assigns points to the closest centroid, then recalculates centroids until convergence.
-//    Euclidean distance: This is used to calculate the distance between points (solutions) and centroids.
-//    Select closest solution: After obtaining the centroids, we find the solution closest to each centroid and use it for seeding.
-//Additional Notes:
-//    Improvement options: It could enhance the initialization of centroids to use smarter methods (e.g., K-Means++), and optimise the K-Means logic.
-//    Distance calculation: The Euclidean distance works for real-valued decision variables, but if your problem involves binary or integer variables, you may need to adjust the distance metric accordingly.
-    
+
 /**
  * EvoChecker class
  * @author gricelvazquez
  * April 2025
  */
 public class KMeans {
+	
+	//wrapper class
+	public static class ParetoPointWrapper implements Clusterable {
+	    private double[] pointVals;
+	    private ParetoPoint paretoPoint;
+	
+	    public ParetoPointWrapper(ParetoPoint paretoPoint) {
+	        this.paretoPoint = paretoPoint;
+	        this.pointVals = paretoPoint.getAllVals();
+	    }
+	
+	    public ParetoPoint getParetoPoint() {
+	        return paretoPoint;
+	    }
+	
+	    public double[] getPoint() {
+	        return pointVals;
+	    }
+	}
+	
+	
 	
 	
 	/**
@@ -32,134 +48,55 @@ public class KMeans {
 	 * @param seedingNumSolutions
 	 * @return
 	 */
-	static List<Solution> getNSolutions(List<Solution> prevSolutions, Integer seedingNumSolutions) {
-	    // Step 1: Extract the decision variables from the solutions and convert them into a list of points.
-	    List<List<Double>> points = new ArrayList<>();
-	    for (Solution solution : prevSolutions) {
-	        List<Double> point = new ArrayList<>();
-	        // Assuming decision variables are stored as a list of Doubles
-	        for (int i = 0; i < solution.numberOfVariables(); i++) {
-	            try {
-//	            	System.out.println(solution.getDecisionVariables()[i]);
-					point.add(solution.getDecisionVariables()[i].getValue());
-				} catch (JMException e) {
-					e.printStackTrace();
-					System.err.println("Error in getting Kmeans N solutions");
-					System.exit(1);
-				}
-	        }
-	        System.out.println("point: " + point);
-	        points.add(point);
-	    }
+	static List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions, int kmeansIterations) {
 	    
-
-	    // Step 2: Perform K-Means clustering on the list of points.
-	    List<List<Double>> centroids = kMeansClustering(points, seedingNumSolutions);
-
-	    // Step 3: For each centroid, find the closest solution in `prevSolutions` and return that as the seed.
-	    List<Solution> seededSolutions = new ArrayList<>();
-	    for (List<Double> centroid : centroids) {
-	        Solution closestSolution = findClosestSolution(prevSolutions, centroid);
-	        seededSolutions.add(closestSolution);
-	    }
-
-	    return seededSolutions;
-	}
-	
-
-	private static List<List<Double>> kMeansClustering(List<List<Double>> points, int k) {
-	    // Initialize centroids (this is a simple implementation, you could improve this part)
-	    List<List<Double>> centroids = new ArrayList<>();
-	    
-	    // Step 1: Randomly initialize centroids
-	    Random rand = new Random();
-	    for (int i = 0; i < k; i++) {
-	        List<Double> randomCentroid = new ArrayList<>(points.get(rand.nextInt(points.size())));
-	        centroids.add(randomCentroid);
-	    }
-
-	    boolean centroidsChanged = true;
-	    List<Integer> assignments = new ArrayList<>(Collections.nCopies(points.size(), -1));
-
-	    while (centroidsChanged) {
-	        centroidsChanged = false;
-
-	        // Step 2: Assign each point to the closest centroid
-	        for (int i = 0; i < points.size(); i++) {
-	            double minDistance = Double.MAX_VALUE;
-	            int closestCentroid = -1;
-
-	            for (int j = 0; j < centroids.size(); j++) {
-	                double distance = euclideanDistance(points.get(i), centroids.get(j));
-	                if (distance < minDistance) {
-	                    minDistance = distance;
-	                    closestCentroid = j;
-	                }
-	            }
-
-	            if (assignments.get(i) != closestCentroid) {
-	                assignments.set(i, closestCentroid);
-	                centroidsChanged = true;
-	            }
-	        }
-
-	        // Step 3: Update centroids
-	        if (centroidsChanged) {
-	            for (int i = 0; i < k; i++) {
-	                List<Double> newCentroid = new ArrayList<>(Collections.nCopies(points.get(0).size(), 0.0));
-	                int count = 0;
-	                for (int j = 0; j < points.size(); j++) {
-	                    if (assignments.get(j) == i) {
-	                        for (int d = 0; d < points.get(j).size(); d++) {
-	                            newCentroid.set(d, newCentroid.get(d) + points.get(j).get(d));
-	                        }
-	                        count++;
-	                    }
-	                }
-	                if (count > 0) {
-	                    for (int d = 0; d < newCentroid.size(); d++) {
-	                        newCentroid.set(d, newCentroid.get(d) / count);
-	                    }
-	                }
-	                centroids.set(i, newCentroid);
-	            }
-	        }
-	    }
-	    return centroids;
-	}
-
-	private static double euclideanDistance(List<Double> point1, List<Double> point2) {
-	    double sum = 0.0;
-	    for (int i = 0; i < point1.size(); i++) {
-	        sum += Math.pow(point1.get(i) - point2.get(i), 2);
-	    }
-	    return Math.sqrt(sum);
-	}
-
-	private static Solution findClosestSolution(List<Solution> prevSolutions, List<Double> centroid) {
-	    Solution closestSolution = null;
-	    double minDistance = Double.MAX_VALUE;
-
-	    for (Solution solution : prevSolutions) {
-	        double distance = 0.0;
-	        for (int i = 0; i < solution.numberOfVariables(); i++) {
-	            try {
-					distance += Math.pow(solution.getDecisionVariables()[i].getValue() - centroid.get(i), 2);
-				} catch (JMException e) {
-					e.printStackTrace();
-					System.err.println("Error in finding closest solution");
-					System.exit(1);
-				}
-	        }
-	        distance = Math.sqrt(distance);
-
-	        if (distance < minDistance) {
-	            minDistance = distance;
-	            closestSolution = solution;
-	        }
-	    }
-
-	    return closestSolution;
+		// add locations
+		List<ParetoPointWrapper> clusterInput = new ArrayList<ParetoPointWrapper>(prevSolutions.size());
+		for (ParetoPoint pp : prevSolutions)
+		    clusterInput.add(new ParetoPointWrapper(pp));
+		
+		// initialize a new clustering algorithm.
+		// we did not specify a distance measure; the default (euclidean distance) is used.
+		int numClusters = seedingNumSolutions;
+		int numIterations = kmeansIterations;
+		KMeansPlusPlusClusterer<ParetoPointWrapper> clusterer = new KMeansPlusPlusClusterer<ParetoPointWrapper>(numClusters, numIterations);
+		List<CentroidCluster<ParetoPointWrapper>> clusterResults = clusterer.cluster(clusterInput);
+		
+		System.out.println("Number of clusters: " + clusterResults.size());
+		
+		// sampling: get K points, one for each cluster, each closest to centroid
+		List<ParetoPoint> closestPoints = new ArrayList<ParetoPoint>();
+		
+		// for each cluster
+		for (int i=0; i<clusterResults.size(); i++) {
+		    // get centroid
+	    	Clusterable centroid = clusterResults.get(i).getCenter();
+	    	ParetoPointWrapper closest = null;
+	    	
+	    	//--Print -- checkpoint
+//	    	System.out.println("Cluster " + i);
+//	    	System.out.println("Centroid: " + centroid.getPoint()[0] + ", " + centroid.getPoint()[1]);
+//		    System.out.println("Num points in cluster: " + clusterResults.get(i).getPoints().size());
+	    	//
+	    	
+		   
+		    if (clusterResults.get(i).getPoints().size()>0) { //some clusters might be empty, e.g., when points are repeated or too close
+		    	Double minDistance = Double.MAX_VALUE;
+		    	// for each point in cluster
+			    for (ParetoPointWrapper locationWrapper : clusterResults.get(i).getPoints()) {
+			    	// get distance to centroid
+			    	DistanceMeasure dm = new EuclideanDistance();
+			    	double distance = dm.compute(locationWrapper.getPoint(), centroid.getPoint());
+			    	
+			    	if (distance < minDistance) {
+			    		minDistance = distance;
+			    		closest = locationWrapper;
+			    	}
+			    }
+			    closestPoints.add(closest.getParetoPoint());
+			}
+		}
+		return closestPoints;
 	}
 
 }
