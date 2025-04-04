@@ -1,9 +1,7 @@
 package evochecker.seeding;
 
 import java.util.List;
-
 import evochecker.seeding.auxiliary.ParetoPoint;
-import jmetal.core.Solution;
 
 
 /**
@@ -11,7 +9,7 @@ import jmetal.core.Solution;
  * @author gricelvazquez
  * April 2025
  */
-public class Random {
+public class Random implements ISeeding {
 	
 	/**
 	 * This method returns the first N solutions randomly from previous solutions.
@@ -19,8 +17,15 @@ public class Random {
 	 * @param seedingNumSolutions
 	 * @return
 	 */
-	static List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions) {
+	@Override
+	public List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions) {
 		return prevSolutions.subList(0, Math.min(prevSolutions.size(), seedingNumSolutions));
+	}
+
+	@Override
+	public void setParameters() {
+		// No parameters to set for random seeding
+		return;
 	}
 
 }

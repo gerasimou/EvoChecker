@@ -9,6 +9,8 @@ import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.distance.DistanceMeasure;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
+import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.Utility;
 import evochecker.seeding.auxiliary.ParetoPoint;
 
 
@@ -18,7 +20,11 @@ import evochecker.seeding.auxiliary.ParetoPoint;
  * @author gricelvazquez
  * April 2025
  */
-public class KMeans {
+public class KMeansPlusPlus implements ISeeding {
+	
+	Integer numIterations = 10000; //default value
+	private DistanceMeasure distanceMeasure = new EuclideanDistance(); // - distance measure to be used
+    
 	
 	//wrapper class
 	public static class ParetoPointWrapper implements Clusterable {
@@ -48,8 +54,9 @@ public class KMeans {
 	 * @param seedingNumSolutions
 	 * @return
 	 */
-	static List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions, int kmeansIterations) {
+	public List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions) {
 	    
+		
 		// add locations
 		List<ParetoPointWrapper> clusterInput = new ArrayList<ParetoPointWrapper>(prevSolutions.size());
 		for (ParetoPoint pp : prevSolutions)
@@ -58,11 +65,10 @@ public class KMeans {
 		// initialize a new clustering algorithm.
 		// we did not specify a distance measure; the default (euclidean distance) is used.
 		int numClusters = seedingNumSolutions;
-		int numIterations = kmeansIterations;
-		KMeansPlusPlusClusterer<ParetoPointWrapper> clusterer = new KMeansPlusPlusClusterer<ParetoPointWrapper>(numClusters, numIterations);
+		KMeansPlusPlusClusterer<ParetoPointWrapper> clusterer = new KMeansPlusPlusClusterer<ParetoPointWrapper>(numClusters, this.numIterations, this.distanceMeasure);
 		List<CentroidCluster<ParetoPointWrapper>> clusterResults = clusterer.cluster(clusterInput);
 		
-		System.out.println("Number of clusters: " + clusterResults.size());
+//		System.out.println("Number of clusters: " + clusterResults.size());
 		
 		// sampling: get K points, one for each cluster, each closest to centroid
 		List<ParetoPoint> closestPoints = new ArrayList<ParetoPoint>();
@@ -98,5 +104,21 @@ public class KMeans {
 		}
 		return closestPoints;
 	}
+
+
+
+
+	@Override
+	public void setParameters() {
+		try {
+			this.numIterations = Integer.parseInt(Utility.getProperty(Constants.SEED_KMEANS_ITERATIONS));
+		}// except default value
+		catch (Exception e) {
+			System.out.println("[KMeans] No KMEANS_ITERATIONS found. Using default value: " + this.numIterations);
+		}
+		return;
+	}
+
+	
 
 }

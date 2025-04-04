@@ -132,11 +132,13 @@ public class Constants {
   public static final String SEED_PERCENTAGE = "SEED_PERCENTAGE";
   
   public static final String SEED_TYPE = "SEED_TYPE";
+
+  public static final String SEED_KMEANS_ITERATIONS = "SEED_KMEANS_ITERATIONS";
   
   public static enum SEED{
 	    RANDOM,
 	    KMEANS,
-	    PCD, //Pareto Crowding Distance 
+	    DBSCAN, //Pareto Crowding Distance 
 	    ;
 	}
   

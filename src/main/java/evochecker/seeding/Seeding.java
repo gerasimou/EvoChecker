@@ -64,21 +64,20 @@ public class Seeding {
 	    	return getSolutions2Seed(prevSolutions);
 	    }
 	    
-	    //--- Seed the population
-	    List<ParetoPoint> solutions2Seed = new ArrayList<ParetoPoint>();
+	    //--- Get the seeding strategy
 	    String seedType = Utility.getProperty(Constants.SEED_TYPE).toUpperCase();
+	    ISeeding seedStrategy = null;
+	    
 	    // - random seeding
-	    if (seedType.equals(Constants.SEED.RANDOM.toString())) {
-	    	System.out.println("[Seeding] SEED_TYPE: RANDOM");
-			solutions2Seed = Random.getNSolutions(prevSolutions, seedingNumSolutions);
-    	}
-	    // - kmeans seeding
-	    else if (seedType.equals(Constants.SEED.KMEANS.toString())) {
-	    	System.out.println("[Seeding] SEED_TYPE: KMEANS");
-	    	int kmeansIterations = 10000;
-	    	//TODO int kmeansIterations = Integer.parseInt(Utility.getProperty(Constants.SEED_KMEANS_ITERATIONS));
-			solutions2Seed = KMeans.getNSolutions(prevSolutions, seedingNumSolutions, kmeansIterations);
-    	}
+	    if (seedType.equals(Constants.SEED.RANDOM.toString()))
+	    	seedStrategy = new Random();
+	    // - kmeans++ seeding
+	    else if (seedType.equals(Constants.SEED.KMEANS.toString()))
+	    	seedStrategy = new KMeansPlusPlus();
+    	// - dbscan seeding
+		else if (seedType.equals(Constants.SEED.DBSCAN.toString()))
+			seedStrategy = new DBSCAN();
+	    
 	    
 	    // TODO
 	    // - Agglomerative clustering
@@ -89,8 +88,12 @@ public class Seeding {
     		System.exit(0);
     	}
 	    
+	    //--- Seed the population
+	    seedStrategy.setParameters();
+	    List<ParetoPoint> solutions2Seed = seedStrategy.getNSolutions(prevSolutions, seedingNumSolutions);
+	    
+	    System.out.println("[Seeding] SEED_TYPE: "+ seedType);
 	    System.out.println("[Seeding] Seeding "+solutions2Seed.size() + " solutions.");
-	    System.out.println();
 	    
 		return getSolutions2Seed(solutions2Seed);
 	}
