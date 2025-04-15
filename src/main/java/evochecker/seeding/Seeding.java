@@ -53,46 +53,66 @@ public class Seeding {
 	    }
 	    
     	
-    	//--- Get previous solutions from file
-	    List<ParetoPoint> prevSolutions =  getPreviousSolutions(problem_);
-	    if (prevSolutions.isEmpty()) {
-	    	System.out.println("[Seeding] No seedable solutions found.");
-	    	return new ArrayList<Solution>();
-	    }
-	    if (prevSolutions.size()<= seedingNumSolutions) { // if less reusable solutions than wanted
-	    	System.out.println("[Seeding] Seeding "+ prevSolutions.size() +" reusable solutions");
-	    	return getSolutions2Seed(prevSolutions);
-	    }
+    	
 	    
-	    //--- Get the seeding strategy
+	    //--- Get the seeding strategy (SEED_TYPE)
 	    String seedType = Utility.getProperty(Constants.SEED_TYPE).toUpperCase();
 	    ISeeding seedStrategy = null;
-	    
-	    // - random seeding
-	    if (seedType.equals(Constants.SEED.RANDOM.toString()))
+	    if (seedType.equals(Constants.SEED.RANDOM.toString())) // - random seeding
 	    	seedStrategy = new Random();
-	    // - kmeans++ seeding
-	    else if (seedType.equals(Constants.SEED.KMEANS.toString()))
+	    else if (seedType.equals(Constants.SEED.KMEANS.toString()))// - kmeans++ seeding
 	    	seedStrategy = new KMeansPlusPlus();
-    	// - dbscan seeding
-		else if (seedType.equals(Constants.SEED.DBSCAN.toString()))
+		else if (seedType.equals(Constants.SEED.DBSCAN.toString()))// - dbscan seeding
 			seedStrategy = new DBSCAN();
-	    
-	    
 	    // TODO
 	    // - Agglomerative clustering
 	    // - DBSCAN clustering
 	    // - Hierarchical clustering (also called hierarchical cluster analysis or HCA) 
     	else { // error
     		System.err.println("[Seeding] Invalid SEED_TYPE: " + seedType);
-    		System.exit(0);
-    	}
+    		System.exit(0);}
+	    System.out.println("[Seeding] SEED_TYPE: "+ seedType);
+	    
+	    
+	    //--- Get data to be used for seeding (SEED_FROM_DATA)
+	    String clusterFromPareto = "";
+	    try {
+	    	clusterFromPareto = Utility.getProperty(Constants.SEED_CLUSTER_FROM_PARETO).toUpperCase();
+	    	if (clusterFromPareto.equals(Constants.SEED_FROM.FRONT.toString())) {
+		    	System.out.println("[Seeding] SEED_FROM_DATA. Using Pareto Front data.");
+		    } else if (clusterFromPareto.equals(Constants.SEED_FROM.SET.toString())) {
+		    	System.out.println("[Seeding] SEED_FROM_DATA. Using Pareto Set data.");
+		    } else if (clusterFromPareto.equals(Constants.SEED_FROM.BOTH.toString())) {
+		    	System.out.println("[Seeding] SEED_FROM_DATA. Using both Pareto Set and Front data.");
+		    } else { // error
+		    	System.err.println("[Seeding] Invalid SEED_FROM_DATA: " + clusterFromPareto);
+		    	System.exit(0);}
+	    }
+	    catch (Exception e) {
+	    	System.out.println("[Seeding] No SEED_FROM_DATA found. Using Pareto Front data.");
+	    	clusterFromPareto = Constants.SEED_FROM.FRONT.toString();
+	    }
+	    if (clusterFromPareto.isEmpty()) {
+	    	System.out.println("[Seeding] No data type defined. Using Front.");
+	    	clusterFromPareto = "Front";
+	    }
+	    
+	    
+	    //--- Get previous solutions from file
+	    List<ParetoPoint> prevSolutions =  getPreviousSolutions(problem_, clusterFromPareto);
+	    if (prevSolutions.isEmpty()) {
+	    	System.out.println("[Seeding] No seedable solutions found.");
+	    	return new ArrayList<Solution>();
+	    }
+	    if (prevSolutions.size()<= seedingNumSolutions) { // if less reusable solutions than wanted
+	    	System.out.println("[Seeding] Seeding all "+ prevSolutions.size() +" previous reusable solutions");
+	    	return getSolutions2Seed(prevSolutions);
+	    }
 	    
 	    //--- Seed the population
 	    seedStrategy.setParameters();
 	    List<ParetoPoint> solutions2Seed = seedStrategy.getNSolutions(prevSolutions, seedingNumSolutions);
 	    
-	    System.out.println("[Seeding] SEED_TYPE: "+ seedType);
 	    System.out.println("[Seeding] Seeding "+solutions2Seed.size() + " solutions.");
 	    
 		return getSolutions2Seed(solutions2Seed);
@@ -180,7 +200,7 @@ public class Seeding {
 	* @throws ClassNotFoundException
 	* @throws JMException
 	*/
-    private static ArrayList<ParetoPoint> getPreviousSolutions(Problem problem_) throws ClassNotFoundException, JMException {
+    private static ArrayList<ParetoPoint> getPreviousSolutions(Problem problem_, String clusterFromPareto) throws ClassNotFoundException, JMException {
 	   // Read previous Pareto sol files
 	   List<String> solutionLines_set =  readPreviousPopulationFile("Set");
 	   List<String> solutionLines_front =  readPreviousPopulationFile("Front");
@@ -211,7 +231,7 @@ public class Seeding {
 			   double val=Double.parseDouble(sol);
 			   frontValues.add(val);
    		   }
-   		   points.add(new ParetoPoint(setValuesD, setValuesI, frontValues, problem_));
+   		   points.add(new ParetoPoint(setValuesD, setValuesI, frontValues, problem_,clusterFromPareto));
 	   }
 	return points;
 	}

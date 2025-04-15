@@ -11,6 +11,7 @@ import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
+import evochecker.seeding.ParetoPointW.ParetoPointWrapper;
 import evochecker.seeding.auxiliary.ParetoPoint;
 
 
@@ -24,29 +25,6 @@ public class KMeansPlusPlus implements ISeeding {
 	
 	Integer numIterations = 10000; //default value
 	private DistanceMeasure distanceMeasure = new EuclideanDistance(); // - distance measure to be used
-    
-	
-	//wrapper class
-	public static class ParetoPointWrapper implements Clusterable {
-	    private double[] pointVals;
-	    private ParetoPoint paretoPoint;
-	
-	    public ParetoPointWrapper(ParetoPoint paretoPoint) {
-	        this.paretoPoint = paretoPoint;
-	        this.pointVals = paretoPoint.getAllVals();
-	    }
-	
-	    public ParetoPoint getParetoPoint() {
-	        return paretoPoint;
-	    }
-	
-	    public double[] getPoint() {
-	        return pointVals;
-	    }
-	}
-	
-	
-	
 	
 	/**
 	 * This method returns the first N solutions from previous solutions using Kmeans clustering.
@@ -56,21 +34,18 @@ public class KMeansPlusPlus implements ISeeding {
 	 */
 	public List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions) {
 	    
-		
-		// add locations
 		List<ParetoPointWrapper> clusterInput = new ArrayList<ParetoPointWrapper>(prevSolutions.size());
 		for (ParetoPoint pp : prevSolutions)
 		    clusterInput.add(new ParetoPointWrapper(pp));
 		
 		// initialize a new clustering algorithm.
-		// we did not specify a distance measure; the default (euclidean distance) is used.
 		int numClusters = seedingNumSolutions;
 		KMeansPlusPlusClusterer<ParetoPointWrapper> clusterer = new KMeansPlusPlusClusterer<ParetoPointWrapper>(numClusters, this.numIterations, this.distanceMeasure);
 		List<CentroidCluster<ParetoPointWrapper>> clusterResults = clusterer.cluster(clusterInput);
 		
-//		System.out.println("Number of clusters: " + clusterResults.size());
+		//System.out.println("Number of clusters: " + clusterResults.size());
 		
-		// sampling: get K points, one for each cluster, each closest to centroid
+		// sampling closest point to centroid: get K points, one for each cluster, each closest to centroid
 		List<ParetoPoint> closestPoints = new ArrayList<ParetoPoint>();
 		
 		// for each cluster

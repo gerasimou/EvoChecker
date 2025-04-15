@@ -134,11 +134,22 @@ public class Constants {
   public static final String SEED_TYPE = "SEED_TYPE";
 
   public static final String SEED_KMEANS_ITERATIONS = "SEED_KMEANS_ITERATIONS";
+
+  public static final String SEED_CLUSTER_FROM_PARETO = "SEED_CLUSTER_FROM_PARETO";
   
+  /** Seeding strategies currently supported*/
   public static enum SEED{
 	    RANDOM,
 	    KMEANS,
-	    DBSCAN, //Pareto Crowding Distance 
+	    DBSCAN,
+	    ;
+	}
+  
+  /** Seeding strategies currently supported*/
+  public static enum SEED_FROM{
+		  FRONT,
+		  SET,
+		  BOTH,
 	    ;
 	}
   

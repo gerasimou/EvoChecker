@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import evochecker.auxiliary.Constants;
 import evochecker.genetic.jmetal.encoding.ArrayInt;
 import evochecker.genetic.jmetal.encoding.ArrayReal;
 import jmetal.core.Problem;
@@ -23,14 +24,17 @@ public class ParetoPoint {
     private List<Integer> setValsI; //pareto set integers
     private Solution solution;
     
+    private String clusterFromPareto;
+    
     public ParetoPoint(List<Double> setValuesD, 
     		List<Integer> setValuesI, 
     		List<Double> frontValues,
-    		Problem _problem) throws JMException, ClassNotFoundException {
+    		Problem _problem, String clusterFromPareto) throws JMException, ClassNotFoundException {
         this.setValsD = setValuesD;
         this.setValsI = setValuesI;
         this.frontVals = frontValues;
         this.solution = this.setSolution(_problem);
+        this.clusterFromPareto = clusterFromPareto;
     }
     
     public Solution getSolution() {
@@ -38,19 +42,31 @@ public class ParetoPoint {
 	}
     
     /**
-	 * Get Pareto front and set values combined as List
+	 * Get Pareto front or/and set values combined as List
 	 */
-    public List<Double> getAllValsList() {
-    	// joint set and front values
+    private List<Double> getAllValsList() {
     	List<Double> allValues = new ArrayList<>(); 
-    	allValues.addAll(setValsI.stream().map(Integer::doubleValue).collect(Collectors.toList()));
-    	allValues.addAll(setValsD);
-    	allValues.addAll(frontVals);
+    	
+    	// Pareto set values
+    	if (clusterFromPareto.equals(Constants.SEED_FROM.SET.toString())) {
+    		allValues.addAll(setValsI.stream().map(Integer::doubleValue).collect(Collectors.toList()));
+        	allValues.addAll(setValsD);
+    	}
+    	// joint Pareto set and front values
+    	else if (clusterFromPareto.equals(Constants.SEED_FROM.BOTH.toString())) {
+    		allValues.addAll(setValsI.stream().map(Integer::doubleValue).collect(Collectors.toList()));
+        	allValues.addAll(setValsD);
+        	allValues.addAll(frontVals);
+	    }
+    	// Pareto front values
+	    else {
+	    	allValues.addAll(frontVals);
+	    }
     	return  allValues;
     }
     
     /**
-    * Get Pareto front and set values combined as double[]
+    * Get Pareto front or/and set values combined as double[]
     */
     public double[] getAllVals() {
     	//Convert List<Double> to double[]
