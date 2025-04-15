@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.math3.ml.clustering.CentroidCluster;
 import org.apache.commons.math3.ml.clustering.Clusterable;
-import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
+import org.apache.commons.math3.ml.clustering.FuzzyKMeansClusterer;
 import org.apache.commons.math3.ml.distance.DistanceMeasure;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
@@ -21,10 +21,11 @@ import evochecker.seeding.encoding.ParetoPointW.ParetoPointWrapper;
  * @author gricelvazquez
  * April 2025
  */
-public class KMeansPlusPlus implements ISeeding {
+public class FuzzyKMeans implements ISeeding {
 	
 	Integer numIterations = 10000; //default value
 	private DistanceMeasure distanceMeasure = new EuclideanDistance(); // - distance measure to be used
+	private double fuzziness = 1.05; // - fuzziness parameter (> 1)
 	
 	/**
 	 * This method returns the first N solutions from previous solutions using Kmeans clustering.
@@ -40,7 +41,7 @@ public class KMeansPlusPlus implements ISeeding {
 		
 		// initialize a new clustering algorithm.
 		int numClusters = seedingNumSolutions;
-		KMeansPlusPlusClusterer<ParetoPointWrapper> clusterer = new KMeansPlusPlusClusterer<ParetoPointWrapper>(numClusters, this.numIterations, this.distanceMeasure);
+		FuzzyKMeansClusterer<ParetoPointWrapper> clusterer = new FuzzyKMeansClusterer<ParetoPointWrapper>(numClusters, this.fuzziness, this.numIterations, this.distanceMeasure);
 		List<CentroidCluster<ParetoPointWrapper>> clusterResults = clusterer.cluster(clusterInput);
 		
 		//System.out.println("Number of clusters: " + clusterResults.size());

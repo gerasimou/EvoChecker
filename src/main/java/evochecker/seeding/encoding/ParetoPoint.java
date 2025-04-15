@@ -1,9 +1,8 @@
-package evochecker.seeding.auxiliary;
+package evochecker.seeding.encoding;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import evochecker.auxiliary.Constants;
 import evochecker.genetic.jmetal.encoding.ArrayInt;

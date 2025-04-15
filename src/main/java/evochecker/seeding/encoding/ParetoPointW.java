@@ -1,8 +1,6 @@
-package evochecker.seeding;
+package evochecker.seeding.encoding;
 
 import org.apache.commons.math3.ml.clustering.Clusterable;
-
-import evochecker.seeding.auxiliary.ParetoPoint;
 
 public class ParetoPointW {
 	

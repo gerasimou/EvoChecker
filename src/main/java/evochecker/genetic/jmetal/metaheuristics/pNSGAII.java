@@ -20,7 +20,6 @@
 
 package evochecker.genetic.jmetal.metaheuristics;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import evochecker.auxiliary.Constants;
@@ -206,6 +205,21 @@ public class pNSGAII extends Algorithm {
 
         remain = 0;
       } // if                               
+      
+      
+      //TODO
+      // get HV
+      // get HV of the previous Pareto sol
+      // compare, if between 1 or 2% stop
+      // HV_prev = 
+      // HV_current =
+      // if (HV_current >= (1 - 0.02) * HV_prev) { ...
+      
+      //TODO
+      // use this to stop the algorithm for better comparison with and without seeding
+      
+      
+      
 
       // This piece of code shows how to use the indicator object into the code
       // of NSGA-II. In particular, it finds the number of evaluations required
@@ -213,7 +227,8 @@ public class pNSGAII extends Algorithm {
       // than the hypervolume of the true Pareto front.
       if ((indicators != null) &&
           (requiredEvaluations == 0)) {
-        double HV = indicators.getHypervolume(population);
+    	  // TODO: compare the current population with the previous Pareto front
+    	double HV = indicators.getHypervolume(population);
         if (HV >= (0.98 * indicators.getTrueParetoFrontHypervolume())) {
           requiredEvaluations = evaluations;
         } // if

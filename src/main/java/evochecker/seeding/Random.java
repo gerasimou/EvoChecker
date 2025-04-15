@@ -1,7 +1,8 @@
 package evochecker.seeding;
 
 import java.util.List;
-import evochecker.seeding.auxiliary.ParetoPoint;
+
+import evochecker.seeding.encoding.ParetoPoint;
 
 
 /**

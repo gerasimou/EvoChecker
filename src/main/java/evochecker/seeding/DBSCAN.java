@@ -1,17 +1,15 @@
 package evochecker.seeding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.math3.ml.clustering.Cluster;
-import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.distance.DistanceMeasure;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
-import evochecker.seeding.ParetoPointW.ParetoPointWrapper;
-import evochecker.seeding.auxiliary.ParetoPoint;
+import evochecker.seeding.encoding.ParetoPoint;
+import evochecker.seeding.encoding.ParetoPointW.ParetoPointWrapper;
 
 
 
@@ -22,7 +20,7 @@ import evochecker.seeding.auxiliary.ParetoPoint;
  */
 public class DBSCAN implements ISeeding {
 	
-	double eps = 0.5; // - maximum radius of the neighborhood to be considered
+	double eps = 2; // - maximum radius of the neighborhood to be considered
     int minPts=2; // - minimum number of points needed for a cluster
 	private DistanceMeasure distanceMeasure = new EuclideanDistance(); // - distance measure to be used
     

@@ -141,6 +141,7 @@ public class Constants {
   public static enum SEED{
 	    RANDOM,
 	    KMEANS,
+	    FUZZYKMEANS,
 	    DBSCAN,
 	    ;
 	}

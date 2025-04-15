@@ -21,7 +21,7 @@ import java.util.List;
 
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
-import evochecker.seeding.auxiliary.ParetoPoint;
+import evochecker.seeding.encoding.ParetoPoint;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.util.JMException;
@@ -62,11 +62,13 @@ public class Seeding {
 	    	seedStrategy = new Random();
 	    else if (seedType.equals(Constants.SEED.KMEANS.toString()))// - kmeans++ seeding
 	    	seedStrategy = new KMeansPlusPlus();
-		else if (seedType.equals(Constants.SEED.DBSCAN.toString()))// - dbscan seeding
+	    else if (seedType.equals(Constants.SEED.FUZZYKMEANS.toString()))// - kmeans++ seeding
+	    	seedStrategy = new FuzzyKMeans();
+	    else if (seedType.equals(Constants.SEED.DBSCAN.toString()))// - dbscan seeding
 			seedStrategy = new DBSCAN();
 	    // TODO
+	    // - Gaussian Mixture Model (GMM) clustering
 	    // - Agglomerative clustering
-	    // - DBSCAN clustering
 	    // - Hierarchical clustering (also called hierarchical cluster analysis or HCA) 
     	else { // error
     		System.err.println("[Seeding] Invalid SEED_TYPE: " + seedType);
