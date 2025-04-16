@@ -136,6 +136,13 @@ public class Constants {
   public static final String SEED_KMEANS_ITERATIONS = "SEED_KMEANS_ITERATIONS";
 
   public static final String SEED_CLUSTER_FROM_PARETO = "SEED_CLUSTER_FROM_PARETO";
+
+  public static final String SEED_FUZZINESS = "SEED_FUZZINESS";
+
+  public static final String SEED_DBSCAN_EPS = "SEED_DBSCAN_EPS";
+
+  public static final String SEED_DBSCAN_MINPTS = "SEED_DBSCAN_MINPTS";
+  
   
   /** Seeding strategies currently supported*/
   public static enum SEED{

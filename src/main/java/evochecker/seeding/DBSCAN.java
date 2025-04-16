@@ -8,6 +8,8 @@ import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.distance.DistanceMeasure;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
+import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.Utility;
 import evochecker.seeding.encoding.ParetoPoint;
 import evochecker.seeding.encoding.ParetoPointW.ParetoPointWrapper;
 
@@ -121,8 +123,23 @@ public class DBSCAN implements ISeeding {
 
 	@Override
 	public void setParameters() {
-		//this.eps;     //set in getNSolutions
-		//this.minPts;  //set in getNSolutions
+		// - maximum radius of the neighborhood to be considered
+	    try {
+	    	this.eps = Double.parseDouble(Utility.getProperty(Constants.SEED_DBSCAN_EPS));
+	    	System.out.println("[DBSCAN] Eps value: " + this.eps);
+	    }
+	    catch (Exception e) {
+	    	System.out.println("[DBSCAN] Eps value not set. Using default value: " + this.eps);
+	    }
+		
+		// - minimum number of points needed for a cluster
+		try {
+	    	this.minPts = Integer.parseInt(Utility.getProperty(Constants.SEED_DBSCAN_MINPTS));
+	    	System.out.println("[DBSCAN] MinPts value: " + this.minPts);
+	    }
+	    catch (Exception e) {
+	    	System.out.println("[DBSCAN] MinPts value not set. Using default value: " + this.minPts);
+	    }
 		return;
 	}
 

@@ -23,7 +23,7 @@ import evochecker.seeding.encoding.ParetoPointW.ParetoPointWrapper;
  */
 public class FuzzyKMeans implements ISeeding {
 	
-	Integer numIterations = 10000; //default value
+	private Integer numIterations = 10000; //default value
 	private DistanceMeasure distanceMeasure = new EuclideanDistance(); // - distance measure to be used
 	private double fuzziness = 1.05; // - fuzziness parameter (> 1)
 	
@@ -86,11 +86,30 @@ public class FuzzyKMeans implements ISeeding {
 
 	@Override
 	public void setParameters() {
+		// - distance measure
+		this.distanceMeasure = new EuclideanDistance(); // - distance measure to be used
+		
+		// - fuzziness parameter (> 1)
+		try {
+			this.fuzziness = Double.parseDouble(Utility.getProperty(Constants.SEED_FUZZINESS));
+			if (this.fuzziness <= 1) {
+				System.out.println("[SeedingFuzzyKM] Fuzziness parameter must be greater than 1.");
+				System.exit(0);
+			}else {
+				System.out.println("[SeedingFuzzyKM] Fuzziness parameter: " + this.fuzziness);
+			}
+			
+		}// except default value
+		catch (Exception e) {
+			System.out.println("[SeedingFuzzyKM] No KMEANS_FUZZINESS found. Using default value: " + this.fuzziness);
+		}
+		
+		// - number of kmean iterations
 		try {
 			this.numIterations = Integer.parseInt(Utility.getProperty(Constants.SEED_KMEANS_ITERATIONS));
 		}// except default value
 		catch (Exception e) {
-			System.out.println("[KMeans] No KMEANS_ITERATIONS found. Using default value: " + this.numIterations);
+			System.out.println("[SeedingFuzzyKM] No KMEANS_ITERATIONS found. Using default value: " + this.numIterations);
 		}
 		return;
 	}

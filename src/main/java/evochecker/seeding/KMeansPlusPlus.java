@@ -23,7 +23,7 @@ import evochecker.seeding.encoding.ParetoPointW.ParetoPointWrapper;
  */
 public class KMeansPlusPlus implements ISeeding {
 	
-	Integer numIterations = 10000; //default value
+	private Integer numIterations = 10000; //default value
 	private DistanceMeasure distanceMeasure = new EuclideanDistance(); // - distance measure to be used
 	
 	/**
@@ -85,11 +85,15 @@ public class KMeansPlusPlus implements ISeeding {
 
 	@Override
 	public void setParameters() {
+		// - distance measure
+		this.distanceMeasure = new EuclideanDistance();
+		
+		// - number of kmean iterations
 		try {
 			this.numIterations = Integer.parseInt(Utility.getProperty(Constants.SEED_KMEANS_ITERATIONS));
 		}// except default value
 		catch (Exception e) {
-			System.out.println("[KMeans] No KMEANS_ITERATIONS found. Using default value: " + this.numIterations);
+			System.out.println("[KMeans++] No KMEANS_ITERATIONS found. Using default value: " + this.numIterations);
 		}
 		return;
 	}
