@@ -1,8 +1,10 @@
 package evochecker.seeding;
 
+import java.util.Collections;
 import java.util.List;
 
 import evochecker.seeding.encoding.ParetoPoint;
+import evochecker.seeding.encoding.PreviousPareto;
 
 
 /**
@@ -19,7 +21,11 @@ public class Random implements ISeeding {
 	 * @return
 	 */
 	@Override
-	public List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions) {
+	public List<ParetoPoint> getNSolutions(PreviousPareto prevPareto, Integer seedingNumSolutions) {
+		// get previous solutions
+		List<ParetoPoint> prevSolutions = prevPareto.getPrevSolutions();
+		
+		Collections.shuffle(prevSolutions);
 		return prevSolutions.subList(0, Math.min(prevSolutions.size(), seedingNumSolutions));
 	}
 

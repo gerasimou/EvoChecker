@@ -3,6 +3,7 @@ package evochecker.seeding;
 import java.util.List;
 
 import evochecker.seeding.encoding.ParetoPoint;
+import evochecker.seeding.encoding.PreviousPareto;
 
 public interface ISeeding {
 	
@@ -12,7 +13,7 @@ public interface ISeeding {
 	 * @param seedingNumSolutions: number of solutions to seed
 	 * @return list of solutions to seed
 	 */
-	public List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions);
+	public List<ParetoPoint> getNSolutions(PreviousPareto prevPareto, Integer seedingNumSolutions);
 		
 	
 	/**

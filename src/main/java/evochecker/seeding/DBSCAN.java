@@ -11,6 +11,7 @@ import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.seeding.encoding.ParetoPoint;
+import evochecker.seeding.encoding.PreviousPareto;
 import evochecker.seeding.encoding.ParetoPointW.ParetoPointWrapper;
 
 
@@ -33,8 +34,11 @@ public class DBSCAN implements ISeeding {
 	 * @param seedingNumSolutions
 	 * @return
 	 */
-	public List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions) {
+	public List<ParetoPoint> getNSolutions(PreviousPareto prevPareto, Integer seedingNumSolutions) {
 	    
+		// get previous solutions
+		List<ParetoPoint> prevSolutions = prevPareto.getPrevSolutions();
+		
 		List<ParetoPointWrapper> clusterInput = new ArrayList<ParetoPointWrapper>(prevSolutions.size());
 		for (ParetoPoint pp : prevSolutions)
 		    clusterInput.add(new ParetoPointWrapper(pp));
@@ -50,11 +54,10 @@ public class DBSCAN implements ISeeding {
 		for (int i=0; i<clusterResults.size(); i++) {
 			ParetoPointWrapper closest = null;
 	    	
-	    	//--Print -- checkpoint
-//	    	System.out.println("Cluster " + i);
-//	    	System.out.println("Centroid: " + centroid.getPoint()[0] + ", " + centroid.getPoint()[1]);
-//		    System.out.println("Num points in cluster: " + clusterResults.get(i).getPoints().size());
-	    	//
+//	    	--Print -- checkpoint
+	    	System.out.println("Cluster " + i);
+		    System.out.println("Num points in cluster: " + clusterResults.get(i).getPoints().size());
+	    	
 	    	
 		   
 		    if (clusterResults.get(i).getPoints().size()>0) { //some clusters might be empty, e.g., when points are repeated or too close

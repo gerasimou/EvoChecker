@@ -1,3 +1,4 @@
+// See documentation for wrapper: https://commons.apache.org/proper/commons-math/userguide/ml.html
 package evochecker.seeding.encoding;
 
 import org.apache.commons.math3.ml.clustering.Clusterable;
@@ -16,11 +17,15 @@ public class ParetoPointW {
 	    }
 	
 	    public ParetoPoint getParetoPoint() {
-	        return paretoPoint;
+	    	//TODO 
+	    	//ParetoPoint has method getAllValsList (check not needed to be normalised)
+	    	//2 normalise getPoint -- check this is not used to get Solution at the end of seeding
+	    	return paretoPoint;
 	    }
 	
 	    public double[] getPoint() {
-	        return pointVals;
+	        // normalise point
+	    	return pointVals;
 	    }
 	}
 		

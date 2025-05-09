@@ -22,6 +22,7 @@ import java.util.List;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.seeding.encoding.ParetoPoint;
+import evochecker.seeding.encoding.PreviousPareto;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.util.JMException;
@@ -34,29 +35,50 @@ import jmetal.util.JMException;
  */
 public class Seeding {
 	
+	public static Integer seedingNumSolutions = 0;
+	public static String clusterFromPareto = "";
+	public static ISeeding seedingStrategy;
 	
 	public static List<Solution> getSeededSolutions(Problem problem_, int populationSize) throws ClassNotFoundException, JMException {
 		
-	    //--- Get the number of solutions to seed
-	    Integer seedingNumSolutions = 0;
-	    try {
-	    	String reloadPercentage = Utility.getProperty(Constants.SEED_PERCENTAGE);
-	    	seedingNumSolutions = reloadPercentage.isEmpty() ? 0 : Math.round( Integer.parseInt(Utility.getProperty(Constants.SEED_PERCENTAGE)) * populationSize / 100.0f);
-	    	if (seedingNumSolutions == 0) {
-	    		System.out.println("[Seeding] Population to seed is 0. Skipping seeding.");
-	    		return new ArrayList<Solution>();
-	    	}
-	    	System.out.println("[Seeding] Seeding porcentage define at "+ reloadPercentage + "%. Searching for "+seedingNumSolutions+" solutions");
-	    } catch (Exception e) {
-	    	System.out.println("[Seeding] No RELOAD_KEYWORD found. Skipping seeding.");
-	    	return new ArrayList<Solution>();
-	    }
-	    
-    	
-    	
+	    //--- Get the number of solutions to seed (SEED_PERCENTAGE)
+	    Seeding.seedingNumSolutions = getNumSolutions2Seed(populationSize);
+	    if (Seeding.seedingNumSolutions == 0) { return new ArrayList<Solution>(); }
 	    
 	    //--- Get the seeding strategy (SEED_TYPE)
-	    String seedType = Utility.getProperty(Constants.SEED_TYPE).toUpperCase();
+	    Seeding.seedingStrategy = getSeedingStrategy();
+	    
+	    
+	    //--- Get data to be used for seeding (SEED_FROM_DATA)
+	    Seeding.clusterFromPareto = setClusterFrontSetBoth(); 
+	    
+	    
+	    
+	    //--- Get previous Pareto
+	    PreviousPareto prevPareto = new PreviousPareto(problem_, clusterFromPareto);
+//	    List<ParetoPoint> prevSolutions = prevPareto.getPrevSolutions();
+	    
+	    if (prevPareto.getPrevSolutions().isEmpty()) {
+	    	System.out.println("[Seeding] No seedable solutions found.");
+	    	return new ArrayList<Solution>();
+	    }
+	    if (prevPareto.getPrevSolutions().size()<= Seeding.seedingNumSolutions) { // if less reusable solutions than wanted
+	    	System.out.println("[Seeding] Seeding all "+ prevPareto.getPrevSolutions().size() +" previous reusable solutions");
+	    	return getSolutions2Seed(prevPareto.getPrevSolutions()); //seed all solutions
+	    }
+	    
+	    //--- Seed the population by clustering
+	    Seeding.seedingStrategy.setParameters();
+	    List<ParetoPoint> solutions2Seed = Seeding.seedingStrategy.getNSolutions(prevPareto, Seeding.seedingNumSolutions);
+	    
+	    System.out.println("[Seeding] Seeding "+solutions2Seed.size() + " solutions.");
+	    
+		return getSolutions2Seed(solutions2Seed);
+	}
+	
+	
+	private static ISeeding getSeedingStrategy() {
+		String seedType = Utility.getProperty(Constants.SEED_TYPE).toUpperCase();
 	    ISeeding seedStrategy = null;
 	    if (seedType.equals(Constants.SEED.RANDOM.toString())) // - random seeding
 	    	seedStrategy = new Random();
@@ -74,53 +96,58 @@ public class Seeding {
     		System.err.println("[Seeding] Invalid SEED_TYPE: " + seedType);
     		System.exit(0);}
 	    System.out.println("[Seeding] SEED_TYPE: "+ seedType);
-	    
-	    
-	    //--- Get data to be used for seeding (SEED_FROM_DATA)
-	    String clusterFromPareto = "";
-	    try {
-	    	clusterFromPareto = Utility.getProperty(Constants.SEED_CLUSTER_FROM_PARETO).toUpperCase();
-	    	if (clusterFromPareto.equals(Constants.SEED_FROM.FRONT.toString())) {
+	    return seedStrategy;
+	}
+
+
+	/**
+	 * This method sets the type of data to be used for seeding.
+	 * It can be either Pareto Front, Pareto Set, or both.
+	 * Set Seeding.clusterFromPareto.
+	 * @return 
+	 */
+	private static String setClusterFrontSetBoth() {
+		String clusterFrontSetBoth;
+		try {
+			clusterFrontSetBoth = Utility.getProperty(Constants.SEED_CLUSTER_FROM_PARETO).toUpperCase();
+	    	if (clusterFrontSetBoth.equals(Constants.SEED_FROM.FRONT.toString())) {
 		    	System.out.println("[Seeding] SEED_FROM_DATA. Using Pareto Front data.");
-		    } else if (clusterFromPareto.equals(Constants.SEED_FROM.SET.toString())) {
+		    } else if (clusterFrontSetBoth.equals(Constants.SEED_FROM.SET.toString())) {
 		    	System.out.println("[Seeding] SEED_FROM_DATA. Using Pareto Set data.");
-		    } else if (clusterFromPareto.equals(Constants.SEED_FROM.BOTH.toString())) {
+		    } else if (clusterFrontSetBoth.equals(Constants.SEED_FROM.BOTH.toString())) {
 		    	System.out.println("[Seeding] SEED_FROM_DATA. Using both Pareto Set and Front data.");
 		    } else { // error
-		    	System.err.println("[Seeding] Invalid SEED_FROM_DATA: " + clusterFromPareto);
+		    	System.err.println("[Seeding] Invalid SEED_FROM_DATA: " + clusterFrontSetBoth);
 		    	System.exit(0);}
 	    }
 	    catch (Exception e) {
 	    	System.out.println("[Seeding] No SEED_FROM_DATA found. Using Pareto Front data.");
-	    	clusterFromPareto = Constants.SEED_FROM.FRONT.toString();
+	    	clusterFrontSetBoth = Constants.SEED_FROM.FRONT.toString();
 	    }
-	    if (clusterFromPareto.isEmpty()) {
+	    if (clusterFrontSetBoth.isEmpty()) {
 	    	System.out.println("[Seeding] No data type defined. Using Front.");
-	    	clusterFromPareto = "Front";
+	    	clusterFrontSetBoth = Constants.SEED_FROM.FRONT.toString();
 	    }
-	    
-	    
-	    //--- Get previous solutions from file
-	    List<ParetoPoint> prevSolutions =  getPreviousSolutions(problem_, clusterFromPareto);
-	    if (prevSolutions.isEmpty()) {
-	    	System.out.println("[Seeding] No seedable solutions found.");
-	    	return new ArrayList<Solution>();
-	    }
-	    if (prevSolutions.size()<= seedingNumSolutions) { // if less reusable solutions than wanted
-	    	System.out.println("[Seeding] Seeding all "+ prevSolutions.size() +" previous reusable solutions");
-	    	return getSolutions2Seed(prevSolutions);
-	    }
-	    
-	    //--- Seed the population
-	    seedStrategy.setParameters();
-	    List<ParetoPoint> solutions2Seed = seedStrategy.getNSolutions(prevSolutions, seedingNumSolutions);
-	    
-	    System.out.println("[Seeding] Seeding "+solutions2Seed.size() + " solutions.");
-	    
-		return getSolutions2Seed(solutions2Seed);
+	    return clusterFrontSetBoth;
 	}
 	
 	
+	private static Integer getNumSolutions2Seed(int populationSize) {
+		Integer seedingNumSolutions = 0;
+	    try {
+	    	String reloadPercentage = Utility.getProperty(Constants.SEED_PERCENTAGE);
+	    	seedingNumSolutions = reloadPercentage.isEmpty() ? 0 : Math.round( Integer.parseInt(Utility.getProperty(Constants.SEED_PERCENTAGE)) * populationSize / 100.0f);
+	    	if (seedingNumSolutions == 0) {
+	    		System.out.println("[Seeding] Population to seed is 0. Skipping seeding.");
+	    		return 0;
+	    	}
+	    	System.out.println("[Seeding] Seeding porcentage define at "+ reloadPercentage + "%. Searching for "+seedingNumSolutions+" solutions");
+	    } catch (Exception e) {
+	    	System.out.println("[Seeding] No RELOAD_KEYWORD found. Skipping seeding.");
+	    	return 0;
+	    }
+	    return seedingNumSolutions;
+	}
 	
 	/**
 	 * Retrieve JMetal solutions from ParetoPoint objects
@@ -202,41 +229,45 @@ public class Seeding {
 	* @throws ClassNotFoundException
 	* @throws JMException
 	*/
-    private static ArrayList<ParetoPoint> getPreviousSolutions(Problem problem_, String clusterFromPareto) throws ClassNotFoundException, JMException {
-	   // Read previous Pareto sol files
-	   List<String> solutionLines_set =  readPreviousPopulationFile("Set");
-	   List<String> solutionLines_front =  readPreviousPopulationFile("Front");
-	   
-	   ArrayList<ParetoPoint> points = new ArrayList<ParetoPoint>();
-	   
-	   // Convert the list of strings to a list of Point objects
-	   for (int i = 0; i < solutionLines_set.size(); i++) {
-		   // Parse previous solution
-	       String[] set_str_list = solutionLines_set.get(i).trim().split("\\s");
-           String[] front_str_list = solutionLines_front.get(i).trim().split("\\s");
-		   
-           // create point object
-           List<Double> setValuesD = new ArrayList<Double>(); 
-   		   List<Integer> setValuesI = new ArrayList<Integer>();
-   		   List<Double> frontValues = new ArrayList<Double>();
-   		   
-   		   for (String  sol: set_str_list) {
-   			   try {
-   				   int val=Integer.parseInt(sol);
-   				   setValuesI.add(val);
-   			   } catch (NumberFormatException e) {
-   				   double val=Double.parseDouble(sol);
-   				   setValuesD.add(val);
-   			   }
-   		   }
-   		   for (String sol: front_str_list) {
-			   double val=Double.parseDouble(sol);
-			   frontValues.add(val);
-   		   }
-   		   points.add(new ParetoPoint(setValuesD, setValuesI, frontValues, problem_,clusterFromPareto));
-	   }
-	return points;
-	}
-	   
+//    private static ArrayList<ParetoPoint> getPreviousSolutions(Problem problem_, String clusterFromPareto) throws ClassNotFoundException, JMException {
+//	   // Read previous Pareto sol files
+//	   List<String> solutionLines_set =  readPreviousPopulationFile("Set");
+//	   List<String> solutionLines_front =  readPreviousPopulationFile("Front");
+//	   
+//	   ArrayList<ParetoPoint> points = new ArrayList<ParetoPoint>();
+//	   
+//	   // Convert the list of strings to a list of Point objects
+//	   for (int i = 0; i < solutionLines_set.size(); i++) {
+//		   // Parse previous solution
+//	       String[] set_str_list = solutionLines_set.get(i).trim().split("\\s");
+//           String[] front_str_list = solutionLines_front.get(i).trim().split("\\s");
+//		   
+//           // create point object
+//           List<Double> setValuesD = new ArrayList<Double>();   //doubles
+//   		   List<Integer> setValuesI = new ArrayList<Integer>(); //integers
+//   		   List<Double> frontValues = new ArrayList<Double>();
+//   		   
+//   		   for (String  sol: set_str_list) {
+//   			   try {
+//   				   int val=Integer.parseInt(sol);
+//   				   setValuesI.add(val);
+//   			   } catch (NumberFormatException e) {
+//   				   double val=Double.parseDouble(sol);
+//   				   setValuesD.add(val);
+//   			   }
+//   		   }
+//   		   for (String sol: front_str_list) {
+//			   double val=Double.parseDouble(sol);
+//			   frontValues.add(val);
+//   		   }
+//   		   
+//   		   
+//   		   // add point to list
+//   		   points.add(new ParetoPoint(setValuesD, setValuesI, frontValues, problem_,clusterFromPareto));
+//	   }
+//	   
+//	return points;
+//	}
+//	   
 	   
 }

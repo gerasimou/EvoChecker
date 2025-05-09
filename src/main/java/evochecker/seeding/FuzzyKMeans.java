@@ -12,6 +12,7 @@ import org.apache.commons.math3.ml.distance.EuclideanDistance;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
 import evochecker.seeding.encoding.ParetoPoint;
+import evochecker.seeding.encoding.PreviousPareto;
 import evochecker.seeding.encoding.ParetoPointW.ParetoPointWrapper;
 
 
@@ -33,8 +34,11 @@ public class FuzzyKMeans implements ISeeding {
 	 * @param seedingNumSolutions
 	 * @return
 	 */
-	public List<ParetoPoint> getNSolutions(List<ParetoPoint> prevSolutions, Integer seedingNumSolutions) {
+	public List<ParetoPoint> getNSolutions(PreviousPareto prevPareto, Integer seedingNumSolutions) {
 	    
+		// get previous solutions
+		List<ParetoPoint> prevSolutions = prevPareto.getPrevSolutions();
+		
 		List<ParetoPointWrapper> clusterInput = new ArrayList<ParetoPointWrapper>(prevSolutions.size());
 		for (ParetoPoint pp : prevSolutions)
 		    clusterInput.add(new ParetoPointWrapper(pp));

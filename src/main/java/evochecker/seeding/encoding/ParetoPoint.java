@@ -66,6 +66,7 @@ public class ParetoPoint {
     
     /**
     * Get Pareto front or/and set values combined as double[]
+    * NOTE: Only used for the clustering process
     */
     public double[] getAllVals() {
     	//Convert List<Double> to double[]
