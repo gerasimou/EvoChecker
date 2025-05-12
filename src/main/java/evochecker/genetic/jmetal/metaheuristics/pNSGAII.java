@@ -20,15 +20,31 @@
 
 package evochecker.genetic.jmetal.metaheuristics;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import evochecker.EvoChecker;
+import evochecker.EvoCheckerType;
 import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.FileUtil;
 import evochecker.auxiliary.Utility;
 import evochecker.evaluator.IParallelEvaluator;
+import evochecker.exception.EvoCheckerException;
+import evochecker.genetic.GenotypeFactory;
+import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.jmetal.metaheuristics.settings.MOCell_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
+import evochecker.language.parser.ModelInstantiator;
+import evochecker.language.parser.IModelInstantiator;
+import evochecker.language.parser.ModelInstantiatorParametric;
+import evochecker.plotting.PlotFactory;
+import evochecker.properties.Property;
+import evochecker.properties.PropertyFactory;
 import evochecker.seeding.Seeding;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
@@ -76,7 +92,8 @@ public class pNSGAII extends Algorithm {
     int populationSize;
     int maxEvaluations;
     int evaluations;
-    int numberOfThreads ;
+    int numberOfThreads;
+    int nParetoSaved = 0;
     
     QualityIndicator indicators; // QualityIndicator object
     int requiredEvaluations; // Use in the example of use of the
@@ -176,7 +193,7 @@ public class pNSGAII extends Algorithm {
 
       // Obtain the next front
       front = ranking.getSubfront(index);
-
+      
       while ((remain > 0) && (remain >= front.size())) {
         //Assign crowding distance to individuals
         distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
@@ -235,17 +252,24 @@ public class pNSGAII extends Algorithm {
       }// if
       
       
-      
-//	  	//Save the pareto set every 25% evaluations
-//	  	if (maxEvaluations*times/4 <= evaluations){
-//	  		System.out.println("Saving Pareto set");
-//	  		Ranking rank = new Ranking(population);
-//	  		SolutionSet paretoSet = rank.getSubfront(0);
-//	  		paretoSet.printVariablesToFile("data/VAR_NSGAII"+times);
-//	  		paretoSet.printObjectivesToFile("data/FUN_NSGAII"+times);
-//	  		times ++;
-//	  	}
-      
+      //Save the Pareto set every N evaluations
+      nParetoSaved ++;
+      // TODO: Fix reading from the properties file
+      //if (maxEvaluations%Integer.parseInt(Utility.getProperty(Constants.SAVE_PARETO_EVERY_N_ITERATIONS))==0) {
+	  if (maxEvaluations%1==0) {
+	  	System.out.println("Saving Pareto set" + nParetoSaved);
+	  	try {
+			exportResults(nParetoSaved, population);
+		} catch (JMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EvoCheckerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	  }
+     
+	System.out.println("");
     } // while
 
     parallelEvaluator_.stopEvaluator();
@@ -260,8 +284,116 @@ public class pNSGAII extends Algorithm {
     //ranking.getSubfront(0).printFeasibleFUN("FUN_NSGAII");
     return ranking.getSubfront(0);
   } // execute
+  
+  
+  /*
+   * Save the population to file
+   */
+  /**
+	 * Export solutions into files
+	 * @param population
+	 * @throws JMException
+ * @throws EvoCheckerException 
+	 */
+	private void exportResults(int nPareto, SolutionSet solutions) throws JMException, EvoCheckerException {
+		
+		//-------- ---------------------------------------------------
+		// a) Set variables as in "EvoChecker.java -- 
+		//--- from initialiseUsingSettingsProvided method
+		// Set variables : note that these must be as in the EvoChecker.java exportResults
+		String modelFilename 		= new File(Utility.getProperty(Constants.MODEL_FILE_KEYWORD)).getAbsolutePath();
+		String propertiesFilename	= new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD)).getAbsolutePath();
+		String algorithmName		= Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
+		String problemName = Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
+		EvoCheckerType ecType = null;
+		switch (EvoCheckerType.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_TYPE).toUpperCase())) {
+			case NORMAL		: ecType = EvoCheckerType.NORMAL; break;
+			case PARAMETRIC	: ecType = EvoCheckerType.PARAMETRIC; break;
+//			case REGION		: ecType = EvoCheckerType.REGION; 
+//							  throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
+		}
+		
+		//--- from initializeProblem method
+		IModelInstantiator modelInstantiator = null;
+		
+		switch (ecType) {
+			case NORMAL		: modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename); break;
+			case PARAMETRIC	: modelInstantiator = new ModelInstantiatorParametric(modelFilename, propertiesFilename);break;
+//			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
+		}
+		List<AbstractGene> genes = GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList(), false);
+		
+		modelInstantiator.createMapping();
+		
+		// --from initialiseProperties method
+		String str = modelInstantiator.getConcreteModel(genes);
+		List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
+		List<Property> objectivesList  = list.get(0);
+		List<Property> constraintsList = list.get(1);
+		
+		//--- from makeInitialisations method
+		String outputDir = "data" + File.separator 
+				+ Utility.getProperty(Constants.PROBLEM_KEYWORD)   + File.separator 
+				+ Utility.getProperty(Constants.ALGORITHM_KEYWORD) + File.separator;
+		String paretoFrontFile = null;
+		String paretoSetFile = null;
+		
+		
+		//------------------------------------------------------------
+		// b) Export results
+		// ---  exportResults method
+		String n = String.valueOf(nPareto); //<---- identifier
+		System.out.println("-------------------------------------------------");
+		System.out.println("SOLUTIONS: \t" + solutions.size());
+		System.out.println(n);
 
-
-
+		String identifier	= problemName +"_"+ algorithmName +"_"+ Utility.getTimeStamp();
+		String frontFile	= outputDir + identifier + "_" + n + "_Front";
+		String setFile		= outputDir  + identifier +"_" + n + "_Set";
+		 try {
+			File pf = File.createTempFile(identifier,"_" + n + "_Front", new File(outputDir));
+			File ps = File.createTempFile(identifier,"_" + n + "_Set", new File(outputDir));
+			
+			frontFile 	= pf.getAbsolutePath();
+			setFile		= ps.getAbsolutePath();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		//generate and save headers
+//		StringBuilder setHeader = new StringBuilder();
+//		for (AbstractGene gene : genes)
+//			setHeader.append(gene.getName() +" ");
+		String setHeader = String.join("\t", GenotypeFactory.getEvolvableNames());
+		FileUtil.saveToFile(setFile, setHeader +"\n", true);
+		StringBuilder frontHeader = new StringBuilder();
+		Iterator<Property> it = objectivesList.iterator();
+		while (it.hasNext()) {
+//		for (Property p : objectivesList) {
+			Property p = it.next();
+			frontHeader.append(p.getExpression());
+			if (it.hasNext())
+				frontHeader.append("\t");
+		}
+		FileUtil.saveToFile(frontFile, frontHeader.toString(), true);
+		
+		List<Solution> solutionList = new ArrayList<Solution>();
+		for (int i=0; i<solutions.size(); i++)
+			solutionList.add(solutions.get(i));
+		Utility.printObjectivesToFile(frontFile, solutionList, objectivesList);
+		Utility.printVariablesToFile2(setFile, solutionList, GenotypeFactory.getGeneEvolvableMap(), genes);
+		
+		//Assign 
+		paretoFrontFile  = frontFile;
+		paretoSetFile	 = setFile; 
+//		solutions.printObjectivesToFile(frontFile);
+//		solutions.printVariablesToFile(setFile);
+		
+		System.out.println("\nPareto Front and Pareto set saved at: " + outputDir);
+		System.out.println("Pareto Front: " + frontFile);
+		System.out.println("Pareto Set: "   + setFile);
+		
+	}
 
 } // pNSGAII

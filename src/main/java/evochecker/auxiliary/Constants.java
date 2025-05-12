@@ -142,6 +142,8 @@ public class Constants {
   public static final String SEED_DBSCAN_EPS = "SEED_DBSCAN_EPS";
 
   public static final String SEED_DBSCAN_MINPTS = "SEED_DBSCAN_MINPTS";
+
+  public static final String SAVE_PARETO_EVERY_N_ITERATIONS = "SAVE_PARETO_EVERY_N_ITERATIONS";
   
   
   /** Seeding strategies currently supported*/
