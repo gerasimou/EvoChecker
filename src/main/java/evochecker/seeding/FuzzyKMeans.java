@@ -41,7 +41,7 @@ public class FuzzyKMeans implements ISeeding {
 		
 		List<ParetoPointWrapper> clusterInput = new ArrayList<ParetoPointWrapper>(prevSolutions.size());
 		for (ParetoPoint pp : prevSolutions)
-		    clusterInput.add(new ParetoPointWrapper(pp));
+		    clusterInput.add(new ParetoPointWrapper(pp,prevPareto));
 		
 		// initialize a new clustering algorithm.
 		int numClusters = seedingNumSolutions;

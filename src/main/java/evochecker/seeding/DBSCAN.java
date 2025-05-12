@@ -41,7 +41,7 @@ public class DBSCAN implements ISeeding {
 		
 		List<ParetoPointWrapper> clusterInput = new ArrayList<ParetoPointWrapper>(prevSolutions.size());
 		for (ParetoPoint pp : prevSolutions)
-		    clusterInput.add(new ParetoPointWrapper(pp));
+		    clusterInput.add(new ParetoPointWrapper(pp, prevPareto));
 		
 		// initialize a new clustering algorithm.
 		DBSCANClusterer<ParetoPointWrapper> clusterer = new DBSCANClusterer<ParetoPointWrapper>(this.eps, this.minPts, this.distanceMeasure);

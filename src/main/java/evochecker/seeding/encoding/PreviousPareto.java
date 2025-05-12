@@ -199,5 +199,14 @@ public class PreviousPareto {
     
 	public List<Double> getMaxVals() {
 		return this.maxVals;
-	}    
+	}
+
+
+	public double getMinVals(int i) {
+		return this.minVals.get(i);
+	}
+	
+	public double getMaxVals(int i) {
+		return this.maxVals.get(i);
+	}
 }
