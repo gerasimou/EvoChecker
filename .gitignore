@@ -1,5 +1,11 @@
 *.class
 
+.classpath
+.project
+.settings/*
+.vscode
+data
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
