@@ -152,151 +152,175 @@ public class pNSGAII extends Algorithm {
 	}
     
     
+    //===============================
+    // Save Pareto front/set every N evaluations (if defined SAVE_PARETO_EVERY_N_ITERATIONS)
+	  try {
+		  nParetoSaved ++;
+		  Ranking ranking2Save = new Ranking(population); //save only non-dominated
+		  exportResults(nParetoSaved, ranking2Save.getSubfront(0), maxEvaluations);
+	  } catch (JMException | EvoCheckerException e) {e.printStackTrace();}
+	//===============================
+    
+    
     // Generations 
     while (evaluations < maxEvaluations) {
     	System.out.println("Evaluations:\t" + evaluations);
-    	    	
-      // Create the offSpring solutionSet      
-      offspringPopulation = new SolutionSet(populationSize);
-      Solution[] parents = new Solution[2];
-      for (int i = 0; i < (populationSize / 2); i++) {
-        if (evaluations < maxEvaluations) {
-          //obtain parents
-          parents[0] = (Solution) selectionOperator.execute(population);
-          parents[1] = (Solution) selectionOperator.execute(population);
-          Solution[] offSpring = (Solution[]) crossoverOperator.execute(parents);
-          mutationOperator.execute(offSpring[0]);
-          mutationOperator.execute(offSpring[1]);
-          // parallel execution
-          parallelEvaluator_.addSolutionForEvaluation(offSpring[0]) ;
-          parallelEvaluator_.addSolutionForEvaluation(offSpring[1]) ;
-        } // if                            
-      } // for
+	    
+    	// Create the offSpring solutionSet      
+	    offspringPopulation = new SolutionSet(populationSize);
+	    Solution[] parents = new Solution[2];
+	    for (int i = 0; i < (populationSize / 2); i++) {
+	    	if (evaluations < maxEvaluations) {
+		        //obtain parents
+		        parents[0] = (Solution) selectionOperator.execute(population);
+		        parents[1] = (Solution) selectionOperator.execute(population);
+		        Solution[] offSpring = (Solution[]) crossoverOperator.execute(parents);
+		        mutationOperator.execute(offSpring[0]);
+		        mutationOperator.execute(offSpring[1]);
+		        // parallel execution
+		        parallelEvaluator_.addSolutionForEvaluation(offSpring[0]) ;
+		        parallelEvaluator_.addSolutionForEvaluation(offSpring[1]) ;
+	        } // if                
+	    } // for
+	    
+	    List<Solution> solutions = parallelEvaluator_.parallelEvaluation() ;
+	    
+	    for(Solution solution : solutions) {
+	    	offspringPopulation.add(solution);
+	        evaluations++;	    
+	    }
+	
+	    // Create the solutionSet union of solutionSet and offSpring
+	    union = ((SolutionSet) population).union(offspringPopulation);
+	
+	    // Ranking the union
+	    Ranking ranking = new Ranking(union);
+
+	    int remain = populationSize;
+	    int index = 0;
+	    SolutionSet front = null;
+	    population.clear();
+
+	    // Obtain the next front
+	    front = ranking.getSubfront(index);
       
-      List<Solution> solutions = parallelEvaluator_.parallelEvaluation() ;
-
-      for(Solution solution : solutions) {
-        offspringPopulation.add(solution);
-        evaluations++;	    
-      }
-
-      // Create the solutionSet union of solutionSet and offSpring
-      union = ((SolutionSet) population).union(offspringPopulation);
-
-      // Ranking the union
-      Ranking ranking = new Ranking(union);
-
-      int remain = populationSize;
-      int index = 0;
-      SolutionSet front = null;
-      population.clear();
-
-      // Obtain the next front
-      front = ranking.getSubfront(index);
-      
-      while ((remain > 0) && (remain >= front.size())) {
-        //Assign crowding distance to individuals
-        distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
-        //Add the individuals of this front
-        for (int k = 0; k < front.size(); k++) {
-          population.add(front.get(k));
-        } // for
-
-        //Decrement remain
-        remain = remain - front.size();
-
-        //Obtain the next front
-        index++;
-        if (remain > 0) {
-          front = ranking.getSubfront(index);
-        } // if        
-      } // while
-
-      // Remain is less than front(index).size, insert only the best one
-      if (remain > 0) {  // front contains individuals to insert                        
-        distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
-        front.sort(new CrowdingComparator());
-        for (int k = 0; k < remain; k++) {
-          population.add(front.get(k));
-        } // for
-
-        remain = 0;
-      } // if                               
-      
-      
-      //TODO
-      // get HV
-      // get HV of the previous Pareto sol
-      // compare, if between 1 or 2% stop
-      // HV_prev = 
-      // HV_current =
-      // if (HV_current >= (1 - 0.02) * HV_prev) { ...
-      
-      //TODO
-      // use this to stop the algorithm for better comparison with and without seeding
-      
-      
-      
-
-      // This piece of code shows how to use the indicator object into the code
-      // of NSGA-II. In particular, it finds the number of evaluations required
-      // by the algorithm to obtain a Pareto front with a hypervolume higher
-      // than the hypervolume of the true Pareto front.
-      if ((indicators != null) &&
-          (requiredEvaluations == 0)) {
-    	  // TODO: compare the current population with the previous Pareto front
-    	double HV = indicators.getHypervolume(population);
-        if (HV >= (0.98 * indicators.getTrueParetoFrontHypervolume())) {
-          requiredEvaluations = evaluations;
-        } // if
-      }// if
-      
-      
-      //Save the Pareto set every N evaluations
-      nParetoSaved ++;
-      // TODO: Fix reading from the properties file
-      //if (maxEvaluations%Integer.parseInt(Utility.getProperty(Constants.SAVE_PARETO_EVERY_N_ITERATIONS))==0) {
-	  if (maxEvaluations%1==0) {
-	  	System.out.println("Saving Pareto set" + nParetoSaved);
-	  	try {
-			exportResults(nParetoSaved, population);
-		} catch (JMException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (EvoCheckerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	  }
-     
-	System.out.println("");
-    } // while
-
-    parallelEvaluator_.stopEvaluator();
-
-    // Return as output parameter the required evaluations
-    setOutputParameter("evaluations", requiredEvaluations);
-
-    // Return the first non-dominated front
-    Ranking ranking = new Ranking(population);
-    //ranking.getSubfront(0).printObjectivesToFile("data/FUN_NSGAII");
-    //ranking.getSubfront(0).printVariablesToFile("data/VAR_NSGAII");
-    //ranking.getSubfront(0).printFeasibleFUN("FUN_NSGAII");
-    return ranking.getSubfront(0);
+	    while ((remain > 0) && (remain >= front.size())) {
+	        //Assign crowding distance to individuals
+	        distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
+	        //Add the individuals of this front
+	        for (int k = 0; k < front.size(); k++) {
+	        	population.add(front.get(k));
+	        } // for
+        
+	        //Decrement remain
+		    remain = remain - front.size();
+		
+		    //Obtain the next front
+		    index++;
+		    if (remain > 0) {
+		    	front = ranking.getSubfront(index);
+	        } // if
+	    } // while
+	
+	    // Remain is less than front(index).size, insert only the best one
+	    if (remain > 0) {  // front contains individuals to insert                        
+	    	distance.crowdingDistanceAssignment(front, problem_.getNumberOfObjectives());
+	        front.sort(new CrowdingComparator());
+	        for (int k = 0; k < remain; k++) {
+	        	population.add(front.get(k));
+	        } // for
+	        remain = 0;
+	    } // if                               
+	      
+	      
+	      //TODO
+	      // get HV
+	      // get HV of the previous Pareto sol
+	      // compare, if between 1 or 2% stop
+	      // HV_prev = 
+	      // HV_current =
+	      // if (HV_current >= (1 - 0.02) * HV_prev) { ...
+	      
+	      //TODO
+	      // use this to stop the algorithm for better comparison with and without seeding
+	      
+	      
+	      
+	
+	      // This piece of code shows how to use the indicator object into the code
+	      // of NSGA-II. In particular, it finds the number of evaluations required
+	      // by the algorithm to obtain a Pareto front with a hypervolume higher
+	      // than the hypervolume of the true Pareto front.
+	      if ((indicators != null) &&
+	          (requiredEvaluations == 0)) {
+	    	  // TODO: compare the current population with the previous Pareto front
+	    	double HV = indicators.getHypervolume(population);
+	        if (HV >= (0.98 * indicators.getTrueParetoFrontHypervolume())) {
+	          requiredEvaluations = evaluations;
+	        } // if
+	      }// if
+	      
+	      
+		  //===============================
+	      // Save Pareto front/set every N evaluations (if defined SAVE_PARETO_EVERY_N_ITERATIONS)
+		  try {
+			  nParetoSaved ++;
+			  Ranking ranking2Save = new Ranking(population); //save only non-dominated
+			  exportResults(nParetoSaved, ranking2Save.getSubfront(0), maxEvaluations);
+		  } catch (JMException | EvoCheckerException e) {e.printStackTrace();}
+		//===============================
+	  
+	  } // while
+	
+      parallelEvaluator_.stopEvaluator();
+	
+	  // Return as output parameter the required evaluations
+	    setOutputParameter("evaluations", requiredEvaluations);
+	
+	    // Return the first non-dominated front
+	    Ranking ranking = new Ranking(population);
+	    //ranking.getSubfront(0).printObjectivesToFile("data/FUN_NSGAII");
+	    //ranking.getSubfront(0).printVariablesToFile("data/VAR_NSGAII");
+	    //ranking.getSubfront(0).printFeasibleFUN("FUN_NSGAII");
+	    return ranking.getSubfront(0);
   } // execute
   
   
-  /*
-   * Save the population to file
-   */
-  /**
-	 * Export solutions into files
-	 * @param population
-	 * @throws JMException
- * @throws EvoCheckerException 
-	 */
-	private void exportResults(int nPareto, SolutionSet solutions) throws JMException, EvoCheckerException {
+    /*
+    * Save the population to file if SAVE_PARETO_EVERY_N_ITERATIONS is defined
+    * @param maxEvaluations 
+	* @param population
+	* @throws JMException
+	* @throws EvoCheckerException 
+	*/
+	private void exportResults(int nPareto, SolutionSet solutions, int maxEvaluations) throws JMException, EvoCheckerException {
+		int nIterFileSaving = Integer.MAX_VALUE;
+		//check if Pareto set to be saved (SAVE_PARETO_EVERY_N_ITERATIONS)
+		try {
+			nIterFileSaving = Integer.parseInt(Utility.getProperty(Constants.SAVE_PARETO_EVERY_N_ITERATIONS));
+			if (nIterFileSaving <= 0) {
+				return;
+			}
+		}
+		catch (NullPointerException ex) {
+			return;
+		}
+		if (maxEvaluations%nIterFileSaving==0) {
+	      _exportResults(nPareto, solutions);
+	    }
+	}
+	
 		
+	/* * Save the population to file as in the EvoChecker.java file
+	 * 
+	 * @param nPareto
+	 * @param solutions
+	 * @throws JMException
+	 * @throws EvoCheckerException 
+	 */
+	private void _exportResults(int nPareto, SolutionSet solutions) throws JMException, EvoCheckerException {
+		// Print
+		System.out.println("Saving Pareto set" + nPareto);
 		//-------- ---------------------------------------------------
 		// a) Set variables as in "EvoChecker.java -- 
 		//--- from initialiseUsingSettingsProvided method
@@ -309,8 +333,8 @@ public class pNSGAII extends Algorithm {
 		switch (EvoCheckerType.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_TYPE).toUpperCase())) {
 			case NORMAL		: ecType = EvoCheckerType.NORMAL; break;
 			case PARAMETRIC	: ecType = EvoCheckerType.PARAMETRIC; break;
-//			case REGION		: ecType = EvoCheckerType.REGION; 
-//							  throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
+			case REGION		: ecType = EvoCheckerType.REGION; 
+							  throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
 		}
 		
 		//--- from initializeProblem method
@@ -319,7 +343,7 @@ public class pNSGAII extends Algorithm {
 		switch (ecType) {
 			case NORMAL		: modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename); break;
 			case PARAMETRIC	: modelInstantiator = new ModelInstantiatorParametric(modelFilename, propertiesFilename);break;
-//			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
+			case REGION		: throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");			
 		}
 		List<AbstractGene> genes = GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList(), false);
 		
@@ -329,14 +353,14 @@ public class pNSGAII extends Algorithm {
 		String str = modelInstantiator.getConcreteModel(genes);
 		List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
 		List<Property> objectivesList  = list.get(0);
-		List<Property> constraintsList = list.get(1);
+//		List<Property> constraintsList = list.get(1);
 		
 		//--- from makeInitialisations method
 		String outputDir = "data" + File.separator 
 				+ Utility.getProperty(Constants.PROBLEM_KEYWORD)   + File.separator 
 				+ Utility.getProperty(Constants.ALGORITHM_KEYWORD) + File.separator;
-		String paretoFrontFile = null;
-		String paretoSetFile = null;
+//		String paretoFrontFile = null;
+//		String paretoSetFile = null;
 		
 		
 		//------------------------------------------------------------
@@ -385,8 +409,8 @@ public class pNSGAII extends Algorithm {
 		Utility.printVariablesToFile2(setFile, solutionList, GenotypeFactory.getGeneEvolvableMap(), genes);
 		
 		//Assign 
-		paretoFrontFile  = frontFile;
-		paretoSetFile	 = setFile; 
+//		paretoFrontFile  = frontFile;
+//		paretoSetFile	 = setFile; 
 //		solutions.printObjectivesToFile(frontFile);
 //		solutions.printVariablesToFile(setFile);
 		
