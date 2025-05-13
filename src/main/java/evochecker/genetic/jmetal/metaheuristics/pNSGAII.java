@@ -126,6 +126,7 @@ public class pNSGAII extends Algorithm {
     mutationOperator = operators_.get("mutation");
     crossoverOperator = operators_.get("crossover");
     selectionOperator = operators_.get("selection");
+        
     
     // Create the initial solutionSet
     Solution newSolution;
@@ -287,7 +288,8 @@ public class pNSGAII extends Algorithm {
   
   
     /*
-    * Save the population to file if SAVE_PARETO_EVERY_N_ITERATIONS is defined
+    * Save the Pareto front/set to file if SAVE_PARETO_EVERY_N_ITERATIONS is defined
+    * and saves time to time.txt file.
     * @param maxEvaluations 
 	* @param population
 	* @throws JMException
@@ -298,29 +300,27 @@ public class pNSGAII extends Algorithm {
 		//check if Pareto set to be saved (SAVE_PARETO_EVERY_N_ITERATIONS)
 		try {
 			nIterFileSaving = Integer.parseInt(Utility.getProperty(Constants.SAVE_PARETO_EVERY_N_ITERATIONS));
-			if (nIterFileSaving <= 0) {
+			if (nIterFileSaving <= 0)
 				return;
-			}
 		}
 		catch (NullPointerException ex) {
 			return;
 		}
 		if (maxEvaluations%nIterFileSaving==0) {
-	      _exportResults(nPareto, solutions);
+			// Save Pareto front/set
+			_exportResults(nPareto, solutions);
+	      	// Save time
+			Utility.saveTimeToFile("iteration"+String.valueOf(nPareto));
 	    }
 	}
 	
 		
-	/* * Save the population to file as in the EvoChecker.java file
-	 * 
-	 * @param nPareto
-	 * @param solutions
-	 * @throws JMException
-	 * @throws EvoCheckerException 
+	/* 
+	 * Save the population to file as in the EvoChecker.java file
 	 */
 	private void _exportResults(int nPareto, SolutionSet solutions) throws JMException, EvoCheckerException {
 		// Print
-		System.out.println("Saving Pareto set" + nPareto);
+		System.out.println("Saving Pareto set, iter: " + nPareto);
 		//-------- ---------------------------------------------------
 		// a) Set variables as in "EvoChecker.java -- 
 		//--- from initialiseUsingSettingsProvided method

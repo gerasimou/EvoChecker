@@ -148,6 +148,7 @@ public class EvoChecker {
 	
 	public void start() {
 		long start = System.currentTimeMillis();
+		Utility.setStartTime(); //<-- save start time
 		
 		try {
 			//make initialisations
@@ -161,6 +162,7 @@ public class EvoChecker {
 
 			long end = System.currentTimeMillis();
 			executionTime = (end - start)/1000.0;
+			Utility.saveTimeToFile("end"); //<-- save final time
 
 			//5) save solutions
 			exportResults(outputDir);

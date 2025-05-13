@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -32,6 +33,8 @@ public class Utility {
 	
 	private static String fileName;
 	private static Properties properties;
+	
+	private static long startTime = -1;
 	
 	public static void setPropertiesFile (String filename) {
 		fileName = filename;
@@ -292,6 +295,45 @@ public class Utility {
 		  }
 		  return null;
 	}
+	  
+	  
+	  public static void setStartTime() {
+		  long time = System.currentTimeMillis();
+		  startTime = time;
+	  }
+	  
+	  public static void saveTimeToFile(String description) {
+		  //check if start time is set
+		  if (startTime == -1) {
+			  System.err.println("Start time not set. Cannot save execution time. Add Utility.setStartTime(); at the beginning of your program.");
+			  return;
+		  }
+		  //get execution time = current time - start time
+		  double executionTime = (System.currentTimeMillis() - Utility.startTime)/1000.0;
+		  // get file
+		  String identifier	= "time.txt" ;
+		  String outputDir = "data" + File.separator 
+					+ Utility.getProperty(Constants.PROBLEM_KEYWORD)   + File.separator 
+					+ Utility.getProperty(Constants.ALGORITHM_KEYWORD) + File.separator;
+		  File file	= new File(outputDir + File.separator + identifier);
+		  try { //check if file exists
+			  if (!file.exists()) {
+				  file.createNewFile();
+			  }
+		  } catch (IOException e) {
+			  e.printStackTrace();
+		  }
+		  // append to file
+		  try (FileWriter writer = new FileWriter(file, true)) {
+              writer.append(description + "\t" + executionTime + "\n");
+              writer.flush();  // Ensure content is written to file
+              System.out.println("Successfully appended 'a' to the file.");
+          } catch (IOException e) {
+			  System.err.println("An error occurred while appending to the file.");
+			  e.printStackTrace();
+			  System.exit(0);
+		  }
+	  }
 	
 	  
 	  
