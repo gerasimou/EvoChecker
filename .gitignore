@@ -4,7 +4,6 @@
 .project
 .settings/*
 .vscode
-data
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -21,3 +20,7 @@ hs_err_pid*
 
 #Ignore logs from Server response (model checker)
 Server*
+
+# Input/output files
+config.properties
+data/

@@ -19,7 +19,7 @@ public class ConfigurationChecker {
 	 * Check whether the experiment has been configured correctly 
 	 * @throws EvoCheckerException 
 	 */
-	public static void checkConfiguration() throws EvoCheckerException {
+	public static void checkConfiguration(Boolean commandLineInvoked) throws EvoCheckerException {
 		StringBuilder errors = new StringBuilder();
 		
 		String runtimeLibDir = Utility.runtimeLibsDirSpecified();
@@ -50,12 +50,12 @@ public class ConfigurationChecker {
 		if (Utility.getProperty(Constants.PROCESSORS_KEYWORD, NAN).equals(NAN))
 			errors.append(Constants.PROCESSORS_KEYWORD + " not found in configuration script!\n");
 
-		//check model file
-		if (Utility.getProperty(Constants.MODEL_FILE_KEYWORD, NAN).equals(NAN))
+		//check model file - not needed if specified in CLI
+		if (Utility.getProperty(Constants.MODEL_FILE_KEYWORD, NAN).equals(NAN) && !commandLineInvoked)
 			errors.append(Constants.MODEL_FILE_KEYWORD + " not found in configuration script!\n");
 
-		//check properties file
-		if (Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD, NAN).equals(NAN))
+		//check properties file - not needed if specified in CLI
+		if (Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD, NAN).equals(NAN) && !commandLineInvoked)
 			errors.append(Constants.PROPERTIES_FILE_KEYWORD + " not found in configuration script!\n");
 
 		//check problem name
