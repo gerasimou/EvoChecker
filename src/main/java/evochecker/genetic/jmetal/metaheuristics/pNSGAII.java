@@ -158,7 +158,7 @@ public class pNSGAII extends Algorithm {
 	  try {
 		  nParetoSaved ++;
 		  Ranking ranking2Save = new Ranking(population); //save only non-dominated
-		  exportResults(nParetoSaved, ranking2Save.getSubfront(0), maxEvaluations);
+		  exportResults(nParetoSaved, ranking2Save.getSubfront(0), evaluations, populationSize);
 	  } catch (JMException | EvoCheckerException e) {e.printStackTrace();}
 	//===============================
     
@@ -267,7 +267,7 @@ public class pNSGAII extends Algorithm {
 		  try {
 			  nParetoSaved ++;
 			  Ranking ranking2Save = new Ranking(population); //save only non-dominated
-			  exportResults(nParetoSaved, ranking2Save.getSubfront(0), maxEvaluations);
+			  exportResults(nParetoSaved, ranking2Save.getSubfront(0), evaluations, populationSize);
 		  } catch (JMException | EvoCheckerException e) {e.printStackTrace();}
 		//===============================
 	  
@@ -295,7 +295,7 @@ public class pNSGAII extends Algorithm {
 	* @throws JMException
 	* @throws EvoCheckerException 
 	*/
-	private void exportResults(int nPareto, SolutionSet solutions, int maxEvaluations) throws JMException, EvoCheckerException {
+	private void exportResults(int nPareto, SolutionSet solutions, int evaluations, int maxpopulationsize) throws JMException, EvoCheckerException {
 		int nIterFileSaving = Integer.MAX_VALUE;
 		//check if Pareto set to be saved (SAVE_PARETO_EVERY_N_ITERATIONS)
 		try {
@@ -306,7 +306,7 @@ public class pNSGAII extends Algorithm {
 		catch (NullPointerException ex) {
 			return;
 		}
-		if (maxEvaluations%nIterFileSaving==0) {
+		if (evaluations%(maxpopulationsize*nIterFileSaving)==0){
 			// Save Pareto front/set
 			_exportResults(nPareto, solutions);
 	      	// Save time
@@ -320,7 +320,7 @@ public class pNSGAII extends Algorithm {
 	 */
 	private void _exportResults(int nPareto, SolutionSet solutions) throws JMException, EvoCheckerException {
 		// Print
-		System.out.println("Saving Pareto set, iter: " + nPareto);
+		System.out.println("[pNSGAII] Saving Pareto set, iter: " + nPareto);
 		//-------- ---------------------------------------------------
 		// a) Set variables as in "EvoChecker.java -- 
 		//--- from initialiseUsingSettingsProvided method
