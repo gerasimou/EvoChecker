@@ -22,6 +22,7 @@ import java.util.List;
 
 // import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 
+import evochecker.initialisation.EvoCheckerInitialiser;
 import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.FileUtil;
@@ -121,7 +122,7 @@ public class EvoChecker {
 	private static String modelFilenameCli;
 	private static String propertiesFilenameCli;
 	private static String configFilePathCli;
-	private static boolean help = false;
+	private static boolean printHelpCli = false;
 
 	public EvoChecker() {
 
@@ -158,7 +159,7 @@ public class EvoChecker {
 		options.addOption(configFile);
 	}
 
-	private static void getArgs(String[] args) {
+	private static void parseArgs(String[] args) {
 		CommandLineParser parser = new DefaultParser();
 		try {
 			CommandLine line = parser.parse(options, args);
@@ -167,10 +168,10 @@ public class EvoChecker {
 			configFilePathCli = line.getOptionValue("cf");
 
 			if (line.hasOption("help")) {
-				help = true;
+				printHelpCli = true;
 			} else if (modelFilenameCli == null || propertiesFilenameCli == null || configFilePathCli == null) {
 				System.out.println("One or more options was not specified.");
-				help = true;
+				printHelpCli = true;
 			}
 
 		} catch (ParseException e) {
@@ -190,9 +191,9 @@ public class EvoChecker {
 		if (args.length > 0) {
 			System.out.println("EvoChecker command line arguments: " + Arrays.toString(args));
 			setUpCLI();
-			getArgs(args);
+			parseArgs(args);
 			commandLineInvoked = true;
-			if (help) {
+			if (printHelpCli) {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("headless", options);
 				return;
@@ -239,13 +240,32 @@ public class EvoChecker {
 
 	public void start() {
 		long start = System.currentTimeMillis();
+		EvoCheckerInitialiser initialiser = new EvoCheckerInitialiser();
 
 		try {
-			// make initialisations
-			makeInitialisations();
+			// // make initialisations
+			// makeInitialisations();
 
-			// 3) initialise algorithm
-			initialiseAlgorithm();
+			// // 3) initialise algorithm
+			// initialiseAlgorithm();
+
+			initialiser.initialiseEvoCheckerOptions();
+			initialiser.initializeEvoCheckerProblem();
+			initialiser.initialiseEvoCheckerAlgorithm();
+
+			modelFilename = initialiser.getModelFilename();
+			propertiesFilename = initialiser.getPropertiesFilename();
+			algorithmName = initialiser.getAlgorithmName();
+			problemName = initialiser.getProblemName();
+			ecType = initialiser.getEcType();
+
+			modelInstantiator = initialiser.getModelInstantiator();
+			genes = initialiser.getGenes();
+			objectivesList = initialiser.getObjectivesList();
+			constraintsList = initialiser.getConstraintsList();
+			problem = initialiser.getProblem();
+
+			algorithm = initialiser.getAlgorithm();
 
 			// 4) execute and save results
 			solutions = execute();
