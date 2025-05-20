@@ -50,12 +50,12 @@ in which case EvoChecker will access [config.properties](https://github.com/gera
 Alternatively, you may run:
 
 ```
-java -jar target/EvoChecker-1.1.1.jar -cf [path to config file] -pf [path to model file] -p [path to properties file, or formatted property string]
+java -jar target/EvoChecker-1.1.1.jar -cf [config path] -pf [model path] -p [properties file path, or property string]
 ```
 
-in which case the -pf and -p arguments will override the files specified in the config file (which may in fact be left unspecified for this usage).
+in which case the `-pf` and `-p` arguments will override the files specified in the config file (which may in fact be left unspecified for this usage).
 
-The -p option may be used to specify a properties file (e.g. [fxNano.pctl](https://github.com/gerasimou/EvoChecker/blob/master/models/FXParam/fxNano.pctl)) or a string containing the properties directly. For the latter method, the string should contain a series of objectives and constraints in the format:
+The `-p` option may be used to specify a properties file (e.g. [fxNano.pctl](https://github.com/gerasimou/EvoChecker/blob/master/models/FXParam/fxNano.pctl)) or a string containing the properties directly. For the latter method, the string should contain a series of objectives and constraints in the format:
 
 ```
 //[decorator]:[formula]
