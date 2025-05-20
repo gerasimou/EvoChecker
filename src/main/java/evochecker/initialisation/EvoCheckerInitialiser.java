@@ -43,7 +43,12 @@ public class EvoCheckerInitialiser {
     List<Property> objectivesList = null;
     List<Property> constraintsList = null;
     String outputDir = null;
-    Boolean commandLineInvoked = false;
+    Boolean useFileOverrides = false; // if true, model and properties
+                                      // filenames in config file are overridden
+                                      // by those specified in command line
+    Boolean allowUnspecifiedFiles = false; // if true, model and properties
+    // filenames in config file are not checked
+    // for existence
 
     public void initialiseEvoCheckerOptions()
 
@@ -58,19 +63,15 @@ public class EvoCheckerInitialiser {
 
             throws Exception {
         // 0) check configuration script
-        ConfigurationChecker.checkConfiguration(commandLineInvoked);
+        ConfigurationChecker.checkConfiguration();
+
+        // why do these have to be here specifically? Why can't I put them in initialiseProblem?
+        modelFilename = new File(Utility.getProperty(Constants.MODEL_FILE_KEYWORD)).getAbsolutePath();
+        propertiesFilename = new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD))
+                .getAbsolutePath();
+
 
         // 1) initialise problem
-        if (commandLineInvoked) {
-            modelFilename = new File(modelFilenameOverride).getAbsolutePath();
-            propertiesFilename = new File(propertiesFilenameOverride).getAbsolutePath();
-            System.out.println(
-                    "Model and properties specified in command line; these will overwrite those in the configuration file");
-        } else {
-            modelFilename = new File(Utility.getProperty(Constants.MODEL_FILE_KEYWORD)).getAbsolutePath();
-            propertiesFilename = new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD))
-                    .getAbsolutePath();
-        }
         algorithmName = Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
         problemName = Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
 
@@ -87,7 +88,7 @@ public class EvoCheckerInitialiser {
         }
     }
 
-    public void initializeEvoCheckerProblem() throws Exception {
+    public void initializeEvoCheckerProblem() throws EvoCheckerException {
 
         /*
          * Initialises the following:
@@ -99,6 +100,11 @@ public class EvoCheckerInitialiser {
          */
 
         // 1) parse model template
+
+
+        System.out.println("Model file: " + modelFilename);
+        System.out.println("Properties file: " + propertiesFilename);
+
         switch (ecType) {
             case NORMAL:
                 modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename);
@@ -156,6 +162,9 @@ public class EvoCheckerInitialiser {
      */
     public void initialiseEvoCheckerAlgorithm() throws Exception {
 
+        System.out.println("Algorithm: " + algorithmName); 
+        System.out.println("Problem: " + problemName);
+
         if (algorithmName != null) {
             if (algorithmName.equals(Constants.ALGORITHM.NSGAII.toString())) {
                 NSGAII_Settings nsgaiiSettings = new NSGAII_Settings(problemName, problem);
@@ -181,19 +190,21 @@ public class EvoCheckerInitialiser {
             else
                 throw new Exception("Algorithm not recognised");
         }
+
+
     }
 
     /**
      * Initialise data structure and variables for saving execution results
      */
-    protected static String initialiseOutputData() {
+    public void initialiseOutputData() {
         // create output dir
         String outputDir = "data" + File.separator
                 + Utility.getProperty(Constants.PROBLEM_KEYWORD) + File.separator
                 + Utility.getProperty(Constants.ALGORITHM_KEYWORD) + File.separator;
         FileUtil.createDir(outputDir);
 
-        return outputDir;
+        this.outputDir = outputDir;
 
         // int run = RODESExperimentRuns.getRun();
         // String outputFileSuffix = tolerance +"_"+ epsilon +"_"+ run;
@@ -246,21 +257,5 @@ public class EvoCheckerInitialiser {
 
     public String getOutputDir() {
         return outputDir;
-    }
-
-    public Boolean getCommandLineInvoked() {
-        return commandLineInvoked;
-    }
-
-    public void setModelFileNameOverride(String modelFilename) {
-        this.modelFilenameOverride = modelFilename;
-    }
-
-    public void setPropertiesFileNameOverride(String propertiesFilename) {
-        this.propertiesFilenameOverride = propertiesFilename;
-    }
-
-    public void setCommandLineInvoked(Boolean commandLineInvoked) {
-        this.commandLineInvoked = commandLineInvoked;
     }
 }

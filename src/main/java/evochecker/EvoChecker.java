@@ -212,6 +212,7 @@ public class EvoChecker {
 	}
 
 	public void setConfigurationFile(String configFile, String modelFile, String propertyFile) {
+		try {
 		Utility.setPropertiesFile(configFile);
 		if (modelFile != null) {
 			Utility.setModelFileOverride(modelFile);
@@ -219,39 +220,24 @@ public class EvoChecker {
 		if (propertyFile != null) {
 			Utility.setPropertiesFileOverride(propertyFile);
 		}
-	}
-
-	public void makeInitialisations() throws Exception {
-		// 0) check configuration script
-		ConfigurationChecker.checkConfiguration(commandLineInvoked);
-
-		// 1) initialise problem
-		initialiseUsingSettingsProvided();
-		initializeProblem();
-
-		// 2) initialise data structures and variables for saving data
-		outputDir = initialiseOutputData();
-
-		if (commandLineInvoked) {
-			System.out.println("Model file: " + Utility.getProperty(Constants.MODEL_FILE_KEYWORD) + "\nProperties file: "
-			+ Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD));
-		}
+		} catch (EvoCheckerException e) {
+			System.out.println("Error setting configuration: " + e.getMessage());
+		} 
 	}
 
 	public void start() {
 		long start = System.currentTimeMillis();
+
+		// set up initialisation and cmi options
 		EvoCheckerInitialiser initialiser = new EvoCheckerInitialiser();
 
 		try {
-			// // make initialisations
-			// makeInitialisations();
-
-			// // 3) initialise algorithm
-			// initialiseAlgorithm();
+			// make initialisations
 
 			initialiser.initialiseEvoCheckerOptions();
 			initialiser.initializeEvoCheckerProblem();
 			initialiser.initialiseEvoCheckerAlgorithm();
+			initialiser.initialiseOutputData();
 
 			modelFilename = initialiser.getModelFilename();
 			propertiesFilename = initialiser.getPropertiesFilename();
@@ -266,6 +252,8 @@ public class EvoChecker {
 			problem = initialiser.getProblem();
 
 			algorithm = initialiser.getAlgorithm();
+
+			outputDir = initialiser.getOutputDir();
 
 			// 4) execute and save results
 			solutions = execute();
@@ -286,143 +274,6 @@ public class EvoChecker {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Initialise the problem and the properties associated with the problem
-	 * Note that in the next iteration of this code,
-	 * the initialisation should be done by reading the properties file
-	 * 
-	 * @throws Exception
-	 */
-	protected void initializeProblem() throws Exception {
-		// 1) parse model template
-		switch (ecType) {
-			case NORMAL:
-				modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename);
-				break;
-			case PARAMETRIC:
-				modelInstantiator = new ModelInstantiatorParametric(modelFilename, propertiesFilename);
-				break;
-			case REGION:
-				throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
-		}
-
-		// 2) create chromosome
-		genes = GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList(), false);
-
-		// 3) create (gene,evolvable element) pairs
-		modelInstantiator.createMapping();
-
-		// 4) create properties list
-		initialiseProperties();
-
-		// 5) instantiate the problem
-		switch (ecType) {
-			case NORMAL:
-				problem = new GeneticProblem(genes, modelInstantiator, objectivesList, constraintsList, problemName);
-				break;
-			// case PARAMETRIC : problem = new GeneticProblemParametric (genes,
-			// modelInstantiator, objectivesList, constraintsList, problemName);break;
-			case PARAMETRIC:
-				problem = new GeneticProblemParametricParallel(genes, modelInstantiator, objectivesList,
-						constraintsList, problemName);
-				break;
-			case REGION:
-				throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
-		}
-	}
-
-	private void initialiseUsingSettingsProvided() throws EvoCheckerException {
-		// 1 Get model and properties filenames
-		if (commandLineInvoked) {
-			modelFilename = new File(modelFilenameCli).getAbsolutePath();
-			propertiesFilename = new File(propertiesFilenameCli).getAbsolutePath();
-			System.out.println(
-					"Model and properties specified in command line; these will overwrite those in the configuration file");
-		} else {
-			modelFilename = new File(Utility.getProperty(Constants.MODEL_FILE_KEYWORD)).getAbsolutePath();
-			propertiesFilename = new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD)).getAbsolutePath();
-		}
-		algorithmName = Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
-		problemName = Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
-
-		switch (EvoCheckerType.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_TYPE).toUpperCase())) {
-			case NORMAL:
-				ecType = EvoCheckerType.NORMAL;
-				break;
-			case PARAMETRIC:
-				ecType = EvoCheckerType.PARAMETRIC;
-				break;
-			case REGION:
-				ecType = EvoCheckerType.REGION;
-				throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
-		}
-	}
-
-	protected void initialiseProperties() {
-		String str = modelInstantiator.getConcreteModel(genes);
-		List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
-		objectivesList = list.get(0);
-		constraintsList = list.get(1);
-
-		System.out.println("Objectives (O)/Constraints(C)");
-		for (Property p : objectivesList)
-			System.out.print("O: " + p.toString());
-		for (Property p : constraintsList)
-			System.out.print("C: " + p.toString());
-		System.out.println();
-	}
-
-	/**
-	 * initialise algorithm
-	 * 
-	 * @throws Exception
-	 */
-	protected void initialiseAlgorithm() throws Exception {
-
-		if (algorithmName != null) {
-			if (algorithmName.equals(Constants.ALGORITHM.NSGAII.toString())) {
-				NSGAII_Settings nsgaiiSettings = new NSGAII_Settings(problemName, problem);
-				algorithm = nsgaiiSettings.configure();
-			} else if (algorithmName.equals(Constants.ALGORITHM.RANDOM.toString())) {
-				RandomSearch_Settings rsSettings = new RandomSearch_Settings(problemName, problem);
-				algorithm = rsSettings.configure();
-			} else if (algorithmName.equals(Constants.ALGORITHM.SPEA2.toString())) {
-				SPEA2_Settings spea2Settings = new SPEA2_Settings(problemName, problem);
-				algorithm = spea2Settings.configure();
-			} else if (algorithmName.equals(Constants.ALGORITHM.MOCELL.toString())) {
-				MOCell_Settings mocellSettings = new MOCell_Settings(problemName, problem);
-				algorithm = mocellSettings.configure();
-			}
-			// else if (algorithmStr.equals("SGA")){
-			// int numOfConstraints = 0;
-			// problem = new GeneticProblemSingle(genes, propertyList, parserEngine,
-			// numOfConstraints);
-			// SingleGA_Settings sga_setting = new SingleGA_Settings("GeneticProblem",
-			// problem);
-			// algorithm = sga_setting.configure();
-			// }
-			else
-				throw new Exception("Algorithm not recognised");
-		}
-	}
-
-	/**
-	 * Initialise data structure and variables for saving execution results
-	 */
-	protected String initialiseOutputData() {
-		// create output dir
-		String outputDir = "data" + File.separator
-				+ Utility.getProperty(Constants.PROBLEM_KEYWORD) + File.separator
-				+ Utility.getProperty(Constants.ALGORITHM_KEYWORD) + File.separator;
-		FileUtil.createDir(outputDir);
-
-		return outputDir;
-
-		// int run = RODESExperimentRuns.getRun();
-		// String outputFileSuffix = tolerance +"_"+ epsilon +"_"+ run;
-
 	}
 
 	/**

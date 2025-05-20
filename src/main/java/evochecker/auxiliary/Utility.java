@@ -37,21 +37,24 @@ public class Utility {
 	private static String modelFileOverride;
 	private static String propertiesFileOverride;
 
-	public static void setPropertiesFile(String filename) {
+	public static void setPropertiesFile(String filename) throws EvoCheckerException {
 		fileName = filename;
+		loadPropertiesInstance();
 	}
 
-	public static void setPropertiesFileOverride(String propertyFile) {
+	public static void setPropertiesFileOverride(String propertyFile) throws EvoCheckerException {
 		if (isFilePath(propertyFile)) {
 			propertiesFileOverride = propertyFile;
 		} else {
 			System.out.println("Creating a temporary property file for property: " + propertyFile);
 			setPropertiesFromString(propertyFile);
 		}
+		loadPropertiesInstance();
 	}
 
-	public static void setModelFileOverride(String modelFile) {
+	public static void setModelFileOverride(String modelFile) throws EvoCheckerException {
 		modelFileOverride = modelFile;
+		loadPropertiesInstance();
 	}
 
 	public static boolean isFilePath(String pathString) {
@@ -70,7 +73,7 @@ public class Utility {
 			Path tempFile = Files.createTempFile("tempPropertyFile", ".properties");
 			String fileContents = "";
 
-			//format the property file contents
+			// format the property file contents
 			String[] elements = propertyContent.split("//"); // e.g. objective,min:P=? [F s=7 & d=5]
 			// System.out.println("Elements: " + Arrays.toString(elements));
 			for (String element : elements) {
@@ -78,15 +81,14 @@ public class Utility {
 				// System.out.println("KeyValue: " + Arrays.toString(keyValue));
 				if (keyValue[0].trim().isEmpty()) {
 					continue;
-				}
-				else if (keyValue.length == 2) {
+				} else if (keyValue.length == 2) {
 					fileContents += "//" + keyValue[0].trim() + "\n" + keyValue[1].trim() + "\n\n";
 				} else {
-					// System.out.println("PROBLEM: " + Arrays.toString(keyValue) + " " + keyValue.length);
+					// System.out.println("PROBLEM: " + Arrays.toString(keyValue) + " " +
+					// keyValue.length);
 					throw new EvoCheckerException("Invalid property format: '" + element + "' in " + propertyContent);
 				}
 			}
-
 
 			// Write the property content to the temporary file
 			Files.write(tempFile, fileContents.getBytes());
@@ -102,26 +104,25 @@ public class Utility {
 		}
 	}
 
-	private static void loadPropertiesInstance() {
+	private static void loadPropertiesInstance() throws EvoCheckerException {
 		try {
-			if (properties == null) {
-				properties = new Properties();
-				properties.load(new FileInputStream(fileName));
-				if (modelFileOverride != null) {
-					properties.setProperty("MODEL_TEMPLATE_FILE", modelFileOverride);
-				}
-				if (propertiesFileOverride != null) {
-					properties.setProperty("PROPERTIES_FILE", propertiesFileOverride);
-				}
+
+			properties = new Properties();
+			properties.load(new FileInputStream(fileName));
+			if (modelFileOverride != null) {
+				properties.setProperty("MODEL_TEMPLATE_FILE", modelFileOverride);
 			}
+			if (propertiesFileOverride != null) {
+				properties.setProperty("PROPERTIES_FILE", propertiesFileOverride);
+			}
+
 		} catch (IOException | NullPointerException e) {
 			if (fileName == null) {
-				System.out.println("Properties file has not been specified. Exiting.");
+				throw new EvoCheckerException("Properties file has not been specified. Exiting.");
 			} else {
-				System.out.println("Error loading properties file: " + fileName + ". Exiting.");
+				throw new EvoCheckerException(
+						"Properties file " + fileName + " has not been specified. Exiting.");
 			}
-			e.printStackTrace();
-			System.exit(0);
 		}
 	}
 
@@ -133,13 +134,13 @@ public class Utility {
 	}
 
 	public static String getPropertyIgnoreNull(String key) {
-		loadPropertiesInstance();
+		// loadPropertiesInstance();
 		String result = properties.getProperty(key).strip();
 		return result;
 	}
 
 	public static String getProperty(String key, String defaultValue) {
-		loadPropertiesInstance();
+		// loadPropertiesInstance();
 		String output = properties.getProperty(key);
 		return (output != null ? output.trim() : defaultValue.trim());
 	}
@@ -149,7 +150,7 @@ public class Utility {
 	}
 
 	public static void setProperty(String key, String value) throws EvoCheckerException {
-		loadPropertiesInstance();
+		// loadPropertiesInstance();
 		properties.setProperty(key, value);
 	}
 

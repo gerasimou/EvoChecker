@@ -14,8 +14,12 @@ public class PlotFactoryTester {
 		String frontFile 	= "/Users/simos/Git/EvoChecker/data/MARC/NSGAII/MARC_NSGAII_170923_1329488796374500851926967_Front";
 		String configFile	= "config.properties";
 		
-
-		Utility.setPropertiesFile(configFile);
+		try {
+			Utility.setPropertiesFile(configFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
 		PlotFactory.plotParetoFront(frontFile, 2);
 	}
 }

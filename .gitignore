@@ -24,3 +24,5 @@ Server*
 # Input/output files
 config.properties
 data/
+
+server_example.sh
