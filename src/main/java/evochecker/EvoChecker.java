@@ -20,9 +20,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-// import org.apache.logging.log4j.core.tools.picocli.CommandLine;
-
-import evochecker.initialisation.EvoCheckerInitialiser;
 import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.FileUtil;
@@ -41,6 +38,8 @@ import evochecker.genetic.problem.GeneticProblemParametricParallel;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.language.parser.ModelInstantiator;
 import evochecker.language.parser.ModelInstantiatorParametric;
+import evochecker.lifecycle.EvoCheckerInitialiser;
+import evochecker.lifecycle.Export;
 import evochecker.plotting.PlotFactory;
 import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
@@ -262,7 +261,13 @@ public class EvoChecker {
 			executionTime = (end - start) / 1000.0;
 
 			// 5) save solutions
-			exportResults(outputDir);
+			Export.exportResults(
+                            objectivesList,
+                            genes,
+                            algorithmName,
+                            problemName,
+                            solutions,
+                            outputDir);
 
 			// 6) close down
 			closeDown();

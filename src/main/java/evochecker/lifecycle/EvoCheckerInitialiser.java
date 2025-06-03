@@ -1,4 +1,4 @@
-package evochecker.initialisation;
+package evochecker.lifecycle;
 
 import java.io.File;
 import java.util.List;

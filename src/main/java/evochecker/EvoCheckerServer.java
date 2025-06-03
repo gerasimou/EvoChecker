@@ -1,79 +1,64 @@
+/**
+    ------------------------------------------------------------------------------
+
+    EvoCheckerServer class. Starts EvoChecker in a server mode,
+    which allows one to send models and properties similarly to the CLI.
+    Intended for use with ULTIMATE for the policy synthesis functionality.
+    @author Brendan Devlin-Hill
+    
+    ------------------------------------------------------------------------------
+
+    This file is part of EvoChecker.
+        
+    ==============================================================================
+ */
+
 package evochecker;
 
 import java.io.BufferedReader;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import org.apache.commons.cli.Option;
-
-/**
- * EvoCheckerServer class. Starts EvoChecker in a server mode,
- * which allows one to send models and properties similarly to the CLI.
- * Intended for use with ULTIMATE for the policy synthesis functionality.
- * @author Brendan Devlin-Hill
- */
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
-// import org.apache.logging.log4j.core.tools.picocli.CommandLine;
-
-import evochecker.exception.EvoCheckerException;
-import evochecker.initialisation.EvoCheckerInitialiser;
-import evochecker.auxiliary.ConfigurationChecker;
-import evochecker.auxiliary.Constants;
-import evochecker.auxiliary.FileUtil;
-import evochecker.auxiliary.Utility;
-import evochecker.exception.EvoCheckerException;
-import evochecker.genetic.GenotypeFactory;
-import evochecker.genetic.genes.AbstractGene;
-import evochecker.genetic.jmetal.metaheuristics.settings.MOCell_Settings;
-import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
-import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
-import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
-import evochecker.genetic.problem.GeneticModelProblem;
-import evochecker.genetic.problem.GeneticProblem;
-import evochecker.genetic.problem.GeneticProblemParametric;
-import evochecker.genetic.problem.GeneticProblemParametricParallel;
-import evochecker.language.parser.IModelInstantiator;
-import evochecker.language.parser.ModelInstantiator;
-import evochecker.language.parser.ModelInstantiatorParametric;
-import evochecker.plotting.PlotFactory;
-import evochecker.properties.Property;
-import evochecker.properties.PropertyFactory;
-import jmetal.core.Algorithm;
-import jmetal.core.Problem;
-import jmetal.core.Solution;
-import jmetal.core.SolutionSet;
-import jmetal.qualityIndicator.QualityIndicator;
-import jmetal.util.JMException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
+import evochecker.auxiliary.Utility;
+
+// import org.apache.logging.log4j.core.tools.picocli.CommandLine;
+
+import evochecker.exception.EvoCheckerException;
+import evochecker.genetic.genes.AbstractGene;
+import evochecker.genetic.problem.GeneticModelProblem;
+import evochecker.language.parser.IModelInstantiator;
+import evochecker.lifecycle.EvoCheckerInitialiser;
+import evochecker.lifecycle.Export;
+import evochecker.properties.Property;
+import jmetal.core.Algorithm;
+import jmetal.core.Problem;
+import jmetal.core.SolutionSet;
 
 public class EvoCheckerServer {
+
+    private Thread executionThread;
+    private volatile boolean isExecuting = false; //
 
     private static boolean printHelpCli = false;
     private static int port;
 
     private EvoCheckerInitialiser initialiser = null;
+    private Export exporter = null;
 
     /** problem trying to solve */
     private Problem problem;
@@ -187,10 +172,12 @@ public class EvoCheckerServer {
 
         ecs.start();
     }
-    
+
     public void start() {
-        
+
         initialiser = new EvoCheckerInitialiser();
+        exporter = new Export();
+
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("EvoChecker running.");
             while (true) {
@@ -198,7 +185,6 @@ public class EvoCheckerServer {
 
                     in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
-
 
                     String command = in.readLine();
                     handleResponse(command);
@@ -218,12 +204,10 @@ public class EvoCheckerServer {
 
         // cases: run command, start, end,
         String helpString = "COMMANDS: \n"
-                + "SET_MODEL_FILE [path] - set path to model file\n"
-                + "SET_PROPERTIES_FILE [path] - set path to properties file\n"
                 + "SET_CONFIG_FILE [path] - set path to config file\n"
-                + "INITIALISE_CONFIG - initialise EvoChecker configuration\n"
-                + "INITIALISE_PROBLEM - initialise EvoChecker for new model and properties file\n"
-                + "EXECUTE - execute EvoChecker\n";
+                + "INITIALISE - initialise EvoChecker\n"
+                + "EXECUTE - execute EvoChecker\n"
+                + "SHUTDOWN - shutdown the server\n";
 
         switch (command) {
             case "COMMANDS":
@@ -232,50 +216,18 @@ public class EvoCheckerServer {
             case "HELP":
                 handleResponse(helpString);
                 break;
-            case "INITIALISE_CONFIG":
+            case "INITIALISE":
                 try {
                     if (configFile == null) {
                         handleResponse(
                                 "Configuration file must be set before initialisation.");
                     }
                     initialise_configuration();
-                } catch (Exception e) {
-                    handleResponse("Error during initialisation: " + e.getMessage());
-                }
-                handleResponse("Initialised EvoChecker successfully.");
-                break;
-            case "INITIALISE_PROBLEM":
-                try {
-                    if (modelFile == null || propertyFile == null) {
-                        handleResponse(
-                                "Model file and property file must be set before initialisation.");
-                    }
                     initialise_problem();
                 } catch (Exception e) {
-                    handleResponse("Error during initialisation: " + e.getMessage());
+                    handleResponse("Error during configuration initialisation: " + e.getMessage());
                 }
                 handleResponse("Initialised EvoChecker successfully.");
-                break;
-            // case "STOP":
-            // handleResponse("Server ended.");
-            // break;
-            case "SET_MODEL_FILE":
-                try {
-                    set_model_file_path(inputBuffer);
-                    Utility.setModelFileOverride(modelFile);
-                    handleResponse("Model file set successfully: " + modelFile);
-                } catch (Exception e) {
-                    handleResponse("Error setting model file: " + e.getMessage());
-                }
-                break;
-            case "SET_PROPERTIES_FILE":
-                try {
-                    set_property_file_path(inputBuffer);
-                    Utility.setPropertiesFileOverride(propertyFile);
-                    handleResponse("Property file set successfully: " + propertyFile);
-                } catch (Exception e) {
-                    handleResponse("Error setting property file: " + e.getMessage());
-                }
                 break;
             case "SET_CONFIG_FILE":
                 try {
@@ -288,17 +240,42 @@ public class EvoCheckerServer {
                 break;
             case "EXECUTE":
                 try {
-                    solutions = execute();
-                    handleResponse("Execution completed.");
+                    handleResponse("Execution in progress...");
+                    execute();
+                    Export.exportResults(
+                            objectivesList,
+                            genes,
+                            algorithmName,
+                            problemName,
+                            solutions,
+                            outputDir);
+                    handleResponse("Saving results to " + outputDir +
+                            "\nExecution completed.");
                 } catch (Exception e) {
-                    handleResponse("Execution error: " + e.getMessage());
+                    handleResponse("Execution error: " + e.getMessage() + e.getStackTrace());
                 }
                 break;
             default:
                 handleResponse("Unknown command: " + command);
                 break;
+            case "SHUTDOWN":
+                handleResponse("Shutting down server.");
+                try {
+                    if (in != null)
+                        in.close();
+                    if (out != null)
+                        out.close();
+                } catch (IOException e) {
+                    handleResponse("Error closing resources: " + e.getMessage());
+                }
+                System.exit(0);
+                break;
         }
 
+    }
+
+    public String getStatistics() {
+        return ((GeneticModelProblem) problem).getStatistics();
     }
 
     private void handleResponse(String response) {
@@ -307,12 +284,15 @@ public class EvoCheckerServer {
         out.println(response);
     }
 
-    private SolutionSet execute() throws Exception {
+    private void execute() throws Exception {
         // Execute the Algorithm
-        System.out.println("Starting evolution");
-        SolutionSet solutions = algorithm.execute();
+        try {
+            solutions = algorithm.execute();
+            handleResponse("Execution finished successfully.");
+        } catch (Exception e) {
+            handleResponse("Execution failed: " + e.getMessage());
+        }
 
-        return solutions;
     }
 
     private void set_config_file_path(BufferedReader in) throws IOException {
@@ -351,7 +331,10 @@ public class EvoCheckerServer {
 
     private void initialise_configuration() throws Exception {
 
-        handleResponse("Initialising EvoChecker options");
+        initialiser = new EvoCheckerInitialiser();
+        exporter = new Export();
+
+        handleResponse("Initialising options");
         initialiser.initialiseEvoCheckerOptions();
 
         propertiesFilename = initialiser.getPropertiesFilename();
@@ -363,11 +346,11 @@ public class EvoCheckerServer {
 
     private void initialise_problem() throws Exception {
 
-        handleResponse("Initialising EvoChecker problem");
+        handleResponse("Initialising problem");
         initialiser.initializeEvoCheckerProblem();
-        handleResponse("Initialising EvoChecker algorithm");
+        handleResponse("Initialising algorithm");
         initialiser.initialiseEvoCheckerAlgorithm();
-        handleResponse("Initialising EvoChecker output data");
+        handleResponse("Initialising output data");
         initialiser.initialiseOutputData();
 
         modelInstantiator = initialiser.getModelInstantiator();
@@ -375,9 +358,7 @@ public class EvoCheckerServer {
         objectivesList = initialiser.getObjectivesList();
         constraintsList = initialiser.getConstraintsList();
         problem = initialiser.getProblem();
-
         algorithm = initialiser.getAlgorithm();
-
         outputDir = initialiser.getOutputDir();
 
     }
