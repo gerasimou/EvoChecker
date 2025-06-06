@@ -74,6 +74,14 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.4</version>
 		</dependency>
+
+		<!-- headless ultimate dependency -->
+		<dependency>
+			<groupId>edu.ultimate_project</groupId>
+			<artifactId>ultimate</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 	</dependencies>
 
 

@@ -62,15 +62,13 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 
-import ultimate.Ultimate;
-
 /**
  * Main EvoChecker class
  * 
  * @author sgerasimou
  *
  */
-public class EvoChecker {
+public class EvoCheckerUltimate {
 
 	/** problem trying to solve */
 	private Problem problem;
@@ -125,7 +123,7 @@ public class EvoChecker {
 	private static String configFilePathCli;
 	private static boolean printHelpCli = false;
 
-	public EvoChecker() {
+	public EvoCheckerUltimate() {
 
 	}
 
@@ -189,19 +187,6 @@ public class EvoChecker {
 	public static void main(String[] args) throws EvoCheckerException {
 
 		EvoChecker ec = new EvoChecker();
-		Ultimate ultimate = new Ultimate();
-
-		ultimate.loadProjectFromFile("/home/brendandevlin-hill/ultimate_casino/casino.ultimate");
-		ultimate.setModelID("casino");
-		try {
-			ultimate.execute();
-		} catch (IOException e) {
-			System.err.println("Error executing Ultimate: " + e.getMessage());
-			return;
-		}
-		System.out.println(ultimate.getResultsInfo());
-
-
 		if (args.length > 0) {
 			System.out.println("EvoChecker command line arguments: " + Arrays.toString(args));
 			setUpCLI();
