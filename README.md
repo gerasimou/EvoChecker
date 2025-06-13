@@ -1,2 +1,1 @@
-This JAR file (see target folder) is used for the experiments setup in:
-```https://github.com/Gricel-lee/CPHSTaskPlanning```
+This JAR file (see target folder) is used for the experiments setup in [https://github.com/Gricel-lee/CPHSTaskPlanning](https://github.com/Gricel-lee/CPHSTaskPlanning)
