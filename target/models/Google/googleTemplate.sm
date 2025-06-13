@@ -1,0 +1,154 @@
+ctmc
+
+// repair rate from hw failure of chunk server; default 1
+//const double cHwRepair;// [0.5..4.0];//evolve
+evolve double cHwRepair [0.5..4.0];//evolve
+
+//max chunks per chunk server
+//const int NC = 5000;//[5000..5000];//evolve
+evolve int NC [5000..10000];
+
+// if it's not sw failure then it is due to hardware 
+//const double cHwFail;// [0.5..4.0];//=0.05;//evolve
+evolve double cHwFail [0.5..4.0];//evolve
+
+//number of chunk servers
+const int M=20;
+
+//total number of GFS chunks
+const int N=100000;
+
+// repair rate from sw failure of chunk server
+// the actual rate is cSwRepair multiplied by cSwDown
+const double cSwRepair=12;
+
+//  "probability" that a chunk server failure is due to software
+// default 0.95; we could try interval [0.0001, 1-0.0001]
+const double cSwFail=0.95;
+
+
+// rate at which master or chunk server failure happens
+const double mFail = 0.0005;
+const double cFail=0.5; // [0.5..1.0];
+
+//  "probability" that a master server failure is due to software
+const double mSwFail = 0.95;
+const double mHwFail = 0.05;
+
+//Failure rates
+const double mSoftFail = mFail * mSwFail;
+const double mHardFail = mFail * mHwFail;
+const double cHardFail = mFail * cHwFail;
+const double cSoftFail = mFail * cSwFail;
+
+//Repair rates
+const double mSoftRepair = 12;
+const double mHardRepair = 6;
+
+//optimal number of chunk copis
+const int CMAX = 3;
+
+
+module google
+    mUp   : [0..1] init 0;//Master server up?
+    mHwDown : [0..1] init 1;//Master server down (hardware)?
+    mSwDown : [0..1] init 0;//Master server down (software)?
+
+    R_present : [0..CMAX] init 0;//number of copies available
+    R_lost  : [0..CMAX] init 3;//number of copies lost
+
+    cUp     : [0..M] init 0; //number of chunk servers up
+    cSwDown : [0..M] init 0;//number of chunk servers down (software)
+    cHwDown : [0..M] init 20;//number of chunk servers down (hardware)
+
+  //Master server failure and repair
+  
+    //SW failure in the master 
+    [mSoftFail] (mUp=1) -> mSoftFail : (mUp'=0) & (mSwDown'=1);
+
+    //HW failure in the master 
+    [mFail_m_hard] (mUp=1) -> mHardFail : (mUp'=0) & (mHwDown'=1);
+
+    //repair SW failure in the master. 
+    [mSwRepair] (mSwDown=1) -> mSoftRepair : (mSwDown'=0) & (mUp'=1);
+
+    //repair HW failure in the master. NOTE: this also depends on the hw repair rate
+    [mHwRepair] (mHwDown=1) -> mHardRepair: (mHwDown'=0) & (mUp'=1);
+
+  
+  //Chunk servers failure and repair
+
+  //software failure in chunck server (loses the chunk)
+  [cFail_destroy_c_soft] (cUp>0) & (R_present>0) & (R_lost<3) & (cSwDown<M)
+          -> (R_present / cUp) * cSoftFail : (cUp'=cUp-1) & (cSwDown'=cSwDown+1) & (R_present'=R_present-1) & (R_lost'=R_lost+1);
+
+    //software failure in chunck server (keeps the chunk)
+    [cFail_keep_c_soft] (cUp>0) & (cSwDown<M) & (cUp-1>=R_present)
+          -> (1 - (R_present / cUp)) * cSoftFail :(cUp'=cUp-1) & (cSwDown'=cSwDown+1);
+
+    //hardware failure in chunck server (loses the chunk)
+    [cFail_destroy_c_hard] (cUp>0) & (R_present>0) & (R_lost<3) & (cHwDown<M)
+          ->  (R_present / cUp) * cHardFail :(cUp'=cUp-1) & (cHwDown'=cHwDown+1) & (R_present'=R_present-1) & (R_lost'=R_lost+1);
+
+    //hardware failure in chunck server (keeps the chunk).
+    [cFail_keep_c_hard] (cUp>0) & (cHwDown<M) & (cUp-1>=R_present)
+        ->  (1 - (R_present / cUp)) * cHardFail :(cUp'=cUp-1) & (cHwDown'=cHwDown+1);
+
+    //software repair (brings a chunk server up from sw failure)
+    [cSwRepair] (cSwDown>0) & (cUp<M)
+          -> cSwDown * cSwRepair : (cSwDown'=cSwDown-1) & (cUp'=cUp+1); 
+
+    //hardware repair (brings a chunk server up from hw failure). 
+    [cHwRepair] (cHwDown>0) & (cUp<M)
+          -> cHwRepair : (cHwDown'=cHwDown-1) & (cUp'=cUp+1); 
+
+    //replicate chunk                   
+    [replicate] (mUp=1) & (R_lost>0) & (R_present<3) & (cUp>R_present) & (cUp*NC>=(R_present+1)*N)
+          -> ((R_present > 0) ? 20 : 2) : (R_lost'=R_lost-1) & (R_present'=R_present+1);
+
+endmodule
+ 
+
+rewards "active"
+  cUp >=10 & cUp <=15 : 1;
+endrewards
+
+
+
+rewards "failures"
+  [mSoftFail] true : 1;
+  [mFail_m_hard] true : 1;
+  [cFail_destroy_c_soft] true : 1;
+  [cFail_keep_c_soft] true : 1;
+  [cFail_destroy_c_hard] true : 1;
+  [cFail_keep_c_hard] true : 1;
+endrewards
+
+
+rewards "C_down"
+  true: cSwDown;
+  true: cHwDown;
+endrewards
+
+
+rewards "chunkup"
+  true : cUp;
+endrewards
+
+
+rewards "replicates"
+  [replicate] true : 1;
+endrewards
+
+
+rewards "R_losts"
+  true : R_lost;
+endrewards
+
+
+rewards "repairCosts"
+  [mHwRepair] true : 10;
+  [mSwRepair] true : 1;
+  [cSwRepair] true : 1;
+  [cHwRepair] true : 5;
+endrewards

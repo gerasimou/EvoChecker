@@ -1,0 +1,5 @@
+//Objective, max
+P=? [ F<=10  (PAL_I0_E1_pc = PAL_I0_E1_R1DeliveredRoomD) | (PAL_F1_E25_pc = PAL_F1_E25_R2DeliveredRoomD)]
+
+//Objective, min
+R{"reward_door12_attempt"} =? [C <= 10]

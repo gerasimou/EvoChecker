@@ -1,0 +1,22 @@
+label "FINAL" = (HCp=mis|(!((ract=welding&wact=welding&hloc=atWeldSpot)|(ract=welding&wact=welding&rngDet=close))&wpfin=1&wps=empty&reffocc=0&mntDone=1));
+label "hFINAL_CUSTOM" = (wpfin=1&wps=empty&reffocc=0&mntDone=1);
+label "CE_HC" = ract=welding & wact=welding & rngDet=close;
+label "ANYOCC" = ract=welding & wact=welding & hloc=atWeldSpot; // occurrence of any hazard
+label "ANYREC" = ract=welding & wact=welding & rngDet=close; // recognition/detection of any hazard
+
+// Constraint, max, 1
+E [ F "hFINAL_CUSTOM" ]
+// // finish all tasks: work & maintenance
+
+// Constraint, max, 1
+E [ F "ANYREC" ]
+// // adversarial environment that creates at least one hazard
+
+// Objective, max
+P=? [ F "hFINAL_CUSTOM" ]
+
+// Objective, max
+R{"nuisance"}=? [ C ]
+
+// Objective, max
+R{"effort"}=? [ C ]
