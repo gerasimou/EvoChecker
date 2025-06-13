@@ -1,0 +1,13 @@
+!SESSION 2025-02-19 15:52:46.343 -----------------------------------------------
+eclipse.buildId=4.33.0.20240905-0613
+java.version=23.0.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.dsl.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.dsl.product -data /home/gnvf500/Gricel-Documents/GithubGris/EvoChecker
+
+!ENTRY ch.qos.logback.classic 1 0 2025-02-19 15:52:48.103
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY ch.qos.logback.classic 1 0 2025-02-19 15:52:48.857
+!MESSAGE Logback config file: /home/gnvf500/Gricel-Documents/GithubGris/EvoChecker/.metadata/.plugins/org.eclipse.m2e.logback/logback.2.6.1.20240411-1122.xml
