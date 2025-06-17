@@ -37,7 +37,8 @@ public class PropertyFactory {
 		List<Property> objectivesList = new ArrayList<Property>();		
 		List<Property> constaintsList = new ArrayList<Property>();		
 		
-		
+		// internal model only used to pass to the PRISM API
+
 		try {
 			PrismAPI api = new PrismAPI(null);
 			api.parseModelAndProperties(internalModel, propertiesFilename);
@@ -48,12 +49,9 @@ public class PropertyFactory {
 			int numProps = propsFile.getNumProperties();
 			for (int index=0; index<numProps; index++) {
 				parser.ast.Property prop = propsFile.getPropertyObject(index);
-
-//				System.out.println(prop);
 				String comment = prop.getComment();
 				if (comment != null) {
 					String[] commentElements = comment.trim().split(",");
-					
 					if (commentElements[0].trim().toUpperCase().equals(OBJECTIVE))
 						objectivesList.add(createObjective(commentElements, prop.toString(), index));					
 					else if (commentElements[0].trim().toUpperCase().equals(CONSTRAINT))

@@ -39,7 +39,7 @@ import evochecker.genetic.problem.GeneticProblem;
 import evochecker.genetic.problem.GeneticProblemParametric;
 import evochecker.genetic.problem.GeneticProblemParametricParallel;
 import evochecker.language.parser.IModelInstantiator;
-import evochecker.language.parser.ModelInstantiator;
+import evochecker.language.parser.ModelInstantiatorUltimate;
 import evochecker.language.parser.ModelInstantiatorParametric;
 import evochecker.lifecycle.EvoCheckerInitialiser;
 import evochecker.plotting.PlotFactory;

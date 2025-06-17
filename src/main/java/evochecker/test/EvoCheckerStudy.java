@@ -31,7 +31,7 @@ import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
 import evochecker.genetic.problem.GeneticProblem;
 import evochecker.language.parser.IModelInstantiator;
-import evochecker.language.parser.ModelInstantiator;
+import evochecker.language.parser.ModelInstantiatorUltimate;
 import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
 import jmetal.core.Algorithm;
@@ -205,7 +205,7 @@ public class EvoCheckerStudy extends Experiment{
 		modelFilename 		= Utility.getProperty("MODEL_TEMPLATE_FILE","models/DPM/dpm.pm");
 		propertiesFilename	= Utility.getProperty("PROPERTIES_FILE", "models/DPM/dpm.pctl");
 	
-		parserEngine 		= new ModelInstantiator(modelFilename, propertiesFilename);
+		parserEngine 		= new ModelInstantiatorUltimate(modelFilename, propertiesFilename);
 		genes				= GenotypeFactory.createChromosome(parserEngine.getEvolvableList(), false);
 		parserEngine.createMapping();
 		

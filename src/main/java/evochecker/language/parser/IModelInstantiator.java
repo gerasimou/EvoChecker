@@ -34,8 +34,7 @@ public interface IModelInstantiator {
 	 * @return
 	 */
 	public String getConcreteModel(Collection<AbstractGene> genes);
-	
-	
+
 	/**
 	 * Return the name of properties file
 	 */

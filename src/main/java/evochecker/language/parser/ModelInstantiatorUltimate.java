@@ -27,7 +27,7 @@ import evochecker.genetic.genes.DistributionGene;
 import evochecker.genetic.genes.DoubleGene;
 import evochecker.genetic.genes.IntegerGene;
 
-public class ModelInstantiator implements IModelInstantiator {
+public class ModelInstantiatorUltimate implements IModelInstantiator {
 
 	/** map that keeps pairs of genes and evolvable elements*/
 	protected Map<AbstractGene, Evolvable> elementsMap;
@@ -37,7 +37,7 @@ public class ModelInstantiator implements IModelInstantiator {
 	
 	protected Map<String, Object> concreteChromosome;
 	
-	public ModelInstantiator(String modelFilename, String propertiesFilename) {
+	public ModelInstantiatorUltimate(String modelFilename, String propertiesFilename) {
 		parser = new ModelParser(modelFilename, propertiesFilename);
 		
 		elementsMap = new HashMap<AbstractGene, Evolvable>();
@@ -46,7 +46,7 @@ public class ModelInstantiator implements IModelInstantiator {
 	}
 	
 	
-	public ModelInstantiator(String modelFilename, String propertiesFilename, ModelParser modelParser) {
+	public ModelInstantiatorUltimate(String modelFilename, String propertiesFilename, ModelParser modelParser) {
 		parser = modelParser;
 		
 		elementsMap = new HashMap<AbstractGene, Evolvable>();
@@ -59,7 +59,7 @@ public class ModelInstantiator implements IModelInstantiator {
 	 * @param instantiator
 	 * @throws EvoCheckerException
 	 */
-	public ModelInstantiator (ModelInstantiator instantiator) throws EvoCheckerException{
+	public ModelInstantiatorUltimate (ModelInstantiatorUltimate instantiator) throws EvoCheckerException{
 		parser = new ModelParser(instantiator.parser);		
 	}
 	
@@ -72,6 +72,18 @@ public class ModelInstantiator implements IModelInstantiator {
 	}
 
 	
+
+	// concrete models are a bit of an issue because the way the ULTIMATE API works
+	// is to simply take the internal parameters to be set and set them itself.
+	// In this case the 'concrete model' is meant to be a String which defines the entire model
+	//
+	// I wonder if we could adapt ULTIMATE such that the internal parameters can be specified
+	// in the .ultimate file. Certainly possible but a bit janky and would require ULTIMATE reading
+	// that over and over.
+	//
+	// maybe I could actually have GeneticProblemUltimate avoid use of the concrete model and
+	// rather set the internal parameters directly
+
 	@Override
 	public String getConcreteModel(Collection<AbstractGene> genes) {
 		StringBuilder concreteModel = new StringBuilder(parser.getModelType().toString().toLowerCase() +"\n\n");
@@ -95,7 +107,7 @@ public class ModelInstantiator implements IModelInstantiator {
 		
 		concreteModel.append("\n" + parser.getInternalModelRepresentation());
 		
-		// System.out.println(concreteModel);
+		// System.err.println(concreteModel);
 		return concreteModel.toString();
 	}
 

@@ -33,7 +33,7 @@ import evochecker.genetic.jmetal.encoding.ArrayReal;
 import evochecker.genetic.jmetal.encoding.ArrayRealIntSolutionType;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.language.parser.MODEL_TYPE;
-import evochecker.language.parser.ModelInstantiator;
+import evochecker.language.parser.ModelInstantiatorUltimate;
 import evochecker.modelInvoker.IModelInvoker;
 import evochecker.modelInvoker.ModelInvokerEngine;
 import evochecker.modelInvoker.ModelInvokerPrism;
@@ -400,12 +400,12 @@ public abstract class GeneticModelProblem extends Problem {
 	 */
 	public GeneticModelProblem(GeneticModelProblem aProblem) throws EvoCheckerException{
 		
-		if (aProblem.modelInstantiator instanceof  ModelInstantiator)
-			this.modelInstantiator 			= new ModelInstantiator((ModelInstantiator)aProblem.modelInstantiator);
+		if (aProblem.modelInstantiator instanceof  ModelInstantiatorUltimate)
+			this.modelInstantiator 			= new ModelInstantiatorUltimate((ModelInstantiatorUltimate)aProblem.modelInstantiator);
 		else
 			throw new EvoCheckerException("Invalid Instantiator inteface!");
 
-		this.genes 					= ((ModelInstantiator)modelInstantiator).getGeneList(); 
+		this.genes 					= ((ModelInstantiatorUltimate)modelInstantiator).getGeneList(); 
 										
 		
 		this.numberOfConstraints_ 	= aProblem.numberOfConstraints_;

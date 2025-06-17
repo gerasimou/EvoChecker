@@ -1,7 +1,7 @@
 {
 "stormInstall":"/home/brendandevlin-hill/storm/build/bin/storm",
 "stormParsInstall":"/home/brendandevlin-hill/storm/build/bin/storm-pars",
-"prismInstall":"prism/bin/prism",
-"prismGamesInstall":"prism-games/bin/prism",
-"pythonInstall":"../.venv/bin/python3"
+"prismInstall":"/home/brendandevlin-hill/ultimate/ULTIMATE_MODEL_MANAGER/prism/bin/prism",
+"prismGamesInstall":"/home/brendandevlin-hill/ultimate/ULTIMATE_MODEL_MANAGER/prism-games/bin/prism",
+"pythonInstall":"/home/brendandevlin-hill/ultimate/.venv/bin/python3"
 }

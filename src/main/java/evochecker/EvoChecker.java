@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
@@ -36,7 +38,7 @@ import evochecker.genetic.problem.GeneticProblem;
 import evochecker.genetic.problem.GeneticProblemParametric;
 import evochecker.genetic.problem.GeneticProblemParametricParallel;
 import evochecker.language.parser.IModelInstantiator;
-import evochecker.language.parser.ModelInstantiator;
+import evochecker.language.parser.ModelInstantiatorUltimate;
 import evochecker.language.parser.ModelInstantiatorParametric;
 import evochecker.lifecycle.EvoCheckerInitialiser;
 import evochecker.lifecycle.Export;
@@ -189,18 +191,20 @@ public class EvoChecker {
 	public static void main(String[] args) throws EvoCheckerException {
 
 		EvoChecker ec = new EvoChecker();
-		Ultimate ultimate = new Ultimate();
+		// Ultimate ultimate = new Ultimate();
 
-		ultimate.loadProjectFromFile("/home/brendandevlin-hill/ultimate_casino/casino.ultimate");
-		ultimate.setModelID("casino");
-		try {
-			ultimate.execute();
-		} catch (IOException e) {
-			System.err.println("Error executing Ultimate: " + e.getMessage());
-			return;
-		}
-		System.out.println(ultimate.getResultsInfo());
-
+		// ultimate.loadProjectFromFile("/home/brendandevlin-hill/ultimate_casino/casino.ultimate");
+		// ultimate.setModelID("casino");
+		// HashMap<String, String> internalParams = new HashMap<>();
+		// internalParams.put("weighting", "0.6");
+		// ultimate.setInternalParameters(internalParams);
+		// try {
+		// ultimate.execute();
+		// } catch (IOException e) {
+		// System.err.println("Error executing Ultimate: " + e.getMessage());
+		// return;
+		// }
+		// System.out.println(ultimate.getResultsInfo());
 
 		if (args.length > 0) {
 			System.out.println("EvoChecker command line arguments: " + Arrays.toString(args));
@@ -219,6 +223,16 @@ public class EvoChecker {
 		}
 
 		ec.start();
+
+		try {
+			ec.ExportToFile();
+		} catch (JMException | EvoCheckerException e) {
+			System.err.println("Error exporting results: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		ec.printStatistics();
+		ec.closeDown();
 	}
 
 	public void setConfigurationFile(String configFile) {
@@ -227,16 +241,16 @@ public class EvoChecker {
 
 	public void setConfigurationFile(String configFile, String modelFile, String propertyFile) {
 		try {
-		Utility.setPropertiesFile(configFile);
-		if (modelFile != null) {
-			Utility.setModelFileOverride(modelFile);
-		}
-		if (propertyFile != null) {
-			Utility.setPropertiesFileOverride(propertyFile);
-		}
+			Utility.setPropertiesFile(configFile);
+			if (modelFile != null) {
+				Utility.setModelFileOverride(modelFile);
+			}
+			if (propertyFile != null) {
+				Utility.setPropertiesFileOverride(propertyFile);
+			}
 		} catch (EvoCheckerException e) {
 			System.out.println("Error setting configuration: " + e.getMessage());
-		} 
+		}
 	}
 
 	public void start() {
@@ -269,31 +283,34 @@ public class EvoChecker {
 
 			outputDir = initialiser.getOutputDir();
 
-			// 4) execute and save results
 			solutions = execute();
 
 			long end = System.currentTimeMillis();
 			executionTime = (end - start) / 1000.0;
-
-			// 5) save solutions
-			Export.exportResults(
-                            objectivesList,
-                            genes,
-                            algorithmName,
-                            problemName,
-                            solutions,
-                            outputDir);
-
-			// 6) close down
-			closeDown();
-
 			System.out.printf("Time:\t%s\n", executionTime);
 
-			// 7 print statistics
-			printStatistics();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+
+
+
+	/**
+	 * Export results to file
+	 * 
+	 * @throws JMException
+	 * @throws EvoCheckerException
+	 */
+	protected void ExportToFile() throws JMException, EvoCheckerException {
+		Export.exportResults(
+				objectivesList,
+				genes,
+				algorithmName,
+				problemName,
+				solutions,
+				outputDir);
 	}
 
 	/**
@@ -316,69 +333,7 @@ public class EvoChecker {
 
 	}
 
-	/**
-	 * Export solutions into files
-	 * 
-	 * @param population
-	 * @throws JMException
-	 */
-	private void exportResults(String outputDir) throws JMException {
-		// Print results to console
-		System.out.println("-------------------------------------------------");
-		System.out.println("SOLUTIONS: \t" + solutions.size());
-
-		String identifier = problemName + "_" + algorithmName + "_" + Utility.getTimeStamp();
-		String frontFile = outputDir + identifier + "_Front";
-		String setFile = outputDir + identifier + "_Set";
-		try {
-			File pf = File.createTempFile(identifier, "_Front", new File(outputDir));
-			File ps = File.createTempFile(identifier, "_Set", new File(outputDir));
-
-			frontFile = pf.getAbsolutePath();
-			setFile = ps.getAbsolutePath();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// generate and save headers
-		// StringBuilder setHeader = new StringBuilder();
-		// for (AbstractGene gene : genes)
-		// setHeader.append(gene.getName() +" ");
-		String setHeader = String.join("\t", GenotypeFactory.getEvolvableNames());
-		FileUtil.saveToFile(setFile, setHeader + "\n", true);
-		StringBuilder frontHeader = new StringBuilder();
-		Iterator<Property> it = objectivesList.iterator();
-		while (it.hasNext()) {
-			// for (Property p : objectivesList) {
-			Property p = it.next();
-			frontHeader.append(p.getExpression());
-			if (it.hasNext())
-				frontHeader.append("\t");
-		}
-		FileUtil.saveToFile(frontFile, frontHeader.toString(), true);
-
-		List<Solution> solutionList = new ArrayList<Solution>();
-		for (int i = 0; i < solutions.size(); i++)
-			solutionList.add(solutions.get(i));
-		Utility.printObjectivesToFile(frontFile, solutionList, objectivesList);
-		Utility.printVariablesToFile2(setFile, solutionList, GenotypeFactory.getGeneEvolvableMap(), genes);
-
-		// Assign
-		paretoFrontFile = frontFile;
-		paretoSetFile = setFile;
-		// solutions.printObjectivesToFile(frontFile);
-		// solutions.printVariablesToFile(setFile);
-
-		System.out.println("\nPareto Front and Pareto set saved at: " + outputDir);
-		System.out.println("Pareto Front: " + frontFile);
-		System.out.println("Pareto Set: " + setFile);
-
-		// show Pareto front plot if specified in configuration file
-		boolean plotParetoFront = Boolean.parseBoolean(Utility.getProperty(Constants.PLOT_PARETO_FRONT));
-		if (plotParetoFront)
-			PlotFactory.plotParetoFront(frontFile, objectivesList.size());
-	}
-
+	// what are these unused methods for?
 	public void executeRandomSearch() throws FileNotFoundException, IOException {
 		Algorithm algorithm;
 		try {
@@ -558,6 +513,10 @@ public class EvoChecker {
 
 	protected void setConstraints(List<Property> constraints) {
 		this.constraintsList = constraints;
+	}
+
+	protected SolutionSet getSolutions() {
+		return this.solutions;
 	}
 
 }

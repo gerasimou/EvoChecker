@@ -19,12 +19,14 @@ import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
 import evochecker.genetic.problem.GeneticProblem;
 import evochecker.genetic.problem.GeneticProblemParametricParallel;
 import evochecker.language.parser.IModelInstantiator;
-import evochecker.language.parser.ModelInstantiator;
+import evochecker.language.parser.ModelInstantiatorUltimate;
+// import evochecker.language.parser.ModelInstantiatorUltimate;
 import evochecker.language.parser.ModelInstantiatorParametric;
 import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
+
 
 public class EvoCheckerInitialiser {
 
@@ -32,6 +34,7 @@ public class EvoCheckerInitialiser {
     String propertiesFilenameOverride = null;
 
     String modelFilename = null;
+    String[] modelFileList = null;
     String propertiesFilename = null;
     String algorithmName = null;
     String problemName = null;
@@ -65,11 +68,16 @@ public class EvoCheckerInitialiser {
         // 0) check configuration script
         ConfigurationChecker.checkConfiguration();
 
-        // why do these have to be here specifically? Why can't I put them in initialiseProblem?
         modelFilename = new File(Utility.getProperty(Constants.MODEL_FILE_KEYWORD)).getAbsolutePath();
         propertiesFilename = new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD))
                 .getAbsolutePath();
 
+        // // check if modelFilename can be split into a list
+        // if (modelFilename.contains(",")) {
+        //     modelFileList = modelFilename.split(",");
+        //     System.out.println("Model files: " + String.join(" | ", modelFileList));
+        // }
+        
 
         // 1) initialise problem
         algorithmName = Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
@@ -82,6 +90,8 @@ public class EvoCheckerInitialiser {
             case PARAMETRIC:
                 ecType = EvoCheckerType.PARAMETRIC;
                 break;
+            case ULTIMATE:
+                ecType = EvoCheckerType.ULTIMATE;
             case REGION:
                 ecType = EvoCheckerType.REGION;
                 throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
@@ -107,11 +117,14 @@ public class EvoCheckerInitialiser {
 
         switch (ecType) {
             case NORMAL:
-                modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename);
+                modelInstantiator = new ModelInstantiatorUltimate(modelFilename, propertiesFilename);
                 break;
             case PARAMETRIC:
                 modelInstantiator = new ModelInstantiatorParametric(modelFilename, propertiesFilename);
                 break;
+            // case ULTIMATE:
+            //     modelInstantiator = new ModelInstantiatorUltimate(modelFilename, propertiesFilename);
+            //     break;
             case REGION:
                 throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
         }
@@ -136,13 +149,17 @@ public class EvoCheckerInitialiser {
                 problem = new GeneticProblemParametricParallel(genes, modelInstantiator, objectivesList,
                         constraintsList, problemName);
                 break;
+            case ULTIMATE:
+                throw new EvoCheckerException("EvoChecker Ultimate is still in development!. Exiting");
             case REGION:
                 throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
         }
     }
 
     private void initialiseProperties() {
+        System.out.println("INITIALISE PROPERTIES");
         String str = modelInstantiator.getConcreteModel(genes);
+        System.out.println("str: START\n" + str + "\nEND");
         List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
         objectivesList = list.get(0);
         constraintsList = list.get(1);
