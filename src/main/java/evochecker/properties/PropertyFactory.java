@@ -76,6 +76,58 @@ public class PropertyFactory {
 		//never happens
 		return null;
 	}
+
+	public static List<List<Property>> getObjectivesConstraints(String internalModel, String properties) throws EvoCheckerException {
+		List<Property> objectivesList = new ArrayList<Property>();		
+		List<Property> constaintsList = new ArrayList<Property>();		
+		
+		// internal model only used to pass to the PRISM API
+
+		try {
+			java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("evochecker_properties_", ".props");
+			java.nio.file.Files.write(tempFile, properties.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+			propertiesFilename = tempFile.toAbsolutePath().toString();
+		} catch (java.io.IOException e) {
+			throw new EvoCheckerException("Failed to create temporary properties file:\n"+ e.getMessage());
+		}
+
+		try {
+			PrismAPI api = new PrismAPI(null);
+			api.parseModelAndProperties(internalModel, propertiesFilename);
+
+			PropertiesFile propsFile = api.getPrismPropertiesFile();
+			
+			
+			int numProps = propsFile.getNumProperties();
+			for (int index=0; index<numProps; index++) {
+				parser.ast.Property prop = propsFile.getPropertyObject(index);
+				String comment = prop.getComment();
+				if (comment != null) {
+					String[] commentElements = comment.trim().split(",");
+					if (commentElements[0].trim().toUpperCase().equals(OBJECTIVE))
+						objectivesList.add(createObjective(commentElements, prop.toString(), index));					
+					else if (commentElements[0].trim().toUpperCase().equals(CONSTRAINT))
+						constaintsList.add(createConstraint(commentElements, prop.toString(), index));
+					else 
+						throw new EvoCheckerException("Property " + prop + " is neither a constraint nor an objective "+ prop.getComment());
+				}
+			}
+			
+			if (objectivesList.isEmpty())
+				throw new EvoCheckerException("No objective found.At least one is required!");
+				
+			
+			List<List<Property>> list= new ArrayList<>();
+			list.add(objectivesList);
+			list.add(constaintsList);
+			return list;
+		} 
+		catch (EvoCheckerException e) {
+			e.printStackTrace();
+		}	
+		//never happens
+		return null;
+	}
  
 	
 	private static Objective createObjective(String[] objElements, String prop, int index) throws EvoCheckerException {

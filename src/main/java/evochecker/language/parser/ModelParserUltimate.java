@@ -50,7 +50,7 @@ public class ModelParserUltimate implements IModelParser {
 
 	/** list of evolvable elements */
 	// protected List<Evolvable> evolvableList;
-	private HashMap<String, Evolvable> evolvableHashMap;
+	private HashMap<String, List<Evolvable>> evolvableHashMap;
 
 	/** model type **/
 	protected MODEL_TYPE modelType;
@@ -82,19 +82,25 @@ public class ModelParserUltimate implements IModelParser {
 		this.modelType = aParser.modelType;
 		this.evolvableHashMap = new HashMap<>();
 
-		for (Map.Entry<String, Evolvable> entry : aParser.evolvableHashMap.entrySet()) {
-			Evolvable value = entry.getValue();
-			if (value instanceof EvolvableInteger) {
-				this.evolvableHashMap.put(entry.getKey(), new EvolvableInteger((EvolvableInteger) value));
-			} else if (value instanceof EvolvableDouble) {
-				this.evolvableHashMap.put(entry.getKey(), new EvolvableDouble((EvolvableDouble) value));
-			} else if (value instanceof EvolvableDistribution) {
-				this.evolvableHashMap.put(entry.getKey(), new EvolvableDistribution((EvolvableDistribution) value));
-			} else if (value instanceof EvolvableModuleAlternative) {
-				this.evolvableHashMap.put(entry.getKey(), new EvolvableModuleAlternative((EvolvableModuleAlternative) value));
-			} else if (value instanceof EvolvableModule) {
-				this.evolvableHashMap.put(entry.getKey(), new EvolvableModule((EvolvableModule) value));
+		for (Map.Entry<String, List<Evolvable>> entry : aParser.evolvableHashMap.entrySet()) {
+			String fileName = entry.getKey();
+			List<Evolvable> el = entry.getValue();
+			List<Evolvable> newList = new ArrayList<>();
+			for (Evolvable e : el){
+				if (e instanceof EvolvableInteger) {
+					newList.add(new EvolvableInteger((EvolvableInteger) e));
+				} else if (e instanceof EvolvableDouble) {
+					newList.add(new EvolvableDouble((EvolvableDouble) e));
+				} else if (e instanceof EvolvableDistribution) {
+					newList.add(new EvolvableDistribution((EvolvableDistribution) e));
+				} else if (e instanceof EvolvableModuleAlternative) {
+					newList.add(
+							new EvolvableModuleAlternative((EvolvableModuleAlternative) e));
+				} else if (e instanceof EvolvableModule) {
+					newList.add(new EvolvableModule((EvolvableModule) e));
+				}
 			}
+			this.evolvableHashMap.put(fileName, newList);
 		}
 
 		// for (Evolvable element : aParser.getEvolvableHashMap())
@@ -155,13 +161,13 @@ public class ModelParserUltimate implements IModelParser {
 		}
 
 		System.out.println("\nEvolvables in world model:");
-		for (Map.Entry<String, Evolvable> entry : evolvableHashMap.entrySet()) {
-			System.out.println(entry.getKey() + "-" + entry.getValue());
+		for (Map.Entry<String, List<Evolvable>> entry : evolvableHashMap.entrySet()) {
+			System.out.println(entry.getKey() + "-" + entry.getValue().toString());
 		}
 		System.out.println("\n");
 
 		// this.setInternalModelRepresentation();
-		this.internalModelRepresentation = String.join("\n@@@\n", modelRepresentations);
+		this.internalModelRepresentation = String.join("@@@", modelRepresentations);
 	}
 
 	/**
@@ -202,20 +208,18 @@ public class ModelParserUltimate implements IModelParser {
 		List<Evolvable> evolvableList = visitor.getEvolvableList();
 		if (evolvableList != null) {
 			// this.evolvableList.addAll(evolvableList);
-			for (Evolvable e : evolvableList) {
-				this.evolvableHashMap.put(fileName, e);
-			}
+			this.evolvableHashMap.put(fileName, evolvableList);
 		}
 
 		// set internal model representation
-		modelRepresentations.add("//"+ fileName +"\n" + visitor.getInternalModelRepresentation());
+		modelRepresentations.add("//" + fileName + "\n" + visitor.getInternalModelRepresentation());
 	}
 
 	/**
 	 * Print the evolvable elements
 	 */
 	public void printEvolvableElements() {
-		for (Map.Entry<String, Evolvable> entry : evolvableHashMap.entrySet()) {
+		for (Map.Entry<String, List<Evolvable>> entry : evolvableHashMap.entrySet()) {
 			System.out.println(entry.getValue().toString());
 		}
 
@@ -265,14 +269,14 @@ public class ModelParserUltimate implements IModelParser {
 
 		List<Evolvable> allEvolvables = new ArrayList<>();
 		if (evolvableHashMap != null && !evolvableHashMap.isEmpty()) {
-			for (Evolvable e: evolvableHashMap.values()) {
-				allEvolvables.add(e);
+			for (Map.Entry<String, List<Evolvable>> entry : evolvableHashMap.entrySet()) {
+				allEvolvables.addAll(entry.getValue());
 			}
 		}
 		return allEvolvables;
 	}
 
-	public HashMap<String, Evolvable> getEvolvableHashMap() {
+	public HashMap<String, List<Evolvable>> getEvolvableHashMap() {
 		return this.evolvableHashMap;
 	}
 

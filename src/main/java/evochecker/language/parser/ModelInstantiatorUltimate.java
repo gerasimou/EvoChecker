@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import evochecker.evolvables.Evolvable;
 import evochecker.exception.EvoCheckerException;
@@ -76,20 +77,22 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 		StringBuilder concreteModel = new StringBuilder("");
 
 		String[] internalRepresentations = parser.getInternalModelRepresentation().split("@@@");
-		HashMap<String, Evolvable> evolvableHashMap = parser.getEvolvableHashMap();
+		HashMap<String, List<Evolvable>> evolvableHashMap = parser.getEvolvableHashMap();
+
 		for (String ir : internalRepresentations) {
 
-			String fileName = ir.split("\n")[0];
+			String fileName = ir.split("\n")[0].replace("//", "");
+			System.out.println("fileName: " + fileName);
 
-			List<String> thisModelEvolvableNames = new java.util.ArrayList<String>();
-			for (Map.Entry<String, Evolvable> entry : evolvableHashMap.entrySet()) {
-				if (entry.getKey().equals(fileName)) {
-					thisModelEvolvableNames.add(entry.getValue().getName());
-				}
-			}
+			List<Evolvable> thisModelEvolvables = evolvableHashMap.get(fileName);
+			List<String> thisModelEvolvablesNames = thisModelEvolvables.stream()
+					.map(Evolvable::getName).collect(Collectors.toList());;
+
+			System.out.println(thisModelEvolvablesNames.toString());
 
 			for (AbstractGene gene : genes) {
-				if (thisModelEvolvableNames.contains(gene.getName())) {
+				if (thisModelEvolvablesNames.contains(gene.getName())) {
+					System.out.println("Gene: " + gene.getName() + " in " + fileName);
 					if (gene instanceof IntegerGene) {
 						concreteModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
 					} else if (gene instanceof DoubleGene) {

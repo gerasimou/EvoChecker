@@ -158,18 +158,74 @@ public class EvoCheckerInitialiser {
         }
     }
 
+    // private List<List<Property>> getUltimateObjectivesConstraints(String str) {
+    //     List<List<Property>> list = new java.util.ArrayList<>();
+    //     String[] modelStrings = str.split("@@@");
+    //     for (String s : modelStrings) {
+    //         System.out.println("Model string\n" + s);
+    //         String propertiesFileName = Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD);
+
+    //         // get the properties directly
+
+    //         // Load the properties file
+    //         String propertiesContent = FileUtil.readFile(propertiesFileName);
+
+    //         // Regex match every two lines: first line starts with "//", second with
+    //         // alphanumeric
+    //         java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("(?m)^//.*\\R^[a-zA-Z0-9].*");
+    //         java.util.regex.Matcher matcher = pattern.matcher(propertiesContent);
+
+    //         String[] matches = matcher.results()
+    //                 .map(m -> m.group())
+    //                 .toArray(String[]::new);
+
+    //         for (String m : matches) {
+    //             System.out.println("Found property:\n" + m);
+    //             java.util.regex.Pattern quotePattern = java.util.regex.Pattern.compile("\"([^\"]*)\"");
+    //             java.util.regex.Matcher quoteMatcher = quotePattern.matcher(m);
+
+    //             // Extract matches without quotes
+    //             String[] quoteMatches = quoteMatcher.results()
+    //                     .map(qm -> qm.group(1))
+    //                     .toArray(String[]::new);
+    //             System.out.println("Quote matches found in model string: " + String.join(" --- ", quoteMatches));
+
+    //             for (String qm : quoteMatches) {
+    //                 if (s.contains(qm)) {
+    //                     System.out.println("Property found in file" + str.split("\n")[0]);
+    //                     try {
+    //                         list.addAll(PropertyFactory.getObjectivesConstraints(s, m));
+    //                     } catch (EvoCheckerException e) {
+    //                         System.err.println("Error parsing properties from model string: " + s);
+    //                         e.printStackTrace();
+    //                         System.exit(1);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     return list;
+    // }
+
     private void initialiseProperties() {
 
         String str = modelInstantiator.getConcreteModel(genes);
         List<List<Property>> list = null;
-        // the below causes issuse with the PRISM API
+
         if (ecType == EvoCheckerType.ULTIMATE) {
-            list = new java.util.ArrayList<>();
-            String[] modelStrings = str.split("@@@");
-            for (String s : modelStrings){
-                System.out.println("Model representation:\n" + s);
-                list.addAll(PropertyFactory.getObjectivesConstraints(s));
-            }
+
+            // Issue:
+            //
+            // PRISM API requires that when parsing properties file a model file is provided as well,
+            // and the properties must be relevant to that model file. If a property is not found in the model,
+            // the API causes the program to close with a System.exit() without throwing an exception. This means
+            // that for us to parse the properties using the PRISM API, we would need some way of knowing which
+            // objective/constraint applies to which model in the ensemble, so that on each API invocation we could
+            // pass only one model and all of its associated O/Cs.
+
+            System.out.println("ULTIMATE Unimplemented. Exiting");
+            System.exit(1);
 
         } else {
 
