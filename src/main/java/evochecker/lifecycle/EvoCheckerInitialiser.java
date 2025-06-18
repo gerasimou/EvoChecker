@@ -1,7 +1,10 @@
 package evochecker.lifecycle;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 // import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import evochecker.EvoCheckerType;
@@ -20,13 +23,13 @@ import evochecker.genetic.problem.GeneticProblem;
 import evochecker.genetic.problem.GeneticProblemParametricParallel;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.language.parser.ModelInstantiatorUltimate;
-// import evochecker.language.parser.ModelInstantiatorUltimate;
+import evochecker.language.parser.ModelInstantiator;
 import evochecker.language.parser.ModelInstantiatorParametric;
 import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
-
+import ultimate.Ultimate;
 
 public class EvoCheckerInitialiser {
 
@@ -74,10 +77,9 @@ public class EvoCheckerInitialiser {
 
         // // check if modelFilename can be split into a list
         // if (modelFilename.contains(",")) {
-        //     modelFileList = modelFilename.split(",");
-        //     System.out.println("Model files: " + String.join(" | ", modelFileList));
+        // modelFileList = modelFilename.split(",");
+        // System.out.println("Model files: " + String.join(" | ", modelFileList));
         // }
-        
 
         // 1) initialise problem
         algorithmName = Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
@@ -92,6 +94,7 @@ public class EvoCheckerInitialiser {
                 break;
             case ULTIMATE:
                 ecType = EvoCheckerType.ULTIMATE;
+                break;
             case REGION:
                 ecType = EvoCheckerType.REGION;
                 throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
@@ -111,20 +114,19 @@ public class EvoCheckerInitialiser {
 
         // 1) parse model template
 
-
         System.out.println("Model file: " + modelFilename);
         System.out.println("Properties file: " + propertiesFilename);
 
         switch (ecType) {
             case NORMAL:
-                modelInstantiator = new ModelInstantiatorUltimate(modelFilename, propertiesFilename);
+                modelInstantiator = new ModelInstantiator(modelFilename, propertiesFilename);
                 break;
             case PARAMETRIC:
                 modelInstantiator = new ModelInstantiatorParametric(modelFilename, propertiesFilename);
                 break;
-            // case ULTIMATE:
-            //     modelInstantiator = new ModelInstantiatorUltimate(modelFilename, propertiesFilename);
-            //     break;
+            case ULTIMATE:
+                modelInstantiator = new ModelInstantiatorUltimate(modelFilename, propertiesFilename);
+                break;
             case REGION:
                 throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
         }
@@ -157,10 +159,23 @@ public class EvoCheckerInitialiser {
     }
 
     private void initialiseProperties() {
-        System.out.println("INITIALISE PROPERTIES");
+
         String str = modelInstantiator.getConcreteModel(genes);
-        System.out.println("str: START\n" + str + "\nEND");
-        List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
+        List<List<Property>> list = null;
+        // the below causes issuse with the PRISM API
+        if (ecType == EvoCheckerType.ULTIMATE) {
+            list = new java.util.ArrayList<>();
+            String[] modelStrings = str.split("@@@");
+            for (String s : modelStrings){
+                System.out.println("Model representation:\n" + s);
+                list.addAll(PropertyFactory.getObjectivesConstraints(s));
+            }
+
+        } else {
+
+            list = PropertyFactory.getObjectivesConstraints(str);
+        }
+
         objectivesList = list.get(0);
         constraintsList = list.get(1);
 
@@ -179,7 +194,7 @@ public class EvoCheckerInitialiser {
      */
     public void initialiseEvoCheckerAlgorithm() throws Exception {
 
-        System.out.println("Algorithm: " + algorithmName); 
+        System.out.println("Algorithm: " + algorithmName);
         System.out.println("Problem: " + problemName);
 
         if (algorithmName != null) {
@@ -207,7 +222,6 @@ public class EvoCheckerInitialiser {
             else
                 throw new Exception("Algorithm not recognised");
         }
-
 
     }
 

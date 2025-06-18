@@ -42,8 +42,8 @@ public class PropertyFactory {
 		try {
 			PrismAPI api = new PrismAPI(null);
 			api.parseModelAndProperties(internalModel, propertiesFilename);
-	
-			PropertiesFile  propsFile = api.getPrismPropertiesFile();
+
+			PropertiesFile propsFile = api.getPrismPropertiesFile();
 			
 			
 			int numProps = propsFile.getNumProperties();

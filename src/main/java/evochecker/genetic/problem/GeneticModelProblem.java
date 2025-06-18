@@ -102,6 +102,7 @@ public abstract class GeneticModelProblem extends Problem {
 		switch (ModelInvokerEngine.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_ENGINE).toUpperCase())) {
 			case PRISM		: modelInvoker = new ModelInvokerPrism(); break;
 			case STORM		: modelInvoker = new ModelInvokerStorm(); break;
+			case ULTIMATE	: System.out.print("ULTIMATE not yet implemented"); break; // new ModelInvokerUltimate(); break;
 		}
 //		this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here		
 		
