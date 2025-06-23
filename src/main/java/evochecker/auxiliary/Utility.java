@@ -305,7 +305,7 @@ public class Utility {
 	  public static void saveTimeToFile(String description) {
 		  //check if start time is set
 		  if (startTime == -1) {
-			  System.err.println("Start time not set. Cannot save execution time. Add Utility.setStartTime(); at the beginning of your program.");
+			  System.err.println("[Utility] Start time not set. Cannot save execution time. Add Utility.setStartTime(); at the beginning of your program.");
 			  return;
 		  }
 		  //get execution time = current time - start time
@@ -327,9 +327,9 @@ public class Utility {
 		  try (FileWriter writer = new FileWriter(file, true)) {
               writer.append(description + "\t" + executionTime + "\n");
               writer.flush();  // Ensure content is written to file
-              System.out.println("Successfully appended 'a' to the file.");
+              //System.out.println("Successfully appended to the file.");
           } catch (IOException e) {
-			  System.err.println("An error occurred while appending to the file.");
+			  System.err.println("[Utility] An error occurred while appending to the file.");
 			  e.printStackTrace();
 			  System.exit(0);
 		  }
