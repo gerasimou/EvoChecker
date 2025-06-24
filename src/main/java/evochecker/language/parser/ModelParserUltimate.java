@@ -131,7 +131,7 @@ public class ModelParserUltimate implements IModelParser {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = null;
 
-		System.out.println("Parsing ULTIMATE folder " + modelFilename);
+		System.out.println("Parsing ULTIMATE file " + modelFilename);
 
 		// Get the directory that modelFilename is in
 		File modelFile = new File(modelFilename);
@@ -144,15 +144,15 @@ public class ModelParserUltimate implements IModelParser {
 			System.exit(1);
 		}
 
-		JsonNode models = root.get("models");
+		JsonNode models = root.get("models"); 
 
 		for (JsonNode model : models) {
 			try {
-				String fileName = model.get("fileName").asText();
+				String fileName = model.get("fileName").asText(); // e.g. casino.dtmc
 				String path = modelDirectory + "/" + fileName;
 				System.out.println("Parsing component model at " + path);
-				String modelString = FileUtil.readFile(path);
-				runVisitor(modelString, fileName);
+				String modelString = FileUtil.readFile(path); // model string for casino.dtmc
+				runVisitor(modelString, fileName); // get evolvables from that model specifically
 			} catch (EvoCheckerException e) {
 				// e.printStackTrace();
 				System.err.println(e.getMessage() + ".");
@@ -166,7 +166,7 @@ public class ModelParserUltimate implements IModelParser {
 		}
 		System.out.println("\n");
 
-		// this.setInternalModelRepresentation();
+		// concatenated string of modelRepresentation1 + @@@ + modelRepresentation2
 		this.internalModelRepresentation = String.join("@@@", modelRepresentations);
 	}
 

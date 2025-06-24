@@ -85,8 +85,9 @@ public class PropertyFactory {
 
 		try {
 			java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("evochecker_properties_", ".props");
-			java.nio.file.Files.write(tempFile, properties.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+			java.nio.file.Files.write(tempFile, properties.replace(":","\n").getBytes(java.nio.charset.StandardCharsets.UTF_8));
 			propertiesFilename = tempFile.toAbsolutePath().toString();
+			System.out.println("Temp properties file at: "+ propertiesFilename);
 		} catch (java.io.IOException e) {
 			throw new EvoCheckerException("Failed to create temporary properties file:\n"+ e.getMessage());
 		}
