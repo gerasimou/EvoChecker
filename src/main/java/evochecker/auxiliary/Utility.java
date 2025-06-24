@@ -109,6 +109,7 @@ public class Utility {
 
 			properties = new Properties();
 			properties.load(new FileInputStream(fileName));
+
 			if (modelFileOverride != null) {
 				properties.setProperty("MODEL_TEMPLATE_FILE", modelFileOverride);
 			}
@@ -135,6 +136,7 @@ public class Utility {
 
 	public static String getPropertyIgnoreNull(String key) {
 		// loadPropertiesInstance();
+		// System.out.println("key: " + key);
 		String result = properties.getProperty(key).strip();
 		return result;
 	}
@@ -177,9 +179,10 @@ public class Utility {
 			for (Solution solution : solutions) {
 				StringBuilder objString = new StringBuilder();
 				for (int i = 0; i < numOfObjectives; i++) {
-					if (objectivesList.get(i).isMaximization())
+					if (objectivesList.get(i).isMaximization()) {
+						// System.out.println(solution.getObjective(i));
 						objString.append(-(solution.getObjective(i)));
-					else
+					} else
 						objString.append(solution.getObjective(i));
 					if (i < numOfObjectives - 1)
 						objString.append("\t");

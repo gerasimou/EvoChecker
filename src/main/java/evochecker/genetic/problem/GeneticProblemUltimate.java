@@ -21,7 +21,7 @@ import evochecker.genetic.genes.AbstractGene;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.properties.Property;
 
-public class GeneticProblemUltimate extends GeneticModelProblem {
+public class GeneticProblemUltimate extends GeneticProblem {
 
 	private static final long serialVersionUID = -2679872853510614319L;
 
@@ -46,7 +46,7 @@ public class GeneticProblemUltimate extends GeneticModelProblem {
 	 * @throws EvoCheckerException
 	 */
 	public GeneticProblemUltimate(GeneticProblemUltimate aProblem) throws EvoCheckerException {
-		super((GeneticModelProblem) aProblem);
+		super((GeneticProblemUltimate) aProblem);
 	}
 
 	@Override

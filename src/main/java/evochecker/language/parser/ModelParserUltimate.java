@@ -162,11 +162,9 @@ public class ModelParserUltimate implements IModelParser {
 
 		System.out.println("\nEvolvables in world model:");
 		for (Map.Entry<String, List<Evolvable>> entry : evolvableHashMap.entrySet()) {
-			System.out.println(entry.getKey() + "-" + entry.getValue().toString());
+			System.out.println(entry.getKey() + ": " + entry.getValue().toString());
 		}
-		System.out.println("\n");
-
-		// concatenated string of modelRepresentation1 + @@@ + modelRepresentation2
+		
 		this.internalModelRepresentation = String.join("@@@", modelRepresentations);
 	}
 

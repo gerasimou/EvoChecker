@@ -82,17 +82,17 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 		for (String ir : internalRepresentations) {
 
 			String fileName = ir.split("\n")[0].replace("//", "");
-			System.out.println("fileName: " + fileName);
+			// System.out.println("fileName: " + fileName);
 
 			List<Evolvable> thisModelEvolvables = evolvableHashMap.get(fileName);
 			List<String> thisModelEvolvablesNames = thisModelEvolvables.stream()
 					.map(Evolvable::getName).collect(Collectors.toList());;
 
-			System.out.println(thisModelEvolvablesNames.toString());
+			// System.out.println(thisModelEvolvablesNames.toString());
 
 			for (AbstractGene gene : genes) {
 				if (thisModelEvolvablesNames.contains(gene.getName())) {
-					System.out.println("Gene: " + gene.getName() + " in " + fileName);
+					// System.out.println("Gene: " + gene.getName() + " in " + fileName);
 					if (gene instanceof IntegerGene) {
 						concreteModel.append(elementsMap.get(gene).getConcreteCommand(gene.getAllele()));
 					} else if (gene instanceof DoubleGene) {

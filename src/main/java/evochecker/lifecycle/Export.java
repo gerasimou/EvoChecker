@@ -96,6 +96,7 @@ public class Export {
         FileUtil.saveToFile(frontFile, frontHeader.toString(), true);
 
         List<Solution> solutionList = new ArrayList<Solution>();
+        // System.out.println(solutions)
         for (int i = 0; i < solutions.size(); i++)
             solutionList.add(solutions.get(i));
         Utility.printObjectivesToFile(frontFile, solutionList, objectivesList);

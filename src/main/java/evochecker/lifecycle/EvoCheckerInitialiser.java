@@ -78,8 +78,7 @@ public class EvoCheckerInitialiser {
         ConfigurationChecker.checkConfiguration();
 
         modelFilename = new File(Utility.getProperty(Constants.MODEL_FILE_KEYWORD)).getAbsolutePath();
-        propertiesFilename = new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD))
-                .getAbsolutePath();
+        problemName = Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
 
         // // check if modelFilename can be split into a list
         // if (modelFilename.contains(",")) {
@@ -89,7 +88,6 @@ public class EvoCheckerInitialiser {
 
         // 1) initialise problem
         algorithmName = Utility.getProperty(Constants.ALGORITHM_KEYWORD).toUpperCase();
-        problemName = Utility.getProperty(Constants.PROBLEM_KEYWORD).toUpperCase();
 
         switch (EvoCheckerType.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_TYPE).toUpperCase())) {
             case NORMAL:
@@ -104,6 +102,14 @@ public class EvoCheckerInitialiser {
             case REGION:
                 ecType = EvoCheckerType.REGION;
                 throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
+        }
+
+        // ULTIMATE functionality does not actually use the properties file as the
+        // properties are contained within the
+        // .ultimate file itself
+        if (ecType != EvoCheckerType.ULTIMATE) {
+            propertiesFilename = new File(Utility.getProperty(Constants.PROPERTIES_FILE_KEYWORD))
+                    .getAbsolutePath();
         }
     }
 
@@ -160,6 +166,7 @@ public class EvoCheckerInitialiser {
             case ULTIMATE:
                 problem = new GeneticProblemUltimate(genes, modelInstantiator, objectivesList,
                         constraintsList, problemName);
+                break;
             case REGION:
                 throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
         }
@@ -177,7 +184,7 @@ public class EvoCheckerInitialiser {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = null;
 
-        System.out.println("Parsing ULTIMATE file " + modelFilename);
+        System.out.println("\nParsing ULTIMATE file " + modelFilename);
 
         File modelFile = new File(modelFilename);
 
@@ -190,13 +197,12 @@ public class EvoCheckerInitialiser {
 
         JsonNode models = root.get("models");
         for (JsonNode model : models) { // iterating over models in the ensemble
-            System.out.println("Model: " + model.get("fileName").asText());
+
             JsonNode synthesis = model.get("synthesis");
             if (synthesis != null && synthesis.has("properties")) { // access synthesis node
                 JsonNode properties = synthesis.get("properties");
                 List<String> propertiesList = new ArrayList<>();
                 for (JsonNode property : properties) { // iterate over O/Cs in node
-                    System.out.println("Properties: " + property.asText());
                     propertiesList.add("//" + property.asText()); // must add '//' for syntax reasons
                 }
                 objectiveConstraintsHashMap.put(model.get("fileName").asText(), propertiesList);
@@ -215,16 +221,20 @@ public class EvoCheckerInitialiser {
      */
     private List<List<Property>> getUltimateObjectiveConstraints(String str) {
 
-        List<List<Property>> list = new ArrayList<>();
+        List<List<Property>> worldModelList = new ArrayList<>();
+        worldModelList.add(new ArrayList<>());
+        worldModelList.add(new ArrayList<>());
+
         // get the OCs from the parsed hashmap (which comes from the .ultimate file)
         HashMap<String, List<String>> objectivesConstraintsHashMap = parseUltimateObjectiveConstraints();
 
-        String[] internalRepresentations = str.split("@@@"); // splits the internal representation into individual
-                                                             // models
+        // split compound representation into representations of the individual models:
+        String[] internalRepresentations = str.split("@@@");
 
-        for (String s : internalRepresentations) { // iterate over individual model representations
+        // iterate over individual model representations
+        for (String s : internalRepresentations) {
 
-            // get the filename of the ensemble model:
+            // get the filename of this ensemble model:
             String fileName = null;
             for (String line : s.split("\n")) {
                 if (line.trim().startsWith("//")) {
@@ -232,26 +242,26 @@ public class EvoCheckerInitialiser {
                     break;
                 }
             }
-            System.out.println("Loading objectives/constraints for: " + fileName);
-            List<String> ocs = objectivesConstraintsHashMap.get(fileName); // get OCs (as strings) from the parsed
-                                                                           // hashmap
+            System.out.println("\nLoading objectives/constraints for '" + fileName + "'");
+            List<String> ocs = objectivesConstraintsHashMap.get(fileName); // get OCs (as strings) the parsed hashmap
             if (ocs != null && ocs.size() > 0) {
-                System.out.println("Found objectives/constaints: " + String.join("\n", ocs));
-                String joinedOcs = String.join("", ocs); // join the OCs together into one string
+                System.out.println("Found objectives/constaints:\n" + String.join("\n", ocs));
+                String joinedOcs = String.join("\n\n", ocs); // join the OCs together into one string
                 try {
-                    list.addAll(PropertyFactory.getObjectivesConstraints(s, joinedOcs)); // get OCs (as property
-                                                                                         // objects) from
-                                                                                         // PropertyFactory
+                    // get OCs (as property objects) from PropertyFactory
+                    List<List<Property>> thisModelList = PropertyFactory.getObjectivesConstraints(s, joinedOcs);
+                    worldModelList.get(0).addAll(thisModelList.get(0)); // add to objectives
+                    worldModelList.get(1).addAll(thisModelList.get(1)); // add to constraints
                 } catch (EvoCheckerException e) {
                     System.err.println("Error getting properties for model'" + fileName + "'\n" + e.getMessage());
                     System.exit(1);
                 }
             } else {
-                System.out.println("No objectives/constraints found.");
+                System.out.println("None found, continuing...");
             }
         }
 
-        return list;
+        return worldModelList; // return list of OCs for entire world model
     }
 
     private void initialiseProperties() {
@@ -268,7 +278,7 @@ public class EvoCheckerInitialiser {
         objectivesList = list.get(0);
         constraintsList = list.get(1);
 
-        System.out.println("Objectives (O)/Constraints(C)");
+        System.out.println("\nObjectives (O)/Constraints(C):");
         for (Property p : objectivesList)
             System.out.print("O: " + p.toString());
         for (Property p : constraintsList)
