@@ -29,6 +29,8 @@ public class PreviousPareto {
     
     public PreviousPareto(Problem problem_, String clusterFromPareto) throws JMException, ClassNotFoundException {
         this.prevSolutions = readPreviousSolutions(problem_, clusterFromPareto);
+        if (this.prevSolutions.isEmpty()) 
+        	return; // no previous solutions found, return nothing
     	this.setMinFrontVals(); // set min and max values across Pareto solutions
     }
     
