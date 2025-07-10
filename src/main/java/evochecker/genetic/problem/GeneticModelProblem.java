@@ -44,6 +44,8 @@ import evochecker.properties.Property;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.util.JMException;
+import evochecker.modelInvoker.ModelInvokerUltimate;
+
 
 /**
  * Class representing a genetic problem to be solved through 
@@ -102,9 +104,9 @@ public abstract class GeneticModelProblem extends Problem {
 		switch (ModelInvokerEngine.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_ENGINE).toUpperCase())) {
 			case PRISM		: modelInvoker = new ModelInvokerPrism(); break;
 			case STORM		: modelInvoker = new ModelInvokerStorm(); break;
-			case ULTIMATE	: System.out.print("ULTIMATE not yet implemented"); break; // new ModelInvokerUltimate(); break;
+			case ULTIMATE	: modelInvoker = new ModelInvokerUltimate(); break;
 		}
-//		this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here		
+		// this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here		
 		
 		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, ConfigurationChecker.FALSE));
 		modelType = instantiator.getModelType();
@@ -401,6 +403,8 @@ public abstract class GeneticModelProblem extends Problem {
 	 */
 	public GeneticModelProblem(GeneticModelProblem aProblem) throws EvoCheckerException{
 		
+
+		// ToDo: check this, looks messy, may cause issues / jank
 		if (aProblem.modelInstantiator instanceof  ModelInstantiatorUltimate)
 			this.modelInstantiator 			= new ModelInstantiatorUltimate((ModelInstantiatorUltimate)aProblem.modelInstantiator);
 		else

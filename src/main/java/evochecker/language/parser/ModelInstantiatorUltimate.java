@@ -37,19 +37,24 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 
 	protected Map<String, Object> concreteChromosome;
 
+	private String modelFilename;
+	private String propertiesFileName;
+
 	public ModelInstantiatorUltimate(String modelFilename, String propertiesFilename) {
+		this.modelFilename = modelFilename;
+		this.propertiesFileName = propertiesFilename;
+
 		parser = new ModelParserUltimate(modelFilename, propertiesFilename);
-
 		elementsMap = new HashMap<AbstractGene, Evolvable>();
-
 		concreteChromosome = new HashMap<String, Object>();
 	}
 
 	public ModelInstantiatorUltimate(String modelFilename, String propertiesFilename, ModelParserUltimate modelParser) {
 		parser = modelParser;
+		this.modelFilename = modelFilename;
+		this.propertiesFileName = propertiesFilename;
 
 		elementsMap = new HashMap<AbstractGene, Evolvable>();
-
 		concreteChromosome = new HashMap<String, Object>();
 	}
 
@@ -149,6 +154,14 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 	@Override
 	public MODEL_TYPE getModelType() {
 		return parser.getModelType();
+	}
+
+	public String getModelFilename() {
+		return modelFilename;
+	}
+
+	public String getPropertiesFileName() {
+		return propertiesFileName;
 	}
 
 }
