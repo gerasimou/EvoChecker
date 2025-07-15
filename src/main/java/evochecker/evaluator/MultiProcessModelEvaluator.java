@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,139 +32,160 @@ import jmetal.core.Solution;
 
 /**
  * Class representing a parallel evaluator
+ * 
  * @author sgerasimou
  *
  */
 public class MultiProcessModelEvaluator implements IParallelEvaluator {
-	/** number of parallel executions (processes)*/
+	/** number of parallel executions (processes) */
 	private int numberOfProcesses;
 
 	private Problem[] problems;
-	
-	/** List of solutions*/
+
+	/** List of solutions */
 	private List<Solution> solutionsList;
 
-	/** Solution results list*/
+	/** Solution results list */
 	private CopyOnWriteArrayList<Solution> evaluatedSolutions;
 
-	/** Array of threads*/
+	/** Array of threads */
 	private Thread[] threads;
 
-	/** Array of runnables*/
+	/** Array of runnables */
 	private RunnableExecutor[] runnables;
-		
-	/** Set of connections array keeping the evaluators instances*/
+
+	/** Set of connections array keeping the evaluators instances */
 	private Connection connections[];
 
-	
 	/**
 	 * Constructor
+	 * 
 	 * @param processes
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public MultiProcessModelEvaluator(){
+	public MultiProcessModelEvaluator() {
 		String processesNum = Utility.getProperty(Constants.PROCESSORS_KEYWORD);
-		if (processesNum!=null)
+		// System.out.println("Processes: " + processesNum);
+		if (processesNum != null)
 			numberOfProcesses = Integer.parseInt(processesNum);
 		else if (processesNum == null || processesNum.equals("-1"))
 			numberOfProcesses = Runtime.getRuntime().availableProcessors();
-			
-		//initialise connections and executors
+
+		// initialise connections and executors
 		int initPort = Integer.parseInt(Utility.getProperty(Constants.INITIAL_PORT_KEYWORD));
+		int retries = 0;
+		int max_retries = 100;
+		while (retries < max_retries) {
+			int portToTest = initPort + retries;
+			// System.out.println("Testing: " + portToTest);
+			try (ServerSocket serverSocket = new ServerSocket(portToTest)) {
+				initPort = portToTest;
+				break;
+			} catch (IOException e) {
+				retries++;
+			}
+		}
+		if (retries == max_retries) {
+			int finalPort = initPort + retries;
+			System.out.print("Could not find an available port in " + initPort + " -- " + finalPort
+					+ ". Try adjusting INIT_PORT in the config file.\nExiting.");
+			System.exit(1);
+		}
+
+		// System.out.println("Using port " + initPort);
+
 		connections = new Connection[numberOfProcesses];
 		for (int i = 0; i < numberOfProcesses; i++) {
 			try {
+				int port = initPort + i;
+				// System.out.println("Establishing connection to " + port);
 				connections[i] = new Connection(initPort + i, i, this);
+		
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}		
-		
-		//initialise threads, runnables and solutions
-		threads 		= new Thread[numberOfProcesses];
-		runnables 		= new RunnableExecutor[numberOfProcesses];
-		solutionsList 	= new ArrayList<Solution>();
-		
+		}
+
+		// initialise threads, runnables and solutions
+		// System.out.println("Initialising threads");
+		threads = new Thread[numberOfProcesses];
+		// System.out.println("Initialising executor");
+		runnables = new RunnableExecutor[numberOfProcesses];
+		solutionsList = new ArrayList<Solution>();
+
 	}
 
-	
-	/** 
-	 * Initialise evaluator 
+	/**
+	 * Initialise evaluator
 	 */
 	public void startEvaluator(Problem problem) {
-		//System.out.println("Cores: " + numberOfProcesses);
+		// System.out.println("Cores: " + numberOfProcesses);
 
-		try {		
+		try {
 			problems = new Problem[numberOfProcesses];
-			if (problem instanceof GeneticProblem){
-				for (int i=0; i<numberOfProcesses; i++){
-					problems[i] = problem;//new GeneticProblem((GeneticProblem) problem);
+			if (problem instanceof GeneticProblem) {
+				for (int i = 0; i < numberOfProcesses; i++) {
+					problems[i] = problem;// new GeneticProblem((GeneticProblem) problem);
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
 
-	/** 
+	/**
 	 * Add the solution to the list of solutions to be evaluated
 	 */
 	public void addSolutionForEvaluation(Solution solution) {
-//		 System.out.println("Adding a solution to be evaluated");
+		// System.out.println("Adding a solution to be evaluated");
 		solutionsList.add(solution);
 	}
 
-	
 	/**
 	 * Run parallel evaluation
 	 */
 	public List<Solution> parallelEvaluation() {
-//		System.out.println("Parallel evaluation");
+		// System.out.println("Parallel evaluation");
 		evaluatedSolutions = new CopyOnWriteArrayList<Solution>();
 		this.reset();
 		this.assignSolutions();
 		this.startThreads();
 		solutionsList.clear();
-//		System.out.println("End of parallel evaluation....");
+		// System.out.println("End of parallel evaluation....");
 		return this.evaluatedSolutions;
 	}
-	
-	
+
 	/**
-	* Assign solutions to parallel processes
-	*/
+	 * Assign solutions to parallel processes
+	 */
 	private void assignSolutions() {
 		if (numberOfProcesses > 1) {
 			for (int i = 0; i < solutionsList.size(); i++) {
-	//			System.out.println("Assigning tasks");
+				// System.out.println("Assigning tasks");
 				runnables[i % runnables.length].addSolutionForEvaluation(solutionsList
 						.get(i));
 			}
-		}
-		else {
+		} else {
 			runnables[0].solutionsList = solutionsList;
 		}
 	}
-	
 
 	/**
 	 * When done, reset the evaluators
 	 */
-	private void reset() {	
-//		if (numberOfProcesses > 1) {
-			for (int i = 0; i < numberOfProcesses; i++) {
-				runnables[i] = new RunnableExecutor(connections[i], problems[i]); 
-	//					new RunnableExecutor(connections[i].getOutChannel(), connections[i].getInChannel(), problems[i]);
-				threads[i] 	 = new Thread(runnables[i]);
-			}
-//		}
-//		else {
-//			threads[0] 	 = new Thread(runnables[0]);
-//		}
+	private void reset() {
+		// if (numberOfProcesses > 1) {
+		for (int i = 0; i < numberOfProcesses; i++) {
+			runnables[i] = new RunnableExecutor(connections[i], problems[i]);
+			// new RunnableExecutor(connections[i].getOutChannel(),
+			// connections[i].getInChannel(), problems[i]);
+			threads[i] = new Thread(runnables[i]);
+		}
+		// }
+		// else {
+		// threads[0] = new Thread(runnables[0]);
+		// }
 	}
-
 
 	/**
 	 * Start parallel execution
@@ -182,80 +204,74 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		}
 	}
 
-	
 	/**
 	 * Once finished, stop the evaluators
 	 */
 	public void stopEvaluator() {
 		try {
-			//close connections
-			for (Connection c: connections) 
+			// close connections
+			for (Connection c : connections)
 				c.close();
 
-			//do any cleaning for problems
+			// do any cleaning for problems
 			for (Problem p : problems)
-				((GeneticModelProblem)p).closeDown();
-			
-		} 
-		catch (IOException e) {
+				((GeneticModelProblem) p).closeDown();
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
 	public void setConnection(int id, Connection c) {
 		connections[id] = c;
 	}
-	
+
 	/**
 	 * Inner class
+	 * 
 	 * @author sgerasimou
 	 *
 	 */
 	private class RunnableExecutor implements Runnable {
-		/** List of solutions to be evaluated*/
+		/** List of solutions to be evaluated */
 		private List<Solution> solutionsList = new ArrayList<Solution>();
 
- 		/** Output*/
+		/** Output */
 		private PrintWriter out;
 
-		/** Input*/
+		/** Input */
 		private BufferedReader in;
 
-		/** Problem to be handled by this executor*/
+		/** Problem to be handled by this executor */
 		Problem runnableProblem;
-		
+
 		Connection connection;
-		
-		
+
 		/**
 		 * Class constructor: create a new runnable executor
+		 * 
 		 * @param out
 		 * @param in
 		 */
 		public RunnableExecutor(PrintWriter out, BufferedReader in, Problem problem) {
-			this.in 			 = in;
-			this.out 			 = out;
+			this.in = in;
+			this.out = out;
 			this.runnableProblem = problem;
-			this.solutionsList 	 = new ArrayList<Solution>();
+			this.solutionsList = new ArrayList<Solution>();
 		}
-		
-		
+
 		public RunnableExecutor(Connection c, Problem problem) {
-			this.in 			 = c.getInChannel();
-			this.out 			 = c.getOutChannel();
+			this.in = c.getInChannel();
+			this.out = c.getOutChannel();
 			this.runnableProblem = problem;
-			this.solutionsList 	 = new ArrayList<Solution>();
-			this.connection		 = c; 
+			this.solutionsList = new ArrayList<Solution>();
+			this.connection = c;
 		}
 
-
-		/** Add a solution for evaluation*/
+		/** Add a solution for evaluation */
 		public void addSolutionForEvaluation(Solution solution) {
 			this.solutionsList.add(solution);
 		}
-		
 
 		/**
 		 * Run
@@ -264,119 +280,109 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		public void run() {
 			for (Solution solution : this.solutionsList) {
 				try {
-					if (runnableProblem instanceof GeneticModelProblem){
-						boolean OK = ((GeneticModelProblem) runnableProblem).parallelEvaluate(in, out, solution);
+					if (runnableProblem instanceof GeneticModelProblem) {
+						boolean OK = ((GeneticModelProblem) runnableProblem).evaluateSolution(in, out, solution);
 						if (!OK) {
 							this.connection = new Connection(connection);
-							this.in			= connection.getInChannel();
-							this.out		= connection.getOutChannel();
-						}	
-					}
-					else throw new IllegalArgumentException("Problem not recognised");
+							this.in = connection.getInChannel();
+							this.out = connection.getOutChannel();
+						}
+					} else
+						throw new IllegalArgumentException("Problem not recognised");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-//				 System.out.println("Adding result");
+				// System.out.println("Adding result");
 				evaluatedSolutions.add(solution);
 			}
 		}
 	}
-	
-	
-	
+
 	private class Connection {
 
 		/** Socket **/
 		private Socket socket;
-		
-		/** Input channel**/
+
+		/** Input channel **/
 		private BufferedReader in;
-		
-		/** Output channel**/
+
+		/** Output channel **/
 		private PrintWriter out;
 
 		private final String HOSTNAME = "127.0.0.1";
-		
+
 		private int portNum;
-		
+
 		private MultiProcessModelEvaluator evaluator;
-		
+
 		private int id;
 
 		public Connection(int portNum, int id, MultiProcessModelEvaluator evaluator) throws Exception {
-			this.portNum 	= portNum;
-			this.evaluator 	= evaluator;
-			this.id			= id;
+			this.portNum = portNum;
+			this.evaluator = evaluator;
+			this.id = id;
 			start();
 		}
-		
-		public Connection (Connection c) throws Exception {
+
+		public Connection(Connection c) throws Exception {
 			this(c.portNum, c.id, c.evaluator);
 			evaluator.setConnection(id, this);
 		}
-		
-		
+
 		public void start() {
 			String params[] = new String[4];
 			params[0] = Utility.getProperty(Constants.JAVA_KEYWORD);
 			params[1] = "-jar";
 			params[2] = Utility.getProperty(Constants.MODEL_CHECKING_ENGINE);
 			params[3] = String.valueOf(portNum);
-			
-			
+
 			try {
 				ProcessBuilder pb = new ProcessBuilder(params);
 				Map<String, String> env = pb.environment();
-				env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR)); //OSX
-				env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR));   //Linux
-	
-				
+				env.put("DYLD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR)); // OSX
+				env.put("LD_LIBRARY_PATH", Utility.getProperty(Constants.MODEL_CHECKING_ENGINE_LIBS_DIR)); // Linux
+
 				boolean alive = false;
 				do {
 					Process p;
-						p = pb.start();
+					p = pb.start();
 					alive = p.isAlive();
 					Thread.sleep(1000);
 				} while (!alive);
-	
+
 				boolean successful = false;
 				while (!successful) {
 					try {
-						socket	= new Socket(HOSTNAME, portNum);
-						in		= new BufferedReader(new InputStreamReader(socket.getInputStream()));
-						out		= new PrintWriter(socket.getOutputStream());
+						socket = new Socket(HOSTNAME, portNum);
+						in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+						out = new PrintWriter(socket.getOutputStream());
 						successful = true;
 					} catch (IOException | NullPointerException e) {
 						Thread.sleep(1000);
 						pb.start();
 					}
 				}
-			}
-			catch (IOException | InterruptedException e) {
+			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
-		}		
-		
-		
+		}
+
 		public BufferedReader getInChannel() {
 			return in;
 		}
 
-		
 		public PrintWriter getOutChannel() {
 			return out;
 		}
-		
+
 		protected int getPort() {
 			return portNum;
 		}
 
-		
 		public void close() throws IOException {
 			out.close();
 			in.close();
 		}
 	}
-
 
 }

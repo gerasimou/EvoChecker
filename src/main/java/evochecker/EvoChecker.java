@@ -127,6 +127,8 @@ public class EvoChecker {
 	private static String configFilePathCli;
 	private static boolean printHelpCli = false;
 
+	private static Ultimate ultimateInstance;
+
 	public EvoChecker() {
 
 	}
@@ -235,6 +237,18 @@ public class EvoChecker {
 		ec.closeDown();
 	}
 
+	public void setUltimateInstance(Ultimate ultimate){
+		ultimateInstance = ultimate;
+	}
+
+	public void setUltimateVerificationProperty(String property){
+		ultimateInstance.setVerificationProperty(property);
+	}
+
+	public static Ultimate getUltimateInstance(){
+		return ultimateInstance;
+	}
+
 	public void setConfigurationFile(String configFile) {
 		setConfigurationFile(configFile, null, null);
 	}
@@ -262,9 +276,13 @@ public class EvoChecker {
 		try {
 			// make initialisations
 
+			System.out.println("Initialising options");
 			initialiser.initialiseEvoCheckerOptions();
+			System.out.println("Initialising problem");
 			initialiser.initializeEvoCheckerProblem();
+			System.out.println("Initialising algorithm");
 			initialiser.initialiseEvoCheckerAlgorithm();
+			System.out.println("Initialising output");
 			initialiser.initialiseOutputData();
 
 			modelFilename = initialiser.getModelFilename();
@@ -283,6 +301,7 @@ public class EvoChecker {
 
 			outputDir = initialiser.getOutputDir();
 
+			System.out.println("Executing");
 			solutions = execute();
 
 			long end = System.currentTimeMillis();
@@ -320,7 +339,6 @@ public class EvoChecker {
 	 */
 	protected SolutionSet execute() throws Exception {
 		// Execute the Algorithm
-		System.out.println("Starting  evolution");
 		SolutionSet solutions = algorithm.execute();
 
 		return solutions;
@@ -409,7 +427,7 @@ public class EvoChecker {
 	/**
 	 * Print statistics
 	 */
-	private void printStatistics() {
+	public void printStatistics() {
 		System.out.println(getStatistics());
 	}
 
@@ -515,7 +533,7 @@ public class EvoChecker {
 		this.constraintsList = constraints;
 	}
 
-	protected SolutionSet getSolutions() {
+	public SolutionSet getSolutions() {
 		return this.solutions;
 	}
 

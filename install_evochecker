@@ -1,0 +1,4 @@
+#!/bin/bash
+rm target/*.jar
+mvn clean package
+mvn install:install-file -Dfile=target/EvoChecker-1.1.1.jar -DgroupId=edu.evochecker_project -DartifactId=evochecker -Dversion=1.0.1-SNAPSHOT -Dpackaging=jar

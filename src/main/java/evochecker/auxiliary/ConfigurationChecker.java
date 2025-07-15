@@ -10,7 +10,7 @@ import evochecker.exception.EvoCheckerException;
 import evochecker.modelInvoker.ModelInvokerEngine;
 
 public class ConfigurationChecker {
-	
+
 	public final static String NAN = "NAN";
 	public final static String TRUE = "TRUE";
 	public final static String FALSE = "FALSE";
@@ -130,7 +130,11 @@ public class ConfigurationChecker {
 		}
 
 		File engine = null;
-		if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN)) {
+		if (ecType == EvoCheckerType.ULTIMATE){
+			// TODO: tidy
+			engine = null;
+		}
+		else if (Utility.getProperty(Constants.MODEL_CHECKING_ENGINE, NAN).equals(NAN)) {
 			if (ecType == EvoCheckerType.REGION)
 				engine = new File(Constants.MODEL_CHECKING_ENGINE_REGION);
 			else if ((ecType == EvoCheckerType.NORMAL) && (ecEngine == ModelInvokerEngine.STORM)) {
@@ -165,24 +169,24 @@ public class ConfigurationChecker {
 		else
 			System.out.println(getConfiguration());
 	}
-	
-	
+
 	/**
 	 * Print the current EvoChecker configuration
+	 * 
 	 * @return
 	 */
 	private static String getConfiguration() {
 		StringBuilder str = new StringBuilder();
-		
+
 		str.append("Configuration script\n");
 		str.append("==========================================\n");
-		
+
 		Properties props = Utility.getAllProperties();
 		for (Map.Entry<Object, Object> entry : props.entrySet()) {
-			str.append(entry.getKey() +" = "+ entry.getValue() +"\n");
+			str.append(entry.getKey() + " = " + entry.getValue() + "\n");
 		}
 		str.append("==========================================\n");
-		
+
 		return str.toString();
 	}
 }

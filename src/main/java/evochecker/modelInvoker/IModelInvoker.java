@@ -27,13 +27,16 @@ import evochecker.genetic.genes.AbstractGene;
  */
 public interface IModelInvoker {
 
-	public List<String> invoke(String model, String propertyFile, List<Property> objectives, List<Property> constraints, PrintWriter out, BufferedReader in) throws IOException;
+    public List<String> invoke(String model, String propertyFile, List<Property> objectives, List<Property> constraints,
+            PrintWriter out, BufferedReader in) throws IOException;
 
-	public List<String> invokeParam(String model, String propertyFile, List<Property> objectives, List<Property> constraints, PrintWriter out, BufferedReader in) throws IOException;
+    public List<String> invokeParam(String model, String propertyFile, List<Property> objectives,
+            List<Property> constraints, PrintWriter out, BufferedReader in) throws IOException;
 
-    default List<String> invokeEnsemble(String modelFile, List<AbstractGene> genes) throws IOException {
+    default List<String> invokeEnsemble(String modelFile, HashMap<String, List<List<Property>>> objectiveConstraintsMap,
+            List<AbstractGene> genes) throws IOException {
         throw new UnsupportedOperationException("Method 'invokeEnsemble' not implemented for this invoker type.");
     }
-	
-	public IModelInvoker copy(int id);
+
+    public IModelInvoker copy(int id);
 }

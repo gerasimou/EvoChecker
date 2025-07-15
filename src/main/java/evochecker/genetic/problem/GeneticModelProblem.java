@@ -309,7 +309,7 @@ public abstract class GeneticModelProblem extends Problem {
 	 * @throws JMException
 	 * @throws EvoCheckerException 
 	 */
-	public boolean parallelEvaluate(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
+	public boolean evaluateSolution(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
 		//Populate genes
 		this.populateGenesWithRealSolution(solution);
 		this.populateGenesWithIntSolution(solution);

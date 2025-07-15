@@ -61,7 +61,7 @@ public class EvoCheckerInitialiser {
     Boolean allowUnspecifiedFiles = false; // if true, model and properties
     // filenames in config file are not checked
     // for existence
-    HashMap<String, List<List<Property>>> ensembleObjectiveConstraintsMap = null; 
+    HashMap<String, List<List<Property>>> ensembleObjectiveConstraintsMap = null;
 
     public void initialiseEvoCheckerOptions()
 
@@ -165,7 +165,8 @@ public class EvoCheckerInitialiser {
                         constraintsList, problemName);
                 break;
             case ULTIMATE:
-                problem = new GeneticProblemUltimate(genes, (ModelInstantiatorUltimate)modelInstantiator, objectivesList, constraintsList, problemName);
+                problem = new GeneticProblemUltimate(genes, (ModelInstantiatorUltimate) modelInstantiator,
+                        objectivesList, constraintsList, ensembleObjectiveConstraintsMap, problemName);
                 break;
             case REGION:
                 throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
@@ -252,7 +253,7 @@ public class EvoCheckerInitialiser {
                     List<List<Property>> thisModelList = PropertyFactory.getObjectivesConstraints(s, joinedOcs);
                     objectivesList.addAll(thisModelList.get(0)); // add to objectives
                     constraintsList.addAll(thisModelList.get(1)); // add to constraints
-                    ensembleObjectiveConstraintsMap.put(fileName, thisModelList);
+                    ensembleObjectiveConstraintsMap.put(fileName.split("\\.")[0], thisModelList); // TODO: fix presuming id.extension = filename
                 } catch (EvoCheckerException e) {
                     System.err.println("Error getting properties for model'" + fileName + "'\n" + e.getMessage());
                     System.exit(1);
@@ -266,14 +267,14 @@ public class EvoCheckerInitialiser {
     private void initialiseProperties() {
 
         String str = modelInstantiator.getConcreteModel(genes);
-        
+
         if (ecType == EvoCheckerType.ULTIMATE) {
-             configureUltimateObjectiveConstraints(str);
+            configureUltimateObjectiveConstraints(str);
         } else {
             List<List<Property>> list = PropertyFactory.getObjectivesConstraints(str);
             objectivesList = list.get(0);
             constraintsList = list.get(1);
-    
+
             System.out.println("\nObjectives (O)/Constraints(C):");
             for (Property p : objectivesList)
                 System.out.print("O: " + p.toString());
@@ -281,8 +282,7 @@ public class EvoCheckerInitialiser {
                 System.out.print("C: " + p.toString());
             System.out.println();
         }
-        }
-
+    }
 
     /**
      * initialise algorithm
@@ -302,8 +302,11 @@ public class EvoCheckerInitialiser {
                 RandomSearch_Settings rsSettings = new RandomSearch_Settings(problemName, problem);
                 algorithm = rsSettings.configure();
             } else if (algorithmName.equals(Constants.ALGORITHM.SPEA2.toString())) {
+                System.out.println("Starting configuration");
                 SPEA2_Settings spea2Settings = new SPEA2_Settings(problemName, problem);
+                System.out.println("Got settings - 5");
                 algorithm = spea2Settings.configure();
+                System.out.println("Configured algorithm");
             } else if (algorithmName.equals(Constants.ALGORITHM.MOCELL.toString())) {
                 MOCell_Settings mocellSettings = new MOCell_Settings(problemName, problem);
                 algorithm = mocellSettings.configure();
