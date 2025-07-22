@@ -102,28 +102,22 @@ public class SPEA2_Settings extends Settings {
     // Creating the algorithm
     IParallelEvaluator evaluator = null;
 
-    System.out.print("EvoChecker Enginer: " + Utility.getProperty(Constants.EVOCHECKER_ENGINE)+"\n");
     if (!"ULTIMATE".equals(Utility.getProperty(Constants.EVOCHECKER_ENGINE))) {
-      System.out.println("Creating MP evaluator");
       evaluator = new MultiProcessModelEvaluator();
     } else {
-      System.out.println("Creating ULTIMATE evaluator");
       evaluator = new UltimateModelEvaluator();
     }
-    System.out.println("Creating pSPEA2");
     algorithm = new pSPEA2(problem_, evaluator);
 
     // Creating the problem
     // algorithm = new SPEA2(problem_) ;
 
     // Algorithm parameters
-    System.out.println("Setting input parameters");
     algorithm.setInputParameter("populationSize", populationSize_);
     algorithm.setInputParameter("archiveSize", archiveSize_);
     algorithm.setInputParameter("maxEvaluations", maxEvaluations_);
 
     // Mutation and Crossover for Real codification
-    System.out.println("Adding parameters");
     parameters = new HashMap<String, Double>();
 
     parameters.put("realCrossoverProbability", this.realCrossoverProbability_);
@@ -141,7 +135,6 @@ public class SPEA2_Settings extends Settings {
     parameters = null;
     selection = SelectionFactory.getSelectionOperator("BinaryTournament", parameters);
 
-    System.out.println("Adding operators");
     // Add the operators to the algorithm
     algorithm.addOperator("crossover", crossover);
     algorithm.addOperator("mutation", mutation);

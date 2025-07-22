@@ -90,6 +90,8 @@ public class GeneticProblemUltimate extends GeneticProblem {
 
 		evaluateObjectives(solution, results);
 		evaluateConstraints(solution, results);
+		if (verbose)
+			System.out.print("\n"); // newline;
 
 		return true;
 
@@ -111,7 +113,7 @@ public class GeneticProblemUltimate extends GeneticProblem {
 			Property p = objectivesList.get(i);
 			int index = p.getIndex();
 			double value = Double.parseDouble(resultsList.get(index));
-			double result = p.evaluate(value);
+			double result = p.evaluate(value); // "evaluate" is just formatting/truncating the number
 			solution.setObjective(i, result);
 			if (verbose)
 				System.out.print("O" + (i + 1) + "):" + result + "\t");

@@ -233,6 +233,8 @@ public class EvoCheckerInitialiser {
         String[] internalRepresentations = str.split("@@@");
 
         // iterate over individual model representations
+        int objectives_index = 0;
+        int constraints_index = 0;
         for (String s : internalRepresentations) {
 
             // get the filename of this ensemble model:
@@ -250,10 +252,17 @@ public class EvoCheckerInitialiser {
                 String joinedOcs = String.join("\n\n", ocs); // join the OCs together into one string
                 try {
                     // get OCs (as property objects) from PropertyFactory
-                    List<List<Property>> thisModelList = PropertyFactory.getObjectivesConstraints(s, joinedOcs);
+                    List<List<Property>> thisModelList = PropertyFactory.getObjectivesConstraints(s, joinedOcs,
+                            objectives_index, constraints_index);
+
+                    objectives_index = objectives_index + thisModelList.get(0).size();
+                    constraints_index = constraints_index + thisModelList.get(1).size();
+
                     objectivesList.addAll(thisModelList.get(0)); // add to objectives
                     constraintsList.addAll(thisModelList.get(1)); // add to constraints
-                    ensembleObjectiveConstraintsMap.put(fileName.split("\\.")[0], thisModelList); // TODO: fix presuming id.extension = filename
+                    ensembleObjectiveConstraintsMap.put(fileName.split("\\.")[0], thisModelList); // TODO: fix presuming
+                                                                                                  // id.extension =
+                                                                                                  // filename
                 } catch (EvoCheckerException e) {
                     System.err.println("Error getting properties for model'" + fileName + "'\n" + e.getMessage());
                     System.exit(1);
@@ -262,6 +271,7 @@ public class EvoCheckerInitialiser {
                 System.out.println("None found, continuing...");
             }
         }
+
     }
 
     private void initialiseProperties() {
@@ -280,7 +290,6 @@ public class EvoCheckerInitialiser {
                 System.out.print("O: " + p.toString());
             for (Property p : constraintsList)
                 System.out.print("C: " + p.toString());
-            System.out.println();
         }
     }
 
@@ -302,11 +311,8 @@ public class EvoCheckerInitialiser {
                 RandomSearch_Settings rsSettings = new RandomSearch_Settings(problemName, problem);
                 algorithm = rsSettings.configure();
             } else if (algorithmName.equals(Constants.ALGORITHM.SPEA2.toString())) {
-                System.out.println("Starting configuration");
                 SPEA2_Settings spea2Settings = new SPEA2_Settings(problemName, problem);
-                System.out.println("Got settings - 5");
                 algorithm = spea2Settings.configure();
-                System.out.println("Configured algorithm");
             } else if (algorithmName.equals(Constants.ALGORITHM.MOCELL.toString())) {
                 MOCell_Settings mocellSettings = new MOCell_Settings(problemName, problem);
                 algorithm = mocellSettings.configure();

@@ -287,22 +287,4 @@ public class ModelParserUltimate implements IModelParser {
 		return this.modelType;
 	}
 
-	public static void main(String args[]) {
-		String modelFilename = "models/SESAME-EDDI/palEvoChecker.prism";
-		String propertiesFilename = "models/SESAME-EDDI/pal.csl";
-
-		if (args.length == 2) {
-			modelFilename = args[0];
-			propertiesFilename = args[1];
-		}
-
-		ModelParser parser = new ModelParser(modelFilename, propertiesFilename);
-
-		// Parse model
-		System.out.println("Checking " + modelFilename);
-		parser.parse();
-
-		System.out.println("DONE");
-	}
-
 }

@@ -141,8 +141,7 @@ public class ModelParser implements IModelParser{
 		//set internal model representation
 		String modelString = visitor.getInternalModelRepresentation();
 		this.internalModelRepresentation = modelString;
-		System.out.println(modelString);
-		
+				
 		//get model type
 		this.modelType = visitor.getModelType();
 	}

@@ -32,6 +32,9 @@ import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.DistributionGene;
 import evochecker.properties.Property;
 import evochecker.EvoChecker;
+import evochecker.auxiliary.ConfigurationChecker;
+import evochecker.auxiliary.Constants;
+import evochecker.auxiliary.Utility;
 
 public class ModelInvokerUltimate implements IModelInvoker {
 
@@ -99,20 +102,18 @@ public class ModelInvokerUltimate implements IModelInvoker {
 			// so it should be easy to set the internal parameters as-is.
 			// however, this means that all evolvables across the world model
 			// must have different names. Maybe this could be ensured by ULTIMATE itself.
-			System.out.println("Evolvable values: " + evolvableValues);
 			ultimate.setInternalParameters(evolvableValues);
 			ultimate.generateModelInstances();
 			// System.out.println(objectiveConstraintsMap);
 			List<Property> objectiveList = objectiveConstraintsMap.get(id).get(0);
-			// List<Property> constraintsList = objectiveConstraintsMap.get(id).get(1);
+			List<Property> constraintsList = objectiveConstraintsMap.get(id).get(1);
 			List<Property> propertyList = new ArrayList<>();
 			propertyList.addAll(objectiveList);
-			// propertyList.addAll(constraintsList);
+			propertyList.addAll(constraintsList);
 			for (Property p : propertyList) {
 				ultimate.resetResults();
 				try {
 					String prop = p.getExpression();
-					System.out.println("EvoChecker prop: " + prop);
 					if (prop != null) {
 						ultimate.setVerificationProperty(prop);
 						ultimate.execute();
@@ -123,13 +124,11 @@ public class ModelInvokerUltimate implements IModelInvoker {
 					return null;
 				}
 				List<Double> resultsList = new ArrayList<>(ultimate.getResults().values());
-				System.out.println(ultimate.getResults());
 				for (Double r : resultsList) {
 					results.add(r.toString());
 				}
 			}
-		}
-		System.out.println("Results: " + results);
+		};
 		return results;
 	}
 
@@ -154,7 +153,7 @@ public class ModelInvokerUltimate implements IModelInvoker {
 	}
 
 	private List<String> checkResult(String resultString) {
-		// System.out.println("Received from PRISM: " + modelBuilder.toString());
+
 		if (resultString.equalsIgnoreCase("NULL"))
 			return null;
 		else

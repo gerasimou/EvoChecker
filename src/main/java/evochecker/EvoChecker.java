@@ -276,13 +276,13 @@ public class EvoChecker {
 		try {
 			// make initialisations
 
-			System.out.println("Initialising options");
+			System.out.println("Initialising options...");
 			initialiser.initialiseEvoCheckerOptions();
-			System.out.println("Initialising problem");
+			System.out.println("Initialising problem...");
 			initialiser.initializeEvoCheckerProblem();
-			System.out.println("Initialising algorithm");
+			System.out.println("Initialising algorithm...");
 			initialiser.initialiseEvoCheckerAlgorithm();
-			System.out.println("Initialising output");
+			System.out.println("Initialising output...");
 			initialiser.initialiseOutputData();
 
 			modelFilename = initialiser.getModelFilename();
@@ -301,7 +301,7 @@ public class EvoChecker {
 
 			outputDir = initialiser.getOutputDir();
 
-			System.out.println("Executing");
+			System.out.println("Executing EvoChecker...");
 			solutions = execute();
 
 			long end = System.currentTimeMillis();
@@ -322,7 +322,7 @@ public class EvoChecker {
 	 * @throws JMException
 	 * @throws EvoCheckerException
 	 */
-	protected void ExportToFile() throws JMException, EvoCheckerException {
+	public void ExportToFile() throws JMException, EvoCheckerException {
 		Export.exportResults(
 				objectivesList,
 				genes,

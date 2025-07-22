@@ -66,7 +66,7 @@ public class UltimateModelEvaluator implements IParallelEvaluator {
 	 * @param processes
 	 * @throws Exception
 	 */
-	// TODO: parallelise. Make port logic into a Utility function.
+	// TODO: actually parallelise. Make port logic into a Utility function.
 	public UltimateModelEvaluator() {
 		// String processesNum = "1"; //
 		// Utility.getProperty(Constants.PROCESSORS_KEYWORD);
@@ -101,11 +101,8 @@ public class UltimateModelEvaluator implements IParallelEvaluator {
 		// System.exit(1);
 		// }
 
-		System.out.println("Creating threads");
 		threads = new Thread[numberOfProcesses];
-		System.out.println("Creating runnables");
 		runnables = new UltimateExecutor[numberOfProcesses];
-		System.out.println("Creating solutions list");
 		solutionsList = new ArrayList<Solution>();
 
 	}

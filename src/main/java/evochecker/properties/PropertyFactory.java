@@ -77,7 +77,8 @@ public class PropertyFactory {
 		return null;
 	}
 
-	public static List<List<Property>> getObjectivesConstraints(String internalModel, String properties) throws EvoCheckerException {
+	// TODO: see if I can make the indexing more elegant
+	public static List<List<Property>> getObjectivesConstraints(String internalModel, String properties, int startingObjectiveIndex, int startingConstraintIndex) throws EvoCheckerException {
 		List<Property> objectivesList = new ArrayList<Property>();		
 		List<Property> constaintsList = new ArrayList<Property>();		
 		
@@ -106,13 +107,15 @@ public class PropertyFactory {
 				if (comment != null) {
 					String[] commentElements = comment.trim().split(",");
 					if (commentElements[0].trim().toUpperCase().equals(OBJECTIVE))
-						objectivesList.add(createObjective(commentElements, prop.toString(), index));					
+						objectivesList.add(createObjective(commentElements, prop.toString(), index + startingObjectiveIndex));					
 					else if (commentElements[0].trim().toUpperCase().equals(CONSTRAINT))
-						constaintsList.add(createConstraint(commentElements, prop.toString(), index));
+						constaintsList.add(createConstraint(commentElements, prop.toString(), index + startingConstraintIndex));
 					else 
 						throw new EvoCheckerException("Property " + prop + " is neither a constraint nor an objective "+ prop.getComment());
 				}
 			}
+
+			
 			
 			if (objectivesList.isEmpty())
 				throw new EvoCheckerException("No objective found.At least one is required!");

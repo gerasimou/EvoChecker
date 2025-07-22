@@ -27,7 +27,9 @@ import java.util.Properties;
 import evochecker.auxiliary.ConfigurationChecker;
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
+import evochecker.evaluator.IParallelEvaluator;
 import evochecker.evaluator.MultiProcessModelEvaluator;
+import evochecker.evaluator.UltimateModelEvaluator;
 import evochecker.genetic.jmetal.metaheuristics.pNSGAII;
 import evochecker.genetic.jmetal.operators.CrossoverFactory;
 import evochecker.genetic.jmetal.operators.MutationFactory;
@@ -40,6 +42,7 @@ import jmetal.operators.mutation.Mutation;
 import jmetal.operators.selection.Selection;
 import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
+import evochecker.evaluator.UltimateModelEvaluator;
 
 /**
  * Settings class of algorithm NSGA-II (real encoding)
@@ -53,57 +56,52 @@ public class NSGAII_Settings extends Settings {
 	public double intMutationProbability_;
 	public double distributionIndex_;
 
-	//default mutation operator;
+	// default mutation operator;
 	String mutationOperator = "PolynomialUniformMutation";
-	
+
 	/**
 	 * Constructor
 	 */
 	public NSGAII_Settings(String problemName, Problem problem) {
 		super(problemName);
-		problem_ 					= problem;
+		problem_ = problem;
 		// Default experiments.settings
-		populationSize_ 			= Integer.parseInt(Utility.getProperty(Constants.POPULATION_SIZE_KEYWORD, "100"));
-		maxEvaluations_ 			= Integer.parseInt(Utility.getProperty(Constants.MAX_EVALUATIONS_KEYWORD, "100"));
+		populationSize_ = Integer.parseInt(Utility.getProperty(Constants.POPULATION_SIZE_KEYWORD, "100"));
+		maxEvaluations_ = Integer.parseInt(Utility.getProperty(Constants.MAX_EVALUATIONS_KEYWORD, "100"));
 
-		realCrossoverProbability_ 	= 0.9;
-		intCrossoverProbability_ 	= 0.9;//0.5;
-		
-		
-		String realMutationProbability = Utility.getProperty(Constants.REAL_MUTATION_PROBABILITY, ConfigurationChecker.NAN);
-		if (realMutationProbability.equals(ConfigurationChecker.NAN)) { 		
-			int realVars = ((GeneticProblem)problem_).getNumOfRealVariables();
+		realCrossoverProbability_ = 0.9;
+		intCrossoverProbability_ = 0.9;// 0.5;
+
+		String realMutationProbability = Utility.getProperty(Constants.REAL_MUTATION_PROBABILITY,
+				ConfigurationChecker.NAN);
+		if (realMutationProbability.equals(ConfigurationChecker.NAN)) {
+			int realVars = ((GeneticProblem) problem_).getNumOfRealVariables();
 			if (realVars > 0)
-				realMutationProbability_ 	= 1.0 / realVars;
-			else 
-				realMutationProbability_ 	=0;
-		}
-		else
+				realMutationProbability_ = 1.0 / realVars;
+			else
+				realMutationProbability_ = 0;
+		} else
 			realMutationProbability_ = Double.parseDouble(realMutationProbability);
-		
-		
-		String intMutationProbability = Utility.getProperty(Constants.INTEGER_MUTATION_PROBABILITY, ConfigurationChecker.NAN);
-		if (intMutationProbability.equals(ConfigurationChecker.NAN)) { 		
-			int intVars = ((GeneticProblem)problem_).getNumOfIntVariables();
+
+		String intMutationProbability = Utility.getProperty(Constants.INTEGER_MUTATION_PROBABILITY,
+				ConfigurationChecker.NAN);
+		if (intMutationProbability.equals(ConfigurationChecker.NAN)) {
+			int intVars = ((GeneticProblem) problem_).getNumOfIntVariables();
 			if (intVars > 0)
-				intMutationProbability_ 	= 1.0 / intVars;
-			else 
-				intMutationProbability_	= 0;
-		}
-		else
+				intMutationProbability_ = 1.0 / intVars;
+			else
+				intMutationProbability_ = 0;
+		} else
 			intMutationProbability_ = Double.parseDouble(intMutationProbability);
-		
-		
-		//specify mutation operator
-		String mutOperator =  Utility.getProperty("MUTATION_OPERATOR", ConfigurationChecker.NAN);
-		if (!mutOperator.equals(ConfigurationChecker.NAN)) 
-				mutationOperator = mutOperator;
-		
-		
-		distributionIndex_ 			= 20;
+
+		// specify mutation operator
+		String mutOperator = Utility.getProperty("MUTATION_OPERATOR", ConfigurationChecker.NAN);
+		if (!mutOperator.equals(ConfigurationChecker.NAN))
+			mutationOperator = mutOperator;
+
+		distributionIndex_ = 20;
 	} // NSGAII_Settings
 
-	
 	/**
 	 * Configure NSGAII with default parameter experiments.settings
 	 * 
@@ -115,11 +113,17 @@ public class NSGAII_Settings extends Settings {
 		Selection selection;
 		Crossover crossover;
 		Mutation mutation;
+		IParallelEvaluator evaluator;
 
 		HashMap<String, Double> parameters; // Operator parameters
 
-		// Creating the algorithm. There are two choices: NSGAII and its steady-state variant ssNSGAII
-		MultiProcessModelEvaluator evaluator = new MultiProcessModelEvaluator();
+		// Creating the algorithm. There are two choices: NSGAII and its steady-state
+		// variant ssNSGAII
+		if (!"ULTIMATE".equals(Utility.getProperty(Constants.EVOCHECKER_ENGINE))) {
+			evaluator = new MultiProcessModelEvaluator();
+		} else {
+			evaluator = new UltimateModelEvaluator();
+		}
 		algorithm = new pNSGAII(problem_, evaluator);
 		// algorithm = new ssNSGAII(problem_) ;
 
@@ -139,36 +143,36 @@ public class NSGAII_Settings extends Settings {
 		parameters.put("realMutationProbability", this.realMutationProbability_);
 		parameters.put("intMutationProbability", this.intMutationProbability_);
 		parameters.put("distributionIndex", this.distributionIndex_);
-		mutation = MutationFactory.getMutationOperator(mutationOperator, parameters);		
-		
+		mutation = MutationFactory.getMutationOperator(mutationOperator, parameters);
+
 		// Add the operators to the algorithm
 		algorithm.addOperator("crossover", crossover);
 		algorithm.addOperator("mutation", mutation);
-		
+
 		// Selection Operator
 		parameters = null;
-		selection = SelectionFactory.getSelectionOperator("BinaryTournament",parameters);
+		selection = SelectionFactory.getSelectionOperator("BinaryTournament", parameters);
 		algorithm.addOperator("selection", selection);
 
 		return algorithm;
 	} // configure
 
-//	public void setCustomNSGAIIParameters() throws FileNotFoundException, IOException{
-////		Properties properties = new Properties();
-////		properties.load(new FileInputStream("res/config.properties"));
-//		
-//		//get custom population size
-//		String param = Utility.getProperty("POPULATION_SIZE");
-//		if (param!=null){
-//			this.populationSize_ = Integer.parseInt(param);
-//		}
-//		param = Utility.getProperty("MAX_EVALUATIONS");
-//		if (param!=null){
-//			this.maxEvaluations_ = Integer.parseInt(param);
-//		}		
-//	}
-	
-	
+	// public void setCustomNSGAIIParameters() throws FileNotFoundException,
+	// IOException{
+	//// Properties properties = new Properties();
+	//// properties.load(new FileInputStream("res/config.properties"));
+	//
+	// //get custom population size
+	// String param = Utility.getProperty("POPULATION_SIZE");
+	// if (param!=null){
+	// this.populationSize_ = Integer.parseInt(param);
+	// }
+	// param = Utility.getProperty("MAX_EVALUATIONS");
+	// if (param!=null){
+	// this.maxEvaluations_ = Integer.parseInt(param);
+	// }
+	// }
+
 	/**
 	 * Configure NSGAII with user-defined parameter experiments.settings
 	 * 
