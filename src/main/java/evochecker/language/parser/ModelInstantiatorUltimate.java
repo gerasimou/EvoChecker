@@ -93,7 +93,6 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 			List<String> thisModelEvolvablesNames = thisModelEvolvables.stream()
 					.map(Evolvable::getName).collect(Collectors.toList());;
 
-			// System.out.println(thisModelEvolvablesNames.toString());
 
 			for (AbstractGene gene : genes) {
 				if (thisModelEvolvablesNames.contains(gene.getName())) {
@@ -115,7 +114,6 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 
 		}
 
-		// System.err.println(concreteModel.toString());
 		return concreteModel.toString();
 	}
 
