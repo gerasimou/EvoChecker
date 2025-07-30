@@ -67,8 +67,6 @@ public class ModelParserUltimate implements IModelParser {
 		this.modelFilename = modelFilename;
 		this.propertiesFilename = propertiesFilename;
 		// this.modelType = MODEL_TYPE.ULTIMATE;
-
-		parse();
 	}
 
 	/**
@@ -86,7 +84,7 @@ public class ModelParserUltimate implements IModelParser {
 			String fileName = entry.getKey();
 			List<Evolvable> el = entry.getValue();
 			List<Evolvable> newList = new ArrayList<>();
-			for (Evolvable e : el){
+			for (Evolvable e : el) {
 				if (e instanceof EvolvableInteger) {
 					newList.add(new EvolvableInteger((EvolvableInteger) e));
 				} else if (e instanceof EvolvableDouble) {
@@ -122,7 +120,7 @@ public class ModelParserUltimate implements IModelParser {
 	/**
 	 * Parse input
 	 */
-	protected void parse() {
+	public void parse() {
 
 		// this.evolvableList = new ArrayList<Evolvable>();
 		this.evolvableHashMap = new HashMap<>();
@@ -144,7 +142,7 @@ public class ModelParserUltimate implements IModelParser {
 			System.exit(1);
 		}
 
-		JsonNode models = root.get("models"); 
+		JsonNode models = root.get("models");
 
 		for (JsonNode model : models) {
 			try {
@@ -152,7 +150,10 @@ public class ModelParserUltimate implements IModelParser {
 				String path = modelDirectory + "/" + fileName;
 				System.out.println("Parsing component model at " + path);
 				String modelString = FileUtil.readFile(path); // model string for casino.dtmc
-				runVisitor(modelString, fileName); // get evolvables from that model specifically
+				PrismVisitor visitor = runPrismVisitor(modelString);
+				addEvolvablesFromVisitor(visitor, fileName);
+				addModelRepresentationFromVisitor(visitor, fileName, model.get("id").asText());
+
 			} catch (EvoCheckerException e) {
 				// e.printStackTrace();
 				System.err.println(e.getMessage() + ".");
@@ -160,12 +161,11 @@ public class ModelParserUltimate implements IModelParser {
 			}
 		}
 
-		System.out.println("\nEvolvables in world model:");
-		for (Map.Entry<String, List<Evolvable>> entry : evolvableHashMap.entrySet()) {
-			System.out.println(entry.getKey() + ": " + entry.getValue().toString());
-		}
-		
 		this.internalModelRepresentation = String.join("@@@", modelRepresentations);
+
+		System.out.println("\nEvolvables in world model:");
+		printEvolvableElements();
+
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class ModelParserUltimate implements IModelParser {
 	 * @param inputString
 	 * @throws EvoCheckerException
 	 */
-	private void runVisitor(String inputString, String fileName) throws EvoCheckerException {
+	private PrismVisitor runPrismVisitor(String inputString) throws EvoCheckerException {
 		// create a CharStream that reads from standard input
 		ANTLRInputStream input = new ANTLRInputStream(inputString);
 		// create a lexer that feeds off of input CharStream
@@ -202,15 +202,22 @@ public class ModelParserUltimate implements IModelParser {
 		// and visit the nodes
 		visitor.visit(tree);
 
-		// generate list with evolvable elements
+		return visitor;
+	}
+
+	private void addEvolvablesFromVisitor(PrismVisitor visitor, String fileName) {
 		List<Evolvable> evolvableList = visitor.getEvolvableList();
 		if (evolvableList != null) {
-			// this.evolvableList.addAll(evolvableList);
+			// TODO: see if I can replace the fileName with modelId - should be possible and
+			// cleaner.
 			this.evolvableHashMap.put(fileName, evolvableList);
 		}
+	}
 
-		// set internal model representation
-		modelRepresentations.add("//" + fileName + "\n" + visitor.getInternalModelRepresentation());
+	private void addModelRepresentationFromVisitor(PrismVisitor visitor, String fileName, String modelId) {
+		// TODO: see if I can remove fileName
+		this.modelRepresentations
+				.add("//" + modelId + "@" + fileName + "\n" + visitor.getInternalModelRepresentation());
 	}
 
 	/**
@@ -218,10 +225,8 @@ public class ModelParserUltimate implements IModelParser {
 	 */
 	public void printEvolvableElements() {
 		for (Map.Entry<String, List<Evolvable>> entry : evolvableHashMap.entrySet()) {
-			System.out.println(entry.getValue().toString());
+			System.out.println(entry.getKey() + ": " + entry.getValue().toString());
 		}
-
-		System.out.println(internalModelRepresentation + evolvableHashMap.size());
 	}
 
 	// public String setInternalModelRepresentation(String modelId){

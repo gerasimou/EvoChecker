@@ -113,12 +113,12 @@ public class NSGAII_Settings extends Settings {
 		Selection selection;
 		Crossover crossover;
 		Mutation mutation;
-		IParallelEvaluator evaluator;
-
+		
 		HashMap<String, Double> parameters; // Operator parameters
-
+		
 		// Creating the algorithm. There are two choices: NSGAII and its steady-state
 		// variant ssNSGAII
+		IParallelEvaluator evaluator;
 		if (!"ULTIMATE".equals(Utility.getProperty(Constants.EVOCHECKER_ENGINE))) {
 			evaluator = new MultiProcessModelEvaluator();
 		} else {

@@ -276,13 +276,9 @@ public class EvoChecker {
 		try {
 			// make initialisations
 
-			System.out.println("Initialising options...");
 			initialiser.initialiseEvoCheckerOptions();
-			System.out.println("Initialising problem...");
 			initialiser.initializeEvoCheckerProblem();
-			System.out.println("Initialising algorithm...");
 			initialiser.initialiseEvoCheckerAlgorithm();
-			System.out.println("Initialising output...");
 			initialiser.initialiseOutputData();
 
 			modelFilename = initialiser.getModelFilename();
@@ -301,12 +297,10 @@ public class EvoChecker {
 
 			outputDir = initialiser.getOutputDir();
 
-			System.out.println("Executing EvoChecker...");
 			solutions = execute();
 
 			long end = System.currentTimeMillis();
 			executionTime = (end - start) / 1000.0;
-			System.out.printf("Time:\t%s\n", executionTime);
 
 		} catch (Exception e) {
 			e.printStackTrace();

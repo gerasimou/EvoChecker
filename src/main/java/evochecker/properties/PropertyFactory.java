@@ -77,7 +77,6 @@ public class PropertyFactory {
 		return null;
 	}
 
-	// TODO: see if I can make the indexing more elegant
 	public static List<List<Property>> getObjectivesConstraints(String internalModel, String properties, int startingObjectiveIndex, int startingConstraintIndex) throws EvoCheckerException {
 		List<Property> objectivesList = new ArrayList<Property>();		
 		List<Property> constaintsList = new ArrayList<Property>();		

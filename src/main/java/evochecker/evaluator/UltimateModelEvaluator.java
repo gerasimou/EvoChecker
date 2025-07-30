@@ -66,41 +66,15 @@ public class UltimateModelEvaluator implements IParallelEvaluator {
 	 * @param processes
 	 * @throws Exception
 	 */
-	// TODO: actually parallelise. Make port logic into a Utility function.
+	/* TODO: Actually parallelise. Make port logic into a Utility function.
+	 * This will require either the parallelisation of ULTIMATE or some sort of cloning of the ULTIMATE
+	 * instance which can run across the numerous threads.
+	 * 
+	 * The latter is probably easier as a first approach.
+	*/
 	public UltimateModelEvaluator() {
-		// String processesNum = "1"; //
-		// Utility.getProperty(Constants.PROCESSORS_KEYWORD);
-		// // System.out.println("Processes: " + processesNum);
-		// if (processesNum != null)
-		// numberOfProcesses = Integer.parseInt(processesNum);
-		// else if (processesNum == null || processesNum.equals("-1"))
-		// numberOfProcesses = Runtime.getRuntime().availableProcessors();
 
 		numberOfProcesses = 1;
-
-		// initialise connections and executors
-		// int initPort =
-		// Integer.parseInt(Utility.getProperty(Constants.INITIAL_PORT_KEYWORD));
-		// int retries = 0;
-		// int max_retries = 100;
-		// while (retries < max_retries) {
-		// int portToTest = initPort + retries;
-		// // System.out.println("Testing: " + portToTest);
-		// try (ServerSocket serverSocket = new ServerSocket(portToTest)) {
-		// initPort = portToTest;
-		// break;
-		// } catch (IOException e) {
-		// retries++;
-		// }
-		// }
-		// if (retries == max_retries) {
-		// int finalPort = initPort + retries;
-		// System.out.print("Could not find an available port in " + initPort + " -- " +
-		// finalPort
-		// + ". Try adjusting INIT_PORT in the config file.\nExiting.");
-		// System.exit(1);
-		// }
-
 		threads = new Thread[numberOfProcesses];
 		runnables = new UltimateExecutor[numberOfProcesses];
 		solutionsList = new ArrayList<Solution>();

@@ -192,7 +192,7 @@ public class EvoCheckerInitialiser {
         try {
             root = mapper.readTree(modelFile); // get root json node
         } catch (IOException e) {
-            System.err.println("Error reading configuration file: " + e.getMessage());
+            System.err.println("Error reading model file: " + e.getMessage());
             System.exit(1);
         }
 
@@ -239,12 +239,16 @@ public class EvoCheckerInitialiser {
 
             // get the filename of this ensemble model:
             String fileName = null;
+            String modelId = null;
             for (String line : s.split("\n")) {
                 if (line.trim().startsWith("//")) {
-                    fileName = line.replace("//", "");
+                    String trimmedLine = line.replace("//", "");
+                    modelId = trimmedLine.split("@")[0];
+                    fileName = trimmedLine.split("@")[1];
                     break;
                 }
             }
+
             System.out.println("\nLoading objectives/constraints for '" + fileName + "'");
             List<String> ocs = ocStringsHashMap.get(fileName); // get OCs (as strings) the parsed hashmap
             if (ocs != null && ocs.size() > 0) {
@@ -260,9 +264,7 @@ public class EvoCheckerInitialiser {
 
                     objectivesList.addAll(thisModelList.get(0)); // add to objectives
                     constraintsList.addAll(thisModelList.get(1)); // add to constraints
-                    ensembleObjectiveConstraintsMap.put(fileName.split("\\.")[0], thisModelList); // TODO: fix presuming
-                                                                                                  // id.extension =
-                                                                                                  // filename
+                    ensembleObjectiveConstraintsMap.put(modelId, thisModelList);
                 } catch (EvoCheckerException e) {
                     System.err.println("Error getting properties for model'" + fileName + "'\n" + e.getMessage());
                     System.exit(1);
@@ -299,9 +301,6 @@ public class EvoCheckerInitialiser {
      * @throws Exception
      */
     public void initialiseEvoCheckerAlgorithm() throws Exception {
-
-        System.out.println("Algorithm: " + algorithmName);
-        System.out.println("Problem: " + problemName);
 
         if (algorithmName != null) {
             if (algorithmName.equals(Constants.ALGORITHM.NSGAII.toString())) {

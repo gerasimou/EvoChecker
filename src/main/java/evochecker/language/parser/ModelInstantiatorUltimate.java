@@ -45,12 +45,14 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 		this.propertiesFileName = propertiesFilename;
 
 		parser = new ModelParserUltimate(modelFilename, propertiesFilename);
+		parser.parse();
 		elementsMap = new HashMap<AbstractGene, Evolvable>();
 		concreteChromosome = new HashMap<String, Object>();
 	}
 
 	public ModelInstantiatorUltimate(String modelFilename, String propertiesFilename, ModelParserUltimate modelParser) {
 		parser = modelParser;
+		parser.parse();
 		this.modelFilename = modelFilename;
 		this.propertiesFileName = propertiesFilename;
 
@@ -66,6 +68,7 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 	 */
 	public ModelInstantiatorUltimate(ModelInstantiatorUltimate instantiator) throws EvoCheckerException {
 		parser = new ModelParserUltimate(instantiator.parser);
+		parser.parse();
 	}
 
 	public void createMapping() {
@@ -82,11 +85,13 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 		StringBuilder concreteModel = new StringBuilder("");
 
 		String[] internalRepresentations = parser.getInternalModelRepresentation().split("@@@");
+		// parser.printEvolvableElements();
 		HashMap<String, List<Evolvable>> evolvableHashMap = parser.getEvolvableHashMap();
+		// System.out.println(evolvableHashMap);
 
 		for (String ir : internalRepresentations) {
 
-			String fileName = ir.split("\n")[0].replace("//", "");
+			String fileName = ir.split("\n")[0].replace("//", "").split("@")[1];
 			// System.out.println("fileName: " + fileName);
 
 			List<Evolvable> thisModelEvolvables = evolvableHashMap.get(fileName);

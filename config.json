@@ -1,7 +1,7 @@
 {
-"stormInstall":"/home/brendandevlin-hill/storm/build/bin/storm",
-"stormParsInstall":"/home/brendandevlin-hill/storm/build/bin/storm-pars",
-"prismInstall":"/home/brendandevlin-hill/ultimate/ULTIMATE_MODEL_MANAGER/prism/bin/prism",
-"prismGamesInstall":"/home/brendandevlin-hill/ultimate/ULTIMATE_MODEL_MANAGER/prism-games/bin/prism",
-"pythonInstall":"/home/brendandevlin-hill/ultimate/.venv/bin/python3"
+"stormInstall":"~/storm/build/bin/storm",
+"stormParsInstall":"~/storm/build/bin/storm-pars",
+"prismInstall":"~/ultimate/ULTIMATE_MODEL_MANAGER/prism/bin/prism",
+"prismGamesInstall":"~/ultimate/ULTIMATE_MODEL_MANAGER/prism-games/bin/prism",
+"pythonInstall":"~/ultimate/.venv/bin/python3"
 }

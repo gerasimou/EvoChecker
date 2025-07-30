@@ -20,8 +20,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package evochecker.genetic.jmetal.metaheuristics.settings;
 
+import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
+import evochecker.evaluator.IParallelEvaluator;
 import evochecker.evaluator.MultiProcessModelEvaluator;
+import evochecker.evaluator.UltimateModelEvaluator;
 import evochecker.genetic.jmetal.metaheuristics.pRandomSearch;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
@@ -31,39 +34,47 @@ import jmetal.util.JMException;
 /**
  * Settings class of algorithm RandomSearch
  */
-public class RandomSearch_Settings extends Settings{
+public class RandomSearch_Settings extends Settings {
 	public int maxEvaluations_;
 	public int populationSize_;
 
 	/***
 	 * Constructor
+	 * 
 	 * @param problemName Problem name
-	 * @param problem Problem to solve
+	 * @param problem     Problem to solve
 	 */
-	public RandomSearch_Settings(String problemName, Problem problem){
+	public RandomSearch_Settings(String problemName, Problem problem) {
 		super(problemName);
-		problem_ 			= problem;
-		maxEvaluations_ 	= Integer.parseInt(Utility.getProperty("MAX_EVALUATIONS", "100"));
-		populationSize_ 	= Integer.parseInt(Utility.getProperty("POPULATION_SIZE", "100"));
+		problem_ = problem;
+		maxEvaluations_ = Integer.parseInt(Utility.getProperty("MAX_EVALUATIONS", "100"));
+		populationSize_ = Integer.parseInt(Utility.getProperty("POPULATION_SIZE", "100"));
 
-	}//RandomSearch_Settings
-
+	}// RandomSearch_Settings
 
 	/**
-	 * Configure the random search algorithm with default parameter experiments.settings
+	 * Configure the random search algorithm with default parameter
+	 * experiments.settings
+	 * 
 	 * @return an algorithm object
 	 * @throws jmetal.util.JMException
 	 */
 	@Override
 	public Algorithm configure() throws JMException {
-		//construct the parallel evaluator
-		MultiProcessModelEvaluator mpPrismEvaluator = new MultiProcessModelEvaluator();
+		// construct the parallel evaluator
 		
-		//create a new algorithm object
-		Algorithm algorithm = new pRandomSearch(problem_, mpPrismEvaluator);
-		
-		//Algorithm Parameters
-	    algorithm.setInputParameter("maxEvaluations", maxEvaluations_);
+		IParallelEvaluator evaluator;
+		if (!"ULTIMATE".equals(Utility.getProperty(Constants.EVOCHECKER_ENGINE))) {
+			evaluator = new MultiProcessModelEvaluator();
+		} else {
+			evaluator = new UltimateModelEvaluator();
+		}
+
+		// create a new algorithm object
+		Algorithm algorithm = new pRandomSearch(problem_, evaluator);
+
+		// Algorithm Parameters
+		algorithm.setInputParameter("maxEvaluations", maxEvaluations_);
 		algorithm.setInputParameter("populationSize", populationSize_);
 		return algorithm;
 	}
