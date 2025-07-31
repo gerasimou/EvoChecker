@@ -42,6 +42,7 @@ import evochecker.language.parser.ModelInstantiatorUltimate;
 import evochecker.language.parser.ModelInstantiatorParametric;
 import evochecker.lifecycle.EvoCheckerInitialiser;
 import evochecker.lifecycle.Export;
+import evochecker.lifecycle.IUltimate;
 import evochecker.plotting.PlotFactory;
 import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
@@ -63,8 +64,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-
-import ultimate.Ultimate;
 
 /**
  * Main EvoChecker class
@@ -127,7 +126,7 @@ public class EvoChecker {
 	private static String configFilePathCli;
 	private static boolean printHelpCli = false;
 
-	private static Ultimate ultimateInstance;
+	private static IUltimate ultimateInstance;
 
 	public EvoChecker() {
 
@@ -237,7 +236,7 @@ public class EvoChecker {
 		ec.closeDown();
 	}
 
-	public void setUltimateInstance(Ultimate ultimate){
+	public void setUltimateInstance(IUltimate ultimate){
 		ultimateInstance = ultimate;
 	}
 
@@ -245,7 +244,7 @@ public class EvoChecker {
 		ultimateInstance.setVerificationProperty(property);
 	}
 
-	public static Ultimate getUltimateInstance(){
+	public static IUltimate getUltimateInstance(){
 		return ultimateInstance;
 	}
 

@@ -21,12 +21,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.jgrapht.alg.linkprediction.SørensenIndexLinkPrediction;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ultimate.Ultimate;
+import evochecker.lifecycle.IUltimate;
 
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.DistributionGene;
@@ -70,7 +68,7 @@ public class ModelInvokerUltimate implements IModelInvoker {
 
 		// this should be done elsewhere (outside the loop) in the long-run, but for now
 		// I will put it here:
-		Ultimate ultimate = EvoChecker.getUltimateInstance();
+		IUltimate ultimate = EvoChecker.getUltimateInstance();
 		File modelFile = new File(modelFilename);
 
 		// Alleles.toString is a limitation (I think). Will have to see how this is
@@ -97,7 +95,7 @@ public class ModelInvokerUltimate implements IModelInvoker {
 
 		for (JsonNode model : models) {
 			String id = model.get("id").asText();
-			ultimate.setTargetModelID(id);
+			ultimate.setTargetModelId(id);
 			// I think the names of the genes match the name of the variable in the model
 			// so it should be easy to set the internal parameters as-is.
 			// however, this means that all evolvables across the world model

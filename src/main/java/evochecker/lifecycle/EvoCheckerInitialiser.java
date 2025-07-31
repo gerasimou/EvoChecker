@@ -33,7 +33,6 @@ import evochecker.properties.Property;
 import evochecker.properties.PropertyFactory;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
-import ultimate.Ultimate;
 
 import evochecker.genetic.problem.GeneticProblemUltimate;
 

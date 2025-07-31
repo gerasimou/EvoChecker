@@ -30,7 +30,6 @@ import evochecker.genetic.problem.GeneticModelProblem;
 import evochecker.genetic.problem.GeneticProblem;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
-import ultimate.Ultimate;
 import evochecker.genetic.problem.GeneticProblemUltimate;
 
 /**
@@ -248,62 +247,4 @@ public class UltimateModelEvaluator implements IParallelEvaluator {
 			}
 		}
 	}
-
-	// private class Connection {
-
-	// /** Socket **/
-	// private Socket socket;
-
-	// /** Input channel **/
-	// private BufferedReader in;
-
-	// /** Output channel **/
-	// private PrintWriter out;
-
-	// private final String HOSTNAME = "127.0.0.1";
-
-	// private int portNum;
-
-	// private UltimateModelEvaluator evaluator;
-
-	// private int id;
-
-	// public Connection(int portNum, int id, UltimateModelEvaluator evaluator)
-	// throws Exception {
-	// this.portNum = portNum;
-	// this.evaluator = evaluator;
-	// this.id = id;
-	// start();
-	// }
-
-	// public Connection(Connection c) throws Exception {
-	// this(c.portNum, c.id, c.evaluator);
-	// evaluator.setConnection(id, this);
-	// }
-
-	// public void start() {
-
-	// Ultimate ultimate = EvoChecker.getUltimateInstance();
-	// ultimate.setInternalParameters();
-
-	// }
-
-	// public BufferedReader getInChannel() {
-	// return in;
-	// }
-
-	// public PrintWriter getOutChannel() {
-	// return out;
-	// }
-
-	// protected int getPort() {
-	// return portNum;
-	// }
-
-	// public void close() throws IOException {
-	// out.close();
-	// in.close();
-	// }
-
-	// }
 }

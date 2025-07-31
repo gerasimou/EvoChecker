@@ -76,11 +76,11 @@
 		</dependency>
 
 		<!-- headless ultimate dependency -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>edu.ultimate_project</groupId>
 			<artifactId>ultimate</artifactId>
 			<version>1.0</version>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

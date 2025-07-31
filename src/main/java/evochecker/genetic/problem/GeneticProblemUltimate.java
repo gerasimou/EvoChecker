@@ -25,8 +25,8 @@ import evochecker.language.parser.IModelInstantiator;
 import evochecker.properties.Property;
 import jmetal.core.Solution;
 import jmetal.util.JMException;
-import ultimate.Ultimate;
 import evochecker.language.parser.ModelInstantiatorUltimate;
+import evochecker.lifecycle.IUltimate;
 import evochecker.modelInvoker.ModelInvokerUltimate;
 
 public class GeneticProblemUltimate extends GeneticProblem {
