@@ -121,9 +121,9 @@ public class ModelInvokerUltimate implements IModelInvoker {
 					e.printStackTrace();
 					return null;
 				}
-				List<Double> resultsList = new ArrayList<>(ultimate.getResults().values());
-				for (Double r : resultsList) {
-					results.add(r.toString());
+				List<String> resultsList = new ArrayList<>(ultimate.getResults().values());
+				for (String r : resultsList) {
+					results.add(r);
 				}
 			}
 		};

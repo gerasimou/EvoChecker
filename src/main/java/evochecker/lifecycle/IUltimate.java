@@ -16,6 +16,6 @@ public interface IUltimate {
 
     void setVerificationProperty(String property);
 
-    HashMap <String, Double> getResults();
+    HashMap <String, String> getResults();
 
 }
