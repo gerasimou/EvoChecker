@@ -119,17 +119,16 @@ public class EvoChecker {
 	/** */
 	private String outputDir;
 
-	private static Boolean commandLineInvoked = false;
-
 	private static String modelFilenameCli;
 	private static String propertiesFilenameCli;
 	private static String configFilePathCli;
 	private static boolean printHelpCli = false;
 
 	private static IUltimate ultimateInstance;
+	private static int currentProgress;
+	private boolean paretoFrontPlottingOn;
 
 	public EvoChecker() {
-
 	}
 
 	private static Options options = new Options();
@@ -211,7 +210,6 @@ public class EvoChecker {
 			System.out.println("EvoChecker command line arguments: " + Arrays.toString(args));
 			setUpCLI();
 			parseArgs(args);
-			commandLineInvoked = true;
 			if (printHelpCli) {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("headless", options);
@@ -222,6 +220,7 @@ public class EvoChecker {
 			// use default config file
 			ec.setConfigurationFile("config.properties");
 		}
+		ec.setParetoFrontPlottingOn(Boolean.parseBoolean(Utility.getPropertyIgnoreNull(Constants.PLOT_PARETO_FRONT)));
 
 		ec.start();
 
@@ -236,15 +235,15 @@ public class EvoChecker {
 		ec.closeDown();
 	}
 
-	public void setUltimateInstance(IUltimate ultimate){
+	public void setUltimateInstance(IUltimate ultimate) {
 		ultimateInstance = ultimate;
 	}
 
-	public void setUltimateVerificationProperty(String property){
+	public void setUltimateVerificationProperty(String property) {
 		ultimateInstance.setVerificationProperty(property);
 	}
 
-	public static IUltimate getUltimateInstance(){
+	public static IUltimate getUltimateInstance() {
 		return ultimateInstance;
 	}
 
@@ -295,7 +294,7 @@ public class EvoChecker {
 			algorithm = initialiser.getAlgorithm();
 
 			outputDir = initialiser.getOutputDir();
-
+			updateProgress(0);
 			solutions = execute();
 
 			long end = System.currentTimeMillis();
@@ -306,9 +305,6 @@ public class EvoChecker {
 		}
 	}
 
-
-
-
 	/**
 	 * Export results to file
 	 * 
@@ -316,13 +312,21 @@ public class EvoChecker {
 	 * @throws EvoCheckerException
 	 */
 	public void ExportToFile() throws JMException, EvoCheckerException {
-		Export.exportResults(
+		String[] files = Export.exportResults(
 				objectivesList,
 				genes,
 				algorithmName,
 				problemName,
 				solutions,
 				outputDir);
+
+		this.paretoFrontFile = files[0];
+		this.paretoSetFile = files[1];
+
+		// show Pareto front plot if specified in configuration file
+		if (paretoFrontPlottingOn) {
+			Export.displayParetoFrontPlot(files[0], this.getObjectives().size());
+		}
 	}
 
 	/**
@@ -333,7 +337,6 @@ public class EvoChecker {
 	protected SolutionSet execute() throws Exception {
 		// Execute the Algorithm
 		SolutionSet solutions = algorithm.execute();
-
 		return solutions;
 	}
 
@@ -390,14 +393,6 @@ public class EvoChecker {
 		return Utility.getProperty(propName);
 	}
 
-	public String getParetoFrontFile() {
-		return this.paretoFrontFile;
-	}
-
-	public String getParetoSetFile() {
-		return this.paretoSetFile;
-	}
-
 	public int getObjectivesNum() {
 		return this.objectivesList.size();
 	}
@@ -446,11 +441,11 @@ public class EvoChecker {
 		return algorithm;
 	}
 
-	protected String getAlgorithmName() {
+	public String getAlgorithmName() {
 		return algorithmName;
 	}
 
-	protected String getProblemName() {
+	public String getProblemName() {
 		return problemName;
 	}
 
@@ -458,23 +453,23 @@ public class EvoChecker {
 		return problem;
 	}
 
-	protected String getModelFileName() {
+	public String getModelFileName() {
 		return modelFilename;
 	}
 
-	protected String getPropertiesFileName() {
+	public String getPropertiesFileName() {
 		return propertiesFilename;
 	}
 
-	protected EvoCheckerType getEvoCheckerType() {
+	public EvoCheckerType getEvoCheckerType() {
 		return ecType;
 	}
 
-	protected List<AbstractGene> getGenes() {
+	public List<AbstractGene> getGenes() {
 		return genes;
 	}
 
-	protected List<Property> getConstraints() {
+	public List<Property> getConstraints() {
 		return constraintsList;
 	}
 
@@ -486,7 +481,7 @@ public class EvoChecker {
 		return modelInstantiator;
 	}
 
-	protected void setAlgorithmName(String algorithmName) {
+	public void setAlgorithmName(String algorithmName) {
 		this.algorithmName = algorithmName;
 	}
 
@@ -528,6 +523,29 @@ public class EvoChecker {
 
 	public SolutionSet getSolutions() {
 		return this.solutions;
+	}
+
+	public int getMaxEvalutations() {
+		return Integer.parseInt(Utility.getProperty(Constants.POPULATION_SIZE_KEYWORD));
+	}
+
+	public static void updateProgress(int numEvaluations) {
+		currentProgress = numEvaluations;
+		if (ultimateInstance != null) {
+			EvoChecker.ultimateInstance.updateSynthesisProgress(currentProgress);
+		}
+	}
+
+	public int getCurrentProgress() {
+		return currentProgress;
+	}
+
+	public void setParetoFrontPlottingOn(boolean paretoFrontPlottingOn) {
+		this.paretoFrontPlottingOn = paretoFrontPlottingOn;
+	}
+
+	public List<String> getInternalParameterNames() {
+		return GenotypeFactory.getEvolvableNames();
 	}
 
 }

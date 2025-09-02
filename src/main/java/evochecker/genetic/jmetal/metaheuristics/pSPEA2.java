@@ -2,6 +2,7 @@ package evochecker.genetic.jmetal.metaheuristics;
 
 import java.util.List;
 
+import evochecker.EvoChecker;
 import evochecker.evaluator.IParallelEvaluator;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
@@ -81,6 +82,7 @@ public class pSPEA2 extends Algorithm {
 		population = new SolutionSet(populationSize);
 		archive = new SolutionSet(archiveSize);
 		evaluations = 0;
+		EvoChecker.updateProgress(evaluations);
 
 		// Create the initial solution set
 		Solution newSolution;
@@ -94,6 +96,7 @@ public class pSPEA2 extends Algorithm {
 		for (Solution solution : solutionList) {
 			population.add(solution);
 			evaluations++;
+			EvoChecker.updateProgress(evaluations);
 		}
 
 		/*
@@ -145,6 +148,7 @@ public class pSPEA2 extends Algorithm {
 			for (Solution solution : solutions) {
 				offSpringSolutionSet.add(solution);
 				evaluations++;
+				EvoChecker.updateProgress(evaluations);
 			}
 
 			// create a offSpring solutionSet

@@ -22,6 +22,7 @@ package evochecker.genetic.jmetal.metaheuristics;
 
 import java.util.List;
 
+import evochecker.EvoChecker;
 import evochecker.evaluator.IParallelEvaluator;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
@@ -95,6 +96,7 @@ public class pNSGAII extends Algorithm {
     //Initialize the variables
     population = new SolutionSet(populationSize);
     evaluations = 0;
+    EvoChecker.updateProgress(evaluations);
 
     requiredEvaluations = 0;
 
@@ -114,6 +116,7 @@ public class pNSGAII extends Algorithm {
     for (Solution solution : solutionList) {
       population.add(solution) ;
       evaluations ++ ;
+      EvoChecker.updateProgress(evaluations);
     }
     
     int times = 1;
@@ -142,7 +145,8 @@ public class pNSGAII extends Algorithm {
 
       for(Solution solution : solutions) {
         offspringPopulation.add(solution);
-        evaluations++;	    
+        evaluations++;	   
+        EvoChecker.updateProgress(evaluations); 
       }
 
       // Create the solutionSet union of solutionSet and offSpring

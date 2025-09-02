@@ -3,6 +3,7 @@ package evochecker.genetic.jmetal.metaheuristics;
 import java.util.Comparator;
 import java.util.List;
 
+import evochecker.EvoChecker;
 import evochecker.evaluator.IParallelEvaluator;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
@@ -53,6 +54,7 @@ public class pMoCell extends Algorithm {
 		int maxEvaluations;
 		int evaluations;
 		// int feedback;
+		EvoChecker.updateProgress(0);
 
 		// QualityIndicator object
 		QualityIndicator indicators;
@@ -194,6 +196,7 @@ public class pMoCell extends Algorithm {
 					}
 				}
 				evaluations++;
+				EvoChecker.updateProgress(evaluations);
 			} // for
 
 			population = newSolutionSet;

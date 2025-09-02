@@ -3,6 +3,7 @@ package evochecker.genetic.jmetal.metaheuristics;
 import java.util.List;
 import java.util.Random;
 
+import evochecker.EvoChecker;
 import evochecker.evaluator.IParallelEvaluator;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
@@ -33,12 +34,11 @@ public class pRandomSearch extends Algorithm{
 		int populationSize;
 		int maxEvaluations;
 		int evaluations;
-		
-//		SolutionSet population;
+		//		SolutionSet population;
 	    NonDominatedSolutionList ndList = new NonDominatedSolutionList();
 
 	    QualityIndicator indicators; // QualityIndicator object
-
+		
 	    //Read the parameters
 		populationSize 	= ((Integer)getInputParameter("populationSize")).intValue();
 		maxEvaluations 	= ((Integer)getInputParameter("maxEvaluations")).intValue();		
@@ -46,10 +46,11 @@ public class pRandomSearch extends Algorithm{
 		
 	    //Start the parallel evaluator
 	    parallelEvaluator_.startEvaluator(problem_);
-
+		
 	    //Initialise the variables
-//	    population 	= new SolutionSet(populationSize);
+		//	    population 	= new SolutionSet(populationSize);
 	    evaluations	= 0;
+		EvoChecker.updateProgress(evaluations);
 	    
 	    //Create the initial solution set
 	    Solution initSolution;
@@ -66,6 +67,7 @@ public class pRandomSearch extends Algorithm{
 //	    	population.add(solution);
 	    	ndList.add(solution);
 	    	evaluations++;
+			EvoChecker.updateProgress(evaluations);
 	    }
 	    
 	    

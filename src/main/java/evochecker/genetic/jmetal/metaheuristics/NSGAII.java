@@ -21,6 +21,7 @@
 
 package evochecker.genetic.jmetal.metaheuristics;
 
+import evochecker.EvoChecker;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
@@ -64,6 +65,8 @@ public class NSGAII extends Algorithm {
 		int maxEvaluations;
 		int evaluations;
 
+		// TODO: implement the logic to increment progress.
+
 		QualityIndicator indicators; // QualityIndicator object
 		int requiredEvaluations; // Use in the example of use of the
 		// indicators object (see below)
@@ -77,6 +80,7 @@ public class NSGAII extends Algorithm {
 		Operator selectionOperator;
 
 		Distance distance = new Distance();
+		EvoChecker.updateProgress(0);
 
 		// Read the parameters
 		populationSize = ((Integer) getInputParameter("populationSize"))
@@ -108,7 +112,7 @@ public class NSGAII extends Algorithm {
 
 		// Generations
 		while (evaluations < maxEvaluations) {
-
+			EvoChecker.updateProgress(evaluations);
 			// Create the offSpring solutionSet
 			offspringPopulation = new SolutionSet(populationSize);
 			Solution[] parents = new Solution[2];

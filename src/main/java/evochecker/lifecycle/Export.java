@@ -105,11 +105,6 @@ public class Export {
         System.out.println("\nPareto Front and Pareto set saved at: " + outputDir);
         System.out.println("Pareto Front: " + frontFile);
         System.out.println("Pareto Set: " + setFile);
-
-        // show Pareto front plot if specified in configuration file
-        boolean plotParetoFront = Boolean.parseBoolean(Utility.getProperty(Constants.PLOT_PARETO_FRONT));
-        if (plotParetoFront)
-            PlotFactory.plotParetoFront(frontFile, objectivesList.size());
     
         // return the files created
         String[] files = new String[2];
@@ -117,6 +112,11 @@ public class Export {
         files[1] = setFile;
         return files;
 
+    }
+
+    // it's redundant to have this here, but I'm leaving it for simplicity
+    public static void displayParetoFrontPlot(String frontFile, int numObjectives) {
+        PlotFactory.plotParetoFront(frontFile, numObjectives);
     }
 
 }

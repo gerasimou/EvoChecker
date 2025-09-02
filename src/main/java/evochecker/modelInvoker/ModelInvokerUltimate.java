@@ -123,7 +123,7 @@ public class ModelInvokerUltimate implements IModelInvoker {
 				}
 				List<String> resultsList = new ArrayList<>(ultimate.getResults().values());
 				for (String r : resultsList) {
-					results.add(r);
+					results.add(r.toString());
 				}
 			}
 		};
