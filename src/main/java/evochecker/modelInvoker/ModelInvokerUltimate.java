@@ -101,7 +101,6 @@ public class ModelInvokerUltimate implements IModelInvoker {
 			// however, this means that all evolvables across the world model
 			// must have different names. Maybe this could be ensured by ULTIMATE itself.
 			ultimate.setInternalParameters(evolvableValues);
-			ultimate.generateModelInstances();
 			// System.out.println(objectiveConstraintsMap);
 			List<Property> objectiveList = objectiveConstraintsMap.get(id).get(0);
 			List<Property> constraintsList = objectiveConstraintsMap.get(id).get(1);
