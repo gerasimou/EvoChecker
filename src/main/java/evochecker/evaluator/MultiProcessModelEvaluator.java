@@ -25,6 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import evochecker.auxiliary.Constants;
 import evochecker.auxiliary.Utility;
+import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.problem.GeneticModelProblem;
 import evochecker.genetic.problem.GeneticProblem;
 import jmetal.core.Problem;
@@ -63,7 +64,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 	 * @param processes
 	 * @throws Exception
 	 */
-	public MultiProcessModelEvaluator() {
+	public MultiProcessModelEvaluator(){
 		String processesNum = Utility.getProperty(Constants.PROCESSORS_KEYWORD);
 		// System.out.println("Processes: " + processesNum);
 		if (processesNum != null)
@@ -87,9 +88,8 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 		}
 		if (retries == max_retries) {
 			int finalPort = initPort + retries;
-			System.out.print("Could not find an available port in " + initPort + " -- " + finalPort
-					+ ". Try adjusting INIT_PORT in the config file.\nExiting.");
-			System.exit(1);
+			throw new RuntimeException("Could not find an available port in " + initPort + " -- " + finalPort
+					+ ". Try adjusting INIT_PORT in the config file.");
 		}
 
 		// System.out.println("Using port " + initPort);
@@ -100,7 +100,7 @@ public class MultiProcessModelEvaluator implements IParallelEvaluator {
 				int port = initPort + i;
 				// System.out.println("Establishing connection to " + port);
 				connections[i] = new Connection(initPort + i, i, this);
-		
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

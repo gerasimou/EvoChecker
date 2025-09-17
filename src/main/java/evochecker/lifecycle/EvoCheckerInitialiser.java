@@ -53,7 +53,7 @@ public class EvoCheckerInitialiser {
     List<AbstractGene> genes = null;
     List<Property> objectivesList = null;
     List<Property> constraintsList = null;
-    String outputDir = null;
+    String defaultOutputDir = null;
     Boolean useFileOverrides = false; // if true, model and properties
                                       // filenames in config file are overridden
                                       // by those specified in command line
@@ -113,7 +113,7 @@ public class EvoCheckerInitialiser {
         }
     }
 
-    public void initializeEvoCheckerProblem() throws EvoCheckerException {
+    public void initializeEvoCheckerProblem() throws EvoCheckerException, IOException {
 
         /*
          * Initialises the following:
@@ -142,6 +142,8 @@ public class EvoCheckerInitialiser {
             case REGION:
                 throw new EvoCheckerException("EvoChecker Region is still in development!. Exiting");
         }
+
+        modelInstantiator.runParser();
 
         // 2) create chromosome
         genes = GenotypeFactory.createChromosome(modelInstantiator.getEvolvableList(), false);
@@ -177,23 +179,18 @@ public class EvoCheckerInitialiser {
      * and values are lists of O/Cs
      * associated with that model.
      */
-    private HashMap<String, List<String>> parseUltimateObjectiveConstraintsStrings() {
+    private HashMap<String, List<String>> parseModelObjectiveConstraints() throws IOException {
 
         HashMap<String, List<String>> objectiveConstraintsHashMap = new HashMap<>();
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = null;
 
-        System.out.println("\nParsing ULTIMATE file " + modelFilename);
+        System.out.println("\nParsing synthesis objectives from ULTIMATE file: " + modelFilename);
 
         File modelFile = new File(modelFilename);
 
-        try {
-            root = mapper.readTree(modelFile); // get root json node
-        } catch (IOException e) {
-            System.err.println("Error reading model file: " + e.getMessage());
-            System.exit(1);
-        }
+        root = mapper.readTree(modelFile); // get root json node
 
         JsonNode models = root.get("models");
         for (JsonNode model : models) { // iterating over models in the ensemble
@@ -219,13 +216,13 @@ public class EvoCheckerInitialiser {
      * the ensemble file names to those in the parsed OCs, and passing to the PRISM
      * API.
      */
-    private void configureUltimateObjectiveConstraints(String str) {
+    private void configureUltimateObjectiveConstraints(String str) throws IOException, EvoCheckerException {
 
         objectivesList = new ArrayList<>();
         constraintsList = new ArrayList<>();
 
         // get the OCs from the parsed hashmap (which comes from the .ultimate file)
-        HashMap<String, List<String>> ocStringsHashMap = parseUltimateObjectiveConstraintsStrings();
+        HashMap<String, List<String>> ocStringsHashMap = parseModelObjectiveConstraints();
         ensembleObjectiveConstraintsMap = new HashMap<>();
 
         // split compound representation into representations of the individual models:
@@ -253,21 +250,17 @@ public class EvoCheckerInitialiser {
             if (ocs != null && ocs.size() > 0) {
                 System.out.println("Found objectives/constaints:\n" + String.join("\n", ocs));
                 String joinedOcs = String.join("\n\n", ocs); // join the OCs together into one string
-                try {
-                    // get OCs (as property objects) from PropertyFactory
-                    List<List<Property>> thisModelList = PropertyFactory.getObjectivesConstraints(s, joinedOcs,
-                            objectives_index, constraints_index);
+                // get OCs (as property objects) from PropertyFactory
+                List<List<Property>> thisModelList = PropertyFactory.getObjectivesConstraints(s, joinedOcs,
+                        objectives_index, constraints_index);
 
-                    objectives_index = objectives_index + thisModelList.get(0).size();
-                    constraints_index = constraints_index + thisModelList.get(1).size();
+                objectives_index = objectives_index + thisModelList.get(0).size();
+                constraints_index = constraints_index + thisModelList.get(1).size();
 
-                    objectivesList.addAll(thisModelList.get(0)); // add to objectives
-                    constraintsList.addAll(thisModelList.get(1)); // add to constraints
-                    ensembleObjectiveConstraintsMap.put(modelId, thisModelList);
-                } catch (EvoCheckerException e) {
-                    System.err.println("Error getting properties for model'" + fileName + "'\n" + e.getMessage());
-                    System.exit(1);
-                }
+                objectivesList.addAll(thisModelList.get(0)); // add to objectives
+                constraintsList.addAll(thisModelList.get(1)); // add to constraints
+                ensembleObjectiveConstraintsMap.put(modelId, thisModelList);
+
             } else {
                 System.out.println("None found, continuing...");
             }
@@ -275,7 +268,7 @@ public class EvoCheckerInitialiser {
 
     }
 
-    private void initialiseProperties() {
+    private void initialiseProperties() throws IOException, EvoCheckerException {
 
         String str = modelInstantiator.getConcreteModel(genes);
 
@@ -339,7 +332,7 @@ public class EvoCheckerInitialiser {
                 + Utility.getProperty(Constants.ALGORITHM_KEYWORD) + File.separator;
         FileUtil.createDir(outputDir);
 
-        this.outputDir = outputDir;
+        this.defaultOutputDir = outputDir;
 
         // int run = RODESExperimentRuns.getRun();
         // String outputFileSuffix = tolerance +"_"+ epsilon +"_"+ run;
@@ -390,7 +383,7 @@ public class EvoCheckerInitialiser {
         return constraintsList;
     }
 
-    public String getOutputDir() {
-        return outputDir;
+    public String getDefaultOutputDir() {
+        return defaultOutputDir;
     }
 }

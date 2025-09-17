@@ -2,6 +2,8 @@ package evochecker;
 
 import java.util.Arrays;
 
+import evochecker.exception.EvoCheckerException;
+
 public class EvoCheckerRunner {
 
 	public static void main(String[] args) {
@@ -27,7 +29,11 @@ public class EvoCheckerRunner {
 			ec.setProperty("MAX_EVALUATIONS", evaluations[i]);
 			
 			//3) Start EvoChecker
+			try{
 			ec.start();
+			} catch (EvoCheckerException e){
+				throw new RuntimeException(e);
+			}
 			
 			time[i]  = ec.getExecutionTime();
 			stats[i] = ec.getStatistics();

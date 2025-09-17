@@ -12,58 +12,38 @@
 //==============================================================================
 package evochecker;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
-import evochecker.auxiliary.ConfigurationChecker;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 import evochecker.auxiliary.Constants;
-import evochecker.auxiliary.FileUtil;
 import evochecker.auxiliary.Utility;
 import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.GenotypeFactory;
 import evochecker.genetic.genes.AbstractGene;
-import evochecker.genetic.jmetal.metaheuristics.settings.MOCell_Settings;
-import evochecker.genetic.jmetal.metaheuristics.settings.NSGAII_Settings;
 import evochecker.genetic.jmetal.metaheuristics.settings.RandomSearch_Settings;
-import evochecker.genetic.jmetal.metaheuristics.settings.SPEA2_Settings;
 import evochecker.genetic.problem.GeneticModelProblem;
-import evochecker.genetic.problem.GeneticProblem;
-import evochecker.genetic.problem.GeneticProblemParametric;
-import evochecker.genetic.problem.GeneticProblemParametricParallel;
 import evochecker.language.parser.IModelInstantiator;
-import evochecker.language.parser.ModelInstantiatorUltimate;
-import evochecker.language.parser.ModelInstantiatorParametric;
 import evochecker.lifecycle.EvoCheckerInitialiser;
 import evochecker.lifecycle.Export;
 import evochecker.lifecycle.IUltimate;
-import evochecker.plotting.PlotFactory;
 import evochecker.properties.Property;
-import evochecker.properties.PropertyFactory;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.qualityIndicator.QualityIndicator;
 import jmetal.util.JMException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
 
 /**
  * Main EvoChecker class
@@ -117,7 +97,7 @@ public class EvoChecker {
 	private double executionTime;
 
 	/** */
-	private String outputDir;
+	private String defaultOutputDirectory;
 
 	private static String modelFilenameCli;
 	private static String propertiesFilenameCli;
@@ -126,7 +106,7 @@ public class EvoChecker {
 
 	private static IUltimate ultimateInstance;
 	private static int currentProgress;
-	private boolean paretoFrontPlottingOn;
+	private boolean paretoFrontPlottingEnabled;
 
 	public EvoChecker() {
 	}
@@ -220,7 +200,7 @@ public class EvoChecker {
 			// use default config file
 			ec.setConfigurationFile("config.properties");
 		}
-		ec.setParetoFrontPlottingOn(Boolean.parseBoolean(Utility.getPropertyIgnoreNull(Constants.PLOT_PARETO_FRONT)));
+		ec.setParetoFrontPlottingEnabled(Boolean.parseBoolean(Utility.getPropertyIgnoreNull(Constants.PLOT_PARETO_FRONT)));
 
 		ec.start();
 
@@ -229,6 +209,10 @@ public class EvoChecker {
 		} catch (JMException | EvoCheckerException e) {
 			System.err.println("Error exporting results: " + e.getMessage());
 			e.printStackTrace();
+		}
+
+		if (ec.paretoFrontPlottingEnabled) {
+			ec.plotParetoFront();
 		}
 
 		ec.printStatistics();
@@ -265,7 +249,7 @@ public class EvoChecker {
 		}
 	}
 
-	public void start() {
+	public void start() throws EvoCheckerException {
 		long start = System.currentTimeMillis();
 
 		// set up initialisation and cmi options
@@ -292,8 +276,8 @@ public class EvoChecker {
 			problem = initialiser.getProblem();
 
 			algorithm = initialiser.getAlgorithm();
+			defaultOutputDirectory = initialiser.getDefaultOutputDir();
 
-			outputDir = initialiser.getOutputDir();
 			updateProgress(0);
 			solutions = execute();
 
@@ -302,6 +286,7 @@ public class EvoChecker {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new EvoCheckerException("EvoChecker encountered an error during execution: " + e.getMessage());
 		}
 	}
 
@@ -311,22 +296,27 @@ public class EvoChecker {
 	 * @throws JMException
 	 * @throws EvoCheckerException
 	 */
-	public void ExportToFile() throws JMException, EvoCheckerException {
+	public void ExportToFile(String directory, boolean makeTemporary) throws JMException, EvoCheckerException {
 		String[] files = Export.exportResults(
 				objectivesList,
 				genes,
 				algorithmName,
 				problemName,
 				solutions,
-				outputDir);
+				directory,
+				makeTemporary);
 
 		this.paretoFrontFile = files[0];
 		this.paretoSetFile = files[1];
+	}
 
-		// show Pareto front plot if specified in configuration file
-		if (paretoFrontPlottingOn) {
-			Export.displayParetoFrontPlot(files[0], this.getObjectives().size());
-		}
+	// override to preserve old behaviour of this method
+	public void ExportToFile() throws JMException, EvoCheckerException{
+		ExportToFile(defaultOutputDirectory, false);
+	}
+
+	public void plotParetoFront() {
+		Export.displayParetoFrontPlot(paretoFrontFile, this.getObjectives().size());
 	}
 
 	/**
@@ -540,8 +530,8 @@ public class EvoChecker {
 		return currentProgress;
 	}
 
-	public void setParetoFrontPlottingOn(boolean paretoFrontPlottingOn) {
-		this.paretoFrontPlottingOn = paretoFrontPlottingOn;
+	public void setParetoFrontPlottingEnabled(boolean paretoFrontPlottingOn) {
+		this.paretoFrontPlottingEnabled = paretoFrontPlottingOn;
 	}
 
 	public List<String> getInternalParameterNames() {

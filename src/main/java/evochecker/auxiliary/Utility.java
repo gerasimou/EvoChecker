@@ -23,6 +23,7 @@ import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.genes.AbstractGene;
 import evochecker.genetic.genes.IntegerGene;
 import evochecker.genetic.jmetal.encoding.ArrayInt;
+import evochecker.genetic.jmetal.encoding.ArrayReal;
 import evochecker.properties.Property;
 import jmetal.core.Solution;
 import jmetal.core.Variable;
@@ -99,8 +100,6 @@ public class Utility {
 			System.out.println("Temporary property file created at: " + propertiesFileOverride);
 		} catch (IOException | EvoCheckerException e) {
 			System.err.println("Error creating temporary property file: " + e.getMessage());
-			// e.printStackTrace();
-			System.exit(1);
 		}
 	}
 
@@ -213,10 +212,12 @@ public class Utility {
 
 			int numberOfVariables = solutions.get(0).getDecisionVariables().length;
 			for (Solution aSolutionsList_ : solutions) {
+				List<String> lineVariableStrings = new ArrayList<String>();
 				for (int j = 0; j < numberOfVariables; j++) {
 					Variable v = aSolutionsList_.getDecisionVariables()[j];
-					bw.write(v.toString() + "\t");
+					lineVariableStrings.add(v.toString());
 				}
+				bw.write(String.join("\t", lineVariableStrings));
 				bw.newLine();
 			}
 			bw.close();
@@ -234,15 +235,15 @@ public class Utility {
 	 */
 	public static void printVariablesToFile2(String path, List<Solution> solutions,
 			Map<AbstractGene, Evolvable> elementsMap, List<AbstractGene> genes) {
-		List<Integer> indexes = new ArrayList<>();
-		List<EvolvableOption> evolvableOptionsList = new ArrayList<EvolvableOption>();
+		List<Integer> integerIndices = new ArrayList<>();
+		List<EvolvableOption> integerEvolvableOptionsList = new ArrayList<EvolvableOption>();
 		int i = -1;
 		for (AbstractGene g : genes) {
 			if (g instanceof IntegerGene) {
 				i++;
 				if (elementsMap.get(g) instanceof EvolvableOption) {
-					indexes.add(i);
-					evolvableOptionsList.add((EvolvableOption) elementsMap.get(g));
+					integerIndices.add(i);
+					integerEvolvableOptionsList.add((EvolvableOption) elementsMap.get(g));
 				}
 			}
 		}
@@ -253,16 +254,25 @@ public class Utility {
 			BufferedWriter bw = new BufferedWriter(osw);
 
 			for (Solution aSolutionsList_ : solutions) {
+				int numOfDoubleVariables = ((ArrayReal) aSolutionsList_.getDecisionVariables()[0]).getLength();
 				int numOfIntVariables = ((ArrayInt) aSolutionsList_.getDecisionVariables()[1]).getLength();
 				int k = 0;
+				List<String> lineVariableStrings = new ArrayList<String>();
+
 				for (int j = 0; j < numOfIntVariables; j++) {
-					int value = ((ArrayInt) aSolutionsList_.getDecisionVariables()[1]).getValue(j);
-					if (indexes.contains(j)) {
-						bw.write(evolvableOptionsList.get(k++).getOption(value) + " ");
+					int value = ((ArrayInt) aSolutionsList_.getDecisionVariables()[1]).getValue(j); // jth integer
+					if (integerIndices.contains(j)) { // isn't this redundant?
+						lineVariableStrings.add(integerEvolvableOptionsList.get(k++).getOption(value).toString());
+						bw.write(integerEvolvableOptionsList.get(k++).getOption(value) + "\t");
 					} else
-						bw.write(value + " ");
+						lineVariableStrings.add(String.valueOf(value));
 				}
-				bw.write(aSolutionsList_.getDecisionVariables()[0].toString());
+				for (int m = 0; m < numOfDoubleVariables; m++) {
+					lineVariableStrings
+							.add(String.valueOf(((ArrayReal) aSolutionsList_.getDecisionVariables()[0]).getValue(m)));
+
+				}
+				bw.write(String.join("\t", lineVariableStrings));
 				bw.newLine();
 			}
 			bw.close();

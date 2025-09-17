@@ -1,6 +1,6 @@
 //==============================================================================
 //	
- //	Copyright (c) 2015-
+//	Copyright (c) 2015-
 //	Authors:
 //	* Simos Gerasimou (University of York)
 //	
@@ -33,6 +33,7 @@ import evochecker.genetic.jmetal.encoding.ArrayReal;
 import evochecker.genetic.jmetal.encoding.ArrayRealIntSolutionType;
 import evochecker.language.parser.IModelInstantiator;
 import evochecker.language.parser.MODEL_TYPE;
+import evochecker.language.parser.ModelInstantiator;
 import evochecker.language.parser.ModelInstantiatorUltimate;
 import evochecker.modelInvoker.IModelInvoker;
 import evochecker.modelInvoker.ModelInvokerEngine;
@@ -46,10 +47,10 @@ import jmetal.core.Solution;
 import jmetal.util.JMException;
 import evochecker.modelInvoker.ModelInvokerUltimate;
 
-
 /**
- * Class representing a genetic problem to be solved through 
+ * Class representing a genetic problem to be solved through
  * using search-based techniques
+ * 
  * @author sgerasimou
  *
  */
@@ -57,104 +58,110 @@ public abstract class GeneticModelProblem extends Problem {
 
 	private static final long serialVersionUID = -2679872853510614319L;
 
-	/** List of genes*/
+	/** List of genes */
 	protected List<AbstractGene> genes;
-	
-	/** List of properties*/
+
+	/** List of properties */
 	protected List<Property> objectivesList;
 	protected List<Property> constraintsList;
 
-	/** Reference to the instantiator instance*/
+	/** Reference to the instantiator instance */
 	protected IModelInstantiator modelInstantiator;
-	
-	/** Reference to the model invokers instance*/
+
+	/** Reference to the model invokers instance */
 	protected IModelInvoker modelInvoker;
-	
-	/** Number of integer variables*/
+
+	/** Number of integer variables */
 	private int intVariables;
-	
-	/** Number of real variables*/
+
+	/** Number of real variables */
 	private int realVariables;
 
-	
-	/** Indicating whether output should be procuded in the console/terminal or not **/
+	/**
+	 * Indicating whether output should be procuded in the console/terminal or not
+	 **/
 	protected boolean verbose;
-	
-	
+
 	protected MODEL_TYPE modelType;
-	
+
 	/**
 	 * Class constructor: create a new Genetic Problem instance
+	 * 
 	 * @param genes
 	 * @param properties
 	 * @param instantiator
 	 * @param numOfConstraints
 	 */
-	public GeneticModelProblem(List<AbstractGene> genes, IModelInstantiator instantiator, 
-							   List<Property> objectivesList, List<Property> constraintsList, String problemName){
-		this.genes 					= genes;
-		this.modelInstantiator 		= instantiator;
-		this.numberOfConstraints_ 	= constraintsList.size();
-		this.numberOfObjectives_ 	= objectivesList.size();
-		this.objectivesList			= objectivesList;
-		this.constraintsList		= constraintsList;
-		this.problemName_			= problemName;
-		this.initializeLimits();	
-		
+	public GeneticModelProblem(List<AbstractGene> genes, IModelInstantiator instantiator,
+			List<Property> objectivesList, List<Property> constraintsList, String problemName) {
+		this.genes = genes;
+		this.modelInstantiator = instantiator;
+		this.numberOfConstraints_ = constraintsList.size();
+		this.numberOfObjectives_ = objectivesList.size();
+		this.objectivesList = objectivesList;
+		this.constraintsList = constraintsList;
+		this.problemName_ = problemName;
+		this.initializeLimits();
+
 		switch (ModelInvokerEngine.valueOf(Utility.getPropertyIgnoreNull(Constants.EVOCHECKER_ENGINE).toUpperCase())) {
-			case PRISM		: modelInvoker = new ModelInvokerPrism(); break;
-			case STORM		: modelInvoker = new ModelInvokerStorm(); break;
-			case ULTIMATE	: modelInvoker = new ModelInvokerUltimate(); break;
+			case PRISM:
+				modelInvoker = new ModelInvokerPrism();
+				break;
+			case STORM:
+				modelInvoker = new ModelInvokerStorm();
+				break;
+			case ULTIMATE:
+				modelInvoker = new ModelInvokerUltimate();
+				break;
 		}
-		// this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need to have a case here		
-		
-		verbose =  Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, ConfigurationChecker.FALSE));
+		// this.modelInvoker = new ModelInvokerPrism();//this is a blackbox so no need
+		// to have a case here
+
+		verbose = Boolean.parseBoolean(Utility.getProperty(Constants.VERBOSE, ConfigurationChecker.FALSE));
 		modelType = instantiator.getModelType();
 	}
-		
-	
+
 	/**
 	 * Intialise limits of variables
 	 */
 	private void initializeLimits() {
-		//1) Calculate how many variables exist in the probabilistic model template
+		// 1) Calculate how many variables exist in the probabilistic model template
 		computeNumberOfVariables();
 		// System.out.println("Found variables: " + this.numberOfVariables_);
-		//2) Initialise arrays to hold their bounds
-		upperLimit_ 	= new double[numberOfVariables_];
-		lowerLimit_ 	= new double[numberOfVariables_];
-		//3) Calculate the number of real variables
-		realVariables 	= this.computeRealVariables(0);
-		//4) Calculate the number of integer variables
-		intVariables 	= this.computeIntVariables(realVariables);
-		//5) Initialise the solution type
-		solutionType_ 	= new ArrayRealIntSolutionType(this, realVariables, intVariables, this.lowerLimit_, this.upperLimit_);
+		// 2) Initialise arrays to hold their bounds
+		upperLimit_ = new double[numberOfVariables_];
+		lowerLimit_ = new double[numberOfVariables_];
+		// 3) Calculate the number of real variables
+		realVariables = this.computeRealVariables(0);
+		// 4) Calculate the number of integer variables
+		intVariables = this.computeIntVariables(realVariables);
+		// 5) Initialise the solution type
+		solutionType_ = new ArrayRealIntSolutionType(this, realVariables, intVariables, this.lowerLimit_,
+				this.upperLimit_);
 	}
 
-	
-	/** 
+	/**
 	 * Calculate the number of variables
 	 */
 	private void computeNumberOfVariables() {
 		this.numberOfVariables_ = 0;
 		for (AbstractGene g : genes) {
-			// Discrete distribution generates a number of genes 
+			// Discrete distribution generates a number of genes
 			// equal to the number of their outcomes
 			if (g instanceof DistributionGene) {
 				int outcomes = ((DistributionGene) g).getNumberOfOutcomes();
 				this.numberOfVariables_ += outcomes;
-			} 
-			else {
+			} else {
 				this.numberOfVariables_++;
 			}
 		}
 		if (numberOfVariables_ == 0)
 			throw new IllegalArgumentException("There must be at least one evolvable parameter. None defined!");
 	}
-	
-	
+
 	/**
-	 * Calculate the number of real variables (i.e., Double + Distribution) 
+	 * Calculate the number of real variables (i.e., Double + Distribution)
+	 * 
 	 * @param baseIndex
 	 * @return
 	 */
@@ -173,16 +180,16 @@ public abstract class GeneticModelProblem extends Problem {
 
 			if (g instanceof DoubleGene) {
 				lowerLimit_[realVariables] = g.getMinValue().doubleValue();
-				upperLimit_[realVariables] = g.getMaxValue().doubleValue();				
+				upperLimit_[realVariables] = g.getMaxValue().doubleValue();
 				realVariables++;
 			}
 		}
 		return realVariables - baseIndex;
 	}
 
-	
 	/**
 	 * Calculate the number of integer variables (i.e., Integer + Module)
+	 * 
 	 * @param baseIndex
 	 * @return
 	 */
@@ -202,12 +209,12 @@ public abstract class GeneticModelProblem extends Problem {
 		return intVariables - baseIndex;
 	}
 
-	
 	/**
 	 * Populate the values for the gene as specified by the solution parameter
+	 * 
 	 * @param solution
 	 * @throws JMException
-	 * @throws EvoCheckerException 
+	 * @throws EvoCheckerException
 	 */
 	protected void populateGenesWithRealSolution(Solution solution) throws JMException, EvoCheckerException {
 		ArrayReal realPart = (ArrayReal) solution.getDecisionVariables()[0];
@@ -226,12 +233,12 @@ public abstract class GeneticModelProblem extends Problem {
 					outcomesValues[index] = realPart.getValue(j);
 					index++;
 				}
-				
-				//TODO real values normalised here: is this good for a CTMC?
+
+				// TODO real values normalised here: is this good for a CTMC?
 				if (modelType == MODEL_TYPE.DTMC)
-					for (int j = 0; j < outcomes; j++) { 
+					for (int j = 0; j < outcomes; j++) {
 						outcomesValues[j] = outcomesValues[j] / cumulative;
-						realPart.setValue(j+currentIndex, outcomesValues[j]);
+						realPart.setValue(j + currentIndex, outcomesValues[j]);
 					}
 				g.setAllele(outcomesValues);
 				currentIndex = currentIndex + outcomes;
@@ -245,9 +252,10 @@ public abstract class GeneticModelProblem extends Problem {
 		}
 	}
 
-
 	/**
-	 * Populate the integer values for the gene as specified by the solution parameter
+	 * Populate the integer values for the gene as specified by the solution
+	 * parameter
+	 * 
 	 * @param solution
 	 * @throws JMException
 	 */
@@ -266,7 +274,6 @@ public abstract class GeneticModelProblem extends Problem {
 		}
 	}
 
-
 	/**
 	 * Evaluate function from JMetal
 	 * throws exception because we use the parallel evaluation
@@ -275,163 +282,161 @@ public abstract class GeneticModelProblem extends Problem {
 	public void evaluate(Solution arg0) throws JMException {
 		try {
 			System.err.println("evaluate");
-			throw new IllegalAccessException("Evaluate() function is not used; invoke parallelEvaluate() instead"); 
+			throw new IllegalAccessException("Evaluate() function is not used; invoke parallelEvaluate() instead");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
-		}		
+		}
 	}
 
-	  
-	/** 
+	/**
 	 * Get number of integer variables
+	 * 
 	 * @return
 	 */
-	public int getNumOfIntVariables(){
+	public int getNumOfIntVariables() {
 		return (this.intVariables);
 	}
 
-
 	/**
 	 * Get number of real variables
+	 * 
 	 * @return
 	 */
-	 public int getNumOfRealVariables(){
-		 return (this.realVariables);
-	 }
+	public int getNumOfRealVariables() {
+		return (this.realVariables);
+	}
 
-	 
-	/** 
-	 * Evaluate 
+	/**
+	 * Evaluate
+	 * 
 	 * @param solution
 	 * @param out
 	 * @param in
 	 * @throws JMException
-	 * @throws EvoCheckerException 
+	 * @throws EvoCheckerException
 	 */
-	public boolean evaluateSolution(BufferedReader in, PrintWriter out, Solution solution) throws JMException, EvoCheckerException {
-		//Populate genes
+	public boolean evaluateSolution(BufferedReader in, PrintWriter out, Solution solution)
+			throws JMException, EvoCheckerException {
+		// Populate genes
 		this.populateGenesWithRealSolution(solution);
 		this.populateGenesWithIntSolution(solution);
-		
-		
+
 		try {
-			//parametric work goes here
-			List<String> resultsList = null; 
-			resultsList	= evaluate(in, out);
-	
-			//check if a problem has occured and act accordingly
+			// parametric work goes here
+			List<String> resultsList = null;
+			resultsList = evaluate(in, out);
+
+			// check if a problem has occured and act accordingly
 			if (resultsList == null)
 				return false;
-			
-			//evaluate objectives
+
+			// evaluate objectives
 			evaluateObjectives(solution, resultsList);
-			
-			//evaluate constraints
+
+			// evaluate constraints
 			this.evaluateConstraints(solution, resultsList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (verbose)
 			System.out.println();
-		
+
 		return true;
-	}	
-	
-	
+	}
+
 	private void evaluateObjectives(Solution solution, List<String> resultsList) {
-		//evaluate objectives
+		// evaluate objectives
 		for (int i = 0; i < numberOfObjectives_; i++) {
 			Property p = objectivesList.get(i);
-			int index  = p.getIndex();
-			double value  = Double.parseDouble(resultsList.get(index));
+			int index = p.getIndex();
+			double value = Double.parseDouble(resultsList.get(index));
 			double result = p.evaluate(value);
 			solution.setObjective(i, result);
 			if (verbose)
-				System.out.print("O" +(i+1) + "):"+ result +"\t");
+				System.out.print("O" + (i + 1) + "):" + result + "\t");
 		}
 	}
-	
-	
-	public abstract List<String> evaluate(BufferedReader in, PrintWriter out) throws Exception;
-		
-		
-	
 
-	 /** 
-	  * Evaluates the constraint overhead of a solution 
-	  * @param solution The solution
-	 * @throws JMException 
-	  */  
-	public void evaluateConstraints(Solution solution, List<String> resultsList) throws JMException{
-		double totalViolation 	  = 0;
-		int 	   violatedConstraints = 0;
-		for  (int i=0; i<numberOfConstraints_; i++) {
-			Property p 	  = constraintsList.get(i);
-			int index	  = p.getIndex();//numberOfObjectives_ + i;
-			double value  = Double.parseDouble(resultsList.get(index));
-			double result =  new BigDecimal(value).setScale(4, RoundingMode.HALF_DOWN).doubleValue();
+	public abstract List<String> evaluate(BufferedReader in, PrintWriter out) throws Exception;
+
+	/**
+	 * Evaluates the constraint overhead of a solution
+	 * 
+	 * @param solution The solution
+	 * @throws JMException
+	 */
+	public void evaluateConstraints(Solution solution, List<String> resultsList) throws JMException {
+		double totalViolation = 0;
+		int violatedConstraints = 0;
+		for (int i = 0; i < numberOfConstraints_; i++) {
+			Property p = constraintsList.get(i);
+			int index = p.getIndex();// numberOfObjectives_ + i;
+			double value = Double.parseDouble(resultsList.get(index));
+			double result = new BigDecimal(value).setScale(4, RoundingMode.HALF_DOWN).doubleValue();
 
 			if (verbose)
-				System.out.print("C" +(i+1) + "):"+ result +"\t");
+				System.out.print("C" + (i + 1) + "):" + result + "\t");
 
-			double constraint = p.evaluate(result); 
-			if (constraint !=0) {
-				totalViolation +=constraint;
+			double constraint = p.evaluate(result);
+			if (constraint != 0) {
+				totalViolation += constraint;
 				violatedConstraints++;
 			}
 		}
-		
+
 		solution.setOverallConstraintViolation(totalViolation);
-		solution.setNumberOfViolatedConstraint(violatedConstraints);			
+		solution.setNumberOfViolatedConstraint(violatedConstraints);
 	}
-	
-	
-	/** Do any final work before executing
-	 * e.g., stop executing threads in @see GeneticProblemParametricParallel*/
+
+	/**
+	 * Do any final work before executing
+	 * e.g., stop executing threads in @see GeneticProblemParametricParallel
+	 */
 	public abstract void closeDown();
-	
-	
-	/** Print any final statistics about this problem*/
+
+	/** Print any final statistics about this problem */
 	public abstract String getStatistics();
 
-	
 	/**
 	 * Copy constructor
+	 * 
 	 * @param aProblem
 	 * @throws EvoCheckerException
 	 */
-	public GeneticModelProblem(GeneticModelProblem aProblem) throws EvoCheckerException{
-		
+	public GeneticModelProblem(GeneticModelProblem aProblem) throws EvoCheckerException {
 
 		// ToDo: check this, looks messy, may cause issues / jank
-		if (aProblem.modelInstantiator instanceof  ModelInstantiatorUltimate)
-			this.modelInstantiator 			= new ModelInstantiatorUltimate((ModelInstantiatorUltimate)aProblem.modelInstantiator);
-		else
-			throw new EvoCheckerException("Invalid Instantiator inteface!");
+		if (aProblem.modelInstantiator instanceof ModelInstantiator) {
+			this.modelInstantiator = new ModelInstantiator((ModelInstantiator) aProblem.modelInstantiator);
+		} else if (aProblem.modelInstantiator instanceof ModelInstantiatorUltimate) {
+			this.modelInstantiator = new ModelInstantiatorUltimate(
+					(ModelInstantiatorUltimate) aProblem.modelInstantiator);
 
-		this.genes 					= ((ModelInstantiatorUltimate)modelInstantiator).getGeneList(); 
-										
-		
-		this.numberOfConstraints_ 	= aProblem.numberOfConstraints_;
-		this.numberOfObjectives_ 	= aProblem.numberOfObjectives_; 
-		
-//		this.properties 			= new ArrayList<Property>();
-//		for (Property prop : aProblem.properties){
-//			this.properties.add(new Property(prop));
-//		}
-		this.objectivesList		=  new CopyOnWriteArrayList<Property>();
-		for (Property objective : aProblem.objectivesList){
-			this.objectivesList.add(new Objective((Objective)objective));
 		}
-		this.constraintsList		=  new CopyOnWriteArrayList<Property>();
-		for (Property constraint : aProblem.constraintsList){
-			this.constraintsList.add(new Constraint((Constraint)constraint));
+
+		this.modelInstantiator = aProblem.modelInstantiator;
+		this.genes = ((IModelInstantiator) modelInstantiator).getGeneList();
+
+		this.numberOfConstraints_ = aProblem.numberOfConstraints_;
+		this.numberOfObjectives_ = aProblem.numberOfObjectives_;
+
+		// this.properties = new ArrayList<Property>();
+		// for (Property prop : aProblem.properties){
+		// this.properties.add(new Property(prop));
+		// }
+		this.objectivesList = new CopyOnWriteArrayList<Property>();
+		for (Property objective : aProblem.objectivesList) {
+			this.objectivesList.add(new Objective((Objective) objective));
 		}
-		
-		this.problemName_			= aProblem.problemName_;
+		this.constraintsList = new CopyOnWriteArrayList<Property>();
+		for (Property constraint : aProblem.constraintsList) {
+			this.constraintsList.add(new Constraint((Constraint) constraint));
+		}
+
+		this.problemName_ = aProblem.problemName_;
 		this.initializeLimits();
-		
-		this.modelInvoker			= new ModelInvokerPrism (modelInvoker);
+
+		this.modelInvoker = new ModelInvokerPrism(modelInvoker);
 	}
 }

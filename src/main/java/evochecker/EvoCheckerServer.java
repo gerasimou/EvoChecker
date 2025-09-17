@@ -49,6 +49,7 @@ import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.core.SolutionSet;
 
+
 public class EvoCheckerServer {
 
     private Thread executionThread;
@@ -248,7 +249,8 @@ public class EvoCheckerServer {
                             algorithmName,
                             problemName,
                             solutions,
-                            outputDir);
+                            outputDir,
+                            false);
                     handleResponse("Saving results to " + outputDir +
                             "\nExecution completed.");
                 } catch (Exception e) {
@@ -359,7 +361,7 @@ public class EvoCheckerServer {
         constraintsList = initialiser.getConstraintsList();
         problem = initialiser.getProblem();
         algorithm = initialiser.getAlgorithm();
-        outputDir = initialiser.getOutputDir();
+        outputDir = initialiser.getDefaultOutputDir();
 
     }
 

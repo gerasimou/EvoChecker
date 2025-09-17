@@ -24,15 +24,10 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import evochecker.lifecycle.IUltimate;
-
-import evochecker.genetic.genes.AbstractGene;
-import evochecker.genetic.genes.DistributionGene;
-import evochecker.properties.Property;
 import evochecker.EvoChecker;
-import evochecker.auxiliary.ConfigurationChecker;
-import evochecker.auxiliary.Constants;
-import evochecker.auxiliary.Utility;
+import evochecker.genetic.genes.AbstractGene;
+import evochecker.lifecycle.IUltimate;
+import evochecker.properties.Property;
 
 public class ModelInvokerUltimate implements IModelInvoker {
 
@@ -96,12 +91,14 @@ public class ModelInvokerUltimate implements IModelInvoker {
 		for (JsonNode model : models) {
 			String id = model.get("id").asText();
 			ultimate.setTargetModelId(id);
+			if (objectiveConstraintsMap.get(id) == null) {
+				continue;
+			}
 			// I think the names of the genes match the name of the variable in the model
 			// so it should be easy to set the internal parameters as-is.
 			// however, this means that all evolvables across the world model
 			// must have different names. Maybe this could be ensured by ULTIMATE itself.
 			ultimate.setInternalParameters(evolvableValues);
-			// System.out.println(objectiveConstraintsMap);
 			List<Property> objectiveList = objectiveConstraintsMap.get(id).get(0);
 			List<Property> constraintsList = objectiveConstraintsMap.get(id).get(1);
 			List<Property> propertyList = new ArrayList<>();
@@ -125,7 +122,8 @@ public class ModelInvokerUltimate implements IModelInvoker {
 					results.add(r.toString());
 				}
 			}
-		};
+		}
+		;
 		return results;
 	}
 

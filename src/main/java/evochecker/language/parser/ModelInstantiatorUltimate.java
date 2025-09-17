@@ -12,6 +12,7 @@
 //==============================================================================
 package evochecker.language.parser;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,17 +41,20 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 	private String modelFilename;
 	private String propertiesFileName;
 
-	public ModelInstantiatorUltimate(String modelFilename, String propertiesFilename) {
+	public ModelInstantiatorUltimate(String modelFilename, String propertiesFilename)
+			throws EvoCheckerException, IOException {
 		this.modelFilename = modelFilename;
 		this.propertiesFileName = propertiesFilename;
 
 		parser = new ModelParserUltimate(modelFilename, propertiesFilename);
 		parser.parse();
+
 		elementsMap = new HashMap<AbstractGene, Evolvable>();
 		concreteChromosome = new HashMap<String, Object>();
 	}
 
-	public ModelInstantiatorUltimate(String modelFilename, String propertiesFilename, ModelParserUltimate modelParser) {
+	public ModelInstantiatorUltimate(String modelFilename, String propertiesFilename, ModelParserUltimate modelParser)
+			throws EvoCheckerException, IOException {
 		parser = modelParser;
 		parser.parse();
 		this.modelFilename = modelFilename;
@@ -96,8 +100,8 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 
 			List<Evolvable> thisModelEvolvables = evolvableHashMap.get(fileName);
 			List<String> thisModelEvolvablesNames = thisModelEvolvables.stream()
-					.map(Evolvable::getName).collect(Collectors.toList());;
-
+					.map(Evolvable::getName).collect(Collectors.toList());
+			;
 
 			for (AbstractGene gene : genes) {
 				if (thisModelEvolvablesNames.contains(gene.getName())) {
@@ -165,6 +169,10 @@ public class ModelInstantiatorUltimate implements IModelInstantiator {
 
 	public String getPropertiesFileName() {
 		return propertiesFileName;
+	}
+
+	public void runParser() throws EvoCheckerException {
+		parser.parse();
 	}
 
 }

@@ -15,17 +15,19 @@ package evochecker.language.parser;
 import java.util.List;
 
 import evochecker.evolvables.Evolvable;
+import evochecker.exception.EvoCheckerException;
 
 public interface IModelParser {
 
-	
 	public void printEvolvableElements();
-	
+
 	public String getInternalModelRepresentation();
 
-	public List<Evolvable> getEvolvableList ();
+	public List<Evolvable> getEvolvableList();
 
 	public String getPropertyFileName();
 
-	public MODEL_TYPE getModelType();	
+	public MODEL_TYPE getModelType();
+
+	public void parse() throws EvoCheckerException;
 }

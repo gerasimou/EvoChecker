@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import evochecker.EvoCheckerType;
 import evochecker.auxiliary.ConfigurationChecker;
@@ -64,27 +66,32 @@ public class Export {
 
     /** */
     public static String[] exportResults(List<Property> objectivesList, List<AbstractGene> genes, String algorithmName,
-            String problemName, SolutionSet solutions, String outputDir) throws JMException {
+            String problemName, SolutionSet solutions, String outputDir, boolean makeTemporary) throws JMException {
         // Print results to console
         System.out.println("-------------------------------------------------");
         System.out.println("SOLUTIONS: \t" + solutions.size());
 
         String identifier = problemName + "_" + algorithmName + "_" + Utility.getTimeStamp();
-        String frontFile = outputDir + identifier + "_Front";
-        String setFile = outputDir + identifier + "_Set";
+        String frontFilePath = outputDir + identifier + "_Front";
+        String setFilePath = outputDir + identifier + "_Set";
         try {
             File pf = File.createTempFile(identifier, "_Front", new File(outputDir));
             File ps = File.createTempFile(identifier, "_Set", new File(outputDir));
 
-            frontFile = pf.getAbsolutePath();
-            setFile = ps.getAbsolutePath();
+            if (makeTemporary) {
+                pf.deleteOnExit();
+                ps.deleteOnExit();
+            }
+
+            frontFilePath = pf.getAbsolutePath();
+            setFilePath = ps.getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // generate and save headers
-        String setHeader = String.join("\t", GenotypeFactory.getEvolvableNames());
-        FileUtil.saveToFile(setFile, setHeader + "\n", true);
+        String setHeader = String.join("\t", GenotypeFactory.getEvolvableNames()).trim();
+        FileUtil.saveToFile(setFilePath, setHeader, false);
         StringBuilder frontHeader = new StringBuilder();
         Iterator<Property> it = objectivesList.iterator();
         while (it.hasNext()) {
@@ -93,23 +100,23 @@ public class Export {
             if (it.hasNext())
                 frontHeader.append("\t");
         }
-        FileUtil.saveToFile(frontFile, frontHeader.toString(), true);
+        FileUtil.saveToFile(frontFilePath, frontHeader.toString().trim(), false);
 
         List<Solution> solutionList = new ArrayList<Solution>();
         // System.out.println(solutions)
         for (int i = 0; i < solutions.size(); i++)
             solutionList.add(solutions.get(i));
-        Utility.printObjectivesToFile(frontFile, solutionList, objectivesList);
-        Utility.printVariablesToFile2(setFile, solutionList, GenotypeFactory.getGeneEvolvableMap(), genes);
+        Utility.printObjectivesToFile(frontFilePath, solutionList, objectivesList);
+        Utility.printVariablesToFile2(setFilePath, solutionList, GenotypeFactory.getGeneEvolvableMap(), genes);
 
         System.out.println("\nPareto Front and Pareto set saved at: " + outputDir);
-        System.out.println("Pareto Front: " + frontFile);
-        System.out.println("Pareto Set: " + setFile);
-    
+        System.out.println("Pareto Front: " + frontFilePath);
+        System.out.println("Pareto Set: " + setFilePath);
+
         // return the files created
         String[] files = new String[2];
-        files[0] = frontFile;
-        files[1] = setFile;
+        files[0] = frontFilePath;
+        files[1] = setFilePath;
         return files;
 
     }

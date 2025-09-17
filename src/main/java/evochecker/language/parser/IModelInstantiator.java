@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import evochecker.evolvables.Evolvable;
+import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.genes.AbstractGene;
 
 
@@ -52,4 +53,7 @@ public interface IModelInstantiator {
 	public Map<String, Object> getChromosome (List<AbstractGene> genes);
 	
 	public MODEL_TYPE getModelType();
+
+	public void runParser() throws EvoCheckerException;
+	
 }

@@ -33,28 +33,12 @@ import evochecker.language.parser.grammar.PrismParser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ModelParserUltimate implements IModelParser {
+public class ModelParserUltimate extends ModelParser {
 
-	/** properties filename */
-	private String propertiesFilename;
-
-	/** model filename */
-	protected String modelFilename;
-
-	/** String that keeps the model template */
-	protected String internalModelRepresentation;
-
-	/** list of evolvable elements */
-	// protected List<Evolvable> evolvableList;
 	private HashMap<String, List<Evolvable>> evolvableHashMap;
-
-	/** model type **/
-	protected MODEL_TYPE modelType;
-
 	private List<String> modelRepresentations;
 
 	/**
@@ -64,17 +48,16 @@ public class ModelParserUltimate implements IModelParser {
 	 * @param propertiesFilename
 	 */
 	public ModelParserUltimate(String modelFilename, String propertiesFilename) {
-		this.modelFilename = modelFilename;
-		this.propertiesFilename = propertiesFilename;
-		// this.modelType = MODEL_TYPE.ULTIMATE;
+		super(modelFilename, propertiesFilename);
 	}
 
 	/**
 	 * Parser engine default copy constructor
 	 */
 	protected ModelParserUltimate(ModelParserUltimate aParser) {
-		this.modelFilename = aParser.modelFilename;
-		this.propertiesFilename = aParser.propertiesFilename;
+		super(aParser.modelFilename, aParser.propertiesFilename);
+		// this.modelFilename = aParser.modelFilename;
+		// this.propertiesFilename = aParser.propertiesFilename;
 		// this.modelType = MODEL_TYPE.ULTIMATE;
 		this.internalModelRepresentation = aParser.internalModelRepresentation;
 		this.modelType = aParser.modelType;
@@ -101,26 +84,12 @@ public class ModelParserUltimate implements IModelParser {
 			this.evolvableHashMap.put(fileName, newList);
 		}
 
-		// for (Evolvable element : aParser.getEvolvableHashMap())
-		// if (element instanceof EvolvableInteger)
-		// this.evolvableList.add(new EvolvableInteger((EvolvableInteger) element));
-		// else if (element instanceof EvolvableDouble)
-		// this.evolvableList.add(new EvolvableDouble((EvolvableDouble) element));
-		// else if (element instanceof EvolvableDistribution)
-		// this.evolvableList.add(new EvolvableDistribution((EvolvableDistribution)
-		// element));
-		// else if (element instanceof EvolvableModuleAlternative)
-		// this.evolvableList.add(new
-		// EvolvableModuleAlternative((EvolvableModuleAlternative) element));
-		// // TODO
-		// // else if (element instanceof EvolvableOption)
-		// // this.evolvableList.add(new EvolvableOption((EvolvableOption))element);
 	}
 
 	/**
 	 * Parse input
 	 */
-	public void parse() {
+	public void parse() throws EvoCheckerException {
 
 		// this.evolvableList = new ArrayList<Evolvable>();
 		this.evolvableHashMap = new HashMap<>();
@@ -129,36 +98,27 @@ public class ModelParserUltimate implements IModelParser {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode root = null;
 
-		System.out.println("Parsing ULTIMATE file " + modelFilename);
+		System.out.println("Parsing ULTIMATE file: " + modelFilename);
 
 		// Get the directory that modelFilename is in
 		File modelFile = new File(modelFilename);
 		String modelDirectory = modelFile.getParent();
-
 		try {
 			root = mapper.readTree(modelFile);
 		} catch (IOException e) {
-			System.err.println("Error reading configuration file: " + e.getMessage());
-			System.exit(1);
+			throw new EvoCheckerException("Could not parse the ULTIMATE model file: " + e.getMessage());
 		}
 
 		JsonNode models = root.get("models");
 
 		for (JsonNode model : models) {
-			try {
-				String fileName = model.get("fileName").asText(); // e.g. casino.dtmc
-				String path = modelDirectory + "/" + fileName;
-				System.out.println("Parsing component model at " + path);
-				String modelString = FileUtil.readFile(path); // model string for casino.dtmc
-				PrismVisitor visitor = runPrismVisitor(modelString);
-				addEvolvablesFromVisitor(visitor, fileName);
-				addModelRepresentationFromVisitor(visitor, fileName, model.get("id").asText());
-
-			} catch (EvoCheckerException e) {
-				// e.printStackTrace();
-				System.err.println(e.getMessage() + ".");
-				System.exit(0);
-			}
+			String fileName = model.get("fileName").asText(); // e.g. casino.dtmc
+			String path = modelDirectory + "/" + fileName;
+			System.out.println("Parsing component model at " + path);
+			String modelString = FileUtil.readFile(path); // model string for casino.dtmc
+			PrismVisitor visitor = runPrismVisitor(modelString);
+			addEvolvablesFromVisitor(visitor, fileName);
+			addModelRepresentationFromVisitor(visitor, fileName, model.get("id").asText());
 		}
 
 		this.internalModelRepresentation = String.join("@@@", modelRepresentations);

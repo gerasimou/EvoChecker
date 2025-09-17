@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import evochecker.auxiliary.Utility;
 import evochecker.evaluator.MultiProcessModelEvaluator;
+import evochecker.exception.EvoCheckerException;
 import evochecker.genetic.jmetal.operators.CrossoverFactory;
 import evochecker.genetic.jmetal.operators.MutationFactory;
 import evochecker.genetic.problem.GeneticProblemSingle;
@@ -17,7 +18,7 @@ import jmetal.operators.selection.Selection;
 import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
 
-public class SingleGA_Settings extends Settings{
+public class SingleGA_Settings extends Settings {
 	public int populationSize_;
 	public int maxEvaluations_;
 	public double realCrossoverProbability_;
@@ -29,22 +30,19 @@ public class SingleGA_Settings extends Settings{
 	/**
 	 * Constructor
 	 */
-	public SingleGA_Settings (String problemName, Problem problem){
+	public SingleGA_Settings(String problemName, Problem problem) {
 		super(problemName);
 		problem_ = problem;
 		// Default experiments.settings
-		populationSize_ 			= Integer.parseInt(Utility.getProperty("POPULATION_SIZE", "100"));
-		maxEvaluations_ 			= Integer.parseInt(Utility.getProperty("MAX_EVALUATIONS", "100"));
+		populationSize_ = Integer.parseInt(Utility.getProperty("POPULATION_SIZE", "100"));
+		maxEvaluations_ = Integer.parseInt(Utility.getProperty("MAX_EVALUATIONS", "100"));
 
-		realCrossoverProbability_ 	= 0.9;
-		intCrossoverProbability_ 	= 0.9;//0.5;
-		realMutationProbability_ 	= 1.0 / ((GeneticProblemSingle)problem_).getNumOfRealVariables();//  0.4;
-		intMutationProbability_ 	= 1.0 / ((GeneticProblemSingle)problem_).getNumOfIntVariables();//0.4;
-		distributionIndex_ 			= 20;
+		realCrossoverProbability_ = 0.9;
+		intCrossoverProbability_ = 0.9;// 0.5;
+		realMutationProbability_ = 1.0 / ((GeneticProblemSingle) problem_).getNumOfRealVariables();// 0.4;
+		intMutationProbability_ = 1.0 / ((GeneticProblemSingle) problem_).getNumOfIntVariables();// 0.4;
+		distributionIndex_ = 20;
 	} // SingleGA_Settings
-	
-	
-	
 
 	/**
 	 * Configure Single_GA with default parameter experiments.settings
@@ -61,9 +59,10 @@ public class SingleGA_Settings extends Settings{
 
 		HashMap<String, Double> parameters; // Operator parameters
 
-		//Create algorithm and parallel objects
+		// Create algorithm and parallel objects
+
 		MultiProcessModelEvaluator evaluator = new MultiProcessModelEvaluator();
-		algorithm = new pgGA(problem_, evaluator); //pNSGAII(problem_, evaluator);
+		algorithm = new pgGA(problem_, evaluator); // pNSGAII(problem_, evaluator);
 
 		// Algorithm parameters
 		algorithm.setInputParameter("populationSize", populationSize_);
@@ -89,7 +88,7 @@ public class SingleGA_Settings extends Settings{
 
 		// Selection Operator
 		parameters = null;
-		selection = SelectionFactory.getSelectionOperator("BinaryTournament",parameters);
+		selection = SelectionFactory.getSelectionOperator("BinaryTournament", parameters);
 
 		algorithm.addOperator("selection", selection);
 
