@@ -2,7 +2,10 @@
 
 //  package org.spg.language.prism.grammar;
   package evochecker.language.parser.grammar;
-  import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+  import java.util.*;
+
+import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
  * This interface defines a complete generic visitor for a parse tree produced
@@ -106,6 +109,12 @@ public interface PrismVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFormula(PrismParser.FormulaContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PrismParser#lbl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLbl(PrismParser.LblContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code constantEntry}
 	 * labeled alternative in {@link PrismParser#constant}.
 	 * @param ctx the parse tree
@@ -154,6 +163,27 @@ public interface PrismVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitEvolveBool(PrismParser.EvolveBoolContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code observableDeclaration}
+	 * labeled alternative in {@link PrismParser#observable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObservableDeclaration(PrismParser.ObservableDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code observableSingle}
+	 * labeled alternative in {@link PrismParser#observableMultiple}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObservableSingle(PrismParser.ObservableSingleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code observableMulti}
+	 * labeled alternative in {@link PrismParser#observableMultiple}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitObservableMulti(PrismParser.ObservableMultiContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code boolVarDeclaration}
 	 * labeled alternative in {@link PrismParser#varDeclaration}.

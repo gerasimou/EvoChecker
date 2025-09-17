@@ -36,6 +36,7 @@ import evochecker.language.parser.grammar.PrismParser.ConstantContext;
 import evochecker.language.parser.grammar.PrismParser.EvolvableContext;
 import evochecker.language.parser.grammar.PrismParser.FormulaContext;
 import evochecker.language.parser.grammar.PrismParser.ModuleContext;
+import evochecker.language.parser.grammar.PrismParser.ObservableContext;
 import evochecker.language.parser.grammar.PrismParser.RewardContext;
 import evochecker.language.parser.grammar.PrismParser.RewardItemContext;
 import evochecker.language.parser.grammar.PrismParser.VarDeclarationContext;
@@ -102,6 +103,12 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 //			System.out.println(str);
 			modelString.append(str);
 		}
+		//visit observable
+		for (ObservableContext observable : ctx.observable()) {
+			str = visit(observable);
+			modelString.append(str);
+		}
+		
 		
 		//print it
 //		System.err.println(modelString);
@@ -127,6 +134,8 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 			else if (model.equalsIgnoreCase("CTMC"))
 				modelType = MODEL_TYPE.CTMC;
 			else if (model.equalsIgnoreCase("DTMC"))
+				modelType = MODEL_TYPE.DTMC;
+			else if (model.equalsIgnoreCase("POMDP"))
 				modelType = MODEL_TYPE.DTMC;
 			else
 				throw new EvoCheckerException("Unsupported model type:" + model);
@@ -188,6 +197,15 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	/**'formula' name=ID '=' expression ';' */
 	public String visitFormula (PrismParser.FormulaContext ctx){
 		StringBuilder str = new StringBuilder("formula ");
+		str.append(ctx.name.getText() +" = ");
+		str.append(visit(ctx.expression()) +";");
+		return str.toString();
+	}
+	
+	
+	@Override
+	public String visitLbl(PrismParser.LblContext ctx) {
+		StringBuilder str = new StringBuilder("label ");
 		str.append(ctx.name.getText() +" = ");
 		str.append(visit(ctx.expression()) +";");
 		return str.toString();
@@ -658,6 +676,23 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 	public String visitDiscreteOptionDoubleMulti (PrismParser.DiscreteOptionDoubleMultiContext ctx) {
 		return visit(ctx.discreteOptionDouble(0)) +","+ visit(ctx.discreteOptionDouble(1));
 	}
+	
+	
+	@Override
+	public String visitObservableDeclaration(PrismParser.ObservableDeclarationContext ctx) {
+		return "observables " + visit(ctx.observableMultiple()) + " endobservables";
+//				return visit(ctx.expression()) +","+ visit(ctx.functionParam());
+	}
+	
+	public String visitObservableSingle(PrismParser.ObservableSingleContext ctx) {
+		return ctx.name.getText();
+	}
+
+	@Override
+	public String visitObservableMulti(PrismParser.ObservableMultiContext ctx) {
+		return ctx.name.getText() +", "+ visit(ctx.observableMultiple());
+	}
+
 	
 	
 	private boolean isParam (TerminalNode n) {

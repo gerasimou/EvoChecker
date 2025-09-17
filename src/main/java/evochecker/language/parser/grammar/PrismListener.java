@@ -171,6 +171,16 @@ public interface PrismListener extends ParseTreeListener {
 	 */
 	void exitFormula(PrismParser.FormulaContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PrismParser#lbl}.
+	 * @param ctx the parse tree
+	 */
+	void enterLbl(PrismParser.LblContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PrismParser#lbl}.
+	 * @param ctx the parse tree
+	 */
+	void exitLbl(PrismParser.LblContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code constantEntry}
 	 * labeled alternative in {@link PrismParser#constant}.
 	 * @param ctx the parse tree
@@ -254,6 +264,42 @@ public interface PrismListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitEvolveBool(PrismParser.EvolveBoolContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code observableDeclaration}
+	 * labeled alternative in {@link PrismParser#observable}.
+	 * @param ctx the parse tree
+	 */
+	void enterObservableDeclaration(PrismParser.ObservableDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code observableDeclaration}
+	 * labeled alternative in {@link PrismParser#observable}.
+	 * @param ctx the parse tree
+	 */
+	void exitObservableDeclaration(PrismParser.ObservableDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code observableSingle}
+	 * labeled alternative in {@link PrismParser#observableMultiple}.
+	 * @param ctx the parse tree
+	 */
+	void enterObservableSingle(PrismParser.ObservableSingleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code observableSingle}
+	 * labeled alternative in {@link PrismParser#observableMultiple}.
+	 * @param ctx the parse tree
+	 */
+	void exitObservableSingle(PrismParser.ObservableSingleContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code observableMulti}
+	 * labeled alternative in {@link PrismParser#observableMultiple}.
+	 * @param ctx the parse tree
+	 */
+	void enterObservableMulti(PrismParser.ObservableMultiContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code observableMulti}
+	 * labeled alternative in {@link PrismParser#observableMultiple}.
+	 * @param ctx the parse tree
+	 */
+	void exitObservableMulti(PrismParser.ObservableMultiContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code boolVarDeclaration}
 	 * labeled alternative in {@link PrismParser#varDeclaration}.
