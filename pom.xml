@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>org.modelChecker</groupId>
 			<artifactId>PrismAPI</artifactId>
-			<version>1.0.18</version>
+			<version>1.0.20</version>
 			<type>jar</type>
 		</dependency>
 

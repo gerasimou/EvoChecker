@@ -136,7 +136,7 @@ public class PrismVisitor extends PrismBaseVisitor<String> {
 			else if (model.equalsIgnoreCase("DTMC"))
 				modelType = MODEL_TYPE.DTMC;
 			else if (model.equalsIgnoreCase("POMDP"))
-				modelType = MODEL_TYPE.DTMC;
+				modelType = MODEL_TYPE.POMDP;
 			else
 				throw new EvoCheckerException("Unsupported model type:" + model);
 		}

@@ -4,5 +4,6 @@ public enum MODEL_TYPE {
 	MDP, 
 	DTMC,
 	CTMC,
-	ULTIMATE
+	ULTIMATE,
+	POMDP
 }
